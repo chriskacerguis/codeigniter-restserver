@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Welcome to CodeIgniter</title>
+<title>Welcome to CodeIgniter REST Server</title>
 
 <style type="text/css">
 
@@ -43,17 +43,20 @@ code {
 </head>
 <body>
 
-<h1>Welcome to CodeIgniter!</h1>
+<h1>Welcome to CodeIgniter REST Server!</h1>
 
-<p>The page you are looking at is being generated dynamically by CodeIgniter.</p>
+<p>The page you are looking at is being generated dynamically by CodeIgniter with <a href="http://philsturgeon.co.uk/" target="_blank">Phil Sturgeon</a>'s REST server included.</p>
 
-<p>If you would like to edit this page you'll find it located at:</p>
-<code>system/application/views/welcome_message.php</code>
+<p>Below are a few examples of the REST server library in use. Remember, we will only see GET methods looking through a browser.</p>
 
-<p>The corresponding controller for this page is found at:</p>
-<code>system/application/controllers/welcome.php</code>
+<ul>
+	<li><a href="<?=site_url('example_api/users');?>">Users</a> - defaulting to XML</li>
+	<li><a href="<?=site_url('example_api/users/format/csv');?>">Users</a> - get it in CSV</li>
+	<li><a href="<?=site_url('example_api/user/id/1');?>">User #1</a> - defaulting to XML</li>
+	<li><a href="<?=site_url('example_api/user/id/1/format/json');?>">User #1</a> - get it in JSON</li>
+</ul>
 
-<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="user_guide/">User Guide</a>.</p>
+<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="http://codeigniter.com/user_guide/">User Guide</a>.</p>
 
 
 <p><br />Page rendered in {elapsed_time} seconds</p>

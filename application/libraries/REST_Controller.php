@@ -401,6 +401,7 @@ class REST_Controller extends Controller {
 			$data = array($data);
 		}
 		
+		$output = implode(',', $headings)."\r\n";
 		foreach($data as &$row)
 		{
 			$output .= '"'.implode('","',$row)."\"\r\n";
