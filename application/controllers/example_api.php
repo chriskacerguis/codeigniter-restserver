@@ -8,7 +8,7 @@ class Example_api extends REST_Controller {
     {
         if(!$this->get('id'))
         {
-        	$this->responce(NULL, 404);
+        	$this->response(NULL, 404);
         }
     	
     	//$user = $this->some_model->getSomething( $this->get('id') );
@@ -21,12 +21,12 @@ class Example_api extends REST_Controller {
     	
         if($user)
         {
-            $this->responce($user, 200); // 200 being the HTTP responce code
+            $this->response($user, 200); // 200 being the HTTP response code
         }
 
         else
         {
-            $this->responce(NULL, 404);
+            $this->response(NULL, 404);
         }
     }
     
@@ -35,7 +35,7 @@ class Example_api extends REST_Controller {
         //$this->some_model->updateUser( $this->get('id') );
         $message = array('id' => $this->get('id'), 'name' => $this->post('name'), 'email' => $this->post('email'), 'message' => 'ADDED!');
         
-        $this->responce($message, 200); // 200 being the HTTP responce code
+        $this->response($message, 200); // 200 being the HTTP response code
     }
     
     function user_delete()
@@ -43,7 +43,7 @@ class Example_api extends REST_Controller {
         //$this->some_model->deletesomething( $this->get('id') );
         $message = array('id' => $this->get('id'), 'message' => 'DELETED!');
         
-        $this->responce($message, 200); // 200 being the HTTP responce code
+        $this->response($message, 200); // 200 being the HTTP response code
     }
     
     function users_get()
@@ -57,12 +57,12 @@ class Example_api extends REST_Controller {
         
         if($users)
         {
-            $this->responce($users, 200); // 200 being the HTTP responce code
+            $this->response($users, 200); // 200 being the HTTP response code
         }
 
         else
         {
-            $this->responce(NULL, 404);
+            $this->response(NULL, 404);
         }
     }
     

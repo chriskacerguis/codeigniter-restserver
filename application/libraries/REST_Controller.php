@@ -78,11 +78,11 @@ class REST_Controller extends Controller {
     }
     
     /* 
-     * Responce
+     * response
      * 
-     * Takes pure data and optionally a status code, then creates the responce
+     * Takes pure data and optionally a status code, then creates the response
      */
-    function responce($data = '', $http_code = 200)
+    function response($data = '', $http_code = 200)
     {
    		if(empty($data))
     	{
@@ -277,7 +277,7 @@ class REST_Controller extends Controller {
             
 		if ($digest['response'] != $valid_response)
 		{
-            $this->responce(NULL, 401);
+            $this->response(NULL, 401);
             exit;
 		}
 
