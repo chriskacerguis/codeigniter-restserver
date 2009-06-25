@@ -2,16 +2,20 @@
 
 class REST_Controller extends Controller {
     
-    private $method;
-    private $format;
+    // Not what you'd think, set this in a controller to use a default format
+    protected $rest_format = NULL;
     
-    private $get_args;
-    private $put_args;
-    private $args;
+    private $_method;
+    private $_format;
+    
+    private $_get_args;
+    private $_put_args;
+    private $_args;
     
     // List all supported methods, the first will be the default format
-    private $supported_formats = array(
+    private $_supported_formats = array(
 		'xml' 		=> 'application/xml',
+		'rawxml' 	=> 'application/xml',
 		'json' 		=> 'application/json',
 		'serialize' => 'text/plain',
 		'php' 		=> 'text/plain',
@@ -25,7 +29,7 @@ class REST_Controller extends Controller {
         parent::Controller();
         
 	    // How is this request being made? POST, DELETE, GET, PUT?
-	    $this->method = $this->_detect_method();
+	    $this->_method = $this->_detect_method();
 	    
         // Lets grab the config and get ready to party
         $this->load->config('rest');
@@ -44,16 +48,16 @@ class REST_Controller extends Controller {
         $this->output->cache( $this->config->item('rest_cache') );
         
         // Set up our GET variables
-    	$this->get_args = $this->uri->ruri_to_assoc();
+    	$this->_get_args = $this->uri->ruri_to_assoc();
     	
     	// Set up out PUT variables
-    	parse_str(file_get_contents('php://input'), $this->put_args);
+    	parse_str(file_get_contents('php://input'), $this->_put_args);
     	
     	// Merge both for one mega-args variable
-    	$this->args = array_merge($this->get_args, $this->put_args);
+    	$this->_args = array_merge($this->_get_args, $this->_put_args);
     	
     	// Which format should the data be returned in?
-	    $this->format = $this->_detect_format();
+	    $this->_format = $this->_detect_format();
     }
     
     /* 
@@ -64,7 +68,7 @@ class REST_Controller extends Controller {
      */
     function _remap($object_called)
     {
-    	$controller_method = $object_called.'_'.$this->method;
+    	$controller_method = $object_called.'_'.$this->_method;
 		
 		if(method_exists($this, $controller_method))
 		{
@@ -93,12 +97,12 @@ class REST_Controller extends Controller {
     	$this->output->set_status_header($http_code);
         
         // If the format method exists, call and return the output in that format
-        if(method_exists($this, '_'.$this->format))
+        if(method_exists($this, '_'.$this->_format))
         {
 	    	// Set a XML header
-	    	$this->output->set_header('Content-type: '.$this->supported_formats[$this->format]);
+	    	$this->output->set_header('Content-type: '.$this->_supported_formats[$this->_format]);
     	
-        	$formatted_data = $this->{'_'.$this->format}($data);
+        	$formatted_data = $this->{'_'.$this->_format}($data);
         	$this->output->set_output( $formatted_data );
         }
         
@@ -117,27 +121,56 @@ class REST_Controller extends Controller {
      */
     private function _detect_format()
     {
-    	if(array_key_exists('format', $this->args) && array_key_exists($this->args['format'], $this->supported_formats))
+    	// A format has been passed in the URL and it is supported
+    	if(array_key_exists('format', $this->_args) && array_key_exists($this->_args['format'], $this->_supported_formats))
     	{
-    		return $this->args['format'];
+    		return $this->_args['format'];
     	}
     	
-    	// If a HTTP_ACCEPT header is present...
-	    if($this->input->server('HTTP_ACCEPT'))
+    	// Otherwise, check the HTTP_ACCEPT (if it exists and we are allowed)
+	    if($this->config->item('rest_ignore_http_accept') === FALSE && $this->input->server('HTTP_ACCEPT'))
 	    {
-	    	// Check to see if it matches a supported format
-	    	foreach(array_keys($this->supported_formats) as $format)
+	    	// Check all formats against the HTTP_ACCEPT header
+	    	foreach(array_keys($this->_supported_formats) as $format)
 	    	{
+		    	// Has this format been requested?
 		    	if(strpos($this->input->server('HTTP_ACCEPT'), $format) !== FALSE)
 		    	{
-		    		return $format;
+		    		// If not HTML or XML assume its right and send it on its way
+		    		if($format != 'html' && $format != 'xml')
+		    		{
+		    			
+		    			return $format;		    			
+		    		}
+		    		
+		    		// HTML or XML have shown up as a match
+		    		else
+		    		{
+		    			// If it is truely HTML, it wont want any XML
+		    			if($format == 'html' && strpos($this->input->server('HTTP_ACCEPT'), 'xml') === FALSE)
+		    			{
+		    				return $format;
+		    			}
+		    			// If it is truely XML, it wont want any HTML
+		    			elseif($format == 'xml' && strpos($this->input->server('HTTP_ACCEPT'), 'html') === FALSE)
+		    			{
+		    				return $format;
+		    			}
+		    		}
 		    	}
 	    	}
-	    }
-	    
-	    // If it doesnt match any or no HTTP_ACCEPT header exists, uses the first (default) supported format
-	    list($default)=array_keys($this->supported_formats);
-	    return $default;
+	    	
+	    } // End HTTP_ACCEPT checking
+	    	
+		// Well, none of that has worked! Let's see if the controller has a default
+		if($this->rest_format != NULL)
+		{
+			return $this->rest_format;
+		}	    	
+
+		// Just use whatever the first supported type is, nothing else is working!
+		list($default)=array_keys($this->_supported_formats);
+		return $default;
     }
     
     
@@ -162,7 +195,7 @@ class REST_Controller extends Controller {
     
     public function get($key)
     {
-    	return array_key_exists($key, $this->get_args) ? $this->input->xss_clean( $this->get_args[$key] ) : $this->input->get($key) ;
+    	return array_key_exists($key, $this->_get_args) ? $this->input->xss_clean( $this->_get_args[$key] ) : $this->input->get($key) ;
     }
     
     public function post($key)
@@ -172,7 +205,7 @@ class REST_Controller extends Controller {
     
     public function put($key)
     {
-    	return array_key_exists($key, $this->put_args) ? $this->input->xss_clean( $this->put_args[$key] ) : FALSE ;
+    	return array_key_exists($key, $this->_put_args) ? $this->input->xss_clean( $this->_put_args[$key] ) : FALSE ;
     }
     
     // SECURITY FUNCTIONS ---------------------------------------------------------
@@ -272,12 +305,13 @@ class REST_Controller extends Controller {
 		
         // This is the valid response expected
 		$A1 = md5($digest['username'] . ':' . $this->config->item('rest_realm') . ':' . $valid_pass);
-		$A2 = md5(strtoupper($this->method).':'.$digest['uri']);
+		$A2 = md5(strtoupper($this->_method).':'.$digest['uri']);
 		$valid_response = md5($A1.':'.$digest['nonce'].':'.$digest['nc'].':'.$digest['cnonce'].':'.$digest['qop'].':'.$A2);
             
 		if ($digest['response'] != $valid_response)
 		{
-            $this->response(NULL, 401);
+	    	header('HTTP/1.0 401 Unauthorized');
+	    	header('HTTP/1.1 401 Unauthorized');
             exit;
 		}
 
@@ -307,6 +341,59 @@ class REST_Controller extends Controller {
     
     // Format XML for output
     private function _xml($data = array(), $structure = NULL, $basenode = 'xml')
+    {
+    	// turn off compatibility mode as simple xml throws a wobbly if you don't.
+		if (ini_get('zend.ze1_compatibility_mode') == 1)
+		{
+			ini_set ('zend.ze1_compatibility_mode', 0);
+		}
+
+		if ($structure == NULL)
+		{
+			$structure = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><$basenode />");
+		}
+
+		// loop through the data passed in.
+		foreach($data as $key => $value)
+		{
+			// no numeric keys in our xml please!
+			if (is_numeric($key))
+			{
+				// make string key...
+				//$key = "item_". (string) $key;
+				$key = "item";
+			}
+
+			// replace anything not alpha numeric
+			$key = preg_replace('/[^a-z]/i', '', $key);
+
+			// if there is another array found recrusively call this function
+			if (is_array($value))
+			{
+				$node = $structure->addChild($key);
+				// recrusive call.
+				$this->_xml($value, $node, $basenode);
+			}
+			else
+			{
+				// add single node.
+
+				$value = htmlentities($value, ENT_NOQUOTES, "UTF-8");
+
+				$UsedKeys[] = $key;
+
+				$structure->addChild($key, $value);
+			}
+
+		}
+    	
+		// pass back as string. or simple xml object if you want!
+		return $structure->asXML();
+    }
+    
+    
+    // Format Raw XML for output
+    private function _rawxml($data = array(), $structure = NULL, $basenode = 'xml')
     {
     	// turn off compatibility mode as simple xml throws a wobbly if you don't.
 		if (ini_get('zend.ze1_compatibility_mode') == 1)
