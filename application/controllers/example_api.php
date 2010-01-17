@@ -2,21 +2,24 @@
 
 require(APPPATH.'/libraries/REST_Controller.php');
 
-class Example_api extends REST_Controller {
-
+class Example_api extends REST_Controller
+{
 	function user_get()
     {
+		$this->response('HAI!', 200);
+/*
         if(!$this->get('id'))
         {
-        	$this->response(NULL, 404);
+        	$this->response(NULL, 400);
         }
-    	
-    	//$user = $this->some_model->getSomething( $this->get('id') );
+
+        // $user = $this->some_model->getSomething( $this->get('id') );
     	$users = array(
 			1 => array('id' => 1, 'name' => 'Some Guy', 'email' => 'example1@example.com', 'fact' => 'Loves swimming'),
 			2 => array('id' => 2, 'name' => 'Person Face', 'email' => 'example2@example.com', 'fact' => 'Has a huge face'),
 			3 => array('id' => 3, 'name' => 'Scotty', 'email' => 'example3@example.com', 'fact' => 'Is a Scott!'),
 		);
+		
     	$user = $users[$this->get('id')];
     	
         if($user)
@@ -28,6 +31,7 @@ class Example_api extends REST_Controller {
         {
             $this->response(NULL, 404);
         }
+*/
     }
     
     function user_post()

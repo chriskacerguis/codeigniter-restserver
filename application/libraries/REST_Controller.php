@@ -8,9 +8,10 @@ class REST_Controller extends Controller {
     private $_method;
     private $_format;
     
-    private $_get_args;
-    private $_put_args;
-    private $_args;
+    public $_get_args = array();
+    private $_put_args = array();
+    private $_delete_args = array();
+    private $_args = array();
     
     // List all supported methods, the first will be the default format
     private $_supported_formats = array(
@@ -36,25 +37,35 @@ class REST_Controller extends Controller {
 	    
         if($this->config->item('rest_auth') == 'basic')
         {
-        	$this->_prepareBasicAuth();
+        	$this->_prepare_basic_auth();
         }
         
         elseif($this->config->item('rest_auth') == 'digest')
         {
-        	$this->_prepareDigestAuth();
+        	$this->_prepare_digest_auth();
         }
         
         // Set caching based on the REST cache config item
         $this->output->cache( $this->config->item('rest_cache') );
         
+        switch($this->_method)
+        {
+        	case 'put':
+		    	// Set up out PUT variables
+		    	parse_str(file_get_contents('php://input'), $this->_put_args);
+    		break;
+    		
+        	case 'delete':
+		    	// Set up out PUT variables
+		    	parse_str(file_get_contents('php://input'), $this->_delete_args);
+    		break;
+        }
+        
         // Set up our GET variables
     	$this->_get_args = $this->uri->ruri_to_assoc();
     	
-    	// Set up out PUT variables
-    	parse_str(file_get_contents('php://input'), $this->_put_args);
-    	
     	// Merge both for one mega-args variable
-    	$this->_args = array_merge($this->_get_args, $this->_put_args);
+    	$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_delete_args);
     	
     	// Which format should the data be returned in?
 	    $this->_format = $this->_detect_format();
@@ -97,12 +108,12 @@ class REST_Controller extends Controller {
     	$this->output->set_status_header($http_code);
         
         // If the format method exists, call and return the output in that format
-        if(method_exists($this, '_'.$this->_format))
+        if(method_exists($this, '_format_'.$this->_format))
         {
 	    	// Set a XML header
 	    	$this->output->set_header('Content-type: '.$this->_supported_formats[$this->_format]);
     	
-        	$formatted_data = $this->{'_'.$this->_format}($data);
+        	$formatted_data = $this->{'_format_'.$this->_format}($data);
         	$this->output->set_output( $formatted_data );
         }
         
@@ -208,9 +219,14 @@ class REST_Controller extends Controller {
     	return array_key_exists($key, $this->_put_args) ? $this->input->xss_clean( $this->_put_args[$key] ) : FALSE ;
     }
     
+    public function delete($key)
+    {
+    	return array_key_exists($key, $this->_delete_args) ? $this->input->xss_clean( $this->_delete_args[$key] ) : FALSE ;
+    }
+    
     // SECURITY FUNCTIONS ---------------------------------------------------------
     
-    private function _checkLogin($username = '', $password = NULL)
+    private function _check_login($username = '', $password = NULL)
     {
 		if(empty($username))
 		{
@@ -236,48 +252,50 @@ class REST_Controller extends Controller {
 		return TRUE;
     }
     
-    private function _prepareBasicAuth()
+    private function _prepare_basic_auth()
     {
     	$username = NULL;
     	$password = NULL;
     	
     	// mod_php
-		if (isset($_SERVER['PHP_AUTH_USER'])) 
+		if ($this->input->server('PHP_AUTH_USER')) 
 		{
-		    $username = $_SERVER['PHP_AUTH_USER'];
-		    $password = $_SERVER['PHP_AUTH_PW'];
+		    $username = $this->input->server('PHP_AUTH_USER');
+		    $password = $this->input->server('PHP_AUTH_PW');
 		}
 		
 		// most other servers
-		elseif (isset($_SERVER['HTTP_AUTHENTICATION']))
+		elseif ( $this->input->server('HTTP_AUTHENTICATION') )
 		{
-			if (strpos(strtolower($_SERVER['HTTP_AUTHENTICATION']),'basic')===0)
+			if (strpos(strtolower($this->input->server('HTTP_AUTHENTICATION')),'basic') === 0)
 			{
-				list($username,$password) = explode(':',base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
+				list($username,$password) = explode(':',base64_decode(substr($this->input->server('HTTP_AUTHORIZATION'), 6)));
 			}  
 		}
 		
-		if ( !$this->_checkLogin($username, $password) )
+		if ( !$this->_check_login($username, $password) )
 		{
-		    $this->_forceLogin();
+		    $this->_force_login();
 		}
 		
     }
     
-    private function _prepareDigestAuth()
+    private function _prepare_digest_auth()
     {
     	$uniqid = uniqid(""); // Empty argument for backward compatibility
 	   
 	    // We need to test which server authentication variable to use
 	    // because the PHP ISAPI module in IIS acts different from CGI
-	    if(isset($_SERVER['PHP_AUTH_DIGEST']))
+	    if($this->input->server('PHP_AUTH_DIGEST'))
 	    {
-	        $digest_string = $_SERVER['PHP_AUTH_DIGEST'];
+	        $digest_string = $this->input->server('PHP_AUTH_DIGEST');
 	    }
-	    elseif(isset($_SERVER['HTTP_AUTHORIZATION']))
+	    
+	    elseif($this->input->server('HTTP_AUTHORIZATION'))
 	    {
-	        $digest_string = $_SERVER['HTTP_AUTHORIZATION'];
+	        $digest_string = $this->input->server('HTTP_AUTHORIZATION');
 	    }
+	    
 	    else
 	    {
 	    	$digest_string = "";
@@ -288,16 +306,16 @@ class REST_Controller extends Controller {
 	       a wrong auth. informations. */
 	    if ( empty($digest_string) )
 	    {
-	        $this->_forceLogin($uniqid);
+	        $this->_force_login($uniqid);
 	    }
 
 	    // We need to retrieve authentication informations from the $auth_data variable
 		preg_match_all('@(username|nonce|uri|nc|cnonce|qop|response)=[\'"]?([^\'",]+)@', $digest_string, $matches);
 		$digest = array_combine($matches[1], $matches[2]); 
 
-		if ( !array_key_exists('username', $digest) || !$this->_checkLogin($digest['username']) )
+		if ( !array_key_exists('username', $digest) || !$this->_check_login($digest['username']) )
 		{
-			$this->_forceLogin($uniqid);
+			$this->_force_login($uniqid);
         }
 		
 		$valid_logins =& $this->config->item('rest_valid_logins');
@@ -318,7 +336,7 @@ class REST_Controller extends Controller {
     }
     
     
-    private function _forceLogin($nonce = '')
+    private function _force_login($nonce = '')
     {
 	    header('HTTP/1.0 401 Unauthorized');
 	    header('HTTP/1.1 401 Unauthorized');
@@ -336,11 +354,22 @@ class REST_Controller extends Controller {
 	    echo 'Text to send if user hits Cancel button';
 	    die();
     }
-    
+
+    // Force it into an array
+    private function _force_loopable($data)
+    {
+    	// Force it to be something useful
+		if(!is_array($data) && !is_object($data))
+		{
+			$data = (array) $data;
+		}
+		
+		return $data;
+    }
     // FORMATING FUNCTIONS ---------------------------------------------------------
     
     // Format XML for output
-    private function _xml($data = array(), $structure = NULL, $basenode = 'xml')
+    private function _format_xml($data = array(), $structure = NULL, $basenode = 'xml')
     {
     	// turn off compatibility mode as simple xml throws a wobbly if you don't.
 		if (ini_get('zend.ze1_compatibility_mode') == 1)
@@ -354,6 +383,7 @@ class REST_Controller extends Controller {
 		}
 
 		// loop through the data passed in.
+		$data = $this->_force_loopable($data);
 		foreach($data as $key => $value)
 		{
 			// no numeric keys in our xml please!
@@ -393,7 +423,7 @@ class REST_Controller extends Controller {
     
     
     // Format Raw XML for output
-    private function _rawxml($data = array(), $structure = NULL, $basenode = 'xml')
+    private function _format_rawxml($data = array(), $structure = NULL, $basenode = 'xml')
     {
     	// turn off compatibility mode as simple xml throws a wobbly if you don't.
 		if (ini_get('zend.ze1_compatibility_mode') == 1)
@@ -407,7 +437,8 @@ class REST_Controller extends Controller {
 		}
 
 		// loop through the data passed in.
-		foreach($data as $key => $value)
+		$data = $this->_force_loopable($data);
+		foreach( $data as $key => $value)
 		{
 			// no numeric keys in our xml please!
 			if (is_numeric($key))
@@ -445,7 +476,7 @@ class REST_Controller extends Controller {
     }
     
     // Format HTML for output
-    private function _html($data = array())
+    private function _format_html($data = array())
     {
 		// Multi-dimentional array
 		if(isset($data[0]))
@@ -473,7 +504,7 @@ class REST_Controller extends Controller {
     }
     
     // Format HTML for output
-    private function _csv($data = array())
+    private function _format_csv($data = array())
     {
     	// Multi-dimentional array
 		if(isset($data[0]))
@@ -498,23 +529,22 @@ class REST_Controller extends Controller {
     }
     
     // Encode as JSON
-    private function _json($data = array())
+    private function _format_json($data = array())
     {
     	return json_encode($data);
     }
     
     // Encode as Serialized array
-    private function _serialize($data = array())
+    private function _format_serialize($data = array())
     {
     	return serialize($data);
     }
     
     // Encode raw PHP
-    private function _php($data = array())
+    private function _format_php($data = array())
     {
     	return var_export($data, TRUE);
     }
-    
     
 }
 ?>
