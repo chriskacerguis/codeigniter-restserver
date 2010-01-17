@@ -1,10 +1,10 @@
 <?php
 
-require(APPPATH.'libraries/REST_Controller.php');
+require(APPPATH.'/libraries/REST_Controller.php');
 
 class Example_api extends REST_Controller {
 
-    function user_get()
+	function user_get()
     {
         if(!$this->get('id'))
         {
@@ -40,10 +40,11 @@ class Example_api extends REST_Controller {
     
     function user_delete()
     {
-        //$this->some_model->deletesomething( $this->get('id') );
-        $message = array('id' => $this->get('id'), 'message' => 'DELETED!');
+        $this->response($this->delete('id'), 200);
+    	//$this->some_model->deletesomething( $this->get('id') );
+//        $message = array('id' => $this->get('id'), 'message' => 'DELETED!');
         
-        $this->response($message, 200); // 200 being the HTTP response code
+  //      $this->response($message, 200); // 200 being the HTTP response code
     }
     
     function users_get()

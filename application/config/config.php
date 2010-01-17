@@ -41,7 +41,7 @@ $config['index_page'] = "index.php";
 | 'ORIG_PATH_INFO'	Uses the ORIG_PATH_INFO
 |
 */
-$config['uri_protocol']	= "AUTO";
+$config['uri_protocol']	= "PATH_INFO"; // You need to use PATH_INFO to enable ?var=somthing strings
 
 /*
 |--------------------------------------------------------------------------
@@ -148,7 +148,7 @@ $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
 | use segment based URLs.
 |
 */
-$config['enable_query_strings'] = FALSE;
+$config['enable_query_strings'] = TRUE;
 $config['controller_trigger'] 	= 'c';
 $config['function_trigger'] 	= 'm';
 $config['directory_trigger'] 	= 'd'; // experimental not currently in use
@@ -173,7 +173,7 @@ $config['directory_trigger'] 	= 'd'; // experimental not currently in use
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 3;
 
 /*
 |--------------------------------------------------------------------------
