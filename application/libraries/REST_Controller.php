@@ -18,7 +18,7 @@ class REST_Controller extends Controller {
 		'xml' 		=> 'application/xml',
 		'rawxml' 	=> 'application/xml',
 		'json' 		=> 'application/json',
-		'serialize' => 'text/plain',
+		'serialize' => 'application/vnd.php.serialized',
 		'php' 		=> 'text/plain',
 		'html' 		=> 'text/html',
 		'csv' 		=> 'application/csv'
