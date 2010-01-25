@@ -1,14 +1,14 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class REST_Controller extends Controller {
-    
-    // Not what you'd think, set this in a controller to use a default format
+class REST_Controller extends Controller
+{
+    // Set this in a controller to use a default format
     protected $rest_format = NULL;
     
     private $_method;
     private $_format;
     
-    public $_get_args = array();
+    private $_get_args = array();
     private $_put_args = array();
     private $_delete_args = array();
     private $_args = array();
@@ -44,9 +44,6 @@ class REST_Controller extends Controller {
         {
         	$this->_prepare_digest_auth();
         }
-        
-        // Set caching based on the REST cache config item
-        $this->output->cache( $this->config->item('rest_cache') );
         
         switch($this->_method)
         {
@@ -97,7 +94,7 @@ class REST_Controller extends Controller {
      * 
      * Takes pure data and optionally a status code, then creates the response
      */
-    function response($data = '', $http_code = 200)
+    function response($data = array(), $http_code = 200)
     {
    		if(empty($data))
     	{
@@ -110,7 +107,7 @@ class REST_Controller extends Controller {
         // If the format method exists, call and return the output in that format
         if(method_exists($this, '_format_'.$this->_format))
         {
-	    	// Set a XML header
+	    	// Set the correct format header
 	    	$this->output->set_header('Content-type: '.$this->_supported_formats[$this->_format]);
     	
         	$formatted_data = $this->{'_format_'.$this->_format}($data);
@@ -204,24 +201,29 @@ class REST_Controller extends Controller {
     
     // INPUT FUNCTION --------------------------------------------------------------
     
-    public function get($key)
+    public function get($key, $xss_clean = TRUE)
     {
-    	return array_key_exists($key, $this->_get_args) ? $this->input->xss_clean( $this->_get_args[$key] ) : $this->input->get($key) ;
+    	return array_key_exists($key, $this->_get_args) ? $this->_xss_clean( $this->_get_args[$key], $xss_clean ) : $this->input->get($key, $xss_clean) ;
     }
     
-    public function post($key)
+    public function post($key, $xss_clean = TRUE)
     {
-    	return $this->input->post($key);
+    	return $this->input->post($key, $xss_clean);
     }
     
-    public function put($key)
+    public function put($key, $xss_clean = TRUE)
     {
-    	return array_key_exists($key, $this->_put_args) ? $this->input->xss_clean( $this->_put_args[$key] ) : FALSE ;
+    	return array_key_exists($key, $this->_put_args) ? $this->_xss_clean( $this->_put_args[$key], $xss_clean ) : FALSE ;
     }
     
-    public function delete($key)
+    public function delete($key, $xss_clean = TRUE)
     {
-    	return array_key_exists($key, $this->_delete_args) ? $this->input->xss_clean( $this->_delete_args[$key] ) : FALSE ;
+    	return array_key_exists($key, $this->_delete_args) ? $this->_xss_clean( $this->_delete_args[$key], $xss_clean ) : FALSE ;
+    }
+    
+    private function _xss_clean($val, $bool)
+    {
+    	return $bool ? $this->input->xss_clean($val) : $val;
     }
     
     // SECURITY FUNCTIONS ---------------------------------------------------------

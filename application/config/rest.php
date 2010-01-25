@@ -2,18 +2,6 @@
 
 /*
 |--------------------------------------------------------------------------
-| REST Login
-|--------------------------------------------------------------------------
-|
-| Is login required and if so, which type of login?
-|
-|	'' = no login required, 'basic' = unsecure login, 'digest' = more secure login
-|
-*/
-$config['rest_auth'] = '';
-
-/*
-|--------------------------------------------------------------------------
 | REST Realm
 |--------------------------------------------------------------------------
 |
@@ -26,27 +14,27 @@ $config['rest_realm'] = 'REST API';
 
 /*
 |--------------------------------------------------------------------------
-| REST Login usernames
+| REST Login
 |--------------------------------------------------------------------------
 |
-| Is login required
+| Is login required and if so, which type of login?
 |
 |	'' = no login required, 'basic' = unsecure login, 'digest' = more secure login
 |
 */
-$config['rest_valid_logins'] = array('admin' => '1234');
+$config['rest_auth'] = 'digest';
 
 /*
 |--------------------------------------------------------------------------
-| REST Cache
+| REST Login usernames
 |--------------------------------------------------------------------------
 |
-| How many MINUTES should output be cached?
+| Array of usernames and passwords for login
 |
-|	0 = no cache
+|	array('admin' => '1234')
 |
 */
-$config['rest_cache'] = 0;
+$config['rest_valid_logins'] = array('admin' => '1234');
 
 /*
 |--------------------------------------------------------------------------
@@ -60,7 +48,6 @@ $config['rest_cache'] = 0;
 |
 */
 $config['rest_ignore_http_accept'] = FALSE;
-
 
 /* End of file config.php */
 /* Location: ./system/application/config/rest.php */
