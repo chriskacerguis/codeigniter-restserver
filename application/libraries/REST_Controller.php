@@ -404,7 +404,7 @@ class REST_Controller extends Controller
 			{
 				$node = $structure->addChild($key);
 				// recrusive call.
-				$this->_xml($value, $node, $basenode);
+				$this-> _format_xml($value, $node, $basenode);
 			}
 			else
 			{
@@ -458,7 +458,7 @@ class REST_Controller extends Controller
 			{
 				$node = $structure->addChild($key);
 				// recrusive call.
-				$this->_xml($value, $node, $basenode);
+				$this->_format_rawxml($value, $node, $basenode);
 			}
 			else
 			{
