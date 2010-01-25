@@ -6,8 +6,6 @@ class Example_api extends REST_Controller
 {
 	function user_get()
     {
-		$this->response('HAI!', 200);
-/*
         if(!$this->get('id'))
         {
         	$this->response(NULL, 400);
@@ -31,7 +29,6 @@ class Example_api extends REST_Controller
         {
             $this->response(NULL, 404);
         }
-*/
     }
     
     function user_post()
@@ -44,11 +41,10 @@ class Example_api extends REST_Controller
     
     function user_delete()
     {
-        $this->response($this->delete('id'), 200);
     	//$this->some_model->deletesomething( $this->get('id') );
-//        $message = array('id' => $this->get('id'), 'message' => 'DELETED!');
+        $message = array('id' => $this->get('id'), 'message' => 'DELETED!');
         
-  //      $this->response($message, 200); // 200 being the HTTP response code
+        $this->response($message, 200); // 200 being the HTTP response code
     }
     
     function users_get()
