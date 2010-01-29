@@ -400,7 +400,7 @@ class REST_Controller extends Controller
 			$key = preg_replace('/[^a-z]/i', '', $key);
 
 			// if there is another array found recrusively call this function
-			if (is_array($value))
+			if (is_array($value) || is_object($value))
 			{
 				$node = $structure->addChild($key);
 				// recrusive call.
@@ -454,7 +454,7 @@ class REST_Controller extends Controller
 			$key = preg_replace('/[^a-z0-9_-]/i', '', $key);
 
 			// if there is another array found recrusively call this function
-			if (is_array($value))
+			if (is_array($value) || is_object($value))
 			{
 				$node = $structure->addChild($key);
 				// recrusive call.
