@@ -18,7 +18,7 @@ class Example_api extends REST_Controller
 			3 => array('id' => 3, 'name' => 'Scotty', 'email' => 'example3@example.com', 'fact' => 'Is a Scott!'),
 		);
 		
-    	$user = $users[$this->get('id')];
+    	$user = @$users[$this->get('id')];
     	
         if($user)
         {
@@ -27,7 +27,7 @@ class Example_api extends REST_Controller
 
         else
         {
-            $this->response(NULL, 404);
+            $this->response(array('error' => 'User could not be found'), 404);
         }
     }
     
@@ -63,7 +63,7 @@ class Example_api extends REST_Controller
 
         else
         {
-            $this->response(NULL, 404);
+            $this->response(array('error' => 'Couldn\'t find any users!'), 404);
         }
     }
     
