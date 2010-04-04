@@ -129,8 +129,23 @@ class REST_Controller extends Controller
      */
     private function _detect_format()
     {
-    	// A format has been passed in the URL and it is supported
-    	if(array_key_exists('format', $this->_args) && array_key_exists($this->_args['format'], $this->_supported_formats))
+		$pattern = '/\.(' . implode( '|', array_keys($this->_supported_formats) ) . ')$/';
+
+		// Check if a file extension is used
+		if(preg_match($pattern, end($this->_get_args), $matches))
+        {
+			// The key of the last argument
+			$last_key = end( array_keys($this->_get_args));
+
+			// Remove the extension from arguments too
+			$this->_get_args[$last_key] = preg_replace($pattern, '', $this->_get_args[$last_key]);
+			$this->_args[$last_key] = preg_replace($pattern, '', $this->_args[$last_key]);
+
+			return $matches[1];
+        }
+		
+    	// A format has been passed as an argument in the URL and it is supported
+    	if(isset($this->_args['format']) && isset($this->_supported_formats))
     	{
     		return $this->_args['format'];
     	}
