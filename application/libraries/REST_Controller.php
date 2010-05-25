@@ -216,23 +216,43 @@ class REST_Controller extends Controller
     
     // INPUT FUNCTION --------------------------------------------------------------
     
-    public function get($key, $xss_clean = TRUE)
+    public function get($key = NULL, $xss_clean = TRUE)
     {
+		if($key === NULL)
+		{
+			return $this->_get_args;
+		}
+		
     	return array_key_exists($key, $this->_get_args) ? $this->_xss_clean( $this->_get_args[$key], $xss_clean ) : $this->input->get($key, $xss_clean) ;
     }
     
-    public function post($key, $xss_clean = TRUE)
+    public function post($key = NULL, $xss_clean = TRUE)
     {
-    	return $this->input->post($key, $xss_clean);
+		if($key === NULL)
+		{
+			return $this->_post_args;
+		}
+		
+    	return $this->input->post($key = NULL, $xss_clean);
     }
     
-    public function put($key, $xss_clean = TRUE)
+    public function put($key = NULL, $xss_clean = TRUE)
     {
+		if($key === NULL)
+		{
+			return $this->_put_args;
+		}
+
     	return array_key_exists($key, $this->_put_args) ? $this->_xss_clean( $this->_put_args[$key], $xss_clean ) : FALSE ;
     }
     
-    public function delete($key, $xss_clean = TRUE)
+    public function delete($key = NULL, $xss_clean = TRUE)
     {
+		if($key === NULL)
+		{
+			return $this->_delete_args;
+		}
+
     	return array_key_exists($key, $this->_delete_args) ? $this->_xss_clean( $this->_delete_args[$key], $xss_clean ) : FALSE ;
     }
     
