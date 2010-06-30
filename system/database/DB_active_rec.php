@@ -6,7 +6,7 @@
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -707,7 +707,7 @@ class CI_DB_active_record extends CI_DB_driver {
 
 			$prefix = (count($this->ar_like) == 0) ? '' : $type;
 
-			$v = $this->escape_str($v);
+			$v = $this->escape_like_str($v);
 
 			if ($side == 'before')
 			{
@@ -720,6 +720,12 @@ class CI_DB_active_record extends CI_DB_driver {
 			else
 			{
 				$like_statement = $prefix." $k $not LIKE '%{$v}%'";
+			}
+			
+			// some platforms require an escape sequence definition for LIKE wildcards
+			if ($this->_like_escape_str != '')
+			{
+				$like_statement = $like_statement.sprintf($this->_like_escape_str, $this->_like_escape_char);
 			}
 			
 			$this->ar_like[] = $like_statement;
@@ -1374,7 +1380,7 @@ class CI_DB_active_record extends CI_DB_driver {
 			$this->limit($limit);
 		}
 
-		if (count($this->ar_where) == 0 && count($this->ar_wherein) == 0 && count($this->ar_like))
+		if (count($this->ar_where) == 0 && count($this->ar_wherein) == 0 && count($this->ar_like) == 0)
 		{
 			if ($this->db_debug)
 			{

@@ -6,7 +6,7 @@
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -460,7 +460,7 @@ if ( ! function_exists('human_to_unix'))
 		$hour = (strlen($ex['0']) == 1) ? '0'.$ex['0'] : $ex['0'];
 		$min  = (strlen($ex['1']) == 1) ? '0'.$ex['1'] : $ex['1'];
 
-		if (isset($ex['2']) AND ereg("[0-9]{1,2}", $ex['2']))
+		if (isset($ex['2']) && preg_match('/[0-9]{1,2}/', $ex['2']))
 		{
 			$sec  = (strlen($ex['2']) == 1) ? '0'.$ex['2'] : $ex['2'];
 		}

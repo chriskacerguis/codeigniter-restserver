@@ -6,7 +6,7 @@
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -350,7 +350,7 @@ class CI_Image_lib {
 	{
 		$protocol = 'image_process_'.$this->image_library;
 
-		if (eregi("gd2$", $protocol))
+		if (preg_match('/gd2$/i', $protocol))
 		{
 			$protocol = 'image_process_gd';
 		}
@@ -373,7 +373,7 @@ class CI_Image_lib {
 	{
 		$protocol = 'image_process_'.$this->image_library;
 
-		if (eregi("gd2$", $protocol))
+		if (preg_match('/gd2$/i', $protocol))
 		{
 			$protocol = 'image_process_gd';
 		}
@@ -559,9 +559,9 @@ class CI_Image_lib {
 			return FALSE;
 		}
 
-		if ( ! eregi("convert$", $this->library_path))
+		if ( ! preg_match("/convert$/i", $this->library_path))
 		{
-			if ( ! eregi("/$", $this->library_path)) $this->library_path .= "/";
+			$this->library_path = rtrim($this->library_path, '/').'/';
 
 			$this->library_path .= 'convert';
 		}

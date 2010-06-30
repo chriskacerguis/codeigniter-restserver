@@ -6,7 +6,7 @@
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -38,7 +38,7 @@ class CI_Xmlrpc {
 	var $xmlrpcBoolean	= 'boolean';
 	var $xmlrpcDouble	= 'double';	
 	var $xmlrpcString	= 'string';
-	var $xmlrpcDateTime	= 'datetime.iso8601';
+	var $xmlrpcDateTime	= 'dateTime.iso8601';
 	var $xmlrpcBase64	= 'base64';
 	var $xmlrpcArray	= 'array';
 	var $xmlrpcStruct	= 'struct';
@@ -231,7 +231,7 @@ class CI_Xmlrpc {
 	{
 		if (is_array($value) && isset($value['0']))
 		{
-			if ( ! isset($value['1']) OR ! isset($this->xmlrpcTypes[strtolower($value['1'])]))
+			if ( ! isset($value['1']) OR (! isset($this->xmlrpcTypes[$value['1']])))
 			{
 				if (is_array($value[0]))
 				{
@@ -1351,13 +1351,13 @@ class XML_RPC_Values extends CI_Xmlrpc
 				switch ($typ)
 				{
 					case $this->xmlrpcBase64:
-						$rs .= "<{$typ}>" . base64_encode($val) . "</{$typ}>\n";
+						$rs .= "<{$typ}>" . base64_encode((string)$val) . "</{$typ}>\n";
 					break;
 					case $this->xmlrpcBoolean:
-						$rs .= "<{$typ}>" . ($val ? '1' : '0') . "</{$typ}>\n";
+						$rs .= "<{$typ}>" . ((bool)$val ? '1' : '0') . "</{$typ}>\n";
 					break;
 					case $this->xmlrpcString:
-						$rs .= "<{$typ}>" . htmlspecialchars($val). "</{$typ}>\n";
+						$rs .= "<{$typ}>" . htmlspecialchars((string)$val). "</{$typ}>\n";
 					break;
 					default:
 						$rs .= "<{$typ}>{$val}</{$typ}>\n";

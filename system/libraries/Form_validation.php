@@ -6,7 +6,7 @@
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -601,7 +601,7 @@ class CI_Form_validation {
 				// If the field isn't required and we just processed a callback we'll move on...
 				if ( ! in_array('required', $rules, TRUE) AND $result !== FALSE)
 				{
-					return;
+					continue;
 				}
 			}
 			else

@@ -6,7 +6,7 @@
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -257,18 +257,28 @@ class CI_DB_forge {
 		}
 
 		// add field info into field array, but we can only do one at a time
-		// so only grab the first field in the event there are more then one
-		$this->add_field(array_slice($field, 0, 1));
+		// so we cycle through
 
-		if (count($this->fields) == 0)
-		{	
-			show_error('Field information is required.');
+		foreach ($field as $k => $v)
+		{
+			$this->add_field(array($k => $field[$k]));		
+
+			if (count($this->fields) == 0)
+			{	
+				show_error('Field information is required.');
+			}
+			
+			$sql = $this->_alter_table('ADD', $this->db->dbprefix.$table, $this->fields, $after_field);
+
+			$this->_reset();
+	
+			if ($this->db->query($sql) === FALSE)
+			{
+				return FALSE;
+			}
 		}
-
-		$sql = $this->_alter_table('ADD', $this->db->dbprefix.$table, $this->fields, $after_field);
-
-		$this->_reset();
-		return $this->db->query($sql);
+		
+		return TRUE;
 	}
 
 	// --------------------------------------------------------------------
@@ -318,18 +328,28 @@ class CI_DB_forge {
 		}
 
 		// add field info into field array, but we can only do one at a time
-		// so only grab the first field in the event there are more then one
-		$this->add_field(array_slice($field, 0, 1));
+		// so we cycle through
 
-		if (count($this->fields) == 0)
-		{	
-			show_error('Field information is required.');
+		foreach ($field as $k => $v)
+		{
+			$this->add_field(array($k => $field[$k]));
+
+			if (count($this->fields) == 0)
+			{	
+				show_error('Field information is required.');
+			}
+		
+			$sql = $this->_alter_table('CHANGE', $this->db->dbprefix.$table, $this->fields);
+
+			$this->_reset();
+	
+			if ($this->db->query($sql) === FALSE)
+			{
+				return FALSE;
+			}
 		}
-
-		$sql = $this->_alter_table('CHANGE', $this->db->dbprefix.$table, $this->fields);
-
-		$this->_reset();
-		return $this->db->query($sql);
+		
+		return TRUE;
 	}
 
 	// --------------------------------------------------------------------

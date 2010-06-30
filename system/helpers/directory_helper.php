@@ -6,7 +6,7 @@
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -41,7 +41,7 @@
  */	
 if ( ! function_exists('directory_map'))
 {
-	function directory_map($source_dir, $top_level_only = FALSE)
+	function directory_map($source_dir, $top_level_only = FALSE, $hidden = FALSE)
 	{	
 		if ($fp = @opendir($source_dir))
 		{
@@ -50,7 +50,7 @@ if ( ! function_exists('directory_map'))
 			
 			while (FALSE !== ($file = readdir($fp)))
 			{
-				if (strncmp($file, '.', 1) == 0)
+				if (($hidden == FALSE && strncmp($file, '.', 1) == 0) OR ($file == '.' OR $file == '..'))
 				{
 					continue;
 				}
@@ -59,7 +59,7 @@ if ( ! function_exists('directory_map'))
 				{
 					$temp_array = array();
 				
-					$temp_array = directory_map($source_dir.$file.DIRECTORY_SEPARATOR);
+					$temp_array = directory_map($source_dir.$file.DIRECTORY_SEPARATOR, $top_level_only, $hidden);
 				
 					$filedata[$file] = $temp_array;
 				}
@@ -71,6 +71,10 @@ if ( ! function_exists('directory_map'))
 			
 			closedir($fp);
 			return $filedata;
+		}
+		else
+		{
+			return FALSE;
 		}
 	}
 }

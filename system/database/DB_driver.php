@@ -6,7 +6,7 @@
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -670,25 +670,45 @@ class CI_DB_driver {
 	 *
 	 * @access	public
 	 * @param	string
-	 * @return	integer		
+	 * @return	mixed		
 	 */	
 	function escape($str)
-	{	
-		switch (gettype($str))
+	{
+		if (is_string($str))
 		{
-			case 'string'	:	$str = "'".$this->escape_str($str)."'";
-				break;
-			case 'boolean'	:	$str = ($str === FALSE) ? 0 : 1;
-				break;
-			default			:	$str = ($str === NULL) ? 'NULL' : $str;
-				break;
-		}		
+			$str = "'".$this->escape_str($str)."'";
+		}
+		elseif (is_bool($str))
+		{
+			$str = ($str === FALSE) ? 0 : 1;
+		}
+		elseif (is_null($str))
+		{
+			$str = 'NULL';
+		}
 
 		return $str;
 	}
 
 	// --------------------------------------------------------------------
+	
+	/**
+	 * Escape LIKE String
+	 *
+	 * Calls the individual driver for platform
+	 * specific escaping for LIKE conditions
+	 * 
+	 * @access	public
+	 * @param	string
+	 * @return	mixed
+	 */
+    function escape_like_str($str)    
+    {    
+    	return $this->escape_str($str, TRUE);
+	}
 
+	// --------------------------------------------------------------------
+	
 	/**
 	 * Primary
 	 *
@@ -1289,7 +1309,13 @@ class CI_DB_driver {
 				{
 					$i++;
 				}
-				
+
+				// Verify table prefix and replace if necessary
+				if ($this->swap_pre != '' && strncmp($parts[$i], $this->swap_pre, strlen($this->swap_pre)) === 0)
+				{
+					$parts[$i] = preg_replace("/^".$this->swap_pre."(\S+?)/", $this->dbprefix."\\1", $parts[$i]);
+				}
+								
 				// We only add the table prefix if it does not already exist
 				if (substr($parts[$i], 0, strlen($this->dbprefix)) != $this->dbprefix)
 				{
@@ -1311,6 +1337,12 @@ class CI_DB_driver {
 		// Is there a table prefix?  If not, no need to insert it
 		if ($this->dbprefix != '')
 		{
+			// Verify table prefix and replace if necessary
+			if ($this->swap_pre != '' && strncmp($item, $this->swap_pre, strlen($this->swap_pre)) === 0)
+			{
+				$item = preg_replace("/^".$this->swap_pre."(\S+?)/", $this->dbprefix."\\1", $item);
+			}
+
 			// Do we prefix an item with no segments?
 			if ($prefix_single == TRUE AND substr($item, 0, strlen($this->dbprefix)) != $this->dbprefix)
 			{

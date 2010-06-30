@@ -6,7 +6,7 @@
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -123,7 +123,7 @@ class CI_Xmlrpcs extends CI_Xmlrpc
 		
 		header("Content-Type: text/xml");
 		header("Content-Length: ".strlen($payload));
-		echo $payload;
+		exit($payload);
 	}
 
 	//-------------------------------------
