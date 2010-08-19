@@ -3,6 +3,7 @@
 class REST_Controller extends Controller
 {
     protected $rest_format = NULL; // Set this in a controller to use a default format
+    protected $rest_permissions = NULL; // Set this in a controller to use a default format
 
 	protected $request;
 
@@ -10,9 +11,9 @@ class REST_Controller extends Controller
     
     private $_method;
     private $_format;
-	private $_allow = TRUE; // Assume innocent until proven guilty
     
     private $_get_args = array();
+    private $_post_args = array();
     private $_put_args = array();
     private $_delete_args = array();
     private $_args = array();
@@ -32,7 +33,7 @@ class REST_Controller extends Controller
     function __construct()
     {
         parent::Controller();
-        
+
 	    // How is this request being made? POST, DELETE, GET, PUT?
 	    $this->_method = $this->_detect_method();
 	    
@@ -66,7 +67,7 @@ class REST_Controller extends Controller
     	$this->_get_args = $this->uri->ruri_to_assoc();
     	
     	// Merge both for one mega-args variable
-    	$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_delete_args);
+    	$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_post_args, $this->_delete_args);
     	
     	// Which format should the data be returned in?
 	    $this->_format = $this->_detect_format();
@@ -75,14 +76,6 @@ class REST_Controller extends Controller
 		if(config_item('rest_database_group') AND (config_item('rest_enable_keys') OR config_item('rest_enable_logging')))
 		{
 			$this->rest->db = $this->load->database(config_item('rest_database_group'), TRUE);
-		}
-
-		// If we are checking for keys, and they have a shitty key, kick em out
-		if (config_item('rest_enable_keys') AND !$this->_detect_api_key())
-		{
-			$this->response(array('error' => 'Invalid API Key.'), 401);
-			$this->_allow = FALSE;
-			return;
 		}
     }
     
@@ -96,18 +89,48 @@ class REST_Controller extends Controller
     {
 		$controller_method = $object_called.'_'.$this->_method;
 
-		if(method_exists($this, $controller_method))
+		// Sure it exists, but can they do anything with it?
+		if ( ! method_exists($this, $controller_method))
 		{
-			if($this->_allow === TRUE)
+			$this->response(array('error' => 'Unknown method.'), 404);
+			return;
+		}
+
+		// Checking for keys? GET TO WORK!
+		if (config_item('rest_enable_keys'))
+		{
+			// Their key is shit
+			if ( ! $this->_detect_api_key())
 			{
-				$this->$controller_method();
+				$this->response(array('error' => 'Invalid API Key.'), 403);
+				return;
+			}
+
+			// Their key might not be shit, but is it good enough?
+			$authorized = ! (isset($this->rest_permissions[$controller_method]) AND $this->rest_permissions[$controller_method] > $this->rest->level);
+
+			// IM TELLIN!
+			if (config_item('rest_enable_logging'))
+			{
+				$this->_log_request($authorized);
+			}
+
+			// They don't have good enough perms
+			if ( ! $authorized)
+			{
+				$this->response(array('error' => 'This API key does not have enough permissions.'), 401);
+				return;
 			}
 		}
-		
-		else
+
+		// No key stuff, but record that stuff is happening
+		else if (config_item('rest_enable_logging'))
 		{
-			show_404();
+			$this->_log_request($authorized = TRUE);
 		}
+
+		// And...... GO!
+		$this->$controller_method();
     }
     
     /* 
@@ -233,11 +256,11 @@ class REST_Controller extends Controller
 
     	return 'get';
     }
-    
-    
-    /* 
+
+
+    /*
      * Detect API Key
-     * 
+     *
      * See if the user has provided an API key
      */
     private function _detect_api_key()
@@ -245,17 +268,38 @@ class REST_Controller extends Controller
 		// Find the key from server or arguments
     	if($key = isset($this->_args['API-Key']) ? $this->_args['API-Key'] : $this->input->server('HTTP_API_KEY'))
 		{
-			if ( ! $row = $this->rest->db->where('LOWER(key)', strtolower($key), FALSE)->get('keys')->row())
+			if ( ! $row = $this->rest->db->where('key', $key)->get('keys')->row())
 			{
 				return FALSE;
 			}
 
 			$this->rest->key = $row->key;
 			$this->rest->level = $row->level;
+
+			return TRUE;
 		}
 
 		// No key has been sent
     	return FALSE;
+    }
+
+
+    /*
+     * Log request
+     *
+     * Record the entry for awesomeness purposes
+     */
+    private function _log_request($authorized = FALSE)
+    {
+		return $this->rest->db->insert('logs', array(
+			'uri' => $this->uri->uri_string(),
+			'method' => $this->_method,
+			'params' => serialize($this->_args),
+			'api_key' => isset($this->rest->key) ? $this->rest->key : NULL,
+			'ip_address' => $this->input->ip_address(),
+			'time' => function_exists('now') ? now() : time(),
+			'authorized' => $authorized
+		));
     }
 
     // INPUT FUNCTION --------------------------------------------------------------
