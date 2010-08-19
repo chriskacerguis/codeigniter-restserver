@@ -2,11 +2,15 @@
 
 class REST_Controller extends Controller
 {
-    // Set this in a controller to use a default format
-    protected $rest_format = NULL;
+    protected $rest_format = NULL; // Set this in a controller to use a default format
+
+	protected $request;
+
+	protected $rest = NULL; // Stores DB, accept, headers, etc
     
     private $_method;
     private $_format;
+	private $_allow = TRUE; // Assume innocent until proven guilty
     
     private $_get_args = array();
     private $_put_args = array();
@@ -66,6 +70,20 @@ class REST_Controller extends Controller
     	
     	// Which format should the data be returned in?
 	    $this->_format = $this->_detect_format();
+
+		// Load DB if its enabled
+		if(config_item('rest_database_group') AND (config_item('rest_enable_keys') OR config_item('rest_enable_logging')))
+		{
+			$this->rest->db = $this->load->database(config_item('rest_database_group'), TRUE);
+		}
+
+		// If we are checking for keys, and they have a shitty key, kick em out
+		if (config_item('rest_enable_keys') AND !$this->_detect_api_key())
+		{
+			$this->response(array('error' => 'Invalid API Key.'), 401);
+			$this->_allow = FALSE;
+			return;
+		}
     }
     
     /* 
@@ -76,11 +94,14 @@ class REST_Controller extends Controller
      */
     function _remap($object_called)
     {
-    	$controller_method = $object_called.'_'.$this->_method;
-		
+		$controller_method = $object_called.'_'.$this->_method;
+
 		if(method_exists($this, $controller_method))
 		{
-			$this->$controller_method();
+			if($this->_allow === TRUE)
+			{
+				$this->$controller_method();
+			}
 		}
 		
 		else
@@ -214,6 +235,29 @@ class REST_Controller extends Controller
     }
     
     
+    /* 
+     * Detect API Key
+     * 
+     * See if the user has provided an API key
+     */
+    private function _detect_api_key()
+    {
+		// Find the key from server or arguments
+    	if($key = isset($this->_args['API-Key']) ? $this->_args['API-Key'] : $this->input->server('HTTP_API_KEY'))
+		{
+			if ( ! $row = $this->rest->db->where('LOWER(key)', strtolower($key), FALSE)->get('keys')->row())
+			{
+				return FALSE;
+			}
+
+			$this->rest->key = $row->key;
+			$this->rest->level = $row->level;
+		}
+
+		// No key has been sent
+    	return FALSE;
+    }
+
     // INPUT FUNCTION --------------------------------------------------------------
     
     public function get($key = NULL, $xss_clean = TRUE)
