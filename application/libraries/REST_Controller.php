@@ -5,12 +5,8 @@ class REST_Controller extends Controller
     protected $rest_format = NULL; // Set this in a controller to use a default format
     protected $rest_permissions = NULL; // Set this in a controller to use a default format
 
-	protected $request;
-
-	protected $rest = NULL; // Stores DB, accept, headers, etc
-    
-    private $_method;
-    private $_format;
+	protected $request = NULL; // Stores accept, language, body, headers, etc
+	protected $rest = NULL; // Stores DB, keys, key level, etc
     
     private $_get_args = array();
     private $_post_args = array();
@@ -35,25 +31,36 @@ class REST_Controller extends Controller
         parent::Controller();
 
 	    // How is this request being made? POST, DELETE, GET, PUT?
-	    $this->_method = $this->_detect_method();
+	    $this->request->method = $this->_detect_method();
 	    
         // Lets grab the config and get ready to party
         $this->load->config('rest');
 	    
-        if($this->config->item('rest_auth') == 'basic')
+        if ($this->config->item('rest_auth') == 'basic')
         {
         	$this->_prepare_basic_auth();
         }
         
-        elseif($this->config->item('rest_auth') == 'digest')
+        elseif ($this->config->item('rest_auth') == 'digest')
         {
         	$this->_prepare_digest_auth();
         }
         
-        switch($this->_method)
+		// Some Methods cant have a body
+		$this->request->body = NULL;
+
+        switch ($this->request->method)
         {
+        	case 'post':
+				// It might be a HTTP body
+				$this->request->body = file_get_contents('php://input');
+    		break;
+
         	case 'put':
-		    	// Set up out PUT variables
+				// It might be a HTTP body
+				$this->request->body = file_get_contents('php://input');
+
+		    	// Try and set up our PUT variables anyway in case its not
 		    	parse_str(file_get_contents('php://input'), $this->_put_args);
     		break;
     		
@@ -70,10 +77,10 @@ class REST_Controller extends Controller
     	$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_post_args, $this->_delete_args);
     	
     	// Which format should the data be returned in?
-	    $this->_format = $this->_detect_format();
+	    $this->request->format = $this->_detect_format();
 
 		// Load DB if its enabled
-		if(config_item('rest_database_group') AND (config_item('rest_enable_keys') OR config_item('rest_enable_logging')))
+		if (config_item('rest_database_group') AND (config_item('rest_enable_keys') OR config_item('rest_enable_logging')))
 		{
 			$this->rest->db = $this->load->database(config_item('rest_database_group'), TRUE);
 		}
@@ -87,7 +94,7 @@ class REST_Controller extends Controller
      */
     function _remap($object_called)
     {
-		$controller_method = $object_called.'_'.$this->_method;
+		$controller_method = $object_called.'_'.$this->request->method;
 
 		// Sure it exists, but can they do anything with it?
 		if ( ! method_exists($this, $controller_method))
@@ -140,7 +147,7 @@ class REST_Controller extends Controller
      */
     function response($data = array(), $http_code = 200)
     {
-   		if(empty($data))
+   		if (empty($data))
     	{
     		$this->output->set_status_header(404);
     		return;
@@ -149,19 +156,19 @@ class REST_Controller extends Controller
     	$this->output->set_status_header($http_code);
         
         // If the format method exists, call and return the output in that format
-        if(method_exists($this, '_format_'.$this->_format))
+        if (method_exists($this, '_format_'.$this->request->format))
         {
 	    	// Set the correct format header
-	    	$this->output->set_header('Content-type: '.$this->_supported_formats[$this->_format]);
+	    	$this->output->set_header('Content-type: '.$this->_supported_formats[$this->request->format]);
     	
-        	$formatted_data = $this->{'_format_'.$this->_format}($data);
-        	$this->output->set_output( $formatted_data );
+        	$formatted_data = $this->{'_format_'.$this->request->format}($data);
+        	$this->output->set_output($formatted_data);
         }
         
         // Format not supported, output directly
         else
 		{
-        	$this->output->set_output( $data );
+        	$this->output->set_output($data);
         }
     }
 
@@ -176,7 +183,7 @@ class REST_Controller extends Controller
 		$pattern = '/\.(' . implode( '|', array_keys($this->_supported_formats) ) . ')$/';
 
 		// Check if a file extension is used
-		if(preg_match($pattern, end($this->_get_args), $matches))
+		if (preg_match($pattern, end($this->_get_args), $matches))
         {
 			// The key of the last argument
 			$last_key = end( array_keys($this->_get_args));
@@ -189,22 +196,22 @@ class REST_Controller extends Controller
         }
 		
     	// A format has been passed as an argument in the URL and it is supported
-    	if(isset($this->_args['format']) && isset($this->_supported_formats))
+    	if (isset($this->_args['format']) AND isset($this->_supported_formats))
     	{
     		return $this->_args['format'];
     	}
     	
     	// Otherwise, check the HTTP_ACCEPT (if it exists and we are allowed)
-	    if($this->config->item('rest_ignore_http_accept') === FALSE && $this->input->server('HTTP_ACCEPT'))
+	    if ($this->config->item('rest_ignore_http_accept') === FALSE AND $this->input->server('HTTP_ACCEPT'))
 	    {
 	    	// Check all formats against the HTTP_ACCEPT header
 	    	foreach(array_keys($this->_supported_formats) as $format)
 	    	{
 		    	// Has this format been requested?
-		    	if(strpos($this->input->server('HTTP_ACCEPT'), $format) !== FALSE)
+		    	if (strpos($this->input->server('HTTP_ACCEPT'), $format) !== FALSE)
 		    	{
 		    		// If not HTML or XML assume its right and send it on its way
-		    		if($format != 'html' && $format != 'xml')
+		    		if ($format != 'html' AND $format != 'xml')
 		    		{
 		    			
 		    			return $format;		    			
@@ -214,12 +221,13 @@ class REST_Controller extends Controller
 		    		else
 		    		{
 		    			// If it is truely HTML, it wont want any XML
-		    			if($format == 'html' && strpos($this->input->server('HTTP_ACCEPT'), 'xml') === FALSE)
+		    			if ($format == 'html' AND strpos($this->input->server('HTTP_ACCEPT'), 'xml') === FALSE)
 		    			{
 		    				return $format;
 		    			}
+						
 		    			// If it is truely XML, it wont want any HTML
-		    			elseif($format == 'xml' && strpos($this->input->server('HTTP_ACCEPT'), 'html') === FALSE)
+		    			elseif ($format == 'xml' AND strpos($this->input->server('HTTP_ACCEPT'), 'html') === FALSE)
 		    			{
 		    				return $format;
 		    			}
@@ -230,7 +238,7 @@ class REST_Controller extends Controller
 	    } // End HTTP_ACCEPT checking
 	    	
 		// Well, none of that has worked! Let's see if the controller has a default
-		if($this->rest_format != NULL)
+		if ($this->rest_format != NULL)
 		{
 			return $this->rest_format;
 		}	    	
@@ -249,7 +257,7 @@ class REST_Controller extends Controller
     private function _detect_method()
     {
     	$method = strtolower($this->input->server('REQUEST_METHOD'));
-    	if(in_array($method, array('get', 'delete', 'post', 'put')))
+    	if (in_array($method, array('get', 'delete', 'post', 'put')))
     	{
 	    	return $method;
     	}
@@ -266,7 +274,7 @@ class REST_Controller extends Controller
     private function _detect_api_key()
     {
 		// Find the key from server or arguments
-    	if($key = isset($this->_args['API-Key']) ? $this->_args['API-Key'] : $this->input->server('HTTP_API_KEY'))
+    	if ($key = isset($this->_args['API-Key']) ? $this->_args['API-Key'] : $this->input->server('HTTP_API_KEY'))
 		{
 			if ( ! $row = $this->rest->db->where('key', $key)->get('keys')->row())
 			{
@@ -293,7 +301,7 @@ class REST_Controller extends Controller
     {
 		return $this->rest->db->insert('logs', array(
 			'uri' => $this->uri->uri_string(),
-			'method' => $this->_method,
+			'method' => $this->request->method,
 			'params' => serialize($this->_args),
 			'api_key' => isset($this->rest->key) ? $this->rest->key : NULL,
 			'ip_address' => $this->input->ip_address(),
@@ -306,7 +314,7 @@ class REST_Controller extends Controller
     
     public function get($key = NULL, $xss_clean = TRUE)
     {
-		if($key === NULL)
+		if ($key === NULL)
 		{
 			return $this->_get_args;
 		}
@@ -316,7 +324,7 @@ class REST_Controller extends Controller
     
     public function post($key = NULL, $xss_clean = TRUE)
     {
-		if($key === NULL)
+		if ($key === NULL)
 		{
 			return $this->_post_args;
 		}
@@ -326,7 +334,7 @@ class REST_Controller extends Controller
     
     public function put($key = NULL, $xss_clean = TRUE)
     {
-		if($key === NULL)
+		if ($key === NULL)
 		{
 			return $this->_put_args;
 		}
@@ -336,7 +344,7 @@ class REST_Controller extends Controller
     
     public function delete($key = NULL, $xss_clean = TRUE)
     {
-		if($key === NULL)
+		if ($key === NULL)
 		{
 			return $this->_delete_args;
 		}
@@ -353,22 +361,22 @@ class REST_Controller extends Controller
     
     private function _check_login($username = '', $password = NULL)
     {
-		if(empty($username))
+		if (empty($username))
 		{
 			return FALSE;
 		}
 		
 		$valid_logins =& $this->config->item('rest_valid_logins');
 		
-		if(!array_key_exists($username, $valid_logins))
+		if (!array_key_exists($username, $valid_logins))
 		{
 			return FALSE;
 		}
 		
 		// If actually NULL (not empty string) then do not check it
-		if($password !== NULL)
+		if ($password !== NULL)
 		{
-			if($valid_logins[$username] != $password)
+			if ($valid_logins[$username] != $password)
 			{
 				return FALSE;
 			}
@@ -411,12 +419,12 @@ class REST_Controller extends Controller
 	   
 	    // We need to test which server authentication variable to use
 	    // because the PHP ISAPI module in IIS acts different from CGI
-	    if($this->input->server('PHP_AUTH_DIGEST'))
+	    if ($this->input->server('PHP_AUTH_DIGEST'))
 	    {
 	        $digest_string = $this->input->server('PHP_AUTH_DIGEST');
 	    }
 	    
-	    elseif($this->input->server('HTTP_AUTHORIZATION'))
+	    elseif ($this->input->server('HTTP_AUTHORIZATION'))
 	    {
 	        $digest_string = $this->input->server('HTTP_AUTHORIZATION');
 	    }
@@ -448,7 +456,7 @@ class REST_Controller extends Controller
 		
         // This is the valid response expected
 		$A1 = md5($digest['username'] . ':' . $this->config->item('rest_realm') . ':' . $valid_pass);
-		$A2 = md5(strtoupper($this->_method).':'.$digest['uri']);
+		$A2 = md5(strtoupper($this->request->method).':'.$digest['uri']);
 		$valid_response = md5($A1.':'.$digest['nonce'].':'.$digest['nc'].':'.$digest['cnonce'].':'.$digest['qop'].':'.$A2);
             
 		if ($digest['response'] != $valid_response)
@@ -466,17 +474,17 @@ class REST_Controller extends Controller
 	    header('HTTP/1.0 401 Unauthorized');
 	    header('HTTP/1.1 401 Unauthorized');
 	    
-    	if($this->config->item('rest_auth') == 'basic')
+    	if ($this->config->item('rest_auth') == 'basic')
         {
         	header('WWW-Authenticate: Basic realm="'.$this->config->item('rest_realm').'"');
         }
         
-        elseif($this->config->item('rest_auth') == 'digest')
+        elseif ($this->config->item('rest_auth') == 'digest')
         {
         	header('WWW-Authenticate: Digest realm="'.$this->config->item('rest_realm'). '" qop="auth" nonce="'.$nonce.'" opaque="'.md5($this->config->item('rest_realm')).'"');
         }
     	
-	    echo 'Text to send if user hits Cancel button';
+	    echo 'Not authorized.';
 	    die();
     }
 
@@ -484,7 +492,7 @@ class REST_Controller extends Controller
     private function _force_loopable($data)
     {
     	// Force it to be something useful
-		if(!is_array($data) && !is_object($data))
+		if (!is_array($data) AND !is_object($data))
 		{
 			$data = (array) $data;
 		}
@@ -529,6 +537,7 @@ class REST_Controller extends Controller
 				// recrusive call.
 				$this-> _format_xml($value, $node, $basenode);
 			}
+			
 			else
 			{
 				// add single node.
@@ -539,7 +548,6 @@ class REST_Controller extends Controller
 
 				$structure->addChild($key, $value);
 			}
-
 		}
     	
 		// pass back as string. or simple xml object if you want!
@@ -604,7 +612,7 @@ class REST_Controller extends Controller
     private function _format_html($data = array())
     {
 		// Multi-dimentional array
-		if(isset($data[0]))
+		if (isset($data[0]))
 		{
 			$headings = array_keys($data[0]);
 		}
@@ -632,7 +640,7 @@ class REST_Controller extends Controller
     private function _format_csv($data = array())
     {
     	// Multi-dimentional array
-		if(isset($data[0]))
+		if (isset($data[0]))
 		{
 			$headings = array_keys($data[0]);
 		}
@@ -670,6 +678,4 @@ class REST_Controller extends Controller
     {
     	return var_export($data, TRUE);
     }
-    
 }
-?>
