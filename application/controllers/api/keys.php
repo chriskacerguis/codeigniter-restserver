@@ -92,11 +92,9 @@ class Keys extends REST_Controller
 	 */
 	public function level_post()
     {
-		$this->load->helper('security');
-
 		$key = $this->post('key');
 		$new_level = $this->post('level');
-
+		
 		// Does this key even exist?
 		if ( ! self::_key_exists($key))
 		{
@@ -107,7 +105,7 @@ class Keys extends REST_Controller
 		// Update the key level
 		if (self::_update_key($key, array('level' => $new_level)))
 		{
-			$this->response(array('status' => 1, 'success' => $this->rest->db->last_query()), 200); // 201 = Created
+			$this->response(array('status' => 1, 'success' => 'Key was updated.'), 200); // 201 = Created
 		}
 
 		else
@@ -128,8 +126,6 @@ class Keys extends REST_Controller
 	 */
 	public function regenerate_post()
     {
-		$this->load->helper('security');
-		
 		$old_key = $this->post('key');
 		$key_details = self::_get_key($old_key);
 
@@ -164,6 +160,8 @@ class Keys extends REST_Controller
 	
 	private function _generate_key()
 	{
+		$this->load->helper('security');
+		
 		do
 		{
 			$salt = dohash(time().mt_rand());

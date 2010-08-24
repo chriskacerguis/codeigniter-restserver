@@ -112,7 +112,7 @@ class REST_Controller extends Controller
 			// Their key is shit
 			if ( ! $this->_detect_api_key())
 			{
-				$this->response(array('error' => 'Invalid API Key.'), 403);
+				$this->response(array('status' => 0, 'error' => 'Invalid API Key.'), 403);
 				return;
 			}
 
@@ -128,7 +128,7 @@ class REST_Controller extends Controller
 			// They don't have good enough perms
 			if ( ! $authorized)
 			{
-				$this->response(array('error' => 'This API key does not have enough permissions.'), 401);
+				$this->response(array('status' => 0, 'error' => 'This API key does not have enough permissions.'), 401);
 				return;
 			}
 		}
