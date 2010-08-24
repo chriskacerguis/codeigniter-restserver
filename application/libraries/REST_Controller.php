@@ -275,8 +275,11 @@ class REST_Controller extends Controller
      */
     private function _detect_api_key()
     {
+		// Work out the name of the SERVER entry based on config
+		$key_name = 'HTTP_'.strtoupper(str_replace('-', '_', config_item('rest_key_name')));
+
 		// Find the key from server or arguments
-    	if ($key = isset($this->_args['API-Key']) ? $this->_args['API-Key'] : $this->input->server('HTTP_API_KEY'))
+    	if ($key = isset($this->_args['API-Key']) ? $this->_args['API-Key'] : $this->input->server($key_name))
 		{
 			if ( ! $row = $this->rest->db->where('key', $key)->get('keys')->row())
 			{
