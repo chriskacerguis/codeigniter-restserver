@@ -16,7 +16,7 @@
 // This can be removed if you use __autoload() in config.php
 require(APPPATH.'/libraries/REST_Controller.php');
 
-class Example_api extends REST_Controller
+class Example extends REST_Controller
 {
 	function user_get()
     {

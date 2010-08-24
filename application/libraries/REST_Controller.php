@@ -75,9 +75,12 @@ class REST_Controller extends Controller
     	
     	// Merge both for one mega-args variable
     	$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_post_args, $this->_delete_args);
-    	
+
     	// Which format should the data be returned in?
 	    $this->request->format = $this->_detect_format();
+
+    	// Which format should the data be returned in?
+	    $this->request->lang = $this->_detect_lang();
 
 		// Load DB if its enabled
 		if (config_item('rest_database_group') AND (config_item('rest_enable_keys') OR config_item('rest_enable_logging')))
@@ -172,10 +175,9 @@ class REST_Controller extends Controller
         }
     }
 
-    
-    /* 
+    /*
      * Detect format
-     * 
+     *
      * Detect which format should be used to output the data
      */
     private function _detect_format()
@@ -293,6 +295,40 @@ class REST_Controller extends Controller
 
 
     /*
+     * Detect language(s)
+     *
+     * What language do they want it in?
+     */
+    private function _detect_lang()
+	{
+		if ( ! $lang = $this->input->server('HTTP_ACCEPT_LANGUAGE'))
+		{
+			return NULL;
+		}
+
+		// They might have sent a few, make it an array
+		if (strpos($lang, ',') !== FALSE)
+		{
+			$langs = explode(',', $lang);
+
+			$return_langs = array();
+			$i = 1;
+			foreach ($langs as $lang)
+			{
+				// Remove weight and strip space
+				list($lang) = explode(';', $lang);
+				$return_langs[] = trim($lang);
+			}
+
+			return $return_langs;
+		}
+
+		// Nope, just return the string
+		return $lang;
+	}
+
+
+    /*
      * Log request
      *
      * Record the entry for awesomeness purposes
@@ -303,7 +339,7 @@ class REST_Controller extends Controller
 			'uri' => $this->uri->uri_string(),
 			'method' => $this->request->method,
 			'params' => serialize($this->_args),
-			'api_key' => isset($this->rest->key) ? $this->rest->key : NULL,
+			'api_key' => isset($this->rest->key) ? $this->rest->key : '',
 			'ip_address' => $this->input->ip_address(),
 			'time' => function_exists('now') ? now() : time(),
 			'authorized' => $authorized

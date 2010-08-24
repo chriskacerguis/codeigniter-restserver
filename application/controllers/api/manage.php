@@ -18,7 +18,7 @@ require(APPPATH.'/libraries/REST_Controller.php');
 class Manage extends REST_Controller
 {
 	protected $rest_permissions = array(
-		'key_post' => 10,
+		'key_put' => 10,
 		'key_delete' => 10,
 	);
 
