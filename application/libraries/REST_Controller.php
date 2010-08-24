@@ -368,7 +368,7 @@ class REST_Controller extends Controller
 			return $this->_post_args;
 		}
 		
-    	return $this->input->post($key = NULL, $xss_clean);
+    	return $this->input->post($key, $xss_clean);
     }
     
     public function put($key = NULL, $xss_clean = TRUE)
