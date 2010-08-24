@@ -17,11 +17,11 @@ require(APPPATH.'/libraries/REST_Controller.php');
 
 class Keys extends REST_Controller
 {
-	protected $rest_permissions = array(
-		'index_put' => 10,
-		'index_delete' => 10,
-		'level_post' => 10,
-		'regenerate_post' => 10,
+	protected $methods = array(
+		'index_put' => array('level' => 10),
+		'index_delete' => array('level' => 10),
+		'level_post' => array('level' => 10),
+		'regenerate_post' => array('level' => 10),
 	);
 
 	/**
@@ -94,7 +94,7 @@ class Keys extends REST_Controller
     {
 		$key = $this->post('key');
 		$new_level = $this->post('level');
-		
+
 		// Does this key even exist?
 		if ( ! self::_key_exists($key))
 		{
@@ -105,12 +105,45 @@ class Keys extends REST_Controller
 		// Update the key level
 		if (self::_update_key($key, array('level' => $new_level)))
 		{
-			$this->response(array('status' => 1, 'success' => 'Key was updated.'), 200); // 201 = Created
+			$this->response(array('status' => 1, 'success' => 'Key was updated.'), 200); // 200 = OK
 		}
 
 		else
 		{
 			$this->response(array('status' => 0, 'error' => 'Could not update the key level.'), 500); // 500 = Internal Server Error
+		}
+    }
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Update Key
+	 *
+	 * Change the level
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function suspend_post()
+    {
+		$key = $this->post('key');
+
+		// Does this key even exist?
+		if ( ! self::_key_exists($key))
+		{
+			// NOOOOOOOOO!
+			$this->response(array('error' => 'Invalid API Key.'), 400);
+		}
+
+		// Update the key level
+		if (self::_update_key($key, array('level' => 0)))
+		{
+			$this->response(array('status' => 1, 'success' => 'Key was suspended.'), 200); // 200 = OK
+		}
+
+		else
+		{
+			$this->response(array('status' => 0, 'error' => 'Could not suspend the user.'), 500); // 500 = Internal Server Error
 		}
     }
 

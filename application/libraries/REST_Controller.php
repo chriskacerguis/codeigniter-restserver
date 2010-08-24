@@ -3,7 +3,8 @@
 class REST_Controller extends Controller
 {
     protected $rest_format = NULL; // Set this in a controller to use a default format
-    protected $rest_permissions = NULL; // Set this in a controller to use a default format
+    
+	protected $methods = array(); // contains a list of method properties such as limit, log and level
 
 	protected $request = NULL; // Stores accept, language, body, headers, etc
 	protected $rest = NULL; // Stores DB, keys, key level, etc
@@ -117,7 +118,7 @@ class REST_Controller extends Controller
 			}
 
 			// Their key might not be shit, but is it good enough?
-			$authorized = ! (isset($this->rest_permissions[$controller_method]) AND $this->rest_permissions[$controller_method] > $this->rest->level);
+			$authorized = ! (isset($this->methods[$controller_method]['level']) AND $this->methods[$controller_method]['level'] > $this->rest->level);
 
 			// IM TELLIN!
 			if (config_item('rest_enable_logging'))
