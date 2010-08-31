@@ -50,10 +50,10 @@ code {
 <p>Below are a few examples of the REST server library in use. Remember, we will only see GET methods looking through a browser.</p>
 
 <ul>
-	<li><a href="<?php echo site_url('example_api/users');?>">Users</a> - defaulting to XML</li>
-	<li><a href="<?php echo site_url('example_api/users/format/csv');?>">Users</a> - get it in CSV</li>
-	<li><a href="<?php echo site_url('example_api/user/id/1');?>">User #1</a> - defaulting to XML</li>
-	<li><a href="<?php echo site_url('example_api/user/id/1/format/json');?>">User #1</a> - get it in JSON</li>
+	<li><a href="<?php echo site_url('api/example/users');?>">Users</a> - defaulting to XML</li>
+	<li><a href="<?php echo site_url('api/example/users/format/csv');?>">Users</a> - get it in CSV</li>
+	<li><a href="<?php echo site_url('api/example/user/id/1');?>">User #1</a> - defaulting to XML</li>
+	<li><a href="<?php echo site_url('api/example/user/id/1/format/json');?>">User #1</a> - get it in JSON</li>
 </ul>
 
 <p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="http://codeigniter.com/user_guide/">User Guide</a>.</p>

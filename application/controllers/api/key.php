@@ -15,10 +15,10 @@
 // This can be removed if you use __autoload() in config.php
 require(APPPATH.'/libraries/REST_Controller.php');
 
-class Keys extends REST_Controller
+class Key extends REST_Controller
 {
 	protected $methods = array(
-		'index_put' => array('level' => 10),
+		'index_put' => array('level' => 10, 'limit' => 10),
 		'index_delete' => array('level' => 10),
 		'level_post' => array('level' => 10),
 		'regenerate_post' => array('level' => 10),
@@ -39,9 +39,10 @@ class Keys extends REST_Controller
 
 		// If no key level provided, give them a rubbish one
 		$level = $this->put('level') ? $this->put('level') : 1;
+		$ignore_limits = $this->put('ignore_limits') ? $this->put('ignore_limits') : 1;
 
 		// Insert the new key
-		if (self::_insert_key($key, $level))
+		if (self::_insert_key($key, array('level' => $level, 'ignore_limits' => $ignore_limits)))
 		{
 			$this->response(array('status' => 1, 'key' => $key), 201); // 201 = Created
 		}
@@ -105,7 +106,7 @@ class Keys extends REST_Controller
 		// Update the key level
 		if (self::_update_key($key, array('level' => $new_level)))
 		{
-			$this->response(array('status' => 1, 'success' => 'Key was updated.'), 200); // 200 = OK
+			$this->response(array('status' => 1, 'success' => 'API Key was updated.'), 200); // 200 = OK
 		}
 
 		else
@@ -173,7 +174,7 @@ class Keys extends REST_Controller
 		$new_key = self::_generate_key();
 
 		// Insert the new key
-		if (self::_insert_key($new_key, $key_details->level))
+		if (self::_insert_key($new_key, array('level' => $key_details->level, 'ignore_limits' => $key_details->ignore_limits)))
 		{
 			// Suspend old key
 			self::_update_key($old_key, array('level' => 0));
@@ -225,13 +226,14 @@ class Keys extends REST_Controller
 
 	// --------------------------------------------------------------------
 
-	private function _insert_key($key, $level)
+	private function _insert_key($key, $data)
 	{
-		return $this->rest->db->set(array(
-			'key' => $key,
-			'level' => $level,
-			'date_created' => function_exists('now') ? now() : time()
-		))->insert('keys');
+		var_dump($data);
+		
+		$data['key'] = $key;
+		$data['date_created'] = function_exists('now') ? now() : time();
+
+		return $this->rest->db->set($data)->insert('keys');
 	}
 
 	// --------------------------------------------------------------------

@@ -2,6 +2,18 @@
 
 /*
 |--------------------------------------------------------------------------
+| REST Format
+|--------------------------------------------------------------------------
+|
+| What format should the data be returned in by default?
+|
+|	Default: xml
+|
+*/
+$config['rest_default_format'] = 'xml';
+
+/*
+|--------------------------------------------------------------------------
 | REST Realm
 |--------------------------------------------------------------------------
 |
@@ -58,9 +70,18 @@ $config['rest_database_group'] = 'default';
 | If no key is provided, the request will return an error.
 |
 |	FALSE
+
+	CREATE TABLE `keys` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `key` varchar(40) NOT NULL,
+	  `level` int(2) NOT NULL,
+	  `ignore_limits` tinyint(1) NOT NULL DEFAULT '0',
+	  `date_created` int(11) NOT NULL,
+	  PRIMARY KEY (`id`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 |
 */
-$config['rest_enable_keys'] = TRUE;
+$config['rest_enable_keys'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,12 +115,48 @@ $config['rest_key_name'] = 'X-API-KEY';
 |--------------------------------------------------------------------------
 |
 | When set to true REST_Controller will log actions based on key, date,
-| time and IP address.
+| time and IP address. This is a general rule that can be overridden in the
+| $this->method array in each controller.
 |
 |	FALSE
 |
+	CREATE TABLE `logs` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `uri` varchar(255) NOT NULL,
+	  `method` varchar(6) NOT NULL,
+	  `params` text NOT NULL,
+	  `api_key` varchar(40) NOT NULL,
+	  `ip_address` varchar(15) NOT NULL,
+	  `time` int(11) NOT NULL,
+	  `authorized` tinyint(1) NOT NULL,
+	  PRIMARY KEY (`id`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+|
 */
-$config['rest_enable_logging'] = TRUE;
+$config['rest_enable_logging'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| REST Enable Limits
+|--------------------------------------------------------------------------
+|
+| When set to true REST_Controller will count the number of uses of each method
+| by an API key each hour. This is a general rule that can be overridden in the
+| $this->method array in each controller.
+|
+|	FALSE
+|
+	CREATE TABLE `limits` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `uri` varchar(255) NOT NULL,
+	  `count` int(10) NOT NULL,
+	  `hour_started` int(11) NOT NULL,
+	  `api_key` varchar(40) NOT NULL,
+	  PRIMARY KEY (`id`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+|
+*/
+$config['rest_enable_limits'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
