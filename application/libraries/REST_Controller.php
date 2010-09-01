@@ -479,7 +479,15 @@ class REST_Controller extends Controller
 
     private function _xss_clean($val, $bool)
     {
-    	return $bool ? $this->input->xss_clean($val) : $val;
+		if(CI_VERSION < 2)
+		{
+			return $bool ? $this->input->xss_clean($val) : $val;
+		}
+
+		else
+		{
+			return $bool ? $this->security->xss_clean($val) : $val;
+		}
     }
 
     // SECURITY FUNCTIONS ---------------------------------------------------------
