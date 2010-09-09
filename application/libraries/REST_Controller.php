@@ -74,7 +74,7 @@ class REST_Controller extends Controller
 				$this->request->body = file_get_contents('php://input');
 
 		    	// Try and set up our PUT variables anyway in case its not
-		    	parse_str(file_get_contents('php://input'), $this->_put_args);
+		    	parse_str($this->request->body, $this->_put_args);
     		break;
 
         	case 'delete':
