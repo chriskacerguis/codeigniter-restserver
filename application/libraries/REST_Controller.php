@@ -490,6 +490,13 @@ class REST_Controller extends Controller
 		}
     }
 
+	public function validation_errors()
+	{
+		$string = strip_tags($this->form_validation->error_string());
+
+		return explode("\n", trim($string, "\n"));
+	}
+
     // SECURITY FUNCTIONS ---------------------------------------------------------
 
     private function _check_login($username = '', $password = NULL)
