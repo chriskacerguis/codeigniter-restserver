@@ -74,7 +74,7 @@ class REST_Controller extends Controller
 				$this->request->body = file_get_contents('php://input');
 
 		    	// Try and set up our PUT variables anyway in case its not
-		    	parse_str(file_get_contents('php://input'), $this->_put_args);
+		    	parse_str($this->request->body, $this->_put_args);
     		break;
 
         	case 'delete':
@@ -306,12 +306,15 @@ class REST_Controller extends Controller
 		// Work out the name of the SERVER entry based on config
 		$key_name = 'HTTP_'.strtoupper(str_replace('-', '_', config_item('rest_key_name')));
 
+		$this->rest->key = NULL;
+		$this->rest->level = NULL;
+		$this->rest->ignore_limits = FALSE;
+
 		// Find the key from server or arguments
     	if ($key = isset($this->_args['API-Key']) ? $this->_args['API-Key'] : $this->input->server($key_name))
 		{
 			if ( ! $row = $this->rest->db->where('key', $key)->get('keys')->row())
 			{
-				var_dump($this->rest->db->last_query());
 				return FALSE;
 			}
 
