@@ -3,6 +3,8 @@
 A fully RESTful server implementation for CodeIgniter using one library, one
 config file and one controller.
 
+## Sponsored by: Coding Futures
+
 ## Requirements
 
 1. PHP 5.1+
@@ -10,10 +12,10 @@ config file and one controller.
 
 ## Usage
 
-Coming soon. Take a look at application/controllers/example_api.php for
+Coming soon. Take a look at application/controllers/api/example.php for
 hints until the default controller demo is built and ready.
 
 I haven't got around to writing any documentation specifically for this project
-but you can read my NetTuts article covers it's usage along with the REST Client lib.
+but you can read my NetTuts article which covers it's usage along with the REST Client lib.
 
-http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/
+<http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/>
