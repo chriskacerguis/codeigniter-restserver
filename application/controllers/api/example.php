@@ -13,8 +13,8 @@
  * @link		http://philsturgeon.co.uk/code/
 */
 
-// This can be removed if you use __autoload() in config.php
-require(APPPATH.'/libraries/REST_Controller.php');
+// This can be removed if you use __autoload() in config.php OR use Modular Extensions
+require APPPATH.'/libraries/REST_Controller.php';
 
 class Example extends REST_Controller
 {

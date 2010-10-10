@@ -121,8 +121,11 @@ class REST_Controller extends Controller
 		// Do we want to log this method (if allowed by config)?
 		$log_method = ! (isset($this->methods[$controller_method]['log']) AND $this->methods[$controller_method]['log'] == FALSE);
 
-		// Their key is shit
-		if (config_item('rest_enable_keys') AND $this->_allow === FALSE)
+		// Use keys for this method?
+		$use_key = ! (isset($this->methods[$controller_method]['key']) AND $this->methods[$controller_method]['key'] == FALSE);
+
+		// Get that useless shitty key out of here
+		if (config_item('rest_enable_keys') AND $use_key AND $this->_allow === FALSE)
 		{
 			$this->response(array('status' => 0, 'error' => 'Invalid API Key.'), 403);
 			return;
@@ -131,12 +134,12 @@ class REST_Controller extends Controller
 		// Sure it exists, but can they do anything with it?
 		if ( ! method_exists($this, $controller_method))
 		{
-			$this->response(array('error' => 'Unknown method.'), 404);
+			$this->response(array('status' => 0, 'error' => 'Unknown method.'), 404);
 			return;
 		}
 
-		// Checking for keys? GET TO WORK!
-		if (config_item('rest_enable_keys'))
+		// Doing key related stuff? Can only do it if they have a key right?
+		if (config_item('rest_enable_keys') AND ! empty($this->rest->key))
 		{
 			// Check the limit
 			if ( config_item('rest_enable_limits') AND ! $this->_check_limit($controller_method))
@@ -145,11 +148,14 @@ class REST_Controller extends Controller
 				return;
 			}
 
-			// Their key might not be shit, but is it good enough?
-			$authorized = ! (isset($this->methods[$controller_method]['level']) AND $this->methods[$controller_method]['level'] > $this->rest->level);
+			// If no level is set use 0, they probably aren't using permissions
+			$level = isset($this->methods[$controller_method]['level']) ? $this->methods[$controller_method]['level'] : 0;
+
+			// If no level is set, or it is lower than/equal to the key's level
+			$authorized = $level <= $this->rest->level;
 
 			// IM TELLIN!
-			if (config_item('rest_enable_logging') && $log_method)
+			if (config_item('rest_enable_logging') AND  $log_method)
 			{
 				$this->_log_request($authorized);
 			}
@@ -163,7 +169,7 @@ class REST_Controller extends Controller
 		}
 
 		// No key stuff, but record that stuff is happening
-		else if (config_item('rest_enable_logging') && $log_method)
+		else if (config_item('rest_enable_logging') AND  $log_method)
 		{
 			$this->_log_request($authorized = TRUE);
 		}
