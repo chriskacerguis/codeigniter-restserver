@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class REST_Controller extends Controller
 {
@@ -391,7 +391,7 @@ class REST_Controller extends Controller
     private function _check_limit($controller_method)
     {
 		// They are special, or it might not even have a limit
-		if ( !empty($this->rest->ignore_limits) OR ! isset($this->methods[$controller_method]['limit']))
+		if ( ! empty($this->rest->ignore_limits) OR ! isset($this->methods[$controller_method]['limit']))
 		{
 			// On your way sonny-jim.
 			return TRUE;
@@ -447,7 +447,7 @@ class REST_Controller extends Controller
 			return $this->_get_args;
 		}
 
-    	return $this->_xss_clean($this->_get_args[$key], $xss_clean);
+		return array_key_exists($key, $this->_get_args) ? $this->_xss_clean($this->_get_args[$key], $xss_clean) : FALSE;
     }
 
     public function post($key = NULL, $xss_clean = TRUE)
@@ -467,7 +467,7 @@ class REST_Controller extends Controller
 			return $this->_put_args;
 		}
 
-    	return array_key_exists($key, $this->_put_args) ? $this->_xss_clean( $this->_put_args[$key], $xss_clean ) : FALSE ;
+    	return array_key_exists($key, $this->_put_args) ? $this->_xss_clean( $this->_put_args[$key], $xss_clean ) : FALSE;
     }
 
     public function delete($key = NULL, $xss_clean = TRUE)
@@ -517,12 +517,9 @@ class REST_Controller extends Controller
 		}
 
 		// If actually NULL (not empty string) then do not check it
-		if ($password !== NULL)
+		if ($password !== NULL AND $valid_logins[$username] != $password)
 		{
-			if ($valid_logins[$username] != $password)
-			{
-				return FALSE;
-			}
+			return FALSE;
 		}
 
 		return TRUE;
@@ -541,7 +538,7 @@ class REST_Controller extends Controller
 		}
 
 		// most other servers
-		elseif ( $this->input->server('HTTP_AUTHENTICATION') )
+		elseif ($this->input->server('HTTP_AUTHENTICATION'))
 		{
 			if (strpos(strtolower($this->input->server('HTTP_AUTHENTICATION')),'basic') === 0)
 			{
@@ -549,7 +546,7 @@ class REST_Controller extends Controller
 			}
 		}
 
-		if ( !$this->_check_login($username, $password) )
+		if ( ! $this->_check_login($username, $password) )
 		{
 		    $this->_force_login();
 		}
@@ -589,7 +586,7 @@ class REST_Controller extends Controller
 		preg_match_all('@(username|nonce|uri|nc|cnonce|qop|response)=[\'"]?([^\'",]+)@', $digest_string, $matches);
 		$digest = array_combine($matches[1], $matches[2]);
 
-		if ( !array_key_exists('username', $digest) || !$this->_check_login($digest['username']) )
+		if ( ! array_key_exists('username', $digest) OR !$this->_check_login($digest['username']) )
 		{
 			$this->_force_login($uniqid);
         }
@@ -627,15 +624,14 @@ class REST_Controller extends Controller
         	header('WWW-Authenticate: Digest realm="'.$this->config->item('rest_realm'). '" qop="auth" nonce="'.$nonce.'" opaque="'.md5($this->config->item('rest_realm')).'"');
         }
 
-	    echo 'Not authorized.';
-	    die();
+	    exit('Not authorized.');
     }
 
     // Force it into an array
     private function _force_loopable($data)
     {
     	// Force it to be something useful
-		if ( ! is_array($data) AND !is_object($data))
+		if ( ! is_array($data) AND ! is_object($data))
 		{
 			$data = (array) $data;
 		}
@@ -650,7 +646,7 @@ class REST_Controller extends Controller
     	// turn off compatibility mode as simple xml throws a wobbly if you don't.
 		if (ini_get('zend.ze1_compatibility_mode') == 1)
 		{
-			ini_set ('zend.ze1_compatibility_mode', 0);
+			ini_set('zend.ze1_compatibility_mode', 0);
 		}
 
 		if ($structure == NULL)
@@ -674,7 +670,7 @@ class REST_Controller extends Controller
 			$key = preg_replace('/[^a-z_]/i', '', $key);
 
 			// if there is another array found recrusively call this function
-			if (is_array($value) || is_object($value))
+			if (is_array($value) OR is_object($value))
 			{
 				$node = $structure->addChild($key);
 				// recrusive call.
@@ -704,7 +700,7 @@ class REST_Controller extends Controller
     	// turn off compatibility mode as simple xml throws a wobbly if you don't.
 		if (ini_get('zend.ze1_compatibility_mode') == 1)
 		{
-			ini_set ('zend.ze1_compatibility_mode', 0);
+			ini_set('zend.ze1_compatibility_mode', 0);
 		}
 
 		if ($structure == NULL)
@@ -728,7 +724,7 @@ class REST_Controller extends Controller
 			$key = preg_replace('/[^a-z0-9_-]/i', '', $key);
 
 			// if there is another array found recrusively call this function
-			if (is_array($value) || is_object($value))
+			if (is_array($value) OR is_object($value))
 			{
 				$node = $structure->addChild($key);
 				// recrusive call.
