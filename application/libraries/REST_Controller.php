@@ -685,8 +685,10 @@ class REST_Controller extends Controller
 
 			else
 			{
-				// add single node.
+				// Actual boolean values need to be converted to numbers
+				is_bool($value) AND $value = (int) $value;
 
+				// add single node.
 				$value = htmlentities($value, ENT_NOQUOTES, "UTF-8");
 
 				$UsedKeys[] = $key;
@@ -736,10 +738,13 @@ class REST_Controller extends Controller
 				// recrusive call.
 				$this->_format_rawxml($value, $node, $basenode);
 			}
+
 			else
 			{
-				// add single node.
+				// Actual boolean values need to be converted to numbers
+				is_bool($value) AND $value = (int) $value;
 
+				// add single node.
 				$value = htmlentities($value, ENT_NOQUOTES, "UTF-8");
 
 				$UsedKeys[] = $key;
@@ -800,7 +805,7 @@ class REST_Controller extends Controller
 		$output = implode(',', $headings)."\r\n";
 		foreach($data as &$row)
 		{
-			$output .= '"'.implode('","',$row)."\"\r\n";
+			$output .= '"'.implode('","', $row)."\"\r\n";
 		}
 
 		return $output;
