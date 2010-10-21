@@ -63,6 +63,18 @@ $config['rest_database_group'] = 'default';
 
 /*
 |--------------------------------------------------------------------------
+| REST API Keys Table Name
+|--------------------------------------------------------------------------
+|
+| The table name in your database that stores API Keys.
+|
+|	'keys'
+|
+*/
+$config['rest_keys_table'] = 'keys';
+
+/*
+|--------------------------------------------------------------------------
 | REST Enable Keys
 |--------------------------------------------------------------------------
 |
@@ -98,16 +110,27 @@ $config['rest_key_length'] = 32;
 
 /*
 |--------------------------------------------------------------------------
-| REST Key Length
+| REST API Key Variable
 |--------------------------------------------------------------------------
 |
-| How long should created keys be? Double check this in your db schema.
+| Which variable will provide us the API Key
 |
-|	Default: 32
-|	Max: 40
+| Default: X-API-KEY
 |
 */
 $config['rest_key_name'] = 'X-API-KEY';
+
+/*
+|--------------------------------------------------------------------------
+| REST API Logs Table Name
+|--------------------------------------------------------------------------
+|
+| The table name in your database that stores logs.
+|
+|	'logs'
+|
+*/
+$config['rest_logs_table'] = 'logs';
 
 /*
 |--------------------------------------------------------------------------
@@ -134,6 +157,18 @@ $config['rest_key_name'] = 'X-API-KEY';
 |
 */
 $config['rest_enable_logging'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| REST API Limits Table Name
+|--------------------------------------------------------------------------
+|
+| The table name in your database that stores limits.
+|
+|	'logs'
+|
+*/
+$config['rest_limits_table'] = 'limits';
 
 /*
 |--------------------------------------------------------------------------
