@@ -96,13 +96,13 @@ class REST_Controller extends Controller
 	    $this->request->lang = $this->_detect_lang();
 
       // Load DB if its enabled
-      if (config_item('rest_database_group') AND (config_item('rest_enable_keys') OR config_item('rest_enable_logging')))
+      if ($this->config->item('rest_database_group') AND ($this->config->item('rest_enable_keys') OR $this->config->item('rest_enable_logging')))
       {
-        $this->rest->db = $this->load->database(config_item('rest_database_group'), TRUE);
+        $this->rest->db = $this->load->database($this->config->item('rest_database_group'), TRUE);
       }
 
       // Checking for keys? GET TO WORK!
-      if (config_item('rest_enable_keys'))
+      if ($this->config->item('rest_enable_keys'))
       {
         $this->_allow = $this->_detect_api_key();
       }
@@ -125,7 +125,7 @@ class REST_Controller extends Controller
 		$use_key = ! (isset($this->methods[$controller_method]['key']) AND $this->methods[$controller_method]['key'] == FALSE);
 
 		// Get that useless shitty key out of here
-		if (config_item('rest_enable_keys') AND $use_key AND $this->_allow === FALSE)
+		if ($this->config->item('rest_enable_keys') AND $use_key AND $this->_allow === FALSE)
 		{
 			$this->response(array('status' => 0, 'error' => 'Invalid API Key.'), 403);
 			return;
@@ -139,10 +139,10 @@ class REST_Controller extends Controller
 		}
 
 		// Doing key related stuff? Can only do it if they have a key right?
-		if (config_item('rest_enable_keys') AND ! empty($this->rest->key))
+		if ($this->config->item('rest_enable_keys') AND ! empty($this->rest->key))
 		{
 			// Check the limit
-			if ( config_item('rest_enable_limits') AND ! $this->_check_limit($controller_method))
+			if ( $this->config->item('rest_enable_limits') AND ! $this->_check_limit($controller_method))
 			{
 				$this->response(array('status' => 0, 'error' => 'This API key has reached the hourly limit for this method.'), 401);
 				return;
@@ -155,7 +155,7 @@ class REST_Controller extends Controller
 			$authorized = $level <= $this->rest->level;
 
 			// IM TELLIN!
-			if (config_item('rest_enable_logging') AND  $log_method)
+			if ($this->config->item('rest_enable_logging') AND  $log_method)
 			{
 				$this->_log_request($authorized);
 			}
@@ -169,7 +169,7 @@ class REST_Controller extends Controller
 		}
 
 		// No key stuff, but record that stuff is happening
-		else if (config_item('rest_enable_logging') AND  $log_method)
+		else if ($this->config->item('rest_enable_logging') AND  $log_method)
 		{
 			$this->_log_request($authorized = TRUE);
 		}
@@ -281,7 +281,7 @@ class REST_Controller extends Controller
 		}
 
 		// Just use the default format
-		return config_item('rest_default_format');
+		return $this->config->item('rest_default_format');
     }
 
 
@@ -310,7 +310,7 @@ class REST_Controller extends Controller
     private function _detect_api_key()
     {
 		// Work out the name of the SERVER entry based on config
-		$key_name = 'HTTP_'.strtoupper(str_replace('-', '_', config_item('rest_key_name')));
+		$key_name = 'HTTP_'.strtoupper(str_replace('-', '_', $this->config->item('rest_key_name')));
 
 		$this->rest->key = NULL;
 		$this->rest->level = NULL;
@@ -319,7 +319,7 @@ class REST_Controller extends Controller
 		// Find the key from server or arguments
     	if ($key = isset($this->_args['API-Key']) ? $this->_args['API-Key'] : $this->input->server($key_name))
 		{
-			if ( ! $row = $this->rest->db->where('key', $key)->get(config_item('rest_keys_table'))->row())
+			if ( ! $row = $this->rest->db->where('key', $key)->get($this->config->item('rest_keys_table'))->row())
 			{
 				return FALSE;
 			}
@@ -377,7 +377,7 @@ class REST_Controller extends Controller
      */
     private function _log_request($authorized = FALSE)
     {
-		return $this->rest->db->insert(config_item('rest_logs_table'), array(
+		return $this->rest->db->insert($this->config->item('rest_logs_table'), array(
 			'uri' => $this->uri->uri_string(),
 			'method' => $this->request->method,
 			'params' => serialize($this->_args),
@@ -410,7 +410,7 @@ class REST_Controller extends Controller
 		$result = $this->rest->db
 			->where('uri', $this->uri->uri_string())
 			->where('api_key', $this->rest->key)
-			->get(config_item('rest_limits_table'))
+			->get($this->config->item('rest_limits_table'))
 			->row();
 
 		// No calls yet, or been an hour since they called
@@ -438,7 +438,7 @@ class REST_Controller extends Controller
 				->where('uri', $this->uri->uri_string())
 				->where('api_key', $this->rest->key)
 				->set('count', 'count + 1', FALSE)
-				->update(config_item('limits'));
+				->update($this->config->item('limits'));
 		}
 
 		return TRUE;
