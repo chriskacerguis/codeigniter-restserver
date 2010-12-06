@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 4.3.2 or newer
+ * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2010, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -22,45 +22,45 @@
  * @author		ExpressionEngine Dev Team
  * @link		http://codeigniter.com/user_guide/database/
  */
-function &DB($params = '', $active_record_override = FALSE)
+function &DB($params = '', $active_record_override = NULL)
 {
 	// Load the DB config file if a DSN string wasn't passed
 	if (is_string($params) AND strpos($params, '://') === FALSE)
 	{
 		include(APPPATH.'config/database'.EXT);
-		
+
 		if ( ! isset($db) OR count($db) == 0)
 		{
 			show_error('No database connection settings were found in the database config file.');
 		}
-		
+
 		if ($params != '')
 		{
 			$active_group = $params;
 		}
-		
+
 		if ( ! isset($active_group) OR ! isset($db[$active_group]))
 		{
 			show_error('You have specified an invalid database connection group.');
 		}
-		
+
 		$params = $db[$active_group];
 	}
 	elseif (is_string($params))
 	{
-		
+
 		/* parse the URL from the DSN string
-		*  Database settings can be passed as discreet
-	 	*  parameters or as a data source name in the first
-	 	*  parameter. DSNs must have this prototype:
-	 	*  $dsn = 'driver://username:password@hostname/database';
-		*/
-	
+		 *  Database settings can be passed as discreet
+		 *  parameters or as a data source name in the first
+		 *  parameter. DSNs must have this prototype:
+		 *  $dsn = 'driver://username:password@hostname/database';
+		 */
+
 		if (($dns = @parse_url($params)) === FALSE)
 		{
 			show_error('Invalid DB Connection String');
 		}
-		
+
 		$params = array(
 							'dbdriver'	=> $dns['scheme'],
 							'hostname'	=> (isset($dns['host'])) ? rawurldecode($dns['host']) : '',
@@ -68,7 +68,7 @@ function &DB($params = '', $active_record_override = FALSE)
 							'password'	=> (isset($dns['pass'])) ? rawurldecode($dns['pass']) : '',
 							'database'	=> (isset($dns['path'])) ? rawurldecode(substr($dns['path'], 1)) : ''
 						);
-		
+
 		// were additional config items set?
 		if (isset($dns['query']))
 		{
@@ -90,7 +90,7 @@ function &DB($params = '', $active_record_override = FALSE)
 			}
 		}
 	}
-	
+
 	// No DB specified yet?  Beat them senseless...
 	if ( ! isset($params['dbdriver']) OR $params['dbdriver'] == '')
 	{
@@ -101,18 +101,18 @@ function &DB($params = '', $active_record_override = FALSE)
 	// we need to dynamically create a class that extends proper parent class
 	// based on whether we're using the active record class or not.
 	// Kudos to Paul for discovering this clever use of eval()
-	
-	if ($active_record_override == TRUE)
+
+	if ($active_record_override !== NULL)
 	{
-		$active_record = TRUE;
+		$active_record = $active_record_override;
 	}
-	
+
 	require_once(BASEPATH.'database/DB_driver'.EXT);
 
 	if ( ! isset($active_record) OR $active_record == TRUE)
 	{
 		require_once(BASEPATH.'database/DB_active_rec'.EXT);
-		
+
 		if ( ! class_exists('CI_DB'))
 		{
 			eval('class CI_DB extends CI_DB_active_record { }');
@@ -125,20 +125,25 @@ function &DB($params = '', $active_record_override = FALSE)
 			eval('class CI_DB extends CI_DB_driver { }');
 		}
 	}
-			
+
 	require_once(BASEPATH.'database/drivers/'.$params['dbdriver'].'/'.$params['dbdriver'].'_driver'.EXT);
 
 	// Instantiate the DB adapter
 	$driver = 'CI_DB_'.$params['dbdriver'].'_driver';
-	$DB =& instantiate_class(new $driver($params));
-	
+	$DB = new $driver($params);
+
 	if ($DB->autoinit == TRUE)
 	{
 		$DB->initialize();
 	}
-	
+
+	if (isset($params['stricton']) && $params['stricton'] == TRUE)
+	{
+		$DB->query('SET SESSION sql_mode="STRICT_ALL_TABLES"');
+	}
+
 	return $DB;
-}	
+}
 
 
 

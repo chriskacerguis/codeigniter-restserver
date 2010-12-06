@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 4.3.2 or newer
+ * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2010, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -27,11 +27,14 @@
 class CI_Pagination {
 
 	var $base_url			= ''; // The page we are linking to
-	var $total_rows  		= ''; // Total number of items (database results)
-	var $per_page	 		= 10; // Max number of items you want shown per page
+	var $prefix				= ''; // A custom prefix added to the path.
+	var $suffix				= ''; // A custom suffix added to the path.
+
+	var $total_rows			= ''; // Total number of items (database results)
+	var $per_page			= 10; // Max number of items you want shown per page
 	var $num_links			=  2; // Number of "digit" links to show before/after the currently viewed page
-	var $cur_page	 		=  0; // The current page being viewed
-	var $first_link   		= '&lsaquo; First';
+	var $cur_page			=  0; // The current page being viewed
+	var $first_link			= '&lsaquo; First';
 	var $next_link			= '&gt;';
 	var $prev_link			= '&lt;';
 	var $last_link			= 'Last &rsaquo;';
@@ -42,6 +45,7 @@ class CI_Pagination {
 	var $first_tag_close	= '&nbsp;';
 	var $last_tag_open		= '&nbsp;';
 	var $last_tag_close		= '';
+	var $first_url			= ''; // Alternative URL for the First Page.
 	var $cur_tag_open		= '&nbsp;<strong>';
 	var $cur_tag_close		= '</strong>';
 	var $next_tag_open		= '&nbsp;';
@@ -52,6 +56,8 @@ class CI_Pagination {
 	var $num_tag_close		= '';
 	var $page_query_string	= FALSE;
 	var $query_string_segment = 'per_page';
+	var $display_pages		= TRUE;
+	var $anchor_class		= '';
 
 	/**
 	 * Constructor
@@ -59,11 +65,16 @@ class CI_Pagination {
 	 * @access	public
 	 * @param	array	initialization parameters
 	 */
-	function CI_Pagination($params = array())
+	public function __construct($params = array())
 	{
 		if (count($params) > 0)
 		{
 			$this->initialize($params);
+		}
+
+		if ($this->anchor_class != '')
+		{
+			$this->anchor_class = 'class="'.$this->anchor_class.'" ';
 		}
 
 		log_message('debug', "Pagination Class Initialized");
@@ -179,53 +190,77 @@ class CI_Pagination {
 			$this->base_url = rtrim($this->base_url, '/') .'/';
 		}
 
-  		// And here we go...
+		// And here we go...
 		$output = '';
 
 		// Render the "First" link
-		if  ($this->cur_page > ($this->num_links + 1))
+		if  ($this->first_link !== FALSE AND $this->cur_page > ($this->num_links + 1))
 		{
-			$output .= $this->first_tag_open.'<a href="'.$this->base_url.'">'.$this->first_link.'</a>'.$this->first_tag_close;
+			$first_url = ($this->first_url == '') ? $this->base_url : $this->first_url;
+			$output .= $this->first_tag_open.'<a '.$this->anchor_class.'href="'.$first_url.'">'.$this->first_link.'</a>'.$this->first_tag_close;
 		}
 
 		// Render the "previous" link
-		if  ($this->cur_page != 1)
+		if  ($this->prev_link !== FALSE AND $this->cur_page != 1)
 		{
 			$i = $uri_page_number - $this->per_page;
-			if ($i == 0) $i = '';
-			$output .= $this->prev_tag_open.'<a href="'.$this->base_url.$i.'">'.$this->prev_link.'</a>'.$this->prev_tag_close;
+
+			if ($i == 0 && $this->first_url != '')
+			{
+				$output .= $this->prev_tag_open.'<a '.$this->anchor_class.'href="'.$this->first_url.'">'.$this->prev_link.'</a>'.$this->prev_tag_close;
+			}
+			else
+			{
+				$i = ($i == 0) ? '' : $this->prefix.$i.$this->suffix;
+				$output .= $this->prev_tag_open.'<a '.$this->anchor_class.'href="'.$this->base_url.$i.'">'.$this->prev_link.'</a>'.$this->prev_tag_close;
+			}
+
 		}
 
-		// Write the digit links
-		for ($loop = $start -1; $loop <= $end; $loop++)
+		// Render the pages
+		if ($this->display_pages !== FALSE)
 		{
-			$i = ($loop * $this->per_page) - $this->per_page;
-
-			if ($i >= 0)
+			// Write the digit links
+			for ($loop = $start -1; $loop <= $end; $loop++)
 			{
-				if ($this->cur_page == $loop)
+				$i = ($loop * $this->per_page) - $this->per_page;
+
+				if ($i >= 0)
 				{
-					$output .= $this->cur_tag_open.$loop.$this->cur_tag_close; // Current page
-				}
-				else
-				{
-					$n = ($i == 0) ? '' : $i;
-					$output .= $this->num_tag_open.'<a href="'.$this->base_url.$n.'">'.$loop.'</a>'.$this->num_tag_close;
+					if ($this->cur_page == $loop)
+					{
+						$output .= $this->cur_tag_open.$loop.$this->cur_tag_close; // Current page
+					}
+					else
+					{
+						$n = ($i == 0) ? '' : $i;
+
+						if ($n == '' && $this->first_url != '')
+						{
+							$output .= $this->num_tag_open.'<a '.$this->anchor_class.'href="'.$this->first_url.'">'.$loop.'</a>'.$this->num_tag_close;
+						}
+						else
+						{
+							$n = ($n == '') ? '' : $this->prefix.$n.$this->suffix;
+
+							$output .= $this->num_tag_open.'<a '.$this->anchor_class.'href="'.$this->base_url.$n.'">'.$loop.'</a>'.$this->num_tag_close;
+						}
+					}
 				}
 			}
 		}
 
 		// Render the "next" link
-		if ($this->cur_page < $num_pages)
+		if ($this->next_link !== FALSE AND $this->cur_page < $num_pages)
 		{
-			$output .= $this->next_tag_open.'<a href="'.$this->base_url.($this->cur_page * $this->per_page).'">'.$this->next_link.'</a>'.$this->next_tag_close;
+			$output .= $this->next_tag_open.'<a '.$this->anchor_class.'href="'.$this->base_url.$this->prefix.($this->cur_page * $this->per_page).$this->suffix.'">'.$this->next_link.'</a>'.$this->next_tag_close;
 		}
 
 		// Render the "Last" link
-		if (($this->cur_page + $this->num_links) < $num_pages)
+		if ($this->last_link !== FALSE AND ($this->cur_page + $this->num_links) < $num_pages)
 		{
 			$i = (($num_pages * $this->per_page) - $this->per_page);
-			$output .= $this->last_tag_open.'<a href="'.$this->base_url.$i.'">'.$this->last_link.'</a>'.$this->last_tag_close;
+			$output .= $this->last_tag_open.'<a '.$this->anchor_class.'href="'.$this->base_url.$this->prefix.$i.$this->suffix.'">'.$this->last_link.'</a>'.$this->last_tag_close;
 		}
 
 		// Kill double slashes.  Note: Sometimes we can end up with a double slash

@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 4.3.2 or newer
+ * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2010, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -84,7 +84,7 @@ class CI_DB_mysql_utility extends CI_DB_utility {
 
 		// Extract the prefs for simplicity
 		extract($params);
-	
+
 		// Build the output
 		$output = '';
 		foreach ((array)$tables as $table)
@@ -97,31 +97,31 @@ class CI_DB_mysql_utility extends CI_DB_utility {
 
 			// Get the table schema
 			$query = $this->db->query("SHOW CREATE TABLE `".$this->db->database.'`.'.$table);
-			
+
 			// No result means the table name was invalid
 			if ($query === FALSE)
 			{
 				continue;
 			}
-			
+
 			// Write out the table schema
 			$output .= '#'.$newline.'# TABLE STRUCTURE FOR: '.$table.$newline.'#'.$newline.$newline;
 
- 			if ($add_drop == TRUE)
- 			{
+			if ($add_drop == TRUE)
+			{
 				$output .= 'DROP TABLE IF EXISTS '.$table.';'.$newline.$newline;
 			}
-			
+
 			$i = 0;
 			$result = $query->result_array();
 			foreach ($result[0] as $val)
 			{
 				if ($i++ % 2)
-				{ 					
+				{
 					$output .= $val.';'.$newline.$newline;
 				}
 			}
-			
+
 			// If inserts are not needed we're done...
 			if ($add_insert == FALSE)
 			{
@@ -130,16 +130,16 @@ class CI_DB_mysql_utility extends CI_DB_utility {
 
 			// Grab all the data from the current table
 			$query = $this->db->query("SELECT * FROM $table");
-			
+
 			if ($query->num_rows() == 0)
 			{
 				continue;
 			}
-		
+
 			// Fetch the field names and determine if the field is an
 			// integer type.  We use this info to decide whether to
 			// surround the data with quotes or not
-			
+
 			$i = 0;
 			$field_str = '';
 			$is_int = array();
@@ -148,24 +148,24 @@ class CI_DB_mysql_utility extends CI_DB_utility {
 				// Most versions of MySQL store timestamp as a string
 				$is_int[$i] = (in_array(
 										strtolower(mysql_field_type($query->result_id, $i)),
-										array('tinyint', 'smallint', 'mediumint', 'int', 'bigint'), //, 'timestamp'), 
+										array('tinyint', 'smallint', 'mediumint', 'int', 'bigint'), //, 'timestamp'),
 										TRUE)
 										) ? TRUE : FALSE;
-										
+
 				// Create a string of field names
 				$field_str .= '`'.$field->name.'`, ';
 				$i++;
 			}
-			
+
 			// Trim off the end comma
 			$field_str = preg_replace( "/, $/" , "" , $field_str);
-			
-			
+
+
 			// Build the insert string
 			foreach ($query->result_array() as $row)
 			{
 				$val_str = '';
-			
+
 				$i = 0;
 				foreach ($row as $v)
 				{
@@ -184,61 +184,26 @@ class CI_DB_mysql_utility extends CI_DB_utility {
 						else
 						{
 							$val_str .= $v;
-						}					
-					}					
-					
+						}
+					}
+
 					// Append a comma
 					$val_str .= ', ';
 					$i++;
 				}
-				
+
 				// Remove the comma at the end of the string
 				$val_str = preg_replace( "/, $/" , "" , $val_str);
-								
+
 				// Build the INSERT string
 				$output .= 'INSERT INTO '.$table.' ('.$field_str.') VALUES ('.$val_str.');'.$newline;
 			}
-			
+
 			$output .= $newline.$newline;
 		}
 
 		return $output;
 	}
-
-	/**
-	 *
-	 * The functions below have been deprecated as of 1.6, and are only here for backwards
-	 * compatibility.  They now reside in dbforge().  The use of dbutils for database manipulation
-	 * is STRONGLY discouraged in favour if using dbforge.
-	 *
-	 */
-
-	/**
-	 * Create database
-	 *
-	 * @access	private
-	 * @param	string	the database name
-	 * @return	bool
-	 */
-	function _create_database($name)
-	{
-		return "CREATE DATABASE ".$name;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Drop database
-	 *
-	 * @access	private
-	 * @param	string	the database name
-	 * @return	bool
-	 */
-	function _drop_database($name)
-	{
-		return "DROP DATABASE ".$name;
-	}
-
 }
 
 /* End of file mysql_utility.php */

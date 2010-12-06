@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 4.3.2 or newer
+ * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2010, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -33,19 +33,19 @@
  * @access	public
  * @param	string
  * @return	string
- */	
+ */
 if ( ! function_exists('nl2br_except_pre'))
 {
 	function nl2br_except_pre($str)
 	{
 		$CI =& get_instance();
-	
+
 		$CI->load->library('typography');
-		
+
 		return $CI->typography->nl2br_except_pre($str);
 	}
 }
-	
+
 // ------------------------------------------------------------------------
 
 /**
@@ -54,16 +54,39 @@ if ( ! function_exists('nl2br_except_pre'))
  *
  * @access	public
  * @param	string
+ * @param	bool	whether to allow javascript event handlers
  * @param	bool	whether to reduce multiple instances of double newlines to two
  * @return	string
  */
 if ( ! function_exists('auto_typography'))
 {
-	function auto_typography($str, $reduce_linebreaks = FALSE)
+	function auto_typography($str, $strip_js_event_handlers = TRUE, $reduce_linebreaks = FALSE)
 	{
-		$CI =& get_instance();	
+		$CI =& get_instance();
 		$CI->load->library('typography');
-		return $CI->typography->auto_typography($str, $reduce_linebreaks);
+		return $CI->typography->auto_typography($str, $strip_js_event_handlers, $reduce_linebreaks);
+	}
+}
+
+
+// --------------------------------------------------------------------
+
+/**
+ * HTML Entities Decode
+ *
+ * This function is a replacement for html_entity_decode()
+ *
+ * @access	public
+ * @param	string
+ * @return	string
+ */
+if ( ! function_exists('entity_decode'))
+{
+	function entity_decode($str, $charset='UTF-8')
+	{
+		$CI =& get_instance();
+		$CI->load->library('security');
+		return $CI->security->entity_decode($str, $charset);
 	}
 }
 

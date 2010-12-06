@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 4.3.2 or newer
+ * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2010, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -97,7 +97,7 @@ if ( ! function_exists('ol'))
  * @param	string
  * @param	mixed
  * @param	mixed
- * @param	intiger
+ * @param	integer
  * @return	string
  */
 if ( ! function_exists('_list'))
@@ -199,6 +199,12 @@ if ( ! function_exists('img'))
 			$src = array('src' => $src);
 		}
 
+		// If there is no alt attribute defined, set it to an empty string
+		if ( ! isset($src['alt']))
+		{
+			$src['alt'] = '';
+		}
+
 		$img = '<img';
 
 		foreach ($src as $k=>$v)
@@ -210,16 +216,16 @@ if ( ! function_exists('img'))
 
 				if ($index_page === TRUE)
 				{
-					$img .= ' src="'.$CI->config->site_url($v).'" ';
+					$img .= ' src="'.$CI->config->site_url($v).'"';
 				}
 				else
 				{
-					$img .= ' src="'.$CI->config->slash_item('base_url').$v.'" ';
+					$img .= ' src="'.$CI->config->slash_item('base_url').$v.'"';
 				}
 			}
 			else
 			{
-				$img .= " $k=\"$v\" ";
+				$img .= " $k=\"$v\"";
 			}
 		}
 
@@ -301,11 +307,11 @@ if ( ! function_exists('link_tag'))
 				{
 					if ($index_page === TRUE)
 					{
-						$link .= ' href="'.$CI->config->site_url($v).'" ';
+						$link .= 'href="'.$CI->config->site_url($v).'" ';
 					}
 					else
 					{
-						$link .= ' href="'.$CI->config->slash_item('base_url').$v.'" ';
+						$link .= 'href="'.$CI->config->slash_item('base_url').$v.'" ';
 					}
 				}
 				else
@@ -320,15 +326,15 @@ if ( ! function_exists('link_tag'))
 		{
 			if ( strpos($href, '://') !== FALSE)
 			{
-				$link .= ' href="'.$href.'" ';
+				$link .= 'href="'.$href.'" ';
 			}
 			elseif ($index_page === TRUE)
 			{
-				$link .= ' href="'.$CI->config->site_url($href).'" ';
+				$link .= 'href="'.$CI->config->site_url($href).'" ';
 			}
 			else
 			{
-				$link .= ' href="'.$CI->config->slash_item('base_url').$href.'" ';
+				$link .= 'href="'.$CI->config->slash_item('base_url').$href.'" ';
 			}
 
 			$link .= 'rel="'.$rel.'" type="'.$type.'" ';
@@ -382,9 +388,9 @@ if ( ! function_exists('meta'))
 		$str = '';
 		foreach ($name as $meta)
 		{
-			$type 		= ( ! isset($meta['type']) OR $meta['type'] == 'name') ? 'name' : 'http-equiv';
-			$name 		= ( ! isset($meta['name'])) 	? '' 	: $meta['name'];
-			$content	= ( ! isset($meta['content']))	? '' 	: $meta['content'];
+			$type		= ( ! isset($meta['type']) OR $meta['type'] == 'name') ? 'name' : 'http-equiv';
+			$name		= ( ! isset($meta['name']))		? ''	: $meta['name'];
+			$content	= ( ! isset($meta['content']))	? ''	: $meta['content'];
 			$newline	= ( ! isset($meta['newline']))	? "\n"	: $meta['newline'];
 
 			$str .= '<meta '.$type.'="'.$name.'" content="'.$content.'" />'.$newline;

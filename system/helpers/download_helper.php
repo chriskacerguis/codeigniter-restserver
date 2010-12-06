@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 4.3.2 or newer
+ * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2010, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -36,7 +36,7 @@
  * @param	string	filename
  * @param	mixed	the data to be downloaded
  * @return	void
- */	
+ */
 if ( ! function_exists('force_download'))
 {
 	function force_download($filename = '', $data = '')
@@ -52,14 +52,14 @@ if ( ! function_exists('force_download'))
 		{
 			return FALSE;
 		}
-	
+
 		// Grab the file extension
 		$x = explode('.', $filename);
 		$extension = end($x);
 
 		// Load the mime types
 		@include(APPPATH.'config/mimes'.EXT);
-	
+
 		// Set a default mime if we can't find it
 		if ( ! isset($mimes[$extension]))
 		{
@@ -69,9 +69,9 @@ if ( ! function_exists('force_download'))
 		{
 			$mime = (is_array($mimes[$extension])) ? $mimes[$extension][0] : $mimes[$extension];
 		}
-	
+
 		// Generate the server headers
-		if (strstr($_SERVER['HTTP_USER_AGENT'], "MSIE"))
+		if (strpos($_SERVER['HTTP_USER_AGENT'], "MSIE") !== FALSE)
 		{
 			header('Content-Type: "'.$mime.'"');
 			header('Content-Disposition: attachment; filename="'.$filename.'"');
@@ -90,7 +90,7 @@ if ( ! function_exists('force_download'))
 			header('Pragma: no-cache');
 			header("Content-Length: ".strlen($data));
 		}
-	
+
 		exit($data);
 	}
 }

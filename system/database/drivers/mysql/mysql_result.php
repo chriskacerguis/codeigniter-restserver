@@ -2,11 +2,11 @@
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 4.3.2 or newer
+ * An open source application development framework for PHP 5.1.6 or newer
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2010, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -36,7 +36,7 @@ class CI_DB_mysql_result extends CI_DB_result {
 	{
 		return @mysql_num_rows($this->result_id);
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -49,7 +49,7 @@ class CI_DB_mysql_result extends CI_DB_result {
 	{
 		return @mysql_num_fields($this->result_id);
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -67,7 +67,7 @@ class CI_DB_mysql_result extends CI_DB_result {
 		{
 			$field_names[] = $field->name;
 		}
-		
+
 		return $field_names;
 	}
 
@@ -85,27 +85,27 @@ class CI_DB_mysql_result extends CI_DB_result {
 	{
 		$retval = array();
 		while ($field = mysql_fetch_field($this->result_id))
-		{	
+		{
 			$F				= new stdClass();
-			$F->name 		= $field->name;
-			$F->type 		= $field->type;
+			$F->name		= $field->name;
+			$F->type		= $field->type;
 			$F->default		= $field->def;
 			$F->max_length	= $field->max_length;
 			$F->primary_key = $field->primary_key;
-			
+
 			$retval[] = $F;
 		}
-		
+
 		return $retval;
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**
 	 * Free the result
 	 *
 	 * @return	null
-	 */		
+	 */
 	function free_result()
 	{
 		if (is_resource($this->result_id))
@@ -146,7 +146,7 @@ class CI_DB_mysql_result extends CI_DB_result {
 	{
 		return mysql_fetch_assoc($this->result_id);
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -161,7 +161,7 @@ class CI_DB_mysql_result extends CI_DB_result {
 	{
 		return mysql_fetch_object($this->result_id);
 	}
-	
+
 }
 
 

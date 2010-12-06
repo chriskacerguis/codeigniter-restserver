@@ -11,7 +11,7 @@
 |	http://example.com/
 |
 */
-$config['base_url']	= "http://localhost/restserver/";
+$config['base_url']	= "http://localhost/classes/codeigniter-restserver/";
 
 /*
 |--------------------------------------------------------------------------
