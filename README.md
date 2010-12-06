@@ -8,7 +8,7 @@ config file and one controller.
 ## Requirements
 
 1. PHP 5.1+
-2. CodeIgniter 1.7.x - 2.0-dev
+2. CodeIgniter 2.0-dev (for 1.7.x support download v2.2 from Downloads tab)
 
 ## Usage
 
