@@ -22,6 +22,7 @@ class REST_Controller extends Controller
 		'xml' 		=> 'application/xml',
 		'rawxml' 	=> 'application/xml',
 		'json' 		=> 'application/json',
+		'jsonp' 	=> 'application/json',
 		'serialize' => 'application/vnd.php.serialized',
 		'php' 		=> 'text/plain',
 		'html' 		=> 'text/html',
@@ -95,17 +96,17 @@ class REST_Controller extends Controller
     	// Which format should the data be returned in?
 	    $this->request->lang = $this->_detect_lang();
 
-		// Load DB if its enabled
-		if (config_item('rest_database_group') AND (config_item('rest_enable_keys') OR config_item('rest_enable_logging')))
-		{
-			$this->rest->db = $this->load->database(config_item('rest_database_group'), TRUE);
-		}
+      // Load DB if its enabled
+      if (config_item('rest_database_group') AND (config_item('rest_enable_keys') OR config_item('rest_enable_logging')))
+      {
+        $this->rest->db = $this->load->database(config_item('rest_database_group'), TRUE);
+      }
 
-		// Checking for keys? GET TO WORK!
-		if (config_item('rest_enable_keys'))
-		{
-			$this->_allow = $this->_detect_api_key();
-		}
+      // Checking for keys? GET TO WORK!
+      if (config_item('rest_enable_keys'))
+      {
+        $this->_allow = $this->_detect_api_key();
+      }
     }
 
     /*
@@ -319,7 +320,7 @@ class REST_Controller extends Controller
 		// Find the key from server or arguments
     	if ($key = isset($this->_args['API-Key']) ? $this->_args['API-Key'] : $this->input->server($key_name))
 		{
-			if ( ! $row = $this->rest->db->where('key', $key)->get('keys')->row())
+			if ( ! $row = $this->rest->db->where('key', $key)->get(config_item('rest_keys_table'))->row())
 			{
 				return FALSE;
 			}
@@ -377,7 +378,7 @@ class REST_Controller extends Controller
      */
     private function _log_request($authorized = FALSE)
     {
-		return $this->rest->db->insert('logs', array(
+		return $this->rest->db->insert(config_item('rest_logs_table'), array(
 			'uri' => $this->uri->uri_string(),
 			'method' => $this->request->method,
 			'params' => serialize($this->_args),
@@ -410,7 +411,7 @@ class REST_Controller extends Controller
 		$result = $this->rest->db
 			->where('uri', $this->uri->uri_string())
 			->where('api_key', $this->rest->key)
-			->get('limits')
+			->get(config_item('rest_limits_table'))
 			->row();
 
 		// No calls yet, or been an hour since they called
@@ -438,7 +439,7 @@ class REST_Controller extends Controller
 				->where('uri', $this->uri->uri_string())
 				->where('api_key', $this->rest->key)
 				->set('count', 'count + 1', FALSE)
-				->update('limits');
+				->update(config_item('limits'));
 		}
 
 		return TRUE;
@@ -815,6 +816,12 @@ class REST_Controller extends Controller
     private function _format_json($data = array())
     {
     	return json_encode($data);
+    }
+	
+	// Encode as JSONP
+    private function _format_jsonp($data = array())
+    {
+    	return $this->get('callback').'('.json_encode($data).')';
     }
 
     // Encode as Serialized array
