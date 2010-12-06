@@ -22,6 +22,7 @@ class REST_Controller extends Controller
 		'xml' 		=> 'application/xml',
 		'rawxml' 	=> 'application/xml',
 		'json' 		=> 'application/json',
+		'jsonp' 	=> 'application/json',
 		'serialize' => 'application/vnd.php.serialized',
 		'php' 		=> 'text/plain',
 		'html' 		=> 'text/html',
@@ -810,6 +811,12 @@ class REST_Controller extends Controller
     private function _format_json($data = array())
     {
     	return json_encode($data);
+    }
+	
+	// Encode as JSONP
+    private function _format_jsonp($data = array())
+    {
+    	return $this->get('callback').'('.json_encode($data).')';
     }
 
     // Encode as Serialized array
