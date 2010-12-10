@@ -18,7 +18,7 @@ class REST_Controller extends CI_Controller {
 		'xml' => 'application/xml',
 		'rawxml' => 'application/xml',
 		'json' => 'application/json',
-		'jsonp' => 'application/json',
+		'jsonp' => 'application/javascript',
 		'serialize' => 'application/vnd.php.serialized',
 		'php' => 'text/plain',
 		'html' => 'text/html',
@@ -36,6 +36,7 @@ class REST_Controller extends CI_Controller {
 		// Lets grab the config and get ready to party
 		$this->load->config('rest');
 
+		$this->load->library('security');
 		if ($this->config->item('rest_auth') == 'basic')
 		{
 			$this->_prepare_basic_auth();
@@ -681,7 +682,7 @@ class REST_Controller extends CI_Controller {
 				is_bool($value) AND $value = (int) $value;
 
 				// add single node.
-				$value = htmlentities($value, ENT_NOQUOTES, "UTF-8");
+				$value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, "UTF-8");
 
 				$UsedKeys[] = $key;
 
@@ -735,7 +736,7 @@ class REST_Controller extends CI_Controller {
 				is_bool($value) AND $value = (int) $value;
 
 				// add single node.
-				$value = htmlentities($value, ENT_NOQUOTES, "UTF-8");
+				$value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, "UTF-8");
 
 				$UsedKeys[] = $key;
 
