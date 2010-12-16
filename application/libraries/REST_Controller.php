@@ -30,11 +30,11 @@ class REST_Controller extends CI_Controller {
 	{
 		parent::__construct();
 
-		// How is this request being made? POST, DELETE, GET, PUT?
-		$this->request->method = $this->_detect_method();
-
 		// Lets grab the config and get ready to party
 		$this->load->config('rest');
+
+		// How is this request being made? POST, DELETE, GET, PUT?
+		$this->request->method = $this->_detect_method();
 
 		$this->load->library('security');
 		if ($this->config->item('rest_auth') == 'basic')
@@ -295,6 +295,12 @@ class REST_Controller extends CI_Controller {
 	private function _detect_method()
 	{
 		$method = strtolower($this->input->server('REQUEST_METHOD'));
+
+		if ($this->config->item('enable_emulate_request') && $this->input->post('_method'))
+		{
+			$method =  $this->input->post('_method');
+		}
+
 		if (in_array($method, array('get', 'delete', 'post', 'put')))
 		{
 			return $method;
