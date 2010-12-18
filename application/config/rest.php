@@ -106,7 +106,7 @@ $config['rest_enable_keys'] = FALSE;
 |	Max: 40
 |
 */
-$config['rest_key_length'] = 32;
+$config['rest_key_length'] = 40;
 
 /*
 |--------------------------------------------------------------------------
