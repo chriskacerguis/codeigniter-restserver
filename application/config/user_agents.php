@@ -48,6 +48,8 @@ $platforms = array (
 // The order of this array should NOT be changed. Many browsers return
 // multiple browser types so we want to identify the sub-type first.
 $browsers = array(
+					'Flock'				=> 'Flock',
+					'Chrome'			=> 'Chrome',
 					'Opera'				=> 'Opera',
 					'MSIE'				=> 'Internet Explorer',
 					'Internet Explorer'	=> 'Internet Explorer',
@@ -59,8 +61,8 @@ $browsers = array(
 					'Camino'			=> 'Camino',
 					'Netscape'			=> 'Netscape',
 					'OmniWeb'			=> 'OmniWeb',
-					'Mozilla'			=> 'Mozilla',
 					'Safari'			=> 'Safari',
+					'Mozilla'			=> 'Mozilla',
 					'Konqueror'			=> 'Konqueror',
 					'icab'				=> 'iCab',
 					'Lynx'				=> 'Lynx',
@@ -92,6 +94,7 @@ $mobiles = array(
 					'nokia'				=> "Nokia",
 					'palm'				=> "Palm",
 					'iphone'			=> "Apple iPhone",
+					'ipad'				=> "iPad",
 					'ipod'				=> "Apple iPod Touch",
 					'sony'				=> "Sony Ericsson",
 					'ericsson'			=> "Sony Ericsson",
@@ -111,7 +114,7 @@ $mobiles = array(
 					'benq'				=> "BenQ",
 					'ipaq'				=> "HP iPaq",
 					'mot-'				=> "Motorola",
-					'playstation portable' 	=> "PlayStation Portable",
+					'playstation portable'	=> "PlayStation Portable",
 					'hiptop'			=> "Danger Hiptop",
 					'nec-'				=> "NEC",
 					'panasonic'			=> "Panasonic",
@@ -124,7 +127,7 @@ $mobiles = array(
 
 					// Operating Systems
 					'symbian'				=> "Symbian",
-					'SymbianOS'				=> "SymbianOS", 
+					'SymbianOS'				=> "SymbianOS",
 					'elaine'				=> "Palm",
 					'palm'					=> "Palm",
 					'series60'				=> "Symbian S60",
@@ -149,7 +152,7 @@ $mobiles = array(
 
 					// Fallback
 					'mobile'				=> "Generic Mobile",
-					'wireless' 				=> "Generic Mobile",
+					'wireless'				=> "Generic Mobile",
 					'j2me'					=> "Generic Mobile",
 					'midp'					=> "Generic Mobile",
 					'cldc'					=> "Generic Mobile",
@@ -172,4 +175,4 @@ $robots = array(
 				);
 
 /* End of file user_agents.php */
-/* Location: ./system/application/config/user_agents.php */
+/* Location: ./application/config/user_agents.php */

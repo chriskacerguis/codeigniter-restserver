@@ -1,6 +1,8 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Welcome to CodeIgniter REST Server</title>
+	<meta charset="utf-8">
+	<title>Welcome to CodeIgniter</title>
 
 <style type="text/css">
 
@@ -43,11 +45,9 @@ code {
 </head>
 <body>
 
-<h1>Welcome to CodeIgniter REST Server!</h1>
+<h1>Welcome to CodeIgniter!</h1>
 
-<p>The page you are looking at is being generated dynamically by CodeIgniter with <a href="http://philsturgeon.co.uk/" target="_blank">Phil Sturgeon</a>'s REST server included.</p>
-
-<p>Below are a few examples of the REST server library in use. Remember, we will only see GET methods looking through a browser.</p>
+<p>The page you are looking at is being generated dynamically by CodeIgniter.</p>
 
 <ul>
 	<li><a href="<?php echo site_url('api/example/users');?>">Users</a> - defaulting to XML</li>
@@ -56,7 +56,7 @@ code {
 	<li><a href="<?php echo site_url('api/example/user/id/1/format/json');?>">User #1</a> - get it in JSON</li>
 </ul>
 
-<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="http://codeigniter.com/user_guide/">User Guide</a>.</p>
+<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="user_guide/">User Guide</a>.</p>
 
 
 <p><br />Page rendered in {elapsed_time} seconds</p>

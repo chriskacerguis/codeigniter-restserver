@@ -6,7 +6,7 @@
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2010, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -333,6 +333,12 @@ class CI_DB_forge {
 
 		foreach ($field as $k => $v)
 		{
+			// If no name provided, use the current name
+			if ( ! isset($field[$k]['name']))
+			{
+				$field[$k]['name'] = $k;
+			}
+
 			$this->add_field(array($k => $field[$k]));
 
 			if (count($this->fields) == 0)

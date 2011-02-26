@@ -6,7 +6,7 @@
  *
  * @package		CodeIgniter
  * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2010, EllisLab, Inc.
+ * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
  * @license		http://codeigniter.com/user_guide/license.html
  * @link		http://codeigniter.com
  * @since		Version 1.0
@@ -87,11 +87,26 @@ class CI_DB_mysql_forge extends CI_DB_forge {
 				if (array_key_exists('TYPE', $attributes))
 				{
 					$sql .=  ' '.$attributes['TYPE'];
-				}
 
-				if (array_key_exists('CONSTRAINT', $attributes))
-				{
-					$sql .= '('.$attributes['CONSTRAINT'].')';
+					if (array_key_exists('CONSTRAINT', $attributes))
+					{
+						switch ($attributes['TYPE'])
+						{
+							case 'decimal':
+							case 'float':
+							case 'numeric':
+								$sql .= '('.implode(',', $attributes['CONSTRAINT']).')';
+							break;
+
+							case 'enum':
+							case 'set':
+								$sql .= '("'.implode('","', $attributes['CONSTRAINT']).'")';
+							break;
+
+							default:
+								$sql .= '('.$attributes['CONSTRAINT'].')';
+						}
+					}
 				}
 
 				if (array_key_exists('UNSIGNED', $attributes) && $attributes['UNSIGNED'] === TRUE)
