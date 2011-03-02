@@ -7,7 +7,7 @@
 | Individual images can be used to replace multiple simileys.  For example:
 | :-) and :) use the same image replacement.
 |
-| Please see user guide for more info: 
+| Please see user guide for more info:
 | http://codeigniter.com/user_guide/helpers/smiley_helper.html
 |
 */
@@ -63,4 +63,4 @@ $smileys = array(
 		);
 
 /* End of file smileys.php */
-/* Location: ./system/application/config/smileys.php */
+/* Location: ./application/config/smileys.php */
