@@ -181,15 +181,19 @@ class REST_Controller extends CI_Controller {
 	 * Takes pure data and optionally a status code, then creates the response
 	 */
 
-	public function response($data = array(), $http_code = 200)
+	public function response($data = array(), $http_code = null)
 	{
-		if (empty($data))
+		// If data is empty and not code provide, error and bail
+		if (empty($data) && $http_code === null)
     	{
     		$http_code = 404;
     	}
 
+		// Otherwise (if no data but 200 provided) or some data, carry on camping!
 		else
 		{
+			is_numeric($http_code) OR $http_code = 200;
+
 			// If the format method exists, call and return the output in that format
 			if (method_exists($this, '_format_'.$this->request->format))
 			{
@@ -637,7 +641,7 @@ class REST_Controller extends CI_Controller {
 	private function _force_loopable($data)
 	{
 		// Force it to be something useful
-		if (!is_array($data) AND !is_object($data))
+		if ( ! is_array($data) AND ! is_object($data))
 		{
 			$data = (array) $data;
 		}
