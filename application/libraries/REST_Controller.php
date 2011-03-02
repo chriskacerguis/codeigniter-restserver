@@ -37,13 +37,21 @@ class REST_Controller extends CI_Controller {
 		$this->request->method = $this->_detect_method();
 
 		$this->load->library('security');
-		if ($this->config->item('rest_auth') == 'basic')
-		{
-			$this->_prepare_basic_auth();
-		}
-		elseif ($this->config->item('rest_auth') == 'digest')
-		{
-			$this->_prepare_digest_auth();
+		
+		// Check if there is a specific auth type for the current class/method 
+		$this->auth_override = $this->_auth_override_check();
+		
+		// When there is no specific override for the current class/method, use the default auth value set in the config
+		if ( $this->auth_override !== TRUE )
+		{		
+			if ($this->config->item('rest_auth') == 'basic')
+			{
+				$this->_prepare_basic_auth();
+			}
+			elseif ($this->config->item('rest_auth') == 'digest')
+			{
+				$this->_prepare_digest_auth();
+			}
 		}
 
 		// Some Methods cant have a body
@@ -455,6 +463,55 @@ class REST_Controller extends CI_Controller {
 
 		return TRUE;
 	}
+	/*
+	 * Auth override check
+	 *
+	 * Check if there is a specific auth type set for the current class/method being called
+	 */	
+	
+	private function _auth_override_check() 
+	{
+		
+		// Assign the class/method auth type override array from the config
+		$this->overrides_array = $this->config->item('auth_override_class_method');		
+		
+		// Check to see if the override array is even populated, otherwise return false
+		if ( empty($this->overrides_array) ) 
+		{ 
+			return false;
+		}
+			
+		// Check to see if there's an override value set for the current class/method being called 
+		if ( empty($this->overrides_array[$this->router->class][$this->router->method]) )
+		{
+			return false;
+		}
+
+		// None auth override found, prepare nothing but send back a true override flag 
+		if ($this->overrides_array[$this->router->class][$this->router->method] == 'none')
+		{
+			return true;
+		}				
+
+		// Basic auth override found, prepare basic
+		if ($this->overrides_array[$this->router->class][$this->router->method] == 'basic')
+		{
+			$this->_prepare_basic_auth();
+			return true;
+		}
+
+		// Digest auth override found, prepare digest
+		if ($this->overrides_array[$this->router->class][$this->router->method] == 'digest')
+		{
+			$this->_prepare_digest_auth();
+			return true;
+		}
+
+		// Return false when there is an override value set but it doesn't match 'basic', 'digest', or 'none'.  (the value was misspelled)
+		return false;
+		
+	}
+	
 
 	// INPUT FUNCTION --------------------------------------------------------------
 

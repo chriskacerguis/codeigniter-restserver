@@ -25,9 +25,9 @@ class Key extends REST_Controller
 	);
 
 	/**
-	 * Key Delete
+	 * Key Create
 	 *
-	 * Remove a key from the database to stop it working.
+	 * Insert a key into the database.
 	 *
 	 * @access	public
 	 * @return	void
