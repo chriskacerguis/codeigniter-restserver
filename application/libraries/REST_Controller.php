@@ -32,7 +32,7 @@ class REST_Controller extends CI_Controller {
 
 		// Lets grab the config and get ready to party
 		$this->load->config('rest');
-
+		
 		// How is this request being made? POST, DELETE, GET, PUT?
 		$this->request->method = $this->_detect_method();
 
@@ -110,6 +110,12 @@ class REST_Controller extends CI_Controller {
 		if (config_item('rest_enable_keys'))
 		{
 			$this->_allow = $this->_detect_api_key();
+		}
+		
+		// only allow ajax requests
+		if( ! $this->input->is_ajax_request() AND config_item('rest_ajax_only') )
+		{
+			$this->response( array('error' => 'Only AJAX requests are accepted.'), 505 );
 		}
 	}
 
