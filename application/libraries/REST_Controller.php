@@ -37,13 +37,13 @@ class REST_Controller extends CI_Controller {
 		$this->request->method = $this->_detect_method();
 
 		$this->load->library('security');
-		
-		// Check if there is a specific auth type for the current class/method 
+
+		// Check if there is a specific auth type for the current class/method
 		$this->auth_override = $this->_auth_override_check();
-		
+
 		// When there is no specific override for the current class/method, use the default auth value set in the config
 		if ( $this->auth_override !== TRUE )
-		{		
+		{
 			if ($this->config->item('rest_auth') == 'basic')
 			{
 				$this->_prepare_basic_auth();
@@ -132,14 +132,14 @@ class REST_Controller extends CI_Controller {
 		// Get that useless shitty key out of here
 		if (config_item('rest_enable_keys') AND $use_key AND $this->_allow === FALSE)
 		{
-			$this->response(array('status' => 0, 'error' => 'Invalid API Key.'), 403);
+			$this->response(array('status' => false, 'error' => 'Invalid API Key.'), 403);
 			return;
 		}
 
 		// Sure it exists, but can they do anything with it?
 		if (!method_exists($this, $controller_method))
 		{
-			$this->response(array('status' => 0, 'error' => 'Unknown method.'), 404);
+			$this->response(array('status' => false, 'error' => 'Unknown method.'), 404);
 			return;
 		}
 
@@ -149,7 +149,7 @@ class REST_Controller extends CI_Controller {
 			// Check the limit
 			if (config_item('rest_enable_limits') AND !$this->_check_limit($controller_method))
 			{
-				$this->response(array('status' => 0, 'error' => 'This API key has reached the hourly limit for this method.'), 401);
+				$this->response(array('status' => false, 'error' => 'This API key has reached the hourly limit for this method.'), 401);
 				return;
 			}
 
@@ -168,7 +168,7 @@ class REST_Controller extends CI_Controller {
 			// They don't have good enough perms
 			if (!$authorized)
 			{
-				$this->response(array('status' => 0, 'error' => 'This API key does not have enough permissions.'), 401);
+				$this->response(array('status' => false, 'error' => 'This API key does not have enough permissions.'), 401);
 				return;
 			}
 		}
@@ -339,7 +339,7 @@ class REST_Controller extends CI_Controller {
 		// Find the key from server or arguments
 		if ($key = isset($this->_args['API-Key']) ? $this->_args['API-Key'] : $this->input->server($key_name))
 		{
-			if (!$row = $this->rest->db->where('key', $key)->get(config_item('rest_keys_table'))->row())
+			if ( ! $row = $this->rest->db->where('key', $key)->get(config_item('rest_keys_table'))->row())
 			{
 				return FALSE;
 			}
@@ -363,7 +363,7 @@ class REST_Controller extends CI_Controller {
 
 	private function _detect_lang()
 	{
-		if (!$lang = $this->input->server('HTTP_ACCEPT_LANGUAGE'))
+		if ( ! $lang = $this->input->server('HTTP_ACCEPT_LANGUAGE'))
 		{
 			return NULL;
 		}
@@ -467,31 +467,31 @@ class REST_Controller extends CI_Controller {
 	 * Auth override check
 	 *
 	 * Check if there is a specific auth type set for the current class/method being called
-	 */	
-	
-	private function _auth_override_check() 
+	 */
+
+	private function _auth_override_check()
 	{
-		
+
 		// Assign the class/method auth type override array from the config
-		$this->overrides_array = $this->config->item('auth_override_class_method');		
-		
+		$this->overrides_array = $this->config->item('auth_override_class_method');
+
 		// Check to see if the override array is even populated, otherwise return false
-		if ( empty($this->overrides_array) ) 
-		{ 
+		if ( empty($this->overrides_array) )
+		{
 			return false;
 		}
-			
-		// Check to see if there's an override value set for the current class/method being called 
+
+		// Check to see if there's an override value set for the current class/method being called
 		if ( empty($this->overrides_array[$this->router->class][$this->router->method]) )
 		{
 			return false;
 		}
 
-		// None auth override found, prepare nothing but send back a true override flag 
+		// None auth override found, prepare nothing but send back a true override flag
 		if ($this->overrides_array[$this->router->class][$this->router->method] == 'none')
 		{
 			return true;
-		}				
+		}
 
 		// Basic auth override found, prepare basic
 		if ($this->overrides_array[$this->router->class][$this->router->method] == 'basic')
@@ -509,9 +509,9 @@ class REST_Controller extends CI_Controller {
 
 		// Return false when there is an override value set but it doesn't match 'basic', 'digest', or 'none'.  (the value was misspelled)
 		return false;
-		
+
 	}
-	
+
 
 	// INPUT FUNCTION --------------------------------------------------------------
 
@@ -891,5 +891,4 @@ class REST_Controller extends CI_Controller {
 	{
 		return var_export($data, TRUE);
 	}
-
 }
