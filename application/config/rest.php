@@ -242,5 +242,20 @@ $config['rest_enable_limits'] = FALSE;
 */
 $config['rest_ignore_http_accept'] = FALSE;
 
+/*
+|--------------------------------------------------------------------------
+| REST AJAX Only
+|--------------------------------------------------------------------------
+|
+| Set to TRUE to only allow AJAX requests. If TRUE and the request is not 
+| coming from AJAX, a 505 response with the error message "Only AJAX 
+| requests are accepted." will be returned. This is good for production 
+| environments. Set to FALSE to also accept HTTP requests. 
+|
+|	FALSE
+|
+*/
+$config['rest_ajax_only'] = FALSE;
+
 /* End of file config.php */
 /* Location: ./system/application/config/rest.php */
