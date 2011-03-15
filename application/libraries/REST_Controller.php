@@ -443,7 +443,7 @@ class REST_Controller extends CI_Controller {
 		if (!$result OR $result->hour_started < time() - (60 * 60))
 		{
 			// Right, set one up from scratch
-			$this->rest->db->insert('limits', array(
+			$this->rest->db->insert(config_item('rest_limits_table'), array(
 				'uri' => $this->uri->uri_string(),
 				'api_key' => isset($this->rest->key) ? $this->rest->key : '',
 				'count' => 1,
@@ -464,7 +464,7 @@ class REST_Controller extends CI_Controller {
 					->where('uri', $this->uri->uri_string())
 					->where('api_key', $this->rest->key)
 					->set('count', 'count + 1', FALSE)
-					->update(config_item('limits'));
+					->update(config_item('rest_limits_table'));
 		}
 
 		return TRUE;
