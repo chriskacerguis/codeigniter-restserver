@@ -214,39 +214,38 @@ class Key extends REST_Controller
 
 	private function _get_key($key)
 	{
-		return $this->rest->db->where('key', $key)->get('keys')->row();
+		return $this->rest->db->where('key', $key)->get(config_item('rest_keys_table'))->row();
 	}
 
 	// --------------------------------------------------------------------
 
 	private function _key_exists($key)
 	{
-		return $this->rest->db->where('key', $key)->count_all_results('keys') > 0;
+		return $this->rest->db->where('key', $key)->count_all_results(config_item('rest_keys_table')) > 0;
 	}
 
 	// --------------------------------------------------------------------
 
 	private function _insert_key($key, $data)
 	{
-		var_dump($data);
 		
 		$data['key'] = $key;
 		$data['date_created'] = function_exists('now') ? now() : time();
 
-		return $this->rest->db->set($data)->insert('keys');
+		return $this->rest->db->set($data)->insert(config_item('rest_keys_table'));
 	}
 
 	// --------------------------------------------------------------------
 
 	private function _update_key($key, $data)
 	{
-		return $this->rest->db->where('key', $key)->update('keys', $data);
+		return $this->rest->db->where('key', $key)->update(config_item('rest_keys_table'), $data);
 	}
 
 	// --------------------------------------------------------------------
 
 	private function _delete_key($key)
 	{
-		return $this->rest->db->where('key', $key)->delete('keys');
+		return $this->rest->db->where('key', $key)->delete(config_item('rest_keys_table'));
 	}
 }
