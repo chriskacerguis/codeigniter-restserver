@@ -115,7 +115,7 @@ class REST_Controller extends CI_Controller {
 		// only allow ajax requests
 		if( ! $this->input->is_ajax_request() AND config_item('rest_ajax_only') )
 		{
-			$this->response( array('statuc' => false, 'error' => 'Only AJAX requests are accepted.'), 505 );
+			$this->response( array('status' => false, 'error' => 'Only AJAX requests are accepted.'), 505 );
 		}
 	}
 
