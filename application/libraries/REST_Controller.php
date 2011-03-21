@@ -5,6 +5,7 @@ class REST_Controller extends CI_Controller {
 	protected $rest_format = NULL; // Set this in a controller to use a default format
 	protected $methods = array(); // contains a list of method properties such as limit, log and level
 	protected $request = NULL; // Stores accept, language, body, headers, etc
+	protected $response = NULL; // What is gonna happen in output?
 	protected $rest = NULL; // Stores DB, keys, key level, etc
 	private $_get_args = array();
 	private $_post_args = array();
@@ -32,27 +33,17 @@ class REST_Controller extends CI_Controller {
 
 		// Lets grab the config and get ready to party
 		$this->load->config('rest');
-		
+
 		// How is this request being made? POST, DELETE, GET, PUT?
 		$this->request->method = $this->_detect_method();
 
 		$this->load->library('security');
 
-		// Check if there is a specific auth type for the current class/method
-		$this->auth_override = $this->_auth_override_check();
+		// This library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter itself
+		$this->load->library('format');
 
-		// When there is no specific override for the current class/method, use the default auth value set in the config
-		if ( $this->auth_override !== TRUE )
-		{
-			if ($this->config->item('rest_auth') == 'basic')
-			{
-				$this->_prepare_basic_auth();
-			}
-			elseif ($this->config->item('rest_auth') == 'digest')
-			{
-				$this->_prepare_digest_auth();
-			}
-		}
+		// Try to find a format for the request (means we have a request body)
+		$this->request->format = $this->_detect_input_format();
 
 		// Some Methods cant have a body
 		$this->request->body = NULL;
@@ -70,22 +61,34 @@ class REST_Controller extends CI_Controller {
 			case 'post':
 				$this->_post_args = $_POST;
 
-				// It might be a HTTP body
-				$this->request->body = file_get_contents('php://input');
+				$this->request->format and $this->request->body = file_get_contents('php://input');
 				break;
 
 			case 'put':
 				// It might be a HTTP body
-				$this->request->body = file_get_contents('php://input');
+				if ($this->request->format)
+				{
+					$this->request->body = file_get_contents('php://input');
+				}
 
-				// Try and set up our PUT variables anyway in case its not
-				parse_str($this->request->body, $this->_put_args);
+				// If no file type is provided, this is probably just arguments
+				else
+				{
+					parse_str($this->request->body, $this->_put_args);
+				}
+				
 				break;
 
 			case 'delete':
-				// Set up out PUT variables
+				// Set up out DELETE variables (which shouldn't really exist, but sssh!)
 				parse_str(file_get_contents('php://input'), $this->_delete_args);
 				break;
+		}
+
+		// Now we know all about our request, let's try and parse the body if it exists
+		if ($this->request->format and $this->request->body)
+		{
+			$this->request->body = $this->format->factory($this->request->body, $this->request->format)->to_array();
 		}
 
 		// Set up our GET variables
@@ -95,10 +98,26 @@ class REST_Controller extends CI_Controller {
 		$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_post_args, $this->_delete_args);
 
 		// Which format should the data be returned in?
-		$this->request->format = $this->_detect_format();
+		$this->response->format = $this->_detect_output_format();
 
 		// Which format should the data be returned in?
-		$this->request->lang = $this->_detect_lang();
+		$this->response->lang = $this->_detect_lang();
+
+		// Check if there is a specific auth type for the current class/method
+		$this->auth_override = $this->_auth_override_check();
+
+		// When there is no specific override for the current class/method, use the default auth value set in the config
+		if ( $this->auth_override !== TRUE )
+		{
+			if ($this->config->item('rest_auth') == 'basic')
+			{
+				$this->_prepare_basic_auth();
+			}
+			elseif ($this->config->item('rest_auth') == 'digest')
+			{
+				$this->_prepare_digest_auth();
+			}
+		}
 
 		// Load DB if its enabled
 		if (config_item('rest_database_group') AND (config_item('rest_enable_keys') OR config_item('rest_enable_logging')))
@@ -111,9 +130,9 @@ class REST_Controller extends CI_Controller {
 		{
 			$this->_allow = $this->_detect_api_key();
 		}
-		
+
 		// only allow ajax requests
-		if( ! $this->input->is_ajax_request() AND config_item('rest_ajax_only') )
+		if ( ! $this->input->is_ajax_request() AND config_item('rest_ajax_only') )
 		{
 			$this->response( array('status' => false, 'error' => 'Only AJAX requests are accepted.'), 505 );
 		}
@@ -130,33 +149,30 @@ class REST_Controller extends CI_Controller {
 		$controller_method = $object_called . '_' . $this->request->method;
 
 		// Do we want to log this method (if allowed by config)?
-		$log_method = !(isset($this->methods[$controller_method]['log']) AND $this->methods[$controller_method]['log'] == FALSE);
+		$log_method = ! (isset($this->methods[$controller_method]['log']) AND $this->methods[$controller_method]['log'] == FALSE);
 
 		// Use keys for this method?
-		$use_key = !(isset($this->methods[$controller_method]['key']) AND $this->methods[$controller_method]['key'] == FALSE);
+		$use_key = ! (isset($this->methods[$controller_method]['key']) AND $this->methods[$controller_method]['key'] == FALSE);
 
 		// Get that useless shitty key out of here
 		if (config_item('rest_enable_keys') AND $use_key AND $this->_allow === FALSE)
 		{
 			$this->response(array('status' => false, 'error' => 'Invalid API Key.'), 403);
-			return;
 		}
 
 		// Sure it exists, but can they do anything with it?
-		if (!method_exists($this, $controller_method))
+		if ( ! method_exists($this, $controller_method))
 		{
 			$this->response(array('status' => false, 'error' => 'Unknown method.'), 404);
-			return;
 		}
 
 		// Doing key related stuff? Can only do it if they have a key right?
-		if (config_item('rest_enable_keys') AND !empty($this->rest->key))
+		if (config_item('rest_enable_keys') AND ! empty($this->rest->key))
 		{
 			// Check the limit
-			if (config_item('rest_enable_limits') AND !$this->_check_limit($controller_method))
+			if (config_item('rest_enable_limits') AND ! $this->_check_limit($controller_method))
 			{
 				$this->response(array('status' => false, 'error' => 'This API key has reached the hourly limit for this method.'), 401);
-				return;
 			}
 
 			// If no level is set use 0, they probably aren't using permissions
@@ -172,11 +188,7 @@ class REST_Controller extends CI_Controller {
 			}
 
 			// They don't have good enough perms
-			if (!$authorized)
-			{
-				$this->response(array('status' => false, 'error' => 'This API key does not have enough permissions.'), 401);
-				return;
-			}
+			$authorized OR $this->response(array('status' => false, 'error' => 'This API key does not have enough permissions.'), 401);
 		}
 
 		// No key stuff, but record that stuff is happening
@@ -194,7 +206,6 @@ class REST_Controller extends CI_Controller {
 	 *
 	 * Takes pure data and optionally a status code, then creates the response
 	 */
-
 	public function response($data = array(), $http_code = null)
 	{
 		// If data is empty and not code provide, error and bail
@@ -209,12 +220,22 @@ class REST_Controller extends CI_Controller {
 			is_numeric($http_code) OR $http_code = 200;
 
 			// If the format method exists, call and return the output in that format
-			if (method_exists($this, '_format_'.$this->request->format))
+			if (method_exists($this, '_format_'.$this->response->format))
 			{
 				// Set the correct format header
-				header('Content-type: '.$this->_supported_formats[$this->request->format]);
+				header('Content-type: '.$this->_supported_formats[$this->response->format]);
 
-				$formatted_data = $this->{'_format_'.$this->request->format}($data);
+				$formatted_data = $this->{'_format_'.$this->response->format}($data);
+				$output = $formatted_data;
+			}
+
+			// If the format method exists, call and return the output in that format
+			elseif (method_exists($this->format, 'to_'.$this->response->format))
+			{
+				// Set the correct format header
+				header('Content-type: '.$this->_supported_formats[$this->response->format]);
+
+				$formatted_data = $this->format->factory($data)->{'to_'.$this->response->format}();
 				$output = $formatted_data;
 			}
 
@@ -232,12 +253,33 @@ class REST_Controller extends CI_Controller {
 	}
 
 	/*
+	 * Detect input format
+	 *
+	 * Detect which format the HTTP Body is provided in
+	 */
+	private function _detect_input_format()
+	{
+		if ($this->input->server('CONTENT_TYPE'))
+		{
+			// Check all formats against the HTTP_ACCEPT header
+			foreach ($this->_supported_formats as $format => $mime)
+			{
+				if ($this->input->server('CONTENT_TYPE') == $mime)
+				{
+					return $format;
+				}
+			}
+		}
+
+		return NULL;
+	}
+
+	/*
 	 * Detect format
 	 *
 	 * Detect which format should be used to output the data
 	 */
-
-	private function _detect_format()
+	private function _detect_output_format()
 	{
 		$pattern = '/\.(' . implode('|', array_keys($this->_supported_formats)) . ')$/';
 
@@ -295,7 +337,7 @@ class REST_Controller extends CI_Controller {
 			}
 		} // End HTTP_ACCEPT checking
 		// Well, none of that has worked! Let's see if the controller has a default
-		if (!empty($this->rest_format))
+		if ( ! empty($this->rest_format))
 		{
 			return $this->rest_format;
 		}
@@ -443,7 +485,7 @@ class REST_Controller extends CI_Controller {
 		if (!$result OR $result->hour_started < time() - (60 * 60))
 		{
 			// Right, set one up from scratch
-			$this->rest->db->insert(config_item('rest_limits_table'), array(
+			$this->rest->db->insert('limits', array(
 				'uri' => $this->uri->uri_string(),
 				'api_key' => isset($this->rest->key) ? $this->rest->key : '',
 				'count' => 1,
@@ -464,7 +506,7 @@ class REST_Controller extends CI_Controller {
 					->where('uri', $this->uri->uri_string())
 					->where('api_key', $this->rest->key)
 					->set('count', 'count + 1', FALSE)
-					->update(config_item('rest_limits_table'));
+					->update(config_item('limits'));
 		}
 
 		return TRUE;
@@ -685,9 +727,6 @@ class REST_Controller extends CI_Controller {
 
 	private function _force_login($nonce = '')
 	{
-		header('HTTP/1.0 401 Unauthorized');
-		header('HTTP/1.1 401 Unauthorized');
-
 		if ($this->config->item('rest_auth') == 'basic')
 		{
 			header('WWW-Authenticate: Basic realm="' . $this->config->item('rest_realm') . '"');
@@ -697,7 +736,7 @@ class REST_Controller extends CI_Controller {
 			header('WWW-Authenticate: Digest realm="' . $this->config->item('rest_realm') . '" qop="auth" nonce="' . $nonce . '" opaque="' . md5($this->config->item('rest_realm')) . '"');
 		}
 
-		exit('Not authorized.');
+		$this->response(array('status' => false, 'error' => 'Not authorized'), 401);
 	}
 
 	// Force it into an array
@@ -713,114 +752,9 @@ class REST_Controller extends CI_Controller {
 	}
 
 	// FORMATING FUNCTIONS ---------------------------------------------------------
-	// Format XML for output
-	private function _format_xml($data = array(), $structure = NULL, $basenode = 'xml')
-	{
-		// turn off compatibility mode as simple xml throws a wobbly if you don't.
-		if (ini_get('zend.ze1_compatibility_mode') == 1)
-		{
-			ini_set('zend.ze1_compatibility_mode', 0);
-		}
 
-		if ($structure == NULL)
-		{
-			$structure = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><$basenode />");
-		}
-
-		// loop through the data passed in.
-		$data = $this->_force_loopable($data);
-		foreach ($data as $key => $value)
-		{
-			// no numeric keys in our xml please!
-			if (is_numeric($key))
-			{
-				// make string key...
-				//$key = "item_". (string) $key;
-				$key = "item";
-			}
-
-			// replace anything not alpha numeric
-			$key = preg_replace('/[^a-z_]/i', '', $key);
-
-			// if there is another array found recrusively call this function
-			if (is_array($value) OR is_object($value))
-			{
-				$node = $structure->addChild($key);
-				// recrusive call.
-				$this->_format_xml($value, $node, $basenode);
-			}
-			else
-			{
-				// Actual boolean values need to be converted to numbers
-				is_bool($value) AND $value = (int) $value;
-
-				// add single node.
-				$value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, "UTF-8");
-
-				$UsedKeys[] = $key;
-
-				$structure->addChild($key, $value);
-			}
-		}
-
-		// pass back as string. or simple xml object if you want!
-		return $structure->asXML();
-	}
-
-	// Format Raw XML for output
-	private function _format_rawxml($data = array(), $structure = NULL, $basenode = 'xml')
-	{
-		// turn off compatibility mode as simple xml throws a wobbly if you don't.
-		if (ini_get('zend.ze1_compatibility_mode') == 1)
-		{
-			ini_set('zend.ze1_compatibility_mode', 0);
-		}
-
-		if ($structure == NULL)
-		{
-			$structure = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><$basenode />");
-		}
-
-		// loop through the data passed in.
-		$data = $this->_force_loopable($data);
-		foreach ($data as $key => $value)
-		{
-			// no numeric keys in our xml please!
-			if (is_numeric($key))
-			{
-				// make string key...
-				//$key = "item_". (string) $key;
-				$key = "item";
-			}
-
-			// replace anything not alpha numeric
-			$key = preg_replace('/[^a-z0-9_-]/i', '', $key);
-
-			// if there is another array found recrusively call this function
-			if (is_array($value) OR is_object($value))
-			{
-				$node = $structure->addChild($key);
-				// recrusive call.
-				$this->_format_rawxml($value, $node, $basenode);
-			}
-			else
-			{
-				// Actual boolean values need to be converted to numbers
-				is_bool($value) AND $value = (int) $value;
-
-				// add single node.
-				$value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, "UTF-8");
-
-				$UsedKeys[] = $key;
-
-				$structure->addChild($key, $value);
-			}
-		}
-
-		// pass back as string. or simple xml object if you want!
-		return $structure->asXML();
-	}
-
+	// Many of these have been moved to the Format class for better separation, but these methods will be checked too
+	
 	// Format HTML for output
 	private function _format_html($data = array())
 	{
@@ -849,52 +783,9 @@ class REST_Controller extends CI_Controller {
 		return $this->table->generate();
 	}
 
-	// Format HTML for output
-	private function _format_csv($data = array())
-	{
-		// Multi-dimentional array
-		if (isset($data[0]))
-		{
-			$headings = array_keys($data[0]);
-		}
-
-		// Single array
-		else
-		{
-			$headings = array_keys($data);
-			$data = array($data);
-		}
-
-		$output = implode(',', $headings) . "\r\n";
-		foreach ($data as &$row)
-		{
-			$output .= '"' . implode('","', $row) . "\"\r\n";
-		}
-
-		return $output;
-	}
-
-	// Encode as JSON
-	private function _format_json($data = array())
-	{
-		return json_encode($data);
-	}
-
 	// Encode as JSONP
 	private function _format_jsonp($data = array())
 	{
 		return $this->get('callback') . '(' . json_encode($data) . ')';
-	}
-
-	// Encode as Serialized array
-	private function _format_serialize($data = array())
-	{
-		return serialize($data);
-	}
-
-	// Encode raw PHP
-	private function _format_php($data = array())
-	{
-		return var_export($data, TRUE);
 	}
 }
