@@ -18,7 +18,7 @@ class Format {
 	/**
 	 * Returns an instance of the Format object.
 	 *
-	 *     echo Format::factory(array('foo' => 'bar'))->to_xml();
+	 *     echo $this->format->factory(array('foo' => 'bar'))->to_xml();
 	 *
 	 * @param   mixed  general date to be converted
 	 * @param   string  data format the file was provided in
@@ -140,32 +140,35 @@ class Format {
 	}
 
 	// Format HTML for output
-//	private function to_html($data = array())
-//	{
-//		// Multi-dimentional array
-//		if (isset($data[0]))
-//		{
-//			$headings = array_keys($data[0]);
-//		}
-//
-//		// Single array
-//		else
-//		{
-//			$headings = array_keys($data);
-//			$data = array($data);
-//		}
-//
-//		$this->load->library('table');
-//
-//		$this->table->set_heading($headings);
-//
-//		foreach ($data as &$row)
-//		{
-//			$this->table->add_row($row);
-//		}
-//
-//		return $this->table->generate();
-//	}
+	public function to_html()
+	{
+		$data = $this->_data;
+		
+		// Multi-dimentional array
+		if (isset($data[0]))
+		{
+			$headings = array_keys($data[0]);
+		}
+
+		// Single array
+		else
+		{
+			$headings = array_keys($data);
+			$data = array($data);
+		}
+
+		$ci = get_instance();
+		$ci->load->library('table');
+
+		$ci->table->set_heading($headings);
+
+		foreach ($data as &$row)
+		{
+			$ci->table->add_row($row);
+		}
+
+		return $ci->table->generate();
+	}
 
 	// Format HTML for output
 	public function to_csv()

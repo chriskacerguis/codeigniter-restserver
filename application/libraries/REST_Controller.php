@@ -37,6 +37,9 @@ class REST_Controller extends CI_Controller {
 		// How is this request being made? POST, DELETE, GET, PUT?
 		$this->request->method = $this->_detect_method();
 
+		// Set up our GET variables
+		$this->_get_args = array_merge($this->_get_args, $this->uri->ruri_to_assoc());
+
 		$this->load->library('security');
 
 		// This library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter itself
@@ -91,9 +94,6 @@ class REST_Controller extends CI_Controller {
 			$this->request->body = $this->format->factory($this->request->body, $this->request->format)->to_array();
 		}
 
-		// Set up our GET variables
-		$this->_get_args = array_merge($this->_get_args, $this->uri->ruri_to_assoc());
-
 		// Merge both for one mega-args variable
 		$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_post_args, $this->_delete_args);
 
@@ -146,6 +146,12 @@ class REST_Controller extends CI_Controller {
 	 */
 	public function _remap($object_called)
 	{
+		$pattern = '/^(.*)\.(' . implode('|', array_keys($this->_supported_formats)) . ')$/';
+		if (preg_match($pattern, $object_called, $matches))
+		{
+			$object_called = $matches[1];
+		}
+
 		$controller_method = $object_called . '_' . $this->request->method;
 
 		// Do we want to log this method (if allowed by config)?
@@ -223,20 +229,18 @@ class REST_Controller extends CI_Controller {
 			if (method_exists($this, '_format_'.$this->response->format))
 			{
 				// Set the correct format header
-				header('Content-type: '.$this->_supported_formats[$this->response->format]);
+				header('Content-Type: '.$this->_supported_formats[$this->response->format]);
 
-				$formatted_data = $this->{'_format_'.$this->response->format}($data);
-				$output = $formatted_data;
+				$output = $this->{'_format_'.$this->response->format}($data);
 			}
 
 			// If the format method exists, call and return the output in that format
 			elseif (method_exists($this->format, 'to_'.$this->response->format))
 			{
 				// Set the correct format header
-				header('Content-type: '.$this->_supported_formats[$this->response->format]);
+				header('Content-Type: '.$this->_supported_formats[$this->response->format]);
 
-				$formatted_data = $this->format->factory($data)->{'to_'.$this->response->format}();
-				$output = $formatted_data;
+				$output = $this->format->factory($data)->{'to_'.$this->response->format}();
 			}
 
 			// Format not supported, output directly
@@ -248,6 +252,7 @@ class REST_Controller extends CI_Controller {
 
 		header('HTTP/1.1: ' . $http_code);
 		header('Status: ' . $http_code);
+		header('Content-Length: ' . strlen($output));
 
 		exit($output);
 	}
@@ -284,7 +289,13 @@ class REST_Controller extends CI_Controller {
 		$pattern = '/\.(' . implode('|', array_keys($this->_supported_formats)) . ')$/';
 
 		// Check if a file extension is used
-		if (preg_match($pattern, end($this->_get_args), $matches))
+		if (preg_match($pattern, $this->uri->uri_string(), $matches))
+		{
+			return $matches[1];
+		}
+		
+		// Check if a file extension is used
+		elseif ($this->_get_args AND preg_match($pattern, end($this->_get_args), $matches))
 		{
 			// The key of the last argument
 			$last_key = end(array_keys($this->_get_args));
@@ -297,9 +308,9 @@ class REST_Controller extends CI_Controller {
 		}
 
 		// A format has been passed as an argument in the URL and it is supported
-		if (isset($this->_args['format']) AND isset($this->_supported_formats))
+		if (isset($this->_get_args['format']) AND array_key_exists($this->_get_args['format'], $this->_supported_formats))
 		{
-			return $this->_args['format'];
+			return $this->_get_args['format'];
 		}
 
 		// Otherwise, check the HTTP_ACCEPT (if it exists and we are allowed)
@@ -336,6 +347,7 @@ class REST_Controller extends CI_Controller {
 				}
 			}
 		} // End HTTP_ACCEPT checking
+		
 		// Well, none of that has worked! Let's see if the controller has a default
 		if ( ! empty($this->rest_format))
 		{
@@ -485,7 +497,7 @@ class REST_Controller extends CI_Controller {
 		if (!$result OR $result->hour_started < time() - (60 * 60))
 		{
 			// Right, set one up from scratch
-			$this->rest->db->insert('limits', array(
+			$this->rest->db->insert(config_item('rest_limits_table'), array(
 				'uri' => $this->uri->uri_string(),
 				'api_key' => isset($this->rest->key) ? $this->rest->key : '',
 				'count' => 1,
@@ -506,7 +518,7 @@ class REST_Controller extends CI_Controller {
 					->where('uri', $this->uri->uri_string())
 					->where('api_key', $this->rest->key)
 					->set('count', 'count + 1', FALSE)
-					->update(config_item('limits'));
+					->update(config_item('rest_limits_table'));
 		}
 
 		return TRUE;
@@ -557,7 +569,6 @@ class REST_Controller extends CI_Controller {
 
 		// Return false when there is an override value set but it doesn't match 'basic', 'digest', or 'none'.  (the value was misspelled)
 		return false;
-
 	}
 
 
@@ -755,34 +766,6 @@ class REST_Controller extends CI_Controller {
 
 	// Many of these have been moved to the Format class for better separation, but these methods will be checked too
 	
-	// Format HTML for output
-	private function _format_html($data = array())
-	{
-		// Multi-dimentional array
-		if (isset($data[0]))
-		{
-			$headings = array_keys($data[0]);
-		}
-
-		// Single array
-		else
-		{
-			$headings = array_keys($data);
-			$data = array($data);
-		}
-
-		$this->load->library('table');
-
-		$this->table->set_heading($headings);
-
-		foreach ($data as &$row)
-		{
-			$this->table->add_row($row);
-		}
-
-		return $this->table->generate();
-	}
-
 	// Encode as JSONP
 	private function _format_jsonp($data = array())
 	{
