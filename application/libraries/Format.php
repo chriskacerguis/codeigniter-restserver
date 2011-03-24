@@ -24,7 +24,7 @@ class Format {
 	 * @param   string  data format the file was provided in
 	 * @return  Factory
 	 */
-	public static function factory($data, $from_type = null)
+	public function factory($data, $from_type = null)
 	{
 		// Stupid stuff to emulate the "new static()" stuff in this libraries PHP 5.3 equivilent
 		$class = __CLASS__;
@@ -68,7 +68,7 @@ class Format {
 		{
 			if (is_object($value) or is_array($value))
 			{
-				$array[$key] = static::to_array($value);
+				$array[$key] = $this->to_array($value);
 			}
 
 			else
