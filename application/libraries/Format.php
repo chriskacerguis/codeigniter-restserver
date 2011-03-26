@@ -57,14 +57,15 @@ class Format {
 
 	public function to_array($data = null)
 	{
-		if ($data === null)
+		// If not just null, but nopthing is provided
+		if ($data === null and ! func_num_args())
 		{
 			$data = $this->_data;
 		}
 
 		$array = array();
 
-		foreach ((array) $this->_data as $key => $value)
+		foreach ((array) $data as $key => $value)
 		{
 			if (is_object($value) or is_array($value))
 			{
@@ -81,9 +82,9 @@ class Format {
 	}
 
 	// Format XML for output
-	public function to_xml($data = null, $structure = NULL, $basenode = 'xml')
+	public function to_xml($data = null, $structure = null, $basenode = 'xml')
 	{
-		if ($data == null)
+		if ($data === null and ! func_num_args())
 		{
 			$data = $this->_data;
 		}
@@ -94,7 +95,7 @@ class Format {
 			ini_set('zend.ze1_compatibility_mode', 0);
 		}
 
-		if ($structure == NULL)
+		if ($structure === null)
 		{
 			$structure = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><$basenode />");
 		}
