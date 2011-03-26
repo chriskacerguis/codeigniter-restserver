@@ -144,7 +144,7 @@ class REST_Controller extends CI_Controller {
 	 * Requests are not made to methods directly The request will be for an "object".
 	 * this simply maps the object and method to the correct Controller method.
 	 */
-	public function _remap($object_called)
+	public function _remap($object_called, $arguments)
 	{
 		$pattern = '/^(.*)\.(' . implode('|', array_keys($this->_supported_formats)) . ')$/';
 		if (preg_match($pattern, $object_called, $matches))
@@ -204,7 +204,7 @@ class REST_Controller extends CI_Controller {
 		}
 
 		// And...... GO!
-		$this->$controller_method();
+		call_user_func_array(array($this, $controller_method), $arguments);
 	}
 
 	/*
