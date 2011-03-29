@@ -77,7 +77,8 @@ class REST_Controller extends CI_Controller {
 				// If no file type is provided, this is probably just arguments
 				else
 				{
-					parse_str($this->request->body, $this->_put_args);
+					$tmp = file_get_contents('php://input');
+                    parse_str($tmp, $this->_put_args);
 				}
 				
 				break;
