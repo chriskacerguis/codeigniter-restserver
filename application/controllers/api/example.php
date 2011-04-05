@@ -86,4 +86,10 @@ class Example extends REST_Controller
 	{
 		var_dump($this->request->body);
 	}
+
+
+	public function send_put()
+	{
+		var_dump($this->put('foo'));
+	}
 }
