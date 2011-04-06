@@ -18,6 +18,17 @@ require APPPATH.'/libraries/REST_Controller.php';
 
 class Example extends REST_Controller
 {
+    function __construct() 
+    {
+        parent::__construct();
+        
+        // Checking for keys? GET TO WORK!
+        if (config_item('rest_enable_keys'))
+        {
+            $this->allow_api = $this->_detect_api_key();
+        }
+    }
+    
 	function user_get()
     {
         if(!$this->get('id'))

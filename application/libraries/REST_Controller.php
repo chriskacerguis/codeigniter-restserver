@@ -7,12 +7,12 @@ class REST_Controller extends CI_Controller {
 	protected $request = NULL; // Stores accept, language, body, headers, etc
 	protected $response = NULL; // What is gonna happen in output?
 	protected $rest = NULL; // Stores DB, keys, key level, etc
+    protected $allow_api = TRUE; // Determines if the API used is allowed in the system.
 	private $_get_args = array();
 	private $_post_args = array();
 	private $_put_args = array();
 	private $_delete_args = array();
 	private $_args = array();
-	private $_allow = TRUE;
 
 	// List all supported methods, the first will be the default format
 	private $_supported_formats = array(
@@ -125,12 +125,6 @@ class REST_Controller extends CI_Controller {
 			$this->rest->db = $this->load->database(config_item('rest_database_group'), TRUE);
 		}
 
-		// Checking for keys? GET TO WORK!
-		if (config_item('rest_enable_keys'))
-		{
-			$this->_allow = $this->_detect_api_key();
-		}
-
 		// only allow ajax requests
 		if ( ! $this->input->is_ajax_request() AND config_item('rest_ajax_only') )
 		{
@@ -161,7 +155,7 @@ class REST_Controller extends CI_Controller {
 		$use_key = ! (isset($this->methods[$controller_method]['key']) AND $this->methods[$controller_method]['key'] == FALSE);
 
 		// Get that useless shitty key out of here
-		if (config_item('rest_enable_keys') AND $use_key AND $this->_allow === FALSE)
+		if (config_item('rest_enable_keys') AND $use_key AND $this->allow_api === FALSE)
 		{
 			$this->response(array('status' => false, 'error' => 'Invalid API Key.'), 403);
 		}
@@ -387,7 +381,7 @@ class REST_Controller extends CI_Controller {
 	 * See if the user has provided an API key
 	 */
 
-	private function _detect_api_key()
+	protected function _detect_api_key()
 	{
 		// Work out the name of the SERVER entry based on config
 		$key_name = 'HTTP_' . strtoupper(str_replace('-', '_', config_item('rest_key_name')));
