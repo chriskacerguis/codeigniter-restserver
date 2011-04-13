@@ -209,12 +209,17 @@ class Format {
 	{
 		return serialize($this->_data);
 	}
-
+	
+	// Output as a string representing the PHP structure
+	public function to_php()
+	{
+	    return var_export($this->_data, TRUE);
+	}
 
 	// Format XML for output
 	protected function _from_xml($string)
 	{
-		return (array) simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOCDATA);
+		return $string ? (array) simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOCDATA) : array();
 	}
 
 	// Format HTML for output
