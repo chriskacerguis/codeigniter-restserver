@@ -36,6 +36,8 @@ class Format {
 	 */
 	public function __construct($data = null, $from_type = null)
 	{
+		get_instance()->load->helper('inflector');
+		
 		// If the provided data is already formatted we should probably convert it to an array
 		if ($from_type !== null)
 		{
@@ -110,27 +112,26 @@ class Format {
 		{
 			// no numeric keys in our xml please!
 			if (is_numeric($key))
-			{
-				// make string key...
-				//$key = "item_". (string) $key;
-				$key = "item";
-			}
+            {
+                // make string key...           
+                $key = (singular($basenode) != $basenode) ? singular($basenode) : 'item';
+            }
 
 			// replace anything not alpha numeric
 			$key = preg_replace('/[^a-z_\-0-9]/i', '', $key);
 
-			// if there is another array found recrusively call this function
-			if (is_array($value) OR is_object($value))
-			{
-				$node = $structure->addChild($key);
-				$this->to_xml($value, $node, $basenode);
-			}
-			else
-			{
-				// Actual boolean values need to be converted to numbers
-				is_bool($value) AND $value = (int) $value;
+            // if there is another array found recrusively call this function
+            if (is_array($value) || is_object($value))
+            {
+                $node = $structure->addChild($key);
 
-				// add single node.
+                // recrusive call.
+                $this->to_xml($value, $node, $key);
+            }
+
+            else
+            {
+                // add single node.
 				$value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, "UTF-8");
 
 				$structure->addChild($key, $value);

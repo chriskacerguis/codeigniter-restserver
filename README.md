@@ -22,6 +22,11 @@ but you can read my NetTuts article which covers it's usage along with the REST 
 
 ## Change Log
 
+### 2.5
+
+* Instead of just seeing item, item, item, the singular version of the basenode will be used if possible. [Example](http://d.pr/RS46)
+* Re-factored to use the Format library, soon to be merged with CodeIgniter.
+
 ### 2.4
 
 * Added support for UTF-8 characters in XML.
