@@ -31,6 +31,9 @@ class REST_Controller extends CI_Controller {
 	{
 		parent::__construct();
 
+		// Add third_party path so that we can find the config/rest.php and libraries/format.php
+		$this->load->add_package_path(APPPATH.'third_party/restserver/');
+
 		// Lets grab the config and get ready to party
 		$this->load->config('rest');
 
