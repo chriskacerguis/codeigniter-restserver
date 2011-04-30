@@ -269,7 +269,12 @@ class REST_Controller extends CI_Controller {
 			// Check all formats against the HTTP_ACCEPT header
 			foreach ($this->_supported_formats as $format => $mime)
 			{
-				if ($this->input->server('CONTENT_TYPE') == $mime)
+				if (strpos($match = $this->input->server('CONTENT_TYPE'), ';'))
+				{
+					$match = current(explode(';', $match));
+				}
+
+				if ($match == $mime)
 				{
 					return $format;
 				}
@@ -405,8 +410,9 @@ class REST_Controller extends CI_Controller {
 			}
 
 			$this->rest->key = $row->key;
-			$this->rest->level = $row->level;
-			$this->rest->ignore_limits = $row->ignore_limits;
+			
+			isset($row->level) AND $this->rest->level = $row->level;
+			isset($row->ignore_limits) AND $this->rest->ignore_limits = $row->ignore_limits;
 
 			return TRUE;
 		}
