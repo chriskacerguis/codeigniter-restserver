@@ -548,27 +548,32 @@ class REST_Controller extends CI_Controller {
 		}
 
 		// Check to see if there's an override value set for the current class/method being called
-		if ( empty($this->overrides_array[$this->router->class][$this->router->method]) )
+		$override_normal = empty($this->overrides_array[$this->router->class][$this->router->method])?'':$this->overrides_array[$this->router->class][$this->router->method];
+		$override_method = empty($this->overrides_array[$this->router->class][$this->router->method][$this->request->method])?'':$this->overrides_array[$this->router->class][$this->router->method][$this->request->method];
+		
+		if ( empty($override_normal) and empty($override_method))
 		{
 			return false;
 		}
-
+		
 		// None auth override found, prepare nothing but send back a true override flag
-		if ($this->overrides_array[$this->router->class][$this->router->method] == 'none')
+		if ((!empty($override_normal) and $override_normal == 'none') or (!empty($override_method) and $override_method == 'none'))
 		{
 			return true;
 		}
 
 		// Basic auth override found, prepare basic
-		if ($this->overrides_array[$this->router->class][$this->router->method] == 'basic')
+		if ((!empty($override_normal) and $override_normal == 'basic') or (!empty($override_method) and $override_method == 'basic'))
 		{
+			$this->rest_auth_type = 'basic';
 			$this->_prepare_basic_auth();
 			return true;
 		}
 
 		// Digest auth override found, prepare digest
-		if ($this->overrides_array[$this->router->class][$this->router->method] == 'digest')
+		if ((!empty($override_normal) and $override_normal == 'digest') or (!empty($override_method) and $override_method == 'digest'))
 		{
+			$this->rest_auth_type = 'digest';
 			$this->_prepare_digest_auth();
 			return true;
 		}

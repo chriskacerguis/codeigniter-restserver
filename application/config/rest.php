@@ -71,6 +71,8 @@ $config['rest_auth'] = false;
 // $config['auth_override_class_method']['deals']['view'] = 'none';
 // $config['auth_override_class_method']['deals']['insert'] = 'digest';
 // $config['auth_override_class_method']['accounts']['user'] = 'basic';
+// $config['auth_override_class_method']['accounts']['forum']['post'] = 'digest';
+
 
 /*
 |--------------------------------------------------------------------------
