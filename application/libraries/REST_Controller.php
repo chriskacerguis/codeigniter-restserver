@@ -734,11 +734,8 @@ class REST_Controller extends CI_Controller {
 		$A2 = md5(strtoupper($this->request->method) . ':' . $digest['uri']);
 		$valid_response = md5($A1 . ':' . $digest['nonce'] . ':' . $digest['nc'] . ':' . $digest['cnonce'] . ':' . $digest['qop'] . ':' . $A2);
 
-		if ($digest['response'] != $valid_response)
-		{
-			header('HTTP/1.0 401 Unauthorized');
-			header('HTTP/1.1 401 Unauthorized');
-			exit;
+		if ($digest['response'] != $valid_response) {
+			$this->response(array('status' => 'ko', 'error' => 'Not authorized'), 401);
 		}
 	}
 
