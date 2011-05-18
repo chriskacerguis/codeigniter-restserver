@@ -51,7 +51,7 @@ class REST_Controller extends CI_Controller {
 		// Some Methods cant have a body
 		$this->request->body = NULL;
 
-		switch ($this->request->method)
+	switch ($this->request->method)
 		{
 			case 'get':
 				// Grab proper GET variables
@@ -63,8 +63,12 @@ class REST_Controller extends CI_Controller {
 
 			case 'post':
 				$this->_post_args = $_POST;
-
-				$this->request->format and $this->request->body = file_get_contents('php://input');
+				
+				if (empty($this->_post_args) and $this->request->format) {
+					$this->request->body = file_get_contents('php://input');
+					$this->_post_args = $this->format->factory($this->request->body, $this->request->format)->to_array();
+				}
+				
 				break;
 
 			case 'put':
@@ -72,19 +76,23 @@ class REST_Controller extends CI_Controller {
 				if ($this->request->format)
 				{
 					$this->request->body = file_get_contents('php://input');
+					$this->_put_args = $this->format->factory($this->request->body, $this->request->format)->to_array();
 				}
 
 				// If no file type is provided, this is probably just arguments
 				else
 				{
-					parse_str(file_get_contents('php://input'), $this->_put_args);
+					parse_str($this->request->body, $this->_put_args);
 				}
 				
 				break;
 
 			case 'delete':
 				// Set up out DELETE variables (which shouldn't really exist, but sssh!)
-				parse_str(file_get_contents('php://input'), $this->_delete_args);
+				//parse_str(file_get_contents('php://input'), $this->_delete_args);
+				$this->request->body = file_get_contents('php://input');
+				$this->_delete_args = $this->format->factory($this->request->body, $this->request->format)->to_array();
+				
 				break;
 		}
 
@@ -746,11 +754,11 @@ class REST_Controller extends CI_Controller {
 
 	private function _force_login($nonce = '')
 	{
-		if ($this->config->item('rest_auth') == 'basic')
+		if ($this->rest_auth_type == 'basic')
 		{
 			header('WWW-Authenticate: Basic realm="' . $this->config->item('rest_realm') . '"');
 		}
-		elseif ($this->config->item('rest_auth') == 'digest')
+		elseif ($this->rest_auth_type == 'digest')
 		{
 			header('WWW-Authenticate: Digest realm="' . $this->config->item('rest_realm') . '" qop="auth" nonce="' . $nonce . '" opaque="' . md5($this->config->item('rest_realm')) . '"');
 		}
