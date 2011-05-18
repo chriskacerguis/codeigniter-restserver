@@ -223,7 +223,7 @@ class Format {
 		return $string ? (array) simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOCDATA) : array();
 	}
 
-	// Format HTML for output
+	// Format CSV for output
 	// This function is DODGY! Not perfect CSV support but works with my REST_Controller
 	protected function _from_csv($string)
 	{
