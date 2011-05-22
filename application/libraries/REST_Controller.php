@@ -394,15 +394,19 @@ class REST_Controller extends CI_Controller {
 
 	private function _detect_api_key()
 	{
+
+                // Get the api key name variable set in the rest config file
+                $api_key_variable = config_item('rest_key_name');
+
 		// Work out the name of the SERVER entry based on config
-		$key_name = 'HTTP_' . strtoupper(str_replace('-', '_', config_item('rest_key_name')));
+		$key_name = 'HTTP_' . strtoupper(str_replace('-', '_', $api_key_variable));
 
 		$this->rest->key = NULL;
 		$this->rest->level = NULL;
 		$this->rest->ignore_limits = FALSE;
 
 		// Find the key from server or arguments
-		if ($key = isset($this->_args['API-Key']) ? $this->_args['API-Key'] : $this->input->server($key_name))
+		if ($key = isset($this->_args[$api_key_variable]) ? $this->_args[$api_key_variable] : $this->input->server($key_name))
 		{
 			if ( ! $row = $this->rest->db->where('key', $key)->get(config_item('rest_keys_table'))->row())
 			{
