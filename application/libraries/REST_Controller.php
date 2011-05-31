@@ -672,7 +672,7 @@ class REST_Controller extends CI_Controller {
 
 	// SECURITY FUNCTIONS ---------------------------------------------------------
 
-	private function _check_login($username = '', $password = NULL)
+	protected function _check_login($username = '', $password = NULL)
 	{
 		if (empty($username))
 		{
