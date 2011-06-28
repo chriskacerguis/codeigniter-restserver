@@ -7,15 +7,15 @@ class REST_Controller extends CI_Controller {
 	protected $request = NULL; // Stores accept, language, body, headers, etc
 	protected $response = NULL; // What is gonna happen in output?
 	protected $rest = NULL; // Stores DB, keys, key level, etc
-	private $_get_args = array();
-	private $_post_args = array();
-	private $_put_args = array();
-	private $_delete_args = array();
-	private $_args = array();
-	private $_allow = TRUE;
+	protected $_get_args = array();
+	protected $_post_args = array();
+	protected $_put_args = array();
+	protected $_delete_args = array();
+	protected $_args = array();
+	protected $_allow = TRUE;
 
 	// List all supported methods, the first will be the default format
-	private $_supported_formats = array(
+	protected $_supported_formats = array(
 		'xml' => 'application/xml',
 		'rawxml' => 'application/xml',
 		'json' => 'application/json',
@@ -262,7 +262,7 @@ class REST_Controller extends CI_Controller {
 	 *
 	 * Detect which format the HTTP Body is provided in
 	 */
-	private function _detect_input_format()
+	protected function _detect_input_format()
 	{
 		if ($this->input->server('CONTENT_TYPE'))
 		{
@@ -289,7 +289,7 @@ class REST_Controller extends CI_Controller {
 	 *
 	 * Detect which format should be used to output the data
 	 */
-	private function _detect_output_format()
+	protected function _detect_output_format()
 	{
 		$pattern = '/\.(' . implode('|', array_keys($this->_supported_formats)) . ')$/';
 
@@ -369,7 +369,7 @@ class REST_Controller extends CI_Controller {
 	 * Detect which method (POST, PUT, GET, DELETE) is being used
 	 */
 
-	private function _detect_method()
+	protected function _detect_method()
 	{
 		$method = strtolower($this->input->server('REQUEST_METHOD'));
 
@@ -392,7 +392,7 @@ class REST_Controller extends CI_Controller {
 	 * See if the user has provided an API key
 	 */
 
-	private function _detect_api_key()
+	protected function _detect_api_key()
 	{
 		// Work out the name of the SERVER entry based on config
 		$key_name = 'HTTP_' . strtoupper(str_replace('-', '_', config_item('rest_key_name')));
@@ -427,7 +427,7 @@ class REST_Controller extends CI_Controller {
 	 * What language do they want it in?
 	 */
 
-	private function _detect_lang()
+	protected function _detect_lang()
 	{
 		if ( ! $lang = $this->input->server('HTTP_ACCEPT_LANGUAGE'))
 		{
@@ -461,7 +461,7 @@ class REST_Controller extends CI_Controller {
 	 * Record the entry for awesomeness purposes
 	 */
 
-	private function _log_request($authorized = FALSE)
+	protected function _log_request($authorized = FALSE)
 	{
 		return $this->rest->db->insert(config_item('rest_logs_table'), array(
 			'uri' => $this->uri->uri_string(),
@@ -480,7 +480,7 @@ class REST_Controller extends CI_Controller {
 	 * Record the entry for awesomeness purposes
 	 */
 
-	private function _check_limit($controller_method)
+	protected function _check_limit($controller_method)
 	{
 		// They are special, or it might not even have a limit
 		if (!empty($this->rest->ignore_limits) OR !isset($this->methods[$controller_method]['limit']))
@@ -535,7 +535,7 @@ class REST_Controller extends CI_Controller {
 	 * Check if there is a specific auth type set for the current class/method being called
 	 */
 
-	private function _auth_override_check()
+	protected function _auth_override_check()
 	{
 
 		// Assign the class/method auth type override array from the config
@@ -620,7 +620,7 @@ class REST_Controller extends CI_Controller {
 		return array_key_exists($key, $this->_delete_args) ? $this->_xss_clean($this->_delete_args[$key], $xss_clean) : FALSE;
 	}
 
-	private function _xss_clean($val, $bool)
+	protected function _xss_clean($val, $bool)
 	{
 		if (CI_VERSION < 2)
 		{
@@ -641,7 +641,7 @@ class REST_Controller extends CI_Controller {
 
 	// SECURITY FUNCTIONS ---------------------------------------------------------
 
-	private function _check_login($username = '', $password = NULL)
+	protected function _check_login($username = '', $password = NULL)
 	{
 		if (empty($username))
 		{
@@ -664,7 +664,7 @@ class REST_Controller extends CI_Controller {
 		return TRUE;
 	}
 
-	private function _prepare_basic_auth()
+	protected function _prepare_basic_auth()
 	{
 		$username = NULL;
 		$password = NULL;
@@ -691,7 +691,7 @@ class REST_Controller extends CI_Controller {
 		}
 	}
 
-	private function _prepare_digest_auth()
+	protected function _prepare_digest_auth()
 	{
 		$uniqid = uniqid(""); // Empty argument for backward compatibility
 		// We need to test which server authentication variable to use
@@ -742,7 +742,7 @@ class REST_Controller extends CI_Controller {
 		}
 	}
 
-	private function _force_login($nonce = '')
+	protected function _force_login($nonce = '')
 	{
 		if ($this->config->item('rest_auth') == 'basic')
 		{
@@ -757,7 +757,7 @@ class REST_Controller extends CI_Controller {
 	}
 
 	// Force it into an array
-	private function _force_loopable($data)
+	protected function _force_loopable($data)
 	{
 		// Force it to be something useful
 		if ( ! is_array($data) AND ! is_object($data))
@@ -773,7 +773,7 @@ class REST_Controller extends CI_Controller {
 	// Many of these have been moved to the Format class for better separation, but these methods will be checked too
 	
 	// Encode as JSONP
-	private function _format_jsonp($data = array())
+	protected function _format_jsonp($data = array())
 	{
 		return $this->get('callback') . '(' . json_encode($data) . ')';
 	}
