@@ -40,9 +40,10 @@
  */
 if ( ! function_exists('heading'))
 {
-	function heading($data = '', $h = '1')
+	function heading($data = '', $h = '1', $attributes = '')
 	{
-		return "<h".$h.">".$data."</h".$h.">";
+		$attributes = ($attributes != '') ? ' '.$attributes : $attributes;
+		return "<h".$h.$attributes.">".$data."</h".$h.">";
 	}
 }
 
@@ -122,6 +123,10 @@ if ( ! function_exists('_list'))
 				$atts .= ' ' . $key . '="' . $val . '"';
 			}
 			$attributes = $atts;
+		}
+		elseif (is_string($attributes) AND strlen($attributes) > 0)
+		{
+			$attributes = ' '. $attributes;
 		}
 
 		// Write the opening list tag
@@ -258,7 +263,16 @@ if ( ! function_exists('doctype'))
 
 		if ( ! is_array($_doctypes))
 		{
-			if ( ! require_once(APPPATH.'config/doctypes.php'))
+			if (defined('ENVIRONMENT') AND is_file(APPPATH.'config/'.ENVIRONMENT.'/doctypes.php'))
+			{
+				include(APPPATH.'config/'.ENVIRONMENT.'/doctypes.php');
+			}
+			elseif (is_file(APPPATH.'config/doctypes.php'))
+			{
+				include(APPPATH.'config/doctypes.php');
+			}
+
+			if ( ! is_array($_doctypes))
 			{
 				return FALSE;
 			}

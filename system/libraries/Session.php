@@ -37,6 +37,7 @@ class CI_Session {
 	var $cookie_prefix				= '';
 	var $cookie_path				= '';
 	var $cookie_domain				= '';
+	var $cookie_secure				= FALSE;
 	var $sess_time_to_update		= 300;
 	var $encryption_key				= '';
 	var $flashdata_key				= 'flash';
@@ -61,7 +62,7 @@ class CI_Session {
 
 		// Set all the session preferences, which can either be set
 		// manually via the $params array above or via the config file
-		foreach (array('sess_encrypt_cookie', 'sess_use_database', 'sess_table_name', 'sess_expiration', 'sess_expire_on_close', 'sess_match_ip', 'sess_match_useragent', 'sess_cookie_name', 'cookie_path', 'cookie_domain', 'sess_time_to_update', 'time_reference', 'cookie_prefix', 'encryption_key') as $key)
+		foreach (array('sess_encrypt_cookie', 'sess_use_database', 'sess_table_name', 'sess_expiration', 'sess_expire_on_close', 'sess_match_ip', 'sess_match_useragent', 'sess_cookie_name', 'cookie_path', 'cookie_domain', 'cookie_secure', 'sess_time_to_update', 'time_reference', 'cookie_prefix', 'encryption_key') as $key)
 		{
 			$this->$key = (isset($params[$key])) ? $params[$key] : $this->CI->config->item($key);
 		}
@@ -188,7 +189,7 @@ class CI_Session {
 		}
 
 		// Does the User Agent Match?
-		if ($this->sess_match_useragent == TRUE AND trim($session['user_agent']) != trim(substr($this->CI->input->user_agent(), 0, 50)))
+		if ($this->sess_match_useragent == TRUE AND trim($session['user_agent']) != trim(substr($this->CI->input->user_agent(), 0, 120)))
 		{
 			$this->sess_destroy();
 			return FALSE;
@@ -315,7 +316,7 @@ class CI_Session {
 		$this->userdata = array(
 							'session_id'	=> md5(uniqid($sessid, TRUE)),
 							'ip_address'	=> $this->CI->input->ip_address(),
-							'user_agent'	=> substr($this->CI->input->user_agent(), 0, 50),
+							'user_agent'	=> substr($this->CI->input->user_agent(), 0, 120),
 							'last_activity'	=> $this->now
 							);
 
@@ -434,11 +435,11 @@ class CI_Session {
 	 * Fetch all session data
 	 *
 	 * @access	public
-	 * @return	mixed
+	 * @return	array
 	 */
 	function all_userdata()
 	{
-		return ( ! isset($this->userdata)) ? FALSE : $this->userdata;
+		return $this->userdata;
 	}
 
 	// --------------------------------------------------------------------
@@ -666,7 +667,7 @@ class CI_Session {
 					$expire,
 					$this->cookie_path,
 					$this->cookie_domain,
-					0
+					$this->cookie_secure
 				);
 	}
 
