@@ -194,7 +194,7 @@ class Key extends REST_Controller
 	
 	private function _generate_key()
 	{
-		$this->load->helper('security');
+		//$this->load->helper('security');
 		
 		do
 		{
