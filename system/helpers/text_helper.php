@@ -366,12 +366,14 @@ if ( ! function_exists('convert_accented_characters'))
 {
 	function convert_accented_characters($str)
 	{
-		if ( ! file_exists(APPPATH.'config/foreign_chars'.EXT))
+		if (defined('ENVIRONMENT') AND is_file(APPPATH.'config/'.ENVIRONMENT.'/foreign_chars.php'))
 		{
-			return $str;
+			include(APPPATH.'config/'.ENVIRONMENT.'/foreign_chars.php');
 		}
-
-		include APPPATH.'config/foreign_chars'.EXT;
+		elseif (is_file(APPPATH.'config/foreign_chars.php'))
+		{
+			include(APPPATH.'config/foreign_chars.php');
+		}
 
 		if ( ! isset($foreign_characters))
 		{
@@ -443,7 +445,7 @@ if ( ! function_exists('word_wrap'))
 			}
 
 			$temp = '';
-			while((strlen($line)) > $charlim)
+			while ((strlen($line)) > $charlim)
 			{
 				// If the over-length word is a URL we won't wrap it
 				if (preg_match("!\[url.+\]|://|wwww.!", $line))

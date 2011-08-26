@@ -395,7 +395,7 @@ class CI_Email {
 	public function attach($filename, $disposition = 'attachment')
 	{
 		$this->_attach_name[] = $filename;
-		$this->_attach_type[] = $this->_mime_types(next(explode('.', basename($filename))));
+		$this->_attach_type[] = $this->_mime_types(pathinfo($filename, PATHINFO_EXTENSION));
 		$this->_attach_disp[] = $disposition; // Can also be 'inline'  Not sure if it matters
 		return $this;
 	}
@@ -722,7 +722,7 @@ class CI_Email {
 	{
 		if ( ! is_array($email))
 		{
-			$this->_set_error_message('email_must_be_array');
+			$this->_set_error_message('lang:email_must_be_array');
 			return FALSE;
 		}
 
@@ -730,7 +730,7 @@ class CI_Email {
 		{
 			if ( ! $this->valid_email($val))
 			{
-				$this->_set_error_message('email_invalid_address', $val);
+				$this->_set_error_message('lang:email_invalid_address', $val);
 				return FALSE;
 			}
 		}
@@ -897,7 +897,7 @@ class CI_Email {
 			}
 
 			$temp = '';
-			while((strlen($line)) > $charlim)
+			while ((strlen($line)) > $charlim)
 			{
 				// If the over-length word is a URL we won't wrap it
 				if (preg_match("!\[url.+\]|://|wwww.!", $line))
@@ -973,7 +973,7 @@ class CI_Email {
 		reset($this->_headers);
 		$this->_header_str = "";
 
-		foreach($this->_headers as $key => $val)
+		foreach ($this->_headers as $key => $val)
 		{
 			$val = trim($val);
 
@@ -1131,7 +1131,7 @@ class CI_Email {
 
 			if ( ! file_exists($filename))
 			{
-				$this->_set_error_message('email_attachment_missing', $filename);
+				$this->_set_error_message('lang:email_attachment_missing', $filename);
 				return FALSE;
 			}
 
@@ -1146,7 +1146,7 @@ class CI_Email {
 
 			if ( ! $fp = fopen($filename, FOPEN_READ))
 			{
-				$this->_set_error_message('email_attachment_unreadable', $filename);
+				$this->_set_error_message('lang:email_attachment_unreadable', $filename);
 				return FALSE;
 			}
 
@@ -1353,7 +1353,7 @@ class CI_Email {
 			( ! isset($this->_bcc_array) AND ! isset($this->_headers['Bcc'])) AND
 			( ! isset($this->_headers['Cc'])))
 		{
-			$this->_set_error_message('email_no_recipients');
+			$this->_set_error_message('lang:email_no_recipients');
 			return FALSE;
 		}
 
@@ -1484,7 +1484,7 @@ class CI_Email {
 
 					if ( ! $this->_send_with_mail())
 					{
-						$this->_set_error_message('email_send_failure_phpmail');
+						$this->_set_error_message('lang:email_send_failure_phpmail');
 						return FALSE;
 					}
 			break;
@@ -1492,7 +1492,7 @@ class CI_Email {
 
 					if ( ! $this->_send_with_sendmail())
 					{
-						$this->_set_error_message('email_send_failure_sendmail');
+						$this->_set_error_message('lang:email_send_failure_sendmail');
 						return FALSE;
 					}
 			break;
@@ -1500,14 +1500,14 @@ class CI_Email {
 
 					if ( ! $this->_send_with_smtp())
 					{
-						$this->_set_error_message('email_send_failure_smtp');
+						$this->_set_error_message('lang:email_send_failure_smtp');
 						return FALSE;
 					}
 			break;
 
 		}
 
-		$this->_set_error_message('email_sent', $this->_get_protocol());
+		$this->_set_error_message('lang:email_sent', $this->_get_protocol());
 		return TRUE;
 	}
 
@@ -1578,8 +1578,8 @@ class CI_Email {
 
 		if ($status != 0)
 		{
-			$this->_set_error_message('email_exit_status', $status);
-			$this->_set_error_message('email_no_socket');
+			$this->_set_error_message('lang:email_exit_status', $status);
+			$this->_set_error_message('lang:email_no_socket');
 			return FALSE;
 		}
 
@@ -1598,7 +1598,7 @@ class CI_Email {
 	{
 		if ($this->smtp_host == '')
 		{
-			$this->_set_error_message('email_no_hostname');
+			$this->_set_error_message('lang:email_no_hostname');
 			return FALSE;
 		}
 
@@ -1607,14 +1607,14 @@ class CI_Email {
 
 		$this->_send_command('from', $this->clean_email($this->_headers['From']));
 
-		foreach($this->_recipients as $val)
+		foreach ($this->_recipients as $val)
 		{
 			$this->_send_command('to', $val);
 		}
 
 		if (count($this->_cc_array) > 0)
 		{
-			foreach($this->_cc_array as $val)
+			foreach ($this->_cc_array as $val)
 			{
 				if ($val != "")
 				{
@@ -1625,7 +1625,7 @@ class CI_Email {
 
 		if (count($this->_bcc_array) > 0)
 		{
-			foreach($this->_bcc_array as $val)
+			foreach ($this->_bcc_array as $val)
 			{
 				if ($val != "")
 				{
@@ -1647,7 +1647,7 @@ class CI_Email {
 
 		if (strncmp($reply, '250', 3) != 0)
 		{
-			$this->_set_error_message('email_smtp_error', $reply);
+			$this->_set_error_message('lang:email_smtp_error', $reply);
 			return FALSE;
 		}
 
@@ -1672,9 +1672,9 @@ class CI_Email {
 										$errstr,
 										$this->smtp_timeout);
 
-		if( ! is_resource($this->_smtp_connect))
+		if ( ! is_resource($this->_smtp_connect))
 		{
-			$this->_set_error_message('email_smtp_error', $errno." ".$errstr);
+			$this->_set_error_message('lang:email_smtp_error', $errno." ".$errstr);
 			return FALSE;
 		}
 
@@ -1737,7 +1737,7 @@ class CI_Email {
 
 		if (substr($reply, 0, 3) != $resp)
 		{
-			$this->_set_error_message('email_smtp_error', $reply);
+			$this->_set_error_message('lang:email_smtp_error', $reply);
 			return FALSE;
 		}
 
@@ -1766,7 +1766,7 @@ class CI_Email {
 
 		if ($this->smtp_user == ""  AND  $this->smtp_pass == "")
 		{
-			$this->_set_error_message('email_no_smtp_unpw');
+			$this->_set_error_message('lang:email_no_smtp_unpw');
 			return FALSE;
 		}
 
@@ -1776,7 +1776,7 @@ class CI_Email {
 
 		if (strncmp($reply, '334', 3) != 0)
 		{
-			$this->_set_error_message('email_failed_smtp_login', $reply);
+			$this->_set_error_message('lang:email_failed_smtp_login', $reply);
 			return FALSE;
 		}
 
@@ -1786,7 +1786,7 @@ class CI_Email {
 
 		if (strncmp($reply, '334', 3) != 0)
 		{
-			$this->_set_error_message('email_smtp_auth_un', $reply);
+			$this->_set_error_message('lang:email_smtp_auth_un', $reply);
 			return FALSE;
 		}
 
@@ -1796,7 +1796,7 @@ class CI_Email {
 
 		if (strncmp($reply, '235', 3) != 0)
 		{
-			$this->_set_error_message('email_smtp_auth_pw', $reply);
+			$this->_set_error_message('lang:email_smtp_auth_pw', $reply);
 			return FALSE;
 		}
 
@@ -1815,7 +1815,7 @@ class CI_Email {
 	{
 		if ( ! fwrite($this->_smtp_connect, $data . $this->newline))
 		{
-			$this->_set_error_message('email_smtp_data_failure', $data);
+			$this->_set_error_message('lang:email_smtp_data_failure', $data);
 			return FALSE;
 		}
 		else
@@ -1942,7 +1942,7 @@ class CI_Email {
 		$CI =& get_instance();
 		$CI->lang->load('email');
 
-		if (FALSE === ($line = $CI->lang->line($msg)))
+		if (substr($msg, 0, 5) != 'lang:' || FALSE === ($line = $CI->lang->line(substr($msg, 5))))
 		{
 			$this->_debug_msg[] = str_replace('%s', $val, $msg)."<br />";
 		}

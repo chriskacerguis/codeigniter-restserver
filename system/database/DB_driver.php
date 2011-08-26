@@ -424,8 +424,8 @@ class CI_DB_driver {
 
 		if ( ! class_exists($driver))
 		{
-			include_once(BASEPATH.'database/DB_result'.EXT);
-			include_once(BASEPATH.'database/drivers/'.$this->dbdriver.'/'.$this->dbdriver.'_result'.EXT);
+			include_once(BASEPATH.'database/DB_result.php');
+			include_once(BASEPATH.'database/drivers/'.$this->dbdriver.'/'.$this->dbdriver.'_result.php');
 		}
 
 		return $driver;
@@ -767,7 +767,7 @@ class CI_DB_driver {
 
 		if ($query->num_rows() > 0)
 		{
-			foreach($query->result_array() as $row)
+			foreach ($query->result_array() as $row)
 			{
 				if (isset($row['TABLE_NAME']))
 				{
@@ -834,7 +834,7 @@ class CI_DB_driver {
 		$query = $this->query($sql);
 
 		$retval = array();
-		foreach($query->result_array() as $row)
+		foreach ($query->result_array() as $row)
 		{
 			if (isset($row['COLUMN_NAME']))
 			{
@@ -904,7 +904,7 @@ class CI_DB_driver {
 		$fields = array();
 		$values = array();
 
-		foreach($data as $key => $val)
+		foreach ($data as $key => $val)
 		{
 			$fields[] = $this->_escape_identifiers($key);
 			$values[] = $this->escape($val);
@@ -932,7 +932,7 @@ class CI_DB_driver {
 		}
 
 		$fields = array();
-		foreach($data as $key => $val)
+		foreach ($data as $key => $val)
 		{
 			$fields[$this->_protect_identifiers($key)] = $this->escape($val);
 		}
@@ -1115,7 +1115,7 @@ class CI_DB_driver {
 
 		if ( ! class_exists('CI_DB_Cache'))
 		{
-			if ( ! @include(BASEPATH.'database/DB_cache'.EXT))
+			if ( ! @include(BASEPATH.'database/DB_cache.php'))
 			{
 				return $this->cache_off();
 			}
@@ -1175,7 +1175,7 @@ class CI_DB_driver {
 
 		$trace = debug_backtrace();
 
-		foreach($trace as $call)
+		foreach ($trace as $call)
 		{
 			if (isset($call['file']) && strpos($call['file'], BASEPATH.'database') === FALSE)
 			{
@@ -1248,7 +1248,7 @@ class CI_DB_driver {
 		{
 			$escaped_array = array();
 
-			foreach($item as $k => $v)
+			foreach ($item as $k => $v)
 			{
 				$escaped_array[$this->_protect_identifiers($k)] = $this->_protect_identifiers($v);
 			}

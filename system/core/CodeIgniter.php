@@ -32,21 +32,35 @@
  *  Define the CodeIgniter Version
  * ------------------------------------------------------
  */
-	define('CI_VERSION', '2.0');
+	define('CI_VERSION', '2.0.3');
+
+/*
+ * ------------------------------------------------------
+ *  Define the CodeIgniter Branch (Core = TRUE, Reactor = FALSE)
+ * ------------------------------------------------------
+ */
+	define('CI_CORE', FALSE);
 
 /*
  * ------------------------------------------------------
  *  Load the global functions
  * ------------------------------------------------------
  */
-	require(BASEPATH.'core/Common'.EXT);
+	require(BASEPATH.'core/Common.php');
 
 /*
  * ------------------------------------------------------
  *  Load the framework constants
  * ------------------------------------------------------
  */
-	require(APPPATH.'config/constants'.EXT);
+	if (defined('ENVIRONMENT') AND file_exists(APPPATH.'config/'.ENVIRONMENT.'/constants.php'))
+	{
+		require(APPPATH.'config/'.ENVIRONMENT.'/constants.php');
+	}
+	else
+	{
+		require(APPPATH.'config/constants.php');
+	}
 
 /*
  * ------------------------------------------------------
@@ -80,7 +94,7 @@
 	{
 		get_config(array('subclass_prefix' => $assign_to_config['subclass_prefix']));
 	}
-	
+
 /*
  * ------------------------------------------------------
  *  Set a liberal script execution time limit
@@ -183,6 +197,13 @@
 	}
 
 /*
+ * -----------------------------------------------------
+ * Load the security class for xss and csrf support
+ * -----------------------------------------------------
+ */
+	$SEC =& load_class('Security', 'core');
+
+/*
  * ------------------------------------------------------
  *  Load the Input class and sanitize globals
  * ------------------------------------------------------
@@ -203,7 +224,7 @@
  *
  */
 	// Load the base controller class
-	require BASEPATH.'core/Controller'.EXT;
+	require BASEPATH.'core/Controller.php';
 
 	function &get_instance()
 	{
@@ -211,20 +232,20 @@
 	}
 
 
-	if (file_exists(APPPATH.'core/'.$CFG->config['subclass_prefix'].'Controller'.EXT))
+	if (file_exists(APPPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php'))
 	{
-		require APPPATH.'core/'.$CFG->config['subclass_prefix'].'Controller'.EXT;
+		require APPPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php';
 	}
 
 	// Load the local application controller
 	// Note: The Router class automatically validates the controller path using the router->_validate_request().
 	// If this include fails it means that the default controller in the Routes.php file is not resolving to something valid.
-	if ( ! file_exists(APPPATH.'controllers/'.$RTR->fetch_directory().$RTR->fetch_class().EXT))
+	if ( ! file_exists(APPPATH.'controllers/'.$RTR->fetch_directory().$RTR->fetch_class().'.php'))
 	{
 		show_error('Unable to load your default controller. Please make sure the controller specified in your Routes.php file is valid.');
 	}
 
-	include(APPPATH.'controllers/'.$RTR->fetch_directory().$RTR->fetch_class().EXT);
+	include(APPPATH.'controllers/'.$RTR->fetch_directory().$RTR->fetch_class().'.php');
 
 	// Set a mark point for benchmarking
 	$BM->mark('loading_time:_base_classes_end');
@@ -289,7 +310,28 @@
 		// methods, so we'll use this workaround for consistent behavior
 		if ( ! in_array(strtolower($method), array_map('strtolower', get_class_methods($CI))))
 		{
-			show_404("{$class}/{$method}");
+			// Check and see if we are using a 404 override and use it.
+			if ( ! empty($RTR->routes['404_override']))
+			{
+				$x = explode('/', $RTR->routes['404_override']);
+				$class = $x[0];
+				$method = (isset($x[1]) ? $x[1] : 'index');
+				if ( ! class_exists($class))
+				{
+					if ( ! file_exists(APPPATH.'controllers/'.$class.'.php'))
+					{
+						show_404("{$class}/{$method}");
+					}
+
+					include_once(APPPATH.'controllers/'.$class.'.php');
+					unset($CI);
+					$CI = new $class();
+				}
+			}
+			else
+			{
+				show_404("{$class}/{$method}");
+			}
 		}
 
 		// Call the requested method.

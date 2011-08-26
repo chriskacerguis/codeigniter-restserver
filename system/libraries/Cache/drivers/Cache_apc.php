@@ -25,7 +25,7 @@
  * @link		
  */
 
-class Cache_apc extends CI_Driver {
+class CI_Cache_apc extends CI_Driver {
 
 	/**
 	 * Get 
@@ -114,7 +114,7 @@ class Cache_apc extends CI_Driver {
 			return FALSE;
 		}
 
-		list($value, $time, $ttl) = $stored;
+		list($data, $time, $ttl) = $stored;
 
 		return array(
 			'expire'	=> $time + $ttl,
