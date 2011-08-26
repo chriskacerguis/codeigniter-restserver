@@ -49,7 +49,14 @@ if ( ! function_exists('form_open'))
 			$attributes = 'method="post"';
 		}
 
-		$action = ( strpos($action, '://') === FALSE) ? $CI->config->site_url($action) : $action;
+		// If an action is not a full URL then turn it into one
+		if ($action && strpos($action, '://') === FALSE)
+		{
+			$action = $CI->config->site_url($action);
+		}
+
+		// If no action is provided then set to the current url
+		$action OR $action = $CI->config->site_url($CI->uri->uri_string());
 
 		$form = '<form action="'.$action.'"';
 
@@ -60,12 +67,12 @@ if ( ! function_exists('form_open'))
 		// CSRF
 		if ($CI->config->item('csrf_protection') === TRUE)
 		{
-			$hidden[$CI->security->csrf_token_name] = $CI->security->csrf_hash;
+			$hidden[$CI->security->get_csrf_token_name()] = $CI->security->get_csrf_hash();
 		}
 
 		if (is_array($hidden) AND count($hidden) > 0)
 		{
-			$form .= sprintf("\n<div class=\"hidden\">%s</div>", form_hidden($hidden));
+			$form .= sprintf("<div style=\"display:none\">%s</div>", form_hidden($hidden));
 		}
 
 		return $form;
@@ -1025,22 +1032,20 @@ if ( ! function_exists('_get_validation_object'))
 	{
 		$CI =& get_instance();
 
-		// We set this as a variable since we're returning by reference
+		// We set this as a variable since we're returning by reference.
 		$return = FALSE;
-
-		if ( ! isset($CI->load->_ci_classes) OR  ! isset($CI->load->_ci_classes['form_validation']))
+		
+		if (FALSE !== ($object = $CI->load->is_loaded('form_validation')))
 		{
-			return $return;
+			if ( ! isset($CI->$object) OR ! is_object($CI->$object))
+			{
+				return $return;
+			}
+			
+			return $CI->$object;
 		}
-
-		$object = $CI->load->_ci_classes['form_validation'];
-
-		if ( ! isset($CI->$object) OR ! is_object($CI->$object))
-		{
-			return $return;
-		}
-
-		return $CI->$object;
+		
+		return $return;
 	}
 }
 

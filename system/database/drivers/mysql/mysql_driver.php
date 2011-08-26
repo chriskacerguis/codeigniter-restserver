@@ -132,7 +132,22 @@ class CI_DB_mysql_driver extends CI_DB {
 	 */
 	function db_set_charset($charset, $collation)
 	{
-		return @mysql_query("SET NAMES '".$this->escape_str($charset)."' COLLATE '".$this->escape_str($collation)."'", $this->conn_id);
+		static $use_set_names;
+		
+		if ( ! isset($use_set_names))
+		{
+			// mysql_set_charset() requires PHP >= 5.2.3 and MySQL >= 5.0.7, use SET NAMES as fallback
+			$use_set_names = (version_compare(PHP_VERSION, '5.2.3', '>=') && version_compare(mysql_get_server_info(), '5.0.7', '>=')) ? FALSE : TRUE;
+		}
+
+		if ($use_set_names)
+		{
+			return @mysql_query("SET NAMES '".$this->escape_str($charset)."' COLLATE '".$this->escape_str($collation)."'", $this->conn_id);
+		}
+		else
+		{
+			return @mysql_set_charset($charset, $this->conn_id);
+		}
 	}
 
 	// --------------------------------------------------------------------
@@ -286,13 +301,13 @@ class CI_DB_mysql_driver extends CI_DB {
 	{
 		if (is_array($str))
 		{
-			foreach($str as $key => $val)
-			{
+			foreach ($str as $key => $val)
+	   		{
 				$str[$key] = $this->escape_str($val, $like);
-			}
+	   		}
 
-			return $str;
-		}
+	   		return $str;
+	   	}
 
 		if (function_exists('mysql_real_escape_string') AND is_resource($this->conn_id))
 		{
@@ -590,9 +605,9 @@ class CI_DB_mysql_driver extends CI_DB {
 	 */
 	function _update($table, $values, $where, $orderby = array(), $limit = FALSE)
 	{
-		foreach($values as $key => $val)
+		foreach ($values as $key => $val)
 		{
-			$valstr[] = $key." = ".$val;
+			$valstr[] = $key . ' = ' . $val;
 		}
 
 		$limit = ( ! $limit) ? '' : ' LIMIT '.$limit;
@@ -627,11 +642,11 @@ class CI_DB_mysql_driver extends CI_DB {
 		$ids = array();
 		$where = ($where != '' AND count($where) >=1) ? implode(" ", $where).' AND ' : '';
 
-		foreach($values as $key => $val)
+		foreach ($values as $key => $val)
 		{
 			$ids[] = $val[$index];
 
-			foreach(array_keys($val) as $field)
+			foreach (array_keys($val) as $field)
 			{
 				if ($field != $index)
 				{
@@ -643,7 +658,7 @@ class CI_DB_mysql_driver extends CI_DB {
 		$sql = "UPDATE ".$table." SET ";
 		$cases = '';
 
-		foreach($final as $k => $v)
+		foreach ($final as $k => $v)
 		{
 			$cases .= $k.' = CASE '."\n";
 			foreach ($v as $row)
