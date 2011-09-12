@@ -134,7 +134,7 @@ class REST_Controller extends CI_Controller {
 		// only allow ajax requests
 		if ( ! $this->input->is_ajax_request() AND config_item('rest_ajax_only') )
 		{
-			$this->response( array('status' => false, 'error' => 'Only AJAX requests are accepted.'), 505 );
+			$this->response( array('status' => '505', 'error' => 'Only AJAX requests are accepted.'), 505 );
 		}
 	}
 
@@ -163,13 +163,13 @@ class REST_Controller extends CI_Controller {
 		// Get that useless shitty key out of here
 		if (config_item('rest_enable_keys') AND $use_key AND $this->_allow === FALSE)
 		{
-			$this->response(array('status' => false, 'error' => 'Invalid API Key.'), 403);
+			$this->response(array('status' => '403', 'error' => 'Invalid API Key.'), 403);
 		}
 
 		// Sure it exists, but can they do anything with it?
 		if ( ! method_exists($this, $controller_method))
 		{
-			$this->response(array('status' => false, 'error' => 'Unknown method.'), 404);
+			$this->response(array('status' => '404', 'error' => 'Unknown method.'), 404);
 		}
 
 		// Doing key related stuff? Can only do it if they have a key right?
@@ -178,7 +178,7 @@ class REST_Controller extends CI_Controller {
 			// Check the limit
 			if (config_item('rest_enable_limits') AND ! $this->_check_limit($controller_method))
 			{
-				$this->response(array('status' => false, 'error' => 'This API key has reached the hourly limit for this method.'), 401);
+				$this->response(array('status' => '401', 'error' => 'This API key has reached the hourly limit for this method.'), 401);
 			}
 
 			// If no level is set use 0, they probably aren't using permissions
@@ -194,7 +194,7 @@ class REST_Controller extends CI_Controller {
 			}
 
 			// They don't have good enough perms
-			$authorized OR $this->response(array('status' => false, 'error' => 'This API key does not have enough permissions.'), 401);
+			$authorized OR $this->response(array('status' => '401', 'error' => 'This API key does not have enough permissions.'), 401);
 		}
 
 		// No key stuff, but record that stuff is happening
@@ -757,7 +757,7 @@ class REST_Controller extends CI_Controller {
 			header('WWW-Authenticate: Digest realm="' . $this->config->item('rest_realm') . '" qop="auth" nonce="' . $nonce . '" opaque="' . md5($this->config->item('rest_realm')) . '"');
 		}
 
-		$this->response(array('status' => false, 'error' => 'Not authorized'), 401);
+		$this->response(array('status' => '401', 'error' => 'Not authorized'), 401);
 	}
 
 	// Force it into an array
