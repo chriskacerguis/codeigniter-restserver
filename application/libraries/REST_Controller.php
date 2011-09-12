@@ -395,8 +395,8 @@ class REST_Controller extends CI_Controller {
 	protected function _detect_api_key()
 	{
 
-                // Get the api key name variable set in the rest config file
-                $api_key_variable = config_item('rest_key_name');
+		// Get the api key name variable set in the rest config file
+		$api_key_variable = config_item('rest_key_name');
 
 		// Work out the name of the SERVER entry based on config
 		$key_name = 'HTTP_' . strtoupper(str_replace('-', '_', $api_key_variable));
@@ -519,7 +519,7 @@ class REST_Controller extends CI_Controller {
 		else
 		{
 			// Your luck is out, you've called too many times!
-			if ($result->count > $limit)
+			if ($result->count >= $limit)
 			{
 				return FALSE;
 			}
