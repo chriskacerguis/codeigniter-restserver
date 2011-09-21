@@ -223,6 +223,18 @@ class REST_Controller extends CI_Controller {
 		// Otherwise (if no data but 200 provided) or some data, carry on camping!
 		else
 		{
+			// all the compression settings must be done before sending any headers
+			// if php is not handling the compression by itself
+                        if (@ini_get('zlib.output_compression') == FALSE) {
+                            // ob_gzhandler depends on zlib
+                            if (extension_loaded('zlib')) {
+                                // if the client supports GZIP compression
+                                if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE) {
+                                    ob_start('ob_gzhandler');
+                                }
+                            }
+                        }
+			
 			is_numeric($http_code) OR $http_code = 200;
 
 			// If the format method exists, call and return the output in that format
