@@ -531,7 +531,7 @@ class REST_Controller extends CI_Controller {
 		else
 		{
 			// Your luck is out, you've called too many times!
-			if ($result->count > $limit)
+			if ($result->count >= $limit)
 			{
 				return FALSE;
 			}
