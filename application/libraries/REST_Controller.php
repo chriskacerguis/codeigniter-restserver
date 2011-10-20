@@ -1,5 +1,12 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * REST_controller V 2.5.x
+ * 
+ * @see https://github.com/philsturgeon/codeigniter-restserver
+ * 
+ */
+
 class REST_Controller extends CI_Controller {
 
 	protected $rest_format = NULL; // Set this in a controller to use a default format
@@ -163,6 +170,11 @@ class REST_Controller extends CI_Controller {
 		// Get that useless shitty key out of here
 		if (config_item('rest_enable_keys') AND $use_key AND $this->_allow === FALSE)
 		{
+      if (config_item('rest_enable_logging') AND $log_method)
+			{
+				$this->_log_request();
+			}
+      
 			$this->response(array('status' => false, 'error' => 'Invalid API Key.'), 403);
 		}
 
@@ -519,7 +531,7 @@ class REST_Controller extends CI_Controller {
 		else
 		{
 			// Your luck is out, you've called too many times!
-			if ($result->count > $limit)
+			if ($result->count >= $limit)
 			{
 				return FALSE;
 			}
