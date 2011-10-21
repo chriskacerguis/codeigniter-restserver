@@ -27,7 +27,7 @@ class REST_Controller extends CI_Controller {
 		'rawxml' => 'application/xml',
 		'json' => 'application/json',
 		'jsonp' => 'application/javascript',
-		'serialize' => 'application/vnd.php.serialized',
+		'serialized' => 'application/vnd.php.serialized',
 		'php' => 'text/plain',
 		'html' => 'text/html',
 		'csv' => 'application/csv'
