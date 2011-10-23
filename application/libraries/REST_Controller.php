@@ -111,19 +111,17 @@ class REST_Controller extends CI_Controller {
 		$this->response->lang = $this->_detect_lang();
 
 		// Check if there is a specific auth type for the current class/method
-		$this->auth_override = $this->_auth_override_check();
-
-		// When there is no specific override for the current class/method, use the default auth value set in the config
-		if ( $this->auth_override !== TRUE )
+		$this->auth_method = $this->_auth_method();
+                
+                //See if we need to do auth
+                
+                if ($this->auth_method == 'basic')
+                {
+                    $this->_prepare_basic_auth();
+		}
+		elseif ($this->auth_method == 'digest')
 		{
-			if ($this->config->item('rest_auth') == 'basic')
-			{
-				$this->_prepare_basic_auth();
-			}
-			elseif ($this->config->item('rest_auth') == 'digest')
-			{
-				$this->_prepare_digest_auth();
-			}
+                    $this->_prepare_digest_auth();
 		}
 
 		// Load DB if its enabled
@@ -545,7 +543,42 @@ class REST_Controller extends CI_Controller {
 
 		return TRUE;
 	}
-	/*
+
+        /*
+	 * Get Auth method
+	 *
+	 * Find out what the auth method should be
+	 */
+	
+	private function _auth_method()
+	{
+            // Check if there is a specific auth type for the current class/method
+            $this->auth_override = $this->_auth_override_check();
+
+            // When there is no specific override for the current class/method, use the default auth value set in the config
+            if ( $this->auth_override === FALSE )
+            {
+                if ($this->config->item('rest_auth') == 'basic')
+                {
+                    return 'basic';
+                }
+                elseif ($this->config->item('rest_auth') == 'digest')
+                {
+                    return 'digest';
+                }
+                else
+                {
+                    return 'none';
+                }    
+            }
+            else
+            {
+                return $this->auth_override;
+            }    
+            
+        }        
+        
+        /*
 	 * Auth override check
 	 *
 	 * Check if there is a specific auth type set for the current class/method being called
@@ -556,41 +589,39 @@ class REST_Controller extends CI_Controller {
 
 		// Assign the class/method auth type override array from the config
 		$this->overrides_array = $this->config->item('auth_override_class_method');
-
-		// Check to see if the override array is even populated, otherwise return false
+              
+                // Check to see if the override array is even populated, otherwise return false
 		if ( empty($this->overrides_array) )
 		{
-			return false;
+			return FALSE;
 		}
 
 		// Check to see if there's an override value set for the current class/method being called
 		if ( empty($this->overrides_array[$this->router->class][$this->router->method]) )
 		{
-			return false;
+			return FALSE;
 		}
 
 		// None auth override found, prepare nothing but send back a true override flag
 		if ($this->overrides_array[$this->router->class][$this->router->method] == 'none')
 		{
-			return true;
+			return 'none';
 		}
 
 		// Basic auth override found, prepare basic
 		if ($this->overrides_array[$this->router->class][$this->router->method] == 'basic')
 		{
-			$this->_prepare_basic_auth();
-			return true;
+                    return 'basic';
 		}
 
 		// Digest auth override found, prepare digest
 		if ($this->overrides_array[$this->router->class][$this->router->method] == 'digest')
 		{
-			$this->_prepare_digest_auth();
-			return true;
+			return 'digest';
 		}
 
 		// Return false when there is an override value set but it doesn't match 'basic', 'digest', or 'none'.  (the value was misspelled)
-		return false;
+		return FALSE;
 	}
 
 
@@ -700,10 +731,10 @@ class REST_Controller extends CI_Controller {
 				list($username, $password) = explode(':', base64_decode(substr($this->input->server('HTTP_AUTHORIZATION'), 6)));
 			}
 		}
-
+                
 		if (!$this->_check_login($username, $password))
 		{
-			$this->_force_login();
+                    $this->_force_login();
 		}
 	}
 
@@ -760,11 +791,11 @@ class REST_Controller extends CI_Controller {
 
 	protected function _force_login($nonce = '')
 	{
-		if ($this->config->item('rest_auth') == 'basic')
+                if ($this->auth_method == 'basic')
 		{
 			header('WWW-Authenticate: Basic realm="' . $this->config->item('rest_realm') . '"');
 		}
-		elseif ($this->config->item('rest_auth') == 'digest')
+		elseif ($this->auth_method == 'digest')
 		{
 			header('WWW-Authenticate: Digest realm="' . $this->config->item('rest_realm') . '" qop="auth" nonce="' . $nonce . '" opaque="' . md5($this->config->item('rest_realm')) . '"');
 		}
