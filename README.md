@@ -7,8 +7,8 @@ config file and one controller.
 
 ## Requirements
 
-1. PHP 5.1+
-2. CodeIgniter Reactor 2.0 (for 1.7.x support download v2.2 from Downloads tab)
+1. PHP 5.2+
+2. CodeIgniter 2.0.3 to 2.1-dev (for 1.7.x support download v2.2 from Downloads tab)
 
 ## Usage
 
@@ -24,8 +24,17 @@ but you can read my NetTuts article which covers it's usage along with the REST 
 
 ### 2.5
 
-* Instead of just seeing item, item, item, the singular version of the basenode will be used if possible. [Example](http://d.pr/RS46)
-* Re-factored to use the Format library, soon to be merged with CodeIgniter.
+* Instead of just seeing item, item, item, the singular version of the basenode will be used if possible. [Example](http://d.pr/RS46).
+* Re-factored to use the Format library, which will soon be merged with CodeIgniter.
+* Fixed Limit bug (limit of 5 would allow 6 requests).
+* Added logging for invalid API key requests.
+* Changed serialize to serialized.
+* Changed all visibility 'private' to 'protected'.
+* MIME's with character encodings on the end will now work.
+* Fixed PUT arguments. Once again just sending a body query string works. [Example](http://d.pr/cY0b)
+* Fixed up all .foo extensions to work when no get arguments provided, and moved .html to Format library.
+* Updated key.php example to use config_item('rest_keys_table') instead of hardcoded 'keys' table name.
+* Updated REST_Controller to use config_item('rest_limits_table') instead of hardcoded 'limits'.
 
 ### 2.4
 
