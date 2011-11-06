@@ -44,7 +44,8 @@ $config['rest_realm'] = 'REST API';
 |
 | Is login required and if so, which type of login?
 |
-|	'' = no login required, 'basic' = unsecure login, 'digest' = more secure login
+|	'' = no login required, 'basic' = unsecure login, 'digest' = more secure login,
+|	'whitelist' = restrict clients to a list of IPs
 |
 */
 $config['rest_auth'] = false;
@@ -83,6 +84,17 @@ $config['rest_auth'] = false;
 |
 */
 $config['rest_valid_logins'] = array('admin' => '1234');
+
+/*
+|--------------------------------------------------------------------------
+| REST IP Whitelist
+|--------------------------------------------------------------------------
+|
+| Limit connections to your REST server to a comma separated
+| list of IP addresses
+|
+*/
+$config['rest_ip_whitelist'] = '127.0.0.1, 0.0.0.0';
 
 /*
 |--------------------------------------------------------------------------
