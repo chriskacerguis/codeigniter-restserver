@@ -770,7 +770,7 @@ class REST_Controller extends CI_Controller {
 	}
 	
 	// Check if the client's ip is in the 'rest_ip_whitelist' config
-	public function _check_whitelist_auth()
+	protected function _check_whitelist_auth()
 	{
 		$whitelist = explode(',', $this->config->item('rest_ip_whitelist'));
 		
