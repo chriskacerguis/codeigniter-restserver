@@ -230,6 +230,9 @@ class REST_Controller extends CI_Controller {
 		if (empty($data) && $http_code === null)
     	{
     		$http_code = 404;
+    		
+    		//create the output variable here in the case of $this->response(array());
+    		$output = $data;
     	}
 
 		// Otherwise (if no data but 200 provided) or some data, carry on camping!
