@@ -124,6 +124,10 @@ class REST_Controller extends CI_Controller {
 			{
 				$this->_prepare_digest_auth();
 			}
+			elseif ($this->config->item('rest_ip_whitelist_enabled'))
+			{
+				$this->_check_whitelist_auth();
+			}
 		}
 
 		// Load DB if its enabled
@@ -592,6 +596,13 @@ class REST_Controller extends CI_Controller {
 			return true;
 		}
 
+		// Whitelist auth override found, check client's ip against config whitelist
+		if ($this->overrides_array[$this->router->class][$this->router->method] == 'whitelist')
+		{
+			$this->_check_whitelist_auth();
+			return true;
+		}
+
 		// Return false when there is an override value set but it doesn't match 'basic', 'digest', or 'none'.  (the value was misspelled)
 		return false;
 	}
@@ -685,6 +696,12 @@ class REST_Controller extends CI_Controller {
 
 	protected function _prepare_basic_auth()
 	{
+		// If whitelist is enabled it has the first chance to kick them out
+		if (config_item('rest_ip_whitelist_enabled'))
+		{
+			$this->_check_whitelist_auth();
+		}
+
 		$username = NULL;
 		$password = NULL;
 
@@ -712,6 +729,12 @@ class REST_Controller extends CI_Controller {
 
 	protected function _prepare_digest_auth()
 	{
+		// If whitelist is enabled it has the first chance to kick them out
+		if (config_item('rest_ip_whitelist_enabled'))
+		{
+			$this->_check_whitelist_auth();
+		}
+
 		$uniqid = uniqid(""); // Empty argument for backward compatibility
 		// We need to test which server authentication variable to use
 		// because the PHP ISAPI module in IIS acts different from CGI
@@ -758,6 +781,24 @@ class REST_Controller extends CI_Controller {
 			header('HTTP/1.0 401 Unauthorized');
 			header('HTTP/1.1 401 Unauthorized');
 			exit;
+		}
+	}
+	
+	// Check if the client's ip is in the 'rest_ip_whitelist' config
+	protected function _check_whitelist_auth()
+	{
+		$whitelist = explode(',', config_item('rest_ip_whitelist'));
+		
+		array_push($whitelist, '127.0.0.1', '0.0.0.0');
+
+		foreach ($whitelist AS &$ip)
+		{
+			$ip = trim($ip);
+		}
+
+		if ( ! in_array($this->input->ip_address(), $whitelist))
+		{
+			$this->response(array('status' => false, 'error' => 'Not authorized'), 401);
 		}
 	}
 
