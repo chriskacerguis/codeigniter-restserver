@@ -44,8 +44,7 @@ $config['rest_realm'] = 'REST API';
 |
 | Is login required and if so, which type of login?
 |
-|	'' = no login required, 'basic' = unsecure login, 'digest' = more secure login,
-|	'whitelist' = restrict clients to a list of IPs
+|	'' = no login required, 'basic' = unsecure login, 'digest' = more secure login
 |
 */
 $config['rest_auth'] = false;
@@ -87,14 +86,35 @@ $config['rest_valid_logins'] = array('admin' => '1234');
 
 /*
 |--------------------------------------------------------------------------
+| Global IP Whitelisting
+|--------------------------------------------------------------------------
+|
+| Limit connections to your REST server to whitelisted IP addresses.
+|
+| Usage:
+| 1. Set to true *and* select an auth option for extreme security (client's IP
+|	 address must be in whitelist and they must also log in)
+| 2. Set to true with auth set to false to allow whitelisted IPs access with no login.
+| 3. Set to false here but set 'auth_override_class_method' to 'whitelist' to
+|	 restrict certain methods to IPs in your whitelist
+|
+*/
+$config['rest_ip_whitelist_enabled'] = false;
+
+/*
+|--------------------------------------------------------------------------
 | REST IP Whitelist
 |--------------------------------------------------------------------------
 |
 | Limit connections to your REST server to a comma separated
 | list of IP addresses
 |
+| Example: $config['rest_ip_whitelist'] = '123.456.789.0, 987.654.32.1';
+|
+| 127.0.0.1 and 0.0.0.0 are allowed by default.
+|
 */
-$config['rest_ip_whitelist'] = '127.0.0.1, 0.0.0.0';
+$config['rest_ip_whitelist'] = '';
 
 /*
 |--------------------------------------------------------------------------

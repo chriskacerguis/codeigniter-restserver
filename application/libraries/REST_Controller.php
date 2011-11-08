@@ -124,7 +124,7 @@ class REST_Controller extends CI_Controller {
 			{
 				$this->_prepare_digest_auth();
 			}
-			elseif ($this->config->item('rest_auth') == 'whitelist')
+			elseif ($this->config->item('rest_ip_whitelist_enabled'))
 			{
 				$this->_check_whitelist_auth();
 			}
@@ -693,6 +693,12 @@ class REST_Controller extends CI_Controller {
 
 	protected function _prepare_basic_auth()
 	{
+		// If whitelist is enabled it has the first chance to kick them out
+		if (config_item('rest_ip_whitelist_enabled'))
+		{
+			$this->_check_whitelist_auth();
+		}
+
 		$username = NULL;
 		$password = NULL;
 
@@ -720,6 +726,12 @@ class REST_Controller extends CI_Controller {
 
 	protected function _prepare_digest_auth()
 	{
+		// If whitelist is enabled it has the first chance to kick them out
+		if (config_item('rest_ip_whitelist_enabled'))
+		{
+			$this->_check_whitelist_auth();
+		}
+
 		$uniqid = uniqid(""); // Empty argument for backward compatibility
 		// We need to test which server authentication variable to use
 		// because the PHP ISAPI module in IIS acts different from CGI
@@ -772,8 +784,10 @@ class REST_Controller extends CI_Controller {
 	// Check if the client's ip is in the 'rest_ip_whitelist' config
 	protected function _check_whitelist_auth()
 	{
-		$whitelist = explode(',', $this->config->item('rest_ip_whitelist'));
+		$whitelist = explode(',', config_item('rest_ip_whitelist'));
 		
+		array_push($whitelist, '127.0.0.1', '0.0.0.0');
+
 		foreach ($whitelist AS &$ip)
 		{
 			$ip = trim($ip);
