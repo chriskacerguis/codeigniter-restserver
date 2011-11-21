@@ -810,7 +810,7 @@ class REST_Controller extends CI_Controller {
 		}
 		elseif ($this->config->item('rest_auth') == 'digest')
 		{
-			header('WWW-Authenticate: Digest realm="' . $this->config->item('rest_realm') . '" qop="auth" nonce="' . $nonce . '" opaque="' . md5($this->config->item('rest_realm')) . '"');
+			header('WWW-Authenticate: Digest realm="' . $this->config->item('rest_realm') . '", qop="auth", nonce="' . $nonce . '", opaque="' . md5($this->config->item('rest_realm')) . '"');
 		}
 
 		$this->response(array('status' => false, 'error' => 'Not authorized'), 401);
