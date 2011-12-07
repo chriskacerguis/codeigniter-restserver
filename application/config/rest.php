@@ -217,7 +217,8 @@ $config['rest_logs_table'] = 'logs';
 	  `method` varchar(6) NOT NULL,
 	  `params` text NOT NULL,
 	  `api_key` varchar(40) NOT NULL,
-	  `ip_address` varchar(15) NOT NULL,
+    `is_public_key` tinyint(1)  NOT NULL DEFAULT NULL ,
+    `ip_addresses` TEXT NULL DEFAULT NULL ,
 	  `time` int(11) NOT NULL,
 	  `authorized` tinyint(1) NOT NULL,
 	  PRIMARY KEY (`id`)
