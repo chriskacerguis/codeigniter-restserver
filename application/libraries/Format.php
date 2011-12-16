@@ -110,6 +110,13 @@ class Format {
 
 		foreach ($data as $key => $value)
 		{
+			
+			//change false/true to 0/1
+			if(is_bool($value))
+			{
+				$value = (int) $value;
+			}
+			
 			// no numeric keys in our xml please!
 			if (is_numeric($key))
             {
@@ -133,12 +140,6 @@ class Format {
             {
                 // add single node.
 				$value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, "UTF-8");
-
-				//change false to 0
-				if($value == false)
-				{
-					$value = 0;
-				}
 				
 				$structure->addChild($key, $value);
 			}
