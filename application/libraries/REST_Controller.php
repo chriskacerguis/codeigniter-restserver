@@ -506,7 +506,7 @@ class REST_Controller extends CI_Controller {
 	protected function _check_limit($controller_method)
 	{
 		// They are special, or it might not even have a limit
-		if (!empty($this->rest->ignore_limits) OR !isset($this->methods[$controller_method]['limit']))
+		if ( ! empty($this->rest->ignore_limits) OR !isset($this->methods[$controller_method]['limit']))
 		{
 			// On your way sonny-jim.
 			return TRUE;
@@ -523,7 +523,7 @@ class REST_Controller extends CI_Controller {
 						->row();
 
 		// No calls yet, or been an hour since they called
-		if (!$result OR $result->hour_started < time() - (60 * 60))
+		if ( ! $result OR $result->hour_started < time() - (60 * 60))
 		{
 			// Right, set one up from scratch
 			$this->rest->db->insert(config_item('rest_limits_table'), array(
