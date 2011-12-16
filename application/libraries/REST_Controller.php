@@ -434,8 +434,42 @@ class REST_Controller extends CI_Controller {
 
 			$this->rest->key = $row->key;
 			
-			isset($row->level) AND $this->rest->level = $row->level;
-			isset($row->ignore_limits) AND $this->rest->ignore_limits = $row->ignore_limits;
+			if(isset($row->level)) 
+      {
+        $this->rest->level = $row->level;
+      }
+
+			if(isset($row->ignore_limits)) 
+      {
+        $this->rest->ignore_limits = $row->ignore_limits;
+      }
+      
+      if(isset($row->is_public_key)) 
+      {
+        
+        // Check for a list of valid ip addresses 
+        if(isset($row->ip_addresses)) 
+        {
+          $list_ip_addresses = explode("\n", $row->ip_addresses);
+          $found_address = FALSE;
+          
+          foreach($list_ip_addresses as $ip_address) 
+          {
+            if($this->input->ip_address() == $ip_address) 
+            {
+              $found_address = TRUE;
+              break;
+            }
+          }
+          
+          return $found_address;
+        }
+        else 
+        {
+          // There should be at least one IP address for this public key.
+          return FALSE;
+        }
+      }
 
 			return TRUE;
 		}
