@@ -2,9 +2,9 @@
 
 /**
  * REST_controller V 2.5.x
- * 
+ *
  * @see https://github.com/philsturgeon/codeigniter-restserver
- * 
+ *
  */
 
 class REST_Controller extends CI_Controller {
@@ -64,8 +64,8 @@ class REST_Controller extends CI_Controller {
 				// Grab proper GET variables
 				parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $get);
 
-				// If there are any, populate $this->_get_args
-				empty($get) OR $this->_get_args = $get;
+				// Merge both the URI segements and GET params
+				$this->_get_args = array_merge($this->_get_args, $get);
 				break;
 
 			case 'post':
@@ -86,7 +86,7 @@ class REST_Controller extends CI_Controller {
 				{
 					parse_str(file_get_contents('php://input'), $this->_put_args);
 				}
-				
+
 				break;
 
 			case 'delete':
@@ -178,7 +178,7 @@ class REST_Controller extends CI_Controller {
 			{
 				$this->_log_request();
 			}
-      
+
 			$this->response(array('status' => false, 'error' => 'Invalid API Key.'), 403);
 		}
 
@@ -234,7 +234,7 @@ class REST_Controller extends CI_Controller {
 		if (empty($data) && $http_code === null)
     	{
     		$http_code = 404;
-    		
+
     		//create the output variable here in the case of $this->response(array());
     		$output = $data;
     	}
@@ -317,7 +317,7 @@ class REST_Controller extends CI_Controller {
 		{
 			return $matches[1];
 		}
-		
+
 		// Check if a file extension is used
 		elseif ($this->_get_args AND ! is_array(end($this->_get_args)) AND preg_match($pattern, end($this->_get_args), $matches))
 		{
@@ -371,7 +371,7 @@ class REST_Controller extends CI_Controller {
 				}
 			}
 		} // End HTTP_ACCEPT checking
-		
+
 		// Well, none of that has worked! Let's see if the controller has a default
 		if ( ! empty($this->rest_format))
 		{
@@ -433,7 +433,7 @@ class REST_Controller extends CI_Controller {
 			}
 
 			$this->rest->key = $row->key;
-			
+
 			isset($row->level) AND $this->rest->level = $row->level;
 			isset($row->ignore_limits) AND $this->rest->ignore_limits = $row->ignore_limits;
 
@@ -783,12 +783,12 @@ class REST_Controller extends CI_Controller {
 			exit;
 		}
 	}
-	
+
 	// Check if the client's ip is in the 'rest_ip_whitelist' config
 	protected function _check_whitelist_auth()
 	{
 		$whitelist = explode(',', config_item('rest_ip_whitelist'));
-		
+
 		array_push($whitelist, '127.0.0.1', '0.0.0.0');
 
 		foreach ($whitelist AS &$ip)
@@ -831,7 +831,7 @@ class REST_Controller extends CI_Controller {
 	// FORMATING FUNCTIONS ---------------------------------------------------------
 
 	// Many of these have been moved to the Format class for better separation, but these methods will be checked too
-	
+
 	// Encode as JSONP
 	protected function _format_jsonp($data = array())
 	{
