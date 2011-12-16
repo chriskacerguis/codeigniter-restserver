@@ -134,6 +134,12 @@ class Format {
                 // add single node.
 				$value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, "UTF-8");
 
+				//change false to 0
+				if($value == false)
+				{
+					$value = 0;
+				}
+				
 				$structure->addChild($key, $value);
 			}
 		}
