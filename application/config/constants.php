@@ -36,6 +36,15 @@ define('FOPEN_READ_WRITE_CREATE',				'a+b');
 define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
+$base_url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
+$base_url .= "://" . $_SERVER['HTTP_HOST'];
+if (!isset($_SERVER['ORIG_SCRIPT_NAME'])) {
+    $base_url .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
+} else {
+    $base_url .= str_replace(basename($_SERVER['ORIG_SCRIPT_NAME']), "", $_SERVER['ORIG_SCRIPT_NAME']);
+}
+
+define('BASE_URL', $base_url);
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
