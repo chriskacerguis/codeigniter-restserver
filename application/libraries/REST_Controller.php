@@ -406,7 +406,7 @@ class REST_Controller extends CI_Controller {
 
 		if ($this->config->item('enable_emulate_request') && $this->input->post('_method'))
 		{
-			$method =  $this->input->post('_method');
+			$method =  strtolower($this->input->post('_method'));
 		}
 
 		if (in_array($method, array('get', 'delete', 'post', 'put')))
