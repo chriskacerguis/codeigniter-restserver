@@ -99,6 +99,8 @@ class REST_Controller extends CI_Controller {
 		if ($this->request->format and $this->request->body)
 		{
 			$this->request->body = $this->format->factory($this->request->body, $this->request->format)->to_array();
+			// Assign payload arguments to proper method container
+			$this->{'_'.$this->request->method.'_args'} = $this->request->body;
 		}
 
 		// Merge both for one mega-args variable
@@ -244,15 +246,15 @@ class REST_Controller extends CI_Controller {
 		{
 			// all the compression settings must be done before sending any headers
 			// if php is not handling the compression by itself
-                        if (@ini_get('zlib.output_compression') == FALSE) {
-                            // ob_gzhandler depends on zlib
-                            if (extension_loaded('zlib')) {
-                                // if the client supports GZIP compression
-                                if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE) {
-                                    ob_start('ob_gzhandler');
-                                }
-                            }
-                        }
+			if (@ini_get('zlib.output_compression') == FALSE) {
+				 // ob_gzhandler depends on zlib
+				 if (extension_loaded('zlib')) {
+					  // if the client supports GZIP compression
+					  if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE) {
+							ob_start('ob_gzhandler');
+					  }
+				 }
+			}
 			
 			is_numeric($http_code) OR $http_code = 200;
 
@@ -434,8 +436,8 @@ class REST_Controller extends CI_Controller {
 	protected function _detect_api_key()
 	{
 
-                // Get the api key name variable set in the rest config file
-                $api_key_variable = config_item('rest_key_name');
+		// Get the api key name variable set in the rest config file
+		$api_key_variable = config_item('rest_key_name');
 
 		// Work out the name of the SERVER entry based on config
 		$key_name = 'HTTP_' . strtoupper(str_replace('-', '_', $api_key_variable));
