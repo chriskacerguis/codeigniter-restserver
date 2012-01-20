@@ -403,10 +403,18 @@ class REST_Controller extends CI_Controller {
 	protected function _detect_method()
 	{
 		$method = strtolower($this->input->server('REQUEST_METHOD'));
+		$request_headers = apache_request_headers();
 
-		if ($this->config->item('enable_emulate_request') && $this->input->post('_method'))
+		if ($this->config->item('enable_emulate_request'))
 		{
-			$method =  strtolower($this->input->post('_method'));
+			if ($this->input->post('_method'))
+			{
+				$method = strtolower($this->input->post('_method'));
+			}
+			else if (isset($request_headers['X-HTTP-Method-Override']))
+			{
+				$method = strtolower($request_headers['X-HTTP-Method-Override']);
+			}
 		}
 
 		if (in_array($method, array('get', 'delete', 'post', 'put')))
