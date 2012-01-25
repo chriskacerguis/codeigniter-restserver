@@ -8,7 +8,7 @@ config file and one controller.
 ## Requirements
 
 1. PHP 5.2+
-2. CodeIgniter 2.0.3 to 2.1-dev (for 1.7.x support download v2.2 from Downloads tab)
+2. CodeIgniter 2.0.3 to 2.1 (for 1.7.x support download v2.2 from Downloads tab)
 
 ## Usage
 
@@ -21,6 +21,10 @@ but you can read my NetTuts article which covers it's usage along with the REST 
 [NetTuts: Working with RESTful Services in CodeIgniter](http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/)
 
 ## Change Log
+
+### 2.5.1
+
+* Update CI to 2.1
 
 ### 2.5
 

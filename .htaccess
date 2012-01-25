@@ -1,0 +1,27 @@
+Options +FollowSymLinks
+Options -Indexes
+RewriteEngine on
+RewriteBase /
+RewriteCond %{HTTP_HOST} !^www\.
+RewriteRule ^ http://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RedirectMatch 403 ^/(application\/cache|application\/logs|\.git).*$
+RewriteCond $1 !^(index\.php|assets|assets\/cache|assets\/images|assets\/css|assets\/js|robots\.txt|uploads)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !=/favicon.ico
+RewriteRule ^(.*)$ index.php/$1 [L]
+AddType video/ogg .ogv
+AddType video/ogg .ogg
+AddType video/mp4 .mp4
+AddType video/webm .webm
+AddType application/x-shockwave-flash swf
+
+#AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/javascript text/css application/x-javascript
+#BrowserMatch ^Mozilla/4 gzip-only-text/html
+#BrowserMatch ^Mozilla/4.0[678] no-gzip
+#BrowserMatch bMSIE !no-gzip !gzip-only-text/html
+
+#php_value upload_max_filesize 20M
+#php_value post_max_size 20M
+#php_value max_execution_time 200
+#php_value max_input_time 200

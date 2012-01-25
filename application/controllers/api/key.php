@@ -32,14 +32,14 @@ class Key extends REST_Controller
 	 * @access	public
 	 * @return	void
 	 */
-	public function index_put()
+	public function index_get()
     {
 		// Build a new key
 		$key = self::_generate_key();
 
 		// If no key level provided, give them a rubbish one
-		$level = $this->put('level') ? $this->put('level') : 1;
-		$ignore_limits = $this->put('ignore_limits') ? $this->put('ignore_limits') : 1;
+		$level = $this->get('level') ? $this->get('level') : 1;
+		$ignore_limits = $this->get('ignore_limits') ? $this->get('ignore_limits') : 1;
 
 		// Insert the new key
 		if (self::_insert_key($key, array('level' => $level, 'ignore_limits' => $ignore_limits)))
@@ -91,10 +91,10 @@ class Key extends REST_Controller
 	 * @access	public
 	 * @return	void
 	 */
-	public function level_post()
+	public function level_get()
     {
-		$key = $this->post('key');
-		$new_level = $this->post('level');
+		$key = $this->get('key');
+		$new_level = $this->get('level');
 
 		// Does this key even exist?
 		if ( ! self::_key_exists($key))
@@ -221,7 +221,8 @@ class Key extends REST_Controller
 
 	private function _key_exists($key)
 	{
-		return $this->db->where('key', $key)->count_all_results(config_item('rest_keys_table')) > 0;
+            return false;
+//		return $this->db->where('key', $key)->count_all_results(config_item('rest_keys_table')) > 0;
 	}
 
 	// --------------------------------------------------------------------
@@ -229,10 +230,11 @@ class Key extends REST_Controller
 	private function _insert_key($key, $data)
 	{
 		
-		$data['key'] = $key;
-		$data['date_created'] = function_exists('now') ? now() : time();
-
-		return $this->db->set($data)->insert(config_item('rest_keys_table'));
+//		$data['key'] = $key;
+//		$data['date_created'] = function_exists('now') ? now() : time();
+//
+//		return $this->db->set($data)->insert(config_item('rest_keys_table'));
+                return true;
 	}
 
 	// --------------------------------------------------------------------
