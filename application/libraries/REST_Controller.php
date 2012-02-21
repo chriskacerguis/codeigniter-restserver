@@ -32,6 +32,7 @@ class REST_Controller extends CI_Controller {
 		'html' => 'text/html',
 		'csv' => 'application/csv'
 	);
+        
 
 	// Constructor function
 	public function __construct()
@@ -403,9 +404,35 @@ class REST_Controller extends CI_Controller {
 	 */
 
 	protected function _detect_method()
-	{
+    {
 		$method = strtolower($this->input->server('REQUEST_METHOD'));
-		$request_headers = apache_request_headers();
+			if (function_exists('apache_request_headers'))
+            {
+            	$request_headers = apache_request_headers();
+            }
+			else 
+			{
+				$arh = array();
+                $rx_http = '/\AHTTP_/';
+                foreach ($_SERVER as $key => $val)
+                {
+					if (preg_match($rx_http, '', $key))
+                    {
+                    	$rx_matches = array();
+                        $rx_matches = explode('_', $arh_key);
+                        if ( count($rx_matches) > 0 and strlen($arh_key) > 2 ) 
+                        {
+                        	foreach ($rx_matches as $ak_key => $ak_val)
+                            	{
+                                	$rx_matches[$ak_key] = ucfirst($ak_val);
+                                    $arh_key = implode('-', $rx_matches);
+                                }
+                            $arh[$arh_key] = $val;
+                        }
+                    }
+                    $request_headers = $arh;
+                }
+        	}
 
 		if ($this->config->item('enable_emulate_request'))
 		{
@@ -859,4 +886,6 @@ class REST_Controller extends CI_Controller {
 	{
 		return $this->get('callback') . '(' . json_encode($data) . ')';
 	}
+        
+
 }
