@@ -20,6 +20,7 @@ class REST_Controller extends CI_Controller {
 	protected $_delete_args = array();
 	protected $_args = array();
 	protected $_allow = TRUE;
+	protected $_zlib_oc = FALSE; // Determines if output compression is enabled
 
 	// List all supported methods, the first will be the default format
 	protected $_supported_formats = array(
@@ -37,6 +38,8 @@ class REST_Controller extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->_zlib_oc = @ini_get('zlib.output_compression');
 
 		// Lets grab the config and get ready to party
 		$this->load->config('rest');
@@ -232,28 +235,30 @@ class REST_Controller extends CI_Controller {
 	 */
 	public function response($data = array(), $http_code = null)
 	{
+		global $CFG;
+
 		// If data is empty and not code provide, error and bail
 		if (empty($data) && $http_code === null)
-    	{
-    		$http_code = 404;
+		{
+			$http_code = 404;
 
-    		//create the output variable here in the case of $this->response(array());
-    		$output = $data;
-    	}
+			//create the output variable here in the case of $this->response(array());
+			$output = $data;
+		}
 
 		// Otherwise (if no data but 200 provided) or some data, carry on camping!
 		else
 		{
-			// all the compression settings must be done before sending any headers
-			// if php is not handling the compression by itself
-			if (@ini_get('zlib.output_compression') == FALSE) {
-				 // ob_gzhandler depends on zlib
-				 if (extension_loaded('zlib')) {
-					  // if the client supports GZIP compression
-					  if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE) {
-							ob_start('ob_gzhandler');
-					  }
-				 }
+			// Is compression requested?
+			if ($CFG->item('compress_output') === TRUE && $this->_zlib_oc == FALSE)
+			{
+				if (extension_loaded('zlib'))
+				{
+					if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) AND strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE)
+					{
+						ob_start('ob_gzhandler');
+					}
+				}
 			}
 			
 			is_numeric($http_code) OR $http_code = 200;
@@ -285,7 +290,15 @@ class REST_Controller extends CI_Controller {
 
 		header('HTTP/1.1: ' . $http_code);
 		header('Status: ' . $http_code);
-		header('Content-Length: ' . strlen($output));
+
+		// If zlib.output_compression is enabled it will compress the output,
+		// but it will not modify the content-length header to compensate for
+		// the reduction, causing the browser to hang waiting for more data.
+		// We'll just skip content-length in those cases.
+		if ( ! $this->_zlib_oc)
+		{
+			header('Content-Length: ' . strlen($output));
+		}
 
 		exit($output);
 	}
