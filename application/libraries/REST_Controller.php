@@ -112,7 +112,7 @@ class REST_Controller extends CI_Controller {
 		// Which format should the data be returned in?
 		$this->response->format = $this->_detect_output_format();
 
-		// Which format should the data be returned in?
+		// Which language should the data be returned in?
 		$this->response->lang = $this->_detect_lang();
 
 		// Check if there is a specific auth type for the current class/method
