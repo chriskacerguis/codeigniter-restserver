@@ -45,6 +45,7 @@ class REST_Controller extends CI_Controller {
 		$this->load->config('rest');
 
 		// How is this request being made? POST, DELETE, GET, PUT?
+		$this->request = new stdClass();
 		$this->request->method = $this->_detect_method();
 
 		// Set up our GET variables
@@ -110,6 +111,7 @@ class REST_Controller extends CI_Controller {
 		$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_post_args, $this->_delete_args);
 
 		// Which format should the data be returned in?
+		$this->response = new stdClass();
 		$this->response->format = $this->_detect_output_format();
 
 		// Which language should the data be returned in?
