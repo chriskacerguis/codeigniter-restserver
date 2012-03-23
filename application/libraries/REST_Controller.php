@@ -38,6 +38,8 @@ class REST_Controller extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->request = new stdClass();
+		$this->response = new stdClass();
 
 		$this->_zlib_oc = @ini_get('zlib.output_compression');
 
