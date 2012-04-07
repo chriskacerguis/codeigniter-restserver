@@ -17,6 +17,7 @@ class REST_Controller extends CI_Controller {
 	protected $_get_args = array();
 	protected $_post_args = array();
 	protected $_put_args = array();
+	protected $_patch_args = array();
 	protected $_delete_args = array();
 	protected $_args = array();
 	protected $_allow = TRUE;
@@ -64,6 +65,8 @@ class REST_Controller extends CI_Controller {
 
 		switch ($this->request->method)
 		{
+			case 'head':
+			case 'options':
 			case 'get':
 				// Grab proper GET variables
 				parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $get);
@@ -93,7 +96,22 @@ class REST_Controller extends CI_Controller {
 
 				break;
 
-			case 'delete':
+			case 'patch':
+				// It might be a HTTP body
+				if ($this->request->format)
+				{
+					$this->request->body = file_get_contents('php://input');
+				}
+
+				// If no file type is provided, this is probably just arguments
+				else
+				{
+					parse_str(file_get_contents('php://input'), $this->_patch_args);
+				}
+
+				break;
+
+				case 'delete':
 				// Set up out DELETE variables (which shouldn't really exist, but sssh!)
 				parse_str(file_get_contents('php://input'), $this->_delete_args);
 				break;
@@ -108,7 +126,7 @@ class REST_Controller extends CI_Controller {
 		}
 
 		// Merge both for one mega-args variable
-		$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_post_args, $this->_delete_args);
+		$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_patch_args, $this->_post_args, $this->_delete_args);
 
 		// Which format should the data be returned in?
 		$this->response = new stdClass();
@@ -192,7 +210,14 @@ class REST_Controller extends CI_Controller {
 		// Sure it exists, but can they do anything with it?
 		if ( ! method_exists($this, $controller_method))
 		{
-			$this->response(array('status' => false, 'error' => 'Unknown method.'), 404);
+			if ($this->request->method == 'options')
+			{
+				$this->_options_response($object_called);
+			}
+			else
+			{
+				$this->response(array('status' => false, 'error' => 'Unknown method.'), 404);
+			}
 		}
 
 		// Doing key related stuff? Can only do it if they have a key right?
@@ -228,6 +253,38 @@ class REST_Controller extends CI_Controller {
 
 		// And...... GO!
 		call_user_func_array(array($this, $controller_method), $arguments);
+	}
+
+	/**
+	 * Respond with implementations of other methods.
+	 * If you want to override this before (perhaps to check for more specific
+	 * authorization) then consider creating an <action>_options() function.
+	 * 
+	 * Note: Authorization is done at the method level, no distinction is made
+	 * between GET, HEAD, etc... If OPTIONS is being fulfilled here it means
+	 * authorization has already been passed.
+	 * 
+	 * @param string $object_called The action
+	 */
+	public function _options_response($object_called)
+	{
+		// List HTTP methods to search for here
+		$verbs = array('GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE');
+		$allow = array();
+
+		// Check controller
+		foreach ($verbs as $verb) {
+			if (method_exists($this, sprintf('%s_%s', $object_called, $verb))) {
+				$allow[] = $verb;
+			}
+		}
+
+		// Responce is simple for this case
+		if ($allow) {
+			header('Allow: ' . join(', ', $allow));
+		}
+		// no body, status code is 200 OK
+		exit;
 	}
 
 	/*
@@ -414,7 +471,7 @@ class REST_Controller extends CI_Controller {
 	/*
 	 * Detect method
 	 *
-	 * Detect which method (POST, PUT, GET, DELETE) is being used
+	 * Detect which method (POST, PUT, GET, DELETE, PATCH, HEAD, OPTIONS) is being used
 	 */
 
 	protected function _detect_method()
@@ -433,7 +490,7 @@ class REST_Controller extends CI_Controller {
 		        }			
 		}
 
-		if (in_array($method, array('get', 'delete', 'post', 'put')))
+		if (in_array($method, array('get', 'head', 'options', 'delete', 'post', 'put', 'patch')))
 		{
 			return $method;
 		}
@@ -646,6 +703,11 @@ class REST_Controller extends CI_Controller {
 
 	// INPUT FUNCTION --------------------------------------------------------------
 
+	public function head($key = NULL, $xss_clean = TRUE)
+	{
+		return $this->get($key, $xss_clean);
+	}
+
 	public function get($key = NULL, $xss_clean = TRUE)
 	{
 		if ($key === NULL)
@@ -664,6 +726,16 @@ class REST_Controller extends CI_Controller {
 		}
 
 		return $this->input->post($key, $xss_clean);
+	}
+
+	public function patch($key = NULL, $xss_clean = TRUE)
+	{
+		if ($key === NULL)
+		{
+			return $this->_patch_args;
+		}
+
+		return array_key_exists($key, $this->_patch_args) ? $this->_xss_clean($this->_patch_args[$key], $xss_clean) : FALSE;
 	}
 
 	public function put($key = NULL, $xss_clean = TRUE)
