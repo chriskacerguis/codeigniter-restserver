@@ -281,9 +281,10 @@ class REST_Controller extends CI_Controller {
 
 		// Responce is simple for this case
 		if ($allow) {
-			$this->output->set_header('Allow: ' . join(', ', $allow));
+			header('Allow: ' . join(', ', $allow));
 		}
 		// no body, status code is 200 OK
+		exit;
 	}
 
 	/*
