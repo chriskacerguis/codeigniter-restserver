@@ -11,9 +11,9 @@
  * @author        	Phil Sturgeon
  * @license         http://philsturgeon.co.uk/code/dbad-license
  * @link			https://github.com/philsturgeon/codeigniter-restserver
- * @version 		2.6
+ * @version 		2.6.0
  */
-class REST_Controller extends MY_Controller
+abstract class REST_Controller extends CI_Controller
 {
 	/**
 	 * This defines the rest format.
@@ -94,7 +94,13 @@ class REST_Controller extends MY_Controller
 	 * @var boolean
 	 */
 	protected $_allow = TRUE;
-	protected $_zlib_oc = FALSE; // Determines if output compression is enabled
+
+	/**
+	 * Determines if output compression is enabled
+	 * 
+	 * @var boolean
+	 */
+	protected $_zlib_oc = FALSE;
 
 	/**
 	 * List all supported methods, the first will be the default format
@@ -103,7 +109,6 @@ class REST_Controller extends MY_Controller
 	 */
 	protected $_supported_formats = array(
 		'xml' => 'application/xml',
-		'rawxml' => 'application/xml',
 		'json' => 'application/json',
 		'jsonp' => 'application/javascript',
 		'serialized' => 'application/vnd.php.serialized',
@@ -248,7 +253,7 @@ class REST_Controller extends MY_Controller
 		}
 
 		// only allow ajax requests
-		if (!$this->input->is_ajax_request() AND config_item('rest_ajax_only'))
+		if ( ! $this->input->is_ajax_request() AND config_item('rest_ajax_only'))
 		{
 			$this->response(array('status' => false, 'error' => 'Only AJAX requests are accepted.'), 505);
 		}
@@ -292,7 +297,7 @@ class REST_Controller extends MY_Controller
 		}
 
 		// Sure it exists, but can they do anything with it?
-		if (!method_exists($this, $controller_method))
+		if ( ! method_exists($this, $controller_method))
 		{
 			$this->response(array('status' => false, 'error' => 'Unknown method.'), 404);
 		}
@@ -558,7 +563,6 @@ class REST_Controller extends MY_Controller
 	 */
 	protected function _detect_api_key()
 	{
-
 		// Get the api key name variable set in the rest config file
 		$api_key_variable = config_item('rest_key_name');
 
@@ -567,12 +571,13 @@ class REST_Controller extends MY_Controller
 
 		$this->rest->key = NULL;
 		$this->rest->level = NULL;
+		$this->rest->user_id = NULL;
 		$this->rest->ignore_limits = FALSE;
 
 		// Find the key from server or arguments
 		if (($key = isset($this->_args[$api_key_variable]) ? $this->_args[$api_key_variable] : $this->input->server($key_name)))
 		{
-			if (!($row = $this->rest->db->where('key', $key)->get(config_item('rest_keys_table'))->row()))
+			if ( ! ($row = $this->rest->db->where('key', $key)->get(config_item('rest_keys_table'))->row()))
 			{
 				return FALSE;
 			}
@@ -599,7 +604,7 @@ class REST_Controller extends MY_Controller
 	 */
 	protected function _detect_lang()
 	{
-		if (!$lang = $this->input->server('HTTP_ACCEPT_LANGUAGE'))
+		if ( ! $lang = $this->input->server('HTTP_ACCEPT_LANGUAGE'))
 		{
 			return NULL;
 		}
@@ -657,7 +662,7 @@ class REST_Controller extends MY_Controller
 	protected function _check_limit($controller_method)
 	{
 		// They are special, or it might not even have a limit
-		if (!empty($this->rest->ignore_limits) OR !isset($this->methods[$controller_method]['limit']))
+		if ( ! empty($this->rest->ignore_limits) OR !isset($this->methods[$controller_method]['limit']))
 		{
 			// On your way sonny-jim.
 			return TRUE;
@@ -674,7 +679,7 @@ class REST_Controller extends MY_Controller
 				->row();
 
 		// No calls yet, or been an hour since they called
-		if (!$result OR $result->hour_started < time() - (60 * 60))
+		if ( ! $result OR $result->hour_started < time() - (60 * 60))
 		{
 			// Right, set one up from scratch
 			$this->rest->db->insert(config_item('rest_limits_table'), array(
@@ -879,7 +884,7 @@ class REST_Controller extends MY_Controller
 
 		$valid_logins = & $this->config->item('rest_valid_logins');
 
-		if (!array_key_exists($username, $valid_logins))
+		if ( ! array_key_exists($username, $valid_logins))
 		{
 			return FALSE;
 		}
@@ -923,7 +928,7 @@ class REST_Controller extends MY_Controller
 			}
 		}
 
-		if (!$this->_check_login($username, $password))
+		if ( ! $this->_check_login($username, $password))
 		{
 			$this->_force_login();
 		}
@@ -967,7 +972,7 @@ class REST_Controller extends MY_Controller
 		preg_match_all('@(username|nonce|uri|nc|cnonce|qop|response)=[\'"]?([^\'",]+)@', $digest_string, $matches);
 		$digest = array_combine($matches[1], $matches[2]);
 
-		if (!array_key_exists('username', $digest) OR !$this->_check_login($digest['username']))
+		if ( ! array_key_exists('username', $digest) OR !$this->_check_login($digest['username']))
 		{
 			$this->_force_login($uniqid);
 		}
@@ -1002,7 +1007,7 @@ class REST_Controller extends MY_Controller
 			$ip = trim($ip);
 		}
 
-		if (!in_array($this->input->ip_address(), $whitelist))
+		if ( ! in_array($this->input->ip_address(), $whitelist))
 		{
 			$this->response(array('status' => false, 'error' => 'Not authorized'), 401);
 		}
@@ -1036,7 +1041,7 @@ class REST_Controller extends MY_Controller
 	protected function _force_loopable($data)
 	{
 		// Force it to be something useful
-		if (!is_array($data) AND !is_object($data))
+		if ( ! is_array($data) AND !is_object($data))
 		{
 			$data = (array) $data;
 		}
