@@ -170,7 +170,7 @@ class REST_Controller extends CI_Controller {
 		// Get that useless shitty key out of here
 		if (config_item('rest_enable_keys') AND $use_key AND $this->_allow === FALSE)
 		{
-      if (config_item('rest_enable_logging') AND $log_method)
+      		if (config_item('rest_enable_logging') AND $log_method)
 			{
 				$this->_log_request();
 			}
@@ -406,9 +406,8 @@ class REST_Controller extends CI_Controller {
 
 	protected function _detect_api_key()
 	{
-
-                // Get the api key name variable set in the rest config file
-                $api_key_variable = config_item('rest_key_name');
+        // Get the api key name variable set in the rest config file
+        $api_key_variable = config_item('rest_key_name');
 
 		// Work out the name of the SERVER entry based on config
 		$key_name = 'HTTP_' . strtoupper(str_replace('-', '_', $api_key_variable));
