@@ -554,6 +554,7 @@ class REST_Controller extends CI_Controller {
 		$result = $this->rest->db
 						->where('uri', $this->uri->uri_string())
 						->where('api_key', $this->rest->key)
+						->order_by("hour_started", "desc")
 						->get(config_item('rest_limits_table'))
 						->row();
 
