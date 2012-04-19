@@ -1,4 +1,4 @@
-# CodeIgniter-RestServer
+# CodeIgniter Rest Server
 
 A fully RESTful server implementation for CodeIgniter using one library, one
 config file and one controller.
@@ -24,7 +24,7 @@ but you can read my NetTuts article which covers it's usage along with the REST 
 
 ## Change Log
 
-### 2.6
+### 2.6.0
 
 * Added loads of PHPDoc comments.
 * Response where method doesn't exist is now "HTTP 405 Method Not Allowed", not "HTTP 404 Not Found".
