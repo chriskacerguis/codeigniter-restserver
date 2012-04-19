@@ -8,7 +8,9 @@ config file and one controller.
 ## Requirements
 
 1. PHP 5.2+
-2. CodeIgniter 2.0.3 to 2.1-dev (for 1.7.x support download v2.2 from Downloads tab)
+2. CodeIgniter 2.1.0 to 3.0-dev
+
+Note: for 1.7.x support download v2.2 from Downloads tab
 
 ## Usage
 
@@ -21,6 +23,22 @@ but you can read my NetTuts article which covers it's usage along with the REST 
 [NetTuts: Working with RESTful Services in CodeIgniter](http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/)
 
 ## Change Log
+
+### 2.6
+
+* Added loads of PHPDoc comments.
+* Response where method doesn't exist is now "HTTP 405 Method Not Allowed", not "HTTP 404 Not Found".
+* Compatable with PHP 5.4.
+* Added support for gzip compression.
+* Fix the apache\_request\_header function with CGI.
+* Fixed up correctly .foo extensions to work when get arguments provided.
+* Allows method emulation via X-HTTP-Method-Override
+* Support for Backbone.emulateHTTP improved.
+* Combine both URI segment and GET params instead of using one or the other
+* Separate each piece of the WWW-Authenticate header for digest requests with a comma.
+* Added IP whitelist option.
+
+
 
 ### 2.5
 
