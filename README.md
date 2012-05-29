@@ -22,19 +22,20 @@ but you can read my NetTuts article which covers it's usage along with the REST 
 
 [NetTuts: Working with RESTful Services in CodeIgniter](http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/)
 
-Note for Apache with CGI/FastCGI:
+### Note for Apache with CGI/FastCGI
 CGI/FastCGI dosn´t declare the authentication variables so you need to pass them you´r self via a htaccess file.
 
 If mod_env is enabled on the server you could simply add the following code to your .htacess file:
+```
 <IfModule mod_env.c>
   SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
 </IfModule>
-
+```
 If mod_env isn´t installed you could do it via mod_rewrite.
 Something like the code below should work with some customization to the authentication methods in the REST_Controller.php, havn´t tested this method.
-
+```
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-
+```
 The new enviorment variable can be reach via $this->input->server('REDIRECT_PHP_AUTH').
 
 ## Change Log
