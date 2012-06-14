@@ -800,7 +800,7 @@ abstract class REST_Controller extends CI_Controller
 			return $this->_post_args;
 		}
 
-		return $this->input->post($key, $xss_clean);
+		return array_key_exists($key, $this->_put_args) ? $this->_xss_clean($this->_put_args[$key], $xss_clean) : FALSE;
 	}
 
 	/**
