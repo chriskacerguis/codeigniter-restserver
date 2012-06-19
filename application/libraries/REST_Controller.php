@@ -234,6 +234,7 @@ abstract class REST_Controller extends CI_Controller
 			}
 		}
 
+		$this->rest = new StdClass();
 		// Load DB if its enabled
 		if (config_item('rest_database_group') AND (config_item('rest_enable_keys') OR config_item('rest_enable_logging')))
 		{
