@@ -1033,6 +1033,47 @@ abstract class REST_Controller extends CI_Controller
 		$this->response(array('status' => false, 'error' => 'Not authorized'), 401);
 	}
 
+    /**
+     * Exclude specified fields
+     *
+     * @param mixed $data an array or object containing the fields to exclude
+     * @param array $fields and array with the fields to exclude
+     *
+     * @return mixed
+    */
+    protected function _exclude($data, $fields = array())
+    {
+        foreach ($fields as $field) {
+
+            // result of $this->db->get()->result()
+
+            if (is_array($data)) {
+
+                foreach ($data as &$obj) {
+
+                    if (isset($obj->{$field})) {
+
+                        unset($obj->{$field});
+                    }
+                }
+
+            }
+
+            // result of $this->db->get()->row()
+
+            elseif (is_object($data)) {
+
+                if (isset($data->{$field})) {
+
+                    unset($data->{$field});
+                }
+            }
+
+        }
+
+        return $data;
+    }
+
 	/**
 	 * Force it into an array
 	 *
