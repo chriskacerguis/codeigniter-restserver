@@ -119,6 +119,29 @@ Any client connecting to your API will be checked against the whitelisted IP arr
 
 Your localhost IPs (`127.0.0.1` and `0.0.0.0`) are allowed by default.
 
+## API Keys
+
+In addition to the authentication methods above, the `REST_Controller` class also supports the use of API keys. Enabling API keys is easy. Turn it on in your **config/rest.php** file:
+
+	$config['rest_enable_keys'] = TRUE;
+
+You'll need to create a new database table to store and access the keys. `REST_Controller` will automatically assume you have a table that looks like this:
+
+	CREATE TABLE `keys` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `key` varchar(40) NOT NULL,
+	  `level` int(2) NOT NULL,
+	  `ignore_limits` tinyint(1) NOT NULL DEFAULT '0',
+	  `date_created` int(11) NOT NULL,
+	  PRIMARY KEY (`id`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+The class will look for an HTTP header with the API key on each request. An invalid or missing API key will result in an `HTTP 403 Forbidden`.
+
+By default, the HTTP will be `X-API-KEY`. This can be configured in **config/rest.php**.
+
+	$ curl -X POST -H "X-API-KEY: some_key_here" http://example.com/books
+
 ## Other Documentation / Tutorials
 
 * [NetTuts: Working with RESTful Services in CodeIgniter](http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/)
