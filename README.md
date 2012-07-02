@@ -10,17 +10,141 @@ config file and one controller.
 1. PHP 5.2+
 2. CodeIgniter 2.1.0 to 3.0-dev
 
-Note: for 1.7.x support download v2.2 from Downloads tab
+_Note: for 1.7.x support download v2.2 from Downloads tab_
 
-## Usage
+## Installation
 
-Coming soon. Take a look at application/controllers/api/example.php for
-hints until the default controller demo is built and ready.
+Drag and drop the **application/libraries/Format.php** and **application/libraries/REST_Controller.php** files into your application's directories. Either autoload the `REST_Controller` class or `require_once` it at the top of your controllers to load it into the scope. Additionally, copy the **rest.php** file from **application/config** in your application's configuration directory.
 
-I haven't got around to writing any documentation specifically for this project
-but you can read my NetTuts article which covers it's usage along with the REST Client lib.
+## Handling Requests
 
-[NetTuts: Working with RESTful Services in CodeIgniter](http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/)
+When your controller extends from `REST_Controller`, the method names will be appended with the HTTP method used to access the request. If you're  making an HTTP `GET` call to `/books`, for instance, it would call a `Books#index_get()` method.
+
+This allows you to implement a RESTful interface easily:
+
+	class Books extends REST_Controller
+	{
+		public function index_get()
+		{
+			// Display all books
+		}
+
+		public function index_post()
+		{
+			// Create a new book
+		}
+	}
+
+`REST_Controller` also supports `PUT` and `DELETE` methods, allowing you to support a truly RESTful interface.
+
+Accessing parameters is also easy. Simply use the name of the HTTP verb as a method:
+
+	$this->get('blah'); // GET param
+	$this->post('blah'); // POST param
+	$this->put('blah'); // PUT param
+	$this->delete('blah'); // DELETE param
+
+## Content Types
+
+`REST_Controller` supports a bunch of different request/response formats, including XML, JSON and serialised PHP. By default, the class will check the URL and look for a format either as an extension or as a separate segment.
+
+This means your URLs can look like this:
+
+	http://example.com/books.json
+	http://example.com/books?format=json
+
+Alternatively (and recommend) is using the HTTP `Accept` header, which is built for this purpose:
+
+	$ curl -H "Accept: application/json" http://example.com
+
+Any responses you make from the class (see [responses](#responses) for more on this) will be serialised in the designated format.
+
+## Responses
+
+The class provides a `response()` method that allows you to return data in the user's requested response format.
+
+Returning any object / array / string / whatever is easy:
+
+	public function index_get()
+	{
+		$this->response($this->db->get('books')->result());
+	}
+
+This will automatically return an `HTTP 200 OK` response. You can specify the status code in the second parameter:
+
+	public function index_post()
+	{
+		// ...create new book
+
+		$this->response($book, 201); // Send an HTTP 201 Created
+	}
+
+If you don't specify a response code, and the data you respond with `== FALSE` (an empty array or string, for instance), the response code will automatically be set to `404 Not Found`:
+
+	$this->response(array()); // HTTP 404 Not Found
+
+## Multilingual Support
+
+If your application uses language files to support multiple locales, `REST_Controller` will automatically parse the HTTP `Accept-Language` header and provide the language(s) in your actions. This information can be found in the `$this->request->lang` object:
+
+	public function __construct()
+	{
+		parent::__construct();
+
+		if (is_array($this->request->lang))
+		{
+			$this->load->language('application', $this->request->lang[0]);
+		}
+		else
+		{
+			$this->load->language('application', $this->request->lang);
+		}
+	}
+
+## Authentication
+
+This class also provides rudimentary support for HTTP basic authentication and/or the securer HTTP digest access authentication.
+
+You can enable basic authentication by setting the `$config['rest_auth']` to `'basic'`. The `$config['rest_valid_logins']` directive can then be used to set the usernames and passwords able to log in to your system. The class will automatically send all the correct headers to trigger the authentication dialogue:
+
+	$config['rest_valid_logins'] = array( 'username' => 'password', 'other_person' => 'secure123' );
+
+Enabling digest auth is similarly easy. Configure your desired logins in the config file like above, and set `$config['rest_auth']` to `'digest'`. The class will automatically send out the headers to enable digest auth.
+
+Both methods of authentication can be secured further by using an IP whitelist. If you enable `$config['rest_ip_whitelist_enabled']` in your config file, you can then set a list of allowed IPs.
+
+Any client connecting to your API will be checked against the whitelisted IP array. If they're on the list, they'll be allowed access. If not, sorry, no can do hombre. The whitelist is a comma-separated string:
+
+	$config['rest_ip_whitelist'] = '123.456.789.0, 987.654.32.1';
+
+Your localhost IPs (`127.0.0.1` and `0.0.0.0`) are allowed by default.
+
+## API Keys
+
+In addition to the authentication methods above, the `REST_Controller` class also supports the use of API keys. Enabling API keys is easy. Turn it on in your **config/rest.php** file:
+
+	$config['rest_enable_keys'] = TRUE;
+
+You'll need to create a new database table to store and access the keys. `REST_Controller` will automatically assume you have a table that looks like this:
+
+	CREATE TABLE `keys` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `key` varchar(40) NOT NULL,
+	  `level` int(2) NOT NULL,
+	  `ignore_limits` tinyint(1) NOT NULL DEFAULT '0',
+	  `date_created` int(11) NOT NULL,
+	  PRIMARY KEY (`id`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+The class will look for an HTTP header with the API key on each request. An invalid or missing API key will result in an `HTTP 403 Forbidden`.
+
+By default, the HTTP will be `X-API-KEY`. This can be configured in **config/rest.php**.
+
+	$ curl -X POST -H "X-API-KEY: some_key_here" http://example.com/books
+
+## Other Documentation / Tutorials
+
+* [NetTuts: Working with RESTful Services in CodeIgniter](http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/)
 
 ## Change Log
 
@@ -37,8 +161,6 @@ but you can read my NetTuts article which covers it's usage along with the REST 
 * Combine both URI segment and GET params instead of using one or the other
 * Separate each piece of the WWW-Authenticate header for digest requests with a comma.
 * Added IP whitelist option.
-
-
 
 ### 2.5
 
@@ -75,7 +197,6 @@ but you can read my NetTuts article which covers it's usage along with the REST 
 * FALSE values were coming out as empty strings in xml or rawxml mode, now they will be 0/1.
 * key => FALSE can now be used to override the keys_enabled option for a specific method, and level is now optional. If no level is set it will assume the method has a level of 0.
 * Fixed issue where calls to ->get('foo') would error is foo was not set. Reported by  Paul Barto.
-
 
 ## Donations
 
