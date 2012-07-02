@@ -10,17 +10,82 @@ config file and one controller.
 1. PHP 5.2+
 2. CodeIgniter 2.1.0 to 3.0-dev
 
-Note: for 1.7.x support download v2.2 from Downloads tab
+_Note: for 1.7.x support download v2.2 from Downloads tab_
 
-## Usage
+## Installation
 
-Coming soon. Take a look at application/controllers/api/example.php for
-hints until the default controller demo is built and ready.
+Drag and drop the **application/libraries/Format.php** and **application/libraries/REST_Controller.php** files into your application's directories. Either autoload the `REST_Controller` class or `require_once` it at the top of your controllers to load it into the scope.
 
-I haven't got around to writing any documentation specifically for this project
-but you can read my NetTuts article which covers it's usage along with the REST Client lib.
+## Handling Requests
 
-[NetTuts: Working with RESTful Services in CodeIgniter](http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/)
+When your controller extends from `REST_Controller`, the method names will be appended with the HTTP method used to access the request. If you're  making an HTTP `GET` call to `/books`, for instance, it would call a `Books#index_get()` method.
+
+This allows you to implement a RESTful interface easily:
+
+	class Books extends REST_Controller
+	{
+		public function index_get()
+		{
+			// Display all books
+		}
+
+		public function index_post()
+		{
+			// Create a new book
+		}
+	}
+
+`REST_Controller` also supports `PUT` and `DELETE` methods, allowing you to support a truly RESTful interface.
+
+Accessing parameters is also easy. Simply use the name of the HTTP verb as a method:
+
+	$this->get('blah'); // GET param
+	$this->post('blah'); // POST param
+	$this->put('blah'); // PUT param
+	$this->delete('blah'); // DELETE param
+
+## Content Types
+
+`REST_Controller` supports a bunch of different request/response formats, including XML, JSON and serialised PHP. By default, the class will check the URL and look for a format either as an extension or as a separate segment.
+
+This means your URLs can look like this:
+
+	http://example.com/books.json
+	http://example.com/books?format=json
+
+Alternatively (and recommend) is using the HTTP `Accept` header, which is built for this purpose:
+
+	$ curl -H "Accept: application/json" http://example.com
+
+Any responses you make from the class (see [responses](#responses) for more on this) will be serialised in the designated format.
+
+## Responses
+
+The class provides a `response()` method that allows you to return data in the user's requested response format.
+
+Returning any object / array / string / whatever is easy:
+
+	public function index_get()
+	{
+		$this->response($this->db->get('books')->result());
+	}
+
+This will automatically return an `HTTP 200 OK` response. You can specify the status code in the second parameter:
+
+	public function index_post()
+	{
+		// ...create new book
+
+		$this->response($book, 201); // Send an HTTP 201 Created
+	}
+
+If you don't specify a response code, and the data you respond with `== FALSE` (an empty array or string, for instance), the response code will automatically be set to `404 Not Found`:
+
+	$this->response(array()); // HTTP 404 Not Found
+
+## Other Documentation / Tutorials
+
+* [NetTuts: Working with RESTful Services in CodeIgniter](http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/)
 
 ## Change Log
 
@@ -37,8 +102,6 @@ but you can read my NetTuts article which covers it's usage along with the REST 
 * Combine both URI segment and GET params instead of using one or the other
 * Separate each piece of the WWW-Authenticate header for digest requests with a comma.
 * Added IP whitelist option.
-
-
 
 ### 2.5
 
@@ -75,7 +138,6 @@ but you can read my NetTuts article which covers it's usage along with the REST 
 * FALSE values were coming out as empty strings in xml or rawxml mode, now they will be 0/1.
 * key => FALSE can now be used to override the keys_enabled option for a specific method, and level is now optional. If no level is set it will assume the method has a level of 0.
 * Fixed issue where calls to ->get('foo') would error is foo was not set. Reported by  Paul Barto.
-
 
 ## Donations
 
