@@ -26,7 +26,7 @@ class Format {
 	 */
 	public function factory($data, $from_type = null)
 	{
-		// Stupid stuff to emulate the "new static()" stuff in this libraries PHP 5.3 equivilent
+		// Stupid stuff to emulate the "new static()" stuff in this libraries PHP 5.3 equivalent
 		$class = __CLASS__;
 		return new $class($data, $from_type);
 	}
@@ -37,7 +37,7 @@ class Format {
 	public function __construct($data = null, $from_type = null)
 	{
 		get_instance()->load->helper('inflector');
-		
+
 		// If the provided data is already formatted we should probably convert it to an array
 		if ($from_type !== null)
 		{
@@ -59,7 +59,7 @@ class Format {
 
 	public function to_array($data = null)
 	{
-		// If not just null, but nopthing is provided
+		// If not just null, but nothing is provided
 		if ($data === null and ! func_num_args())
 		{
 			$data = $this->_data;
@@ -110,37 +110,37 @@ class Format {
 
 		foreach ($data as $key => $value)
 		{
-			
+
 			//change false/true to 0/1
 			if(is_bool($value))
 			{
 				$value = (int) $value;
 			}
-			
+
 			// no numeric keys in our xml please!
 			if (is_numeric($key))
-            {
-                // make string key...           
-                $key = (singular($basenode) != $basenode) ? singular($basenode) : 'item';
-            }
+			{
+				// make string key...
+				$key = (singular($basenode) != $basenode) ? singular($basenode) : 'item';
+			}
 
 			// replace anything not alpha numeric
 			$key = preg_replace('/[^a-z_\-0-9]/i', '', $key);
 
-            // if there is another array found recrusively call this function
-            if (is_array($value) || is_object($value))
-            {
-                $node = $structure->addChild($key);
+			// if there is another array found recursively call this function
+			if (is_array($value) || is_object($value))
+			{
+				$node = $structure->addChild($key);
 
-                // recrusive call.
-                $this->to_xml($value, $node, $key);
-            }
+				// recursive call.
+				$this->to_xml($value, $node, $key);
+			}
 
-            else
-            {
-                // add single node.
+			else
+			{
+				// add single node.
 				$value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, "UTF-8");
-				
+
 				$structure->addChild($key, $value);
 			}
 		}
@@ -152,7 +152,7 @@ class Format {
 	public function to_html()
 	{
 		$data = $this->_data;
-		
+
 		// Multi-dimensional array
 		if (isset($data[0]) && is_array($data[0]))
 		{
@@ -179,12 +179,12 @@ class Format {
 		return $ci->table->generate();
 	}
 
-	// Format HTML for output
+	// Format CSV for output
 	public function to_csv()
 	{
 		$data = $this->_data;
 
-		// Multi-dimentional array
+		// Multi-dimensional array
 		if (isset($data[0]))
 		{
 			$headings = array_keys($data[0]);
@@ -217,11 +217,11 @@ class Format {
 	{
 		return serialize($this->_data);
 	}
-	
+
 	// Output as a string representing the PHP structure
 	public function to_php()
 	{
-	    return var_export($this->_data, TRUE);
+		return var_export($this->_data, TRUE);
 	}
 
 	// Format XML for output
@@ -230,7 +230,7 @@ class Format {
 		return $string ? (array) simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOCDATA) : array();
 	}
 
-	// Format HTML for output
+	// Format CSV for output
 	// This function is DODGY! Not perfect CSV support but works with my REST_Controller
 	protected function _from_csv($string)
 	{
