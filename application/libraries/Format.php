@@ -37,7 +37,7 @@ class Format {
 	public function __construct($data = null, $from_type = null)
 	{
 		get_instance()->load->helper('inflector');
-		
+
 		// If the provided data is already formatted we should probably convert it to an array
 		if ($from_type !== null)
 		{
@@ -110,17 +110,17 @@ class Format {
 
 		foreach ($data as $key => $value)
 		{
-			
+
 			//change false/true to 0/1
 			if(is_bool($value))
 			{
 				$value = (int) $value;
 			}
-			
+
 			// no numeric keys in our xml please!
 			if (is_numeric($key))
             {
-                // make string key...           
+                // make string key...
                 $key = (singular($basenode) != $basenode) ? singular($basenode) : 'item';
             }
 
@@ -140,7 +140,7 @@ class Format {
             {
                 // add single node.
 				$value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, "UTF-8");
-				
+
 				$structure->addChild($key, $value);
 			}
 		}
@@ -152,7 +152,7 @@ class Format {
 	public function to_html()
 	{
 		$data = $this->_data;
-		
+
 		// Multi-dimensional array
 		if (isset($data[0]) && is_array($data[0]))
 		{
@@ -217,7 +217,7 @@ class Format {
 	{
 		return serialize($this->_data);
 	}
-	
+
 	// Output as a string representing the PHP structure
 	public function to_php()
 	{
