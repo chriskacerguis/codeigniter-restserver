@@ -541,10 +541,10 @@ abstract class REST_Controller extends CI_Controller
 			{
 				$method = strtolower($this->input->post('_method'));
 			}
-	        	else if ($this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE'))
-		        {
-		            $method = strtolower($this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE'));
-		        }
+			elseif ($this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE'))
+			{
+				$method = strtolower($this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE'));
+			}
 		}
 
 		if (in_array($method, array('get', 'delete', 'post', 'put')))
