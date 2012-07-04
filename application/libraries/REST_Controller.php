@@ -18,7 +18,7 @@ abstract class REST_Controller extends CI_Controller
 	/**
 	 * This defines the rest format.
 	 *
-	 * Must be overriden it in a controller so that it is set.
+	 * Must be overridden it in a controller so that it is set.
 	 *
 	 * @var string|null
 	 */
@@ -162,7 +162,7 @@ abstract class REST_Controller extends CI_Controller
 				// Grab proper GET variables
 				parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $get);
 
-				// Merge both the URI segements and GET params
+				// Merge both the URI segments and GET params
 				$this->_get_args = array_merge($this->_get_args, $get);
 				break;
 
@@ -498,13 +498,13 @@ abstract class REST_Controller extends CI_Controller
 					// HTML or XML have shown up as a match
 					else
 					{
-						// If it is truely HTML, it wont want any XML
+						// If it is truly HTML, it wont want any XML
 						if ($format == 'html' AND strpos($this->input->server('HTTP_ACCEPT'), 'xml') === FALSE)
 						{
 							return $format;
 						}
 
-						// If it is truely XML, it wont want any HTML
+						// If it is truly XML, it wont want any HTML
 						elseif ($format == 'xml' AND strpos($this->input->server('HTTP_ACCEPT'), 'html') === FALSE)
 						{
 							return $format;
@@ -657,7 +657,7 @@ abstract class REST_Controller extends CI_Controller
 	 *
 	 * Check if the requests are coming in a tad too fast.
 	 *
-	 * @param string $controller_method The method deing called.
+	 * @param string $controller_method The method being called.
 	 * @return boolean
 	 */
 	protected function _check_limit($controller_method)

@@ -26,7 +26,7 @@ class Format {
 	 */
 	public function factory($data, $from_type = null)
 	{
-		// Stupid stuff to emulate the "new static()" stuff in this libraries PHP 5.3 equivilent
+		// Stupid stuff to emulate the "new static()" stuff in this libraries PHP 5.3 equivalent
 		$class = __CLASS__;
 		return new $class($data, $from_type);
 	}
@@ -59,7 +59,7 @@ class Format {
 
 	public function to_array($data = null)
 	{
-		// If not just null, but nopthing is provided
+		// If not just null, but nothing is provided
 		if ($data === null and ! func_num_args())
 		{
 			$data = $this->_data;
@@ -127,12 +127,12 @@ class Format {
 			// replace anything not alpha numeric
 			$key = preg_replace('/[^a-z_\-0-9]/i', '', $key);
 
-            // if there is another array found recrusively call this function
+            // if there is another array found recursively call this function
             if (is_array($value) || is_object($value))
             {
                 $node = $structure->addChild($key);
 
-                // recrusive call.
+                // recursive call.
                 $this->to_xml($value, $node, $key);
             }
 
@@ -184,7 +184,7 @@ class Format {
 	{
 		$data = $this->_data;
 
-		// Multi-dimentional array
+		// Multi-dimensional array
 		if (isset($data[0]))
 		{
 			$headings = array_keys($data[0]);
