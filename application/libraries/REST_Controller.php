@@ -356,7 +356,7 @@ abstract class REST_Controller extends CI_Controller
 			$http_code = 404;
 
 			//create the output variable here in the case of $this->response(array());
-			$output = $data;
+			$output = NULL;
 		}
 
 		// Otherwise (if no data but 200 provided) or some data, carry on camping!
