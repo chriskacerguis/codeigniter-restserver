@@ -32,6 +32,13 @@ abstract class REST_Controller extends CI_Controller
 	protected $methods = array();
 
 	/**
+	 * List of allowed HTTP methods
+	 *
+	 * @var array
+	 */
+	protected $allowed_http_methods = array('get', 'delete', 'post', 'put');
+
+	/**
 	 * General request data and information.
 	 * Stores accept, language, body, headers, etc.
 	 *
@@ -320,7 +327,7 @@ abstract class REST_Controller extends CI_Controller
 		{
 			$http_code = 404;
 
-			//create the output variable here in the case of $this->response(array());
+			// create the output variable here in the case of $this->response(array());
 			$output = NULL;
 		}
 
@@ -492,7 +499,7 @@ abstract class REST_Controller extends CI_Controller
 	/**
 	 * Detect method
 	 *
-	 * Detect which method (POST, PUT, GET, DELETE) is being used
+	 * Detect which HTTP method is being used
 	 *
 	 * @return string
 	 */
@@ -512,7 +519,7 @@ abstract class REST_Controller extends CI_Controller
 			}
 		}
 
-		if (in_array($method, array('get', 'delete', 'post', 'put')))
+		if (in_array($method, $this->allowed_http_methods) && method_exists($this, '_parse_' . $method))
 		{
 			return $method;
 		}
