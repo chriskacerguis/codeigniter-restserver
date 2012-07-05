@@ -17,8 +17,8 @@ abstract class REST_Controller extends CI_Controller
 {
 	/**
 	 * This defines the rest format.
-	 * 
-	 * Must be overriden it in a controller so that it is set.
+	 *
+	 * Must be overridden it in a controller so that it is set.
 	 *
 	 * @var string|null
 	 */
@@ -27,7 +27,7 @@ abstract class REST_Controller extends CI_Controller
 	/**
 	 * Defines the list of method properties such as limit, log and level
 	 *
-	 * @var array 
+	 * @var array
 	 */
 	protected $methods = array();
 
@@ -35,34 +35,34 @@ abstract class REST_Controller extends CI_Controller
 	 * General request data and information.
 	 * Stores accept, language, body, headers, etc.
 	 *
-	 * @var object 
+	 * @var object
 	 */
 	protected $request = NULL;
 
 	/**
 	 * What is gonna happen in output?
-	 * 
-	 * @var object 
+	 *
+	 * @var object
 	 */
 	protected $response = NULL;
 
 	/**
 	 * Stores DB, keys, key level, etc
 	 *
-	 * @var object 
+	 * @var object
 	 */
 	protected $rest = NULL;
 
 	/**
 	 * The arguments for the GET request method
 	 *
-	 * @var array 
+	 * @var array
 	 */
 	protected $_get_args = array();
 
 	/**
 	 * The arguments for the POST request method
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $_post_args = array();
@@ -90,14 +90,14 @@ abstract class REST_Controller extends CI_Controller
 
 	/**
 	 * If the request is allowed based on the API key provided.
-	 * 
+	 *
 	 * @var boolean
 	 */
 	protected $_allow = TRUE;
 
 	/**
 	 * Determines if output compression is enabled
-	 * 
+	 *
 	 * @var boolean
 	 */
 	protected $_zlib_oc = FALSE;
@@ -122,7 +122,7 @@ abstract class REST_Controller extends CI_Controller
 	 */
 	protected function early_checks()
 	{
-		
+
 	}
 
 	/**
@@ -162,7 +162,7 @@ abstract class REST_Controller extends CI_Controller
 				// Grab proper GET variables
 				parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $get);
 
-				// Merge both the URI segements and GET params
+				// Merge both the URI segments and GET params
 				$this->_get_args = array_merge($this->_get_args, $get);
 				break;
 
@@ -263,8 +263,8 @@ abstract class REST_Controller extends CI_Controller
 	/**
 	 * Remap
 	 *
-	 * Requests are not made to methods directly, the request will be for 
-	 * an "object". This simply maps the object and method to the correct 
+	 * Requests are not made to methods directly, the request will be for
+	 * an "object". This simply maps the object and method to the correct
 	 * Controller method.
 	 *
 	 * @param string $object_called
@@ -344,7 +344,7 @@ abstract class REST_Controller extends CI_Controller
 	 * Takes pure data and optionally a status code, then creates the response.
 	 *
 	 * @param array $data
-	 * @param null|int $http_code 
+	 * @param null|int $http_code
 	 */
 	public function response($data = array(), $http_code = null)
 	{
@@ -373,7 +373,7 @@ abstract class REST_Controller extends CI_Controller
 					}
 				}
 			}
-			
+
 			is_numeric($http_code) OR $http_code = 200;
 
 			// If the format method exists, call and return the output in that format
@@ -447,8 +447,8 @@ abstract class REST_Controller extends CI_Controller
 	 * Detect format
 	 *
 	 * Detect which format should be used to output the data.
-	 * 
-	 * @return string The output format. 
+	 *
+	 * @return string The output format.
 	 */
 	protected function _detect_output_format()
 	{
@@ -498,13 +498,13 @@ abstract class REST_Controller extends CI_Controller
 					// HTML or XML have shown up as a match
 					else
 					{
-						// If it is truely HTML, it wont want any XML
+						// If it is truly HTML, it wont want any XML
 						if ($format == 'html' AND strpos($this->input->server('HTTP_ACCEPT'), 'xml') === FALSE)
 						{
 							return $format;
 						}
 
-						// If it is truely XML, it wont want any HTML
+						// If it is truly XML, it wont want any HTML
 						elseif ($format == 'xml' AND strpos($this->input->server('HTTP_ACCEPT'), 'html') === FALSE)
 						{
 							return $format;
@@ -528,23 +528,23 @@ abstract class REST_Controller extends CI_Controller
 	 * Detect method
 	 *
 	 * Detect which method (POST, PUT, GET, DELETE) is being used
-	 * 
-	 * @return string 
+	 *
+	 * @return string
 	 */
 	protected function _detect_method()
 	{
 		$method = strtolower($this->input->server('REQUEST_METHOD'));
-        
+
 		if ($this->config->item('enable_emulate_request'))
 		{
 			if ($this->input->post('_method'))
 			{
 				$method = strtolower($this->input->post('_method'));
 			}
-	        	else if ($this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE'))
-		        {
-		            $method = strtolower($this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE'));
-		        }			
+			elseif ($this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE'))
+			{
+				$method = strtolower($this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE'));
+			}
 		}
 
 		if (in_array($method, array('get', 'delete', 'post', 'put')))
@@ -559,8 +559,8 @@ abstract class REST_Controller extends CI_Controller
 	 * Detect API Key
 	 *
 	 * See if the user has provided an API key
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	protected function _detect_api_key()
 	{
@@ -600,7 +600,7 @@ abstract class REST_Controller extends CI_Controller
 	 * Detect language(s)
 	 *
 	 * What language do they want it in?
-	 * 
+	 *
 	 * @return null|string The language code.
 	 */
 	protected function _detect_lang()
@@ -635,9 +635,9 @@ abstract class REST_Controller extends CI_Controller
 	 * Log request
 	 *
 	 * Record the entry for awesomeness purposes
-	 * 
+	 *
 	 * @param boolean $authorized
-	 * @return object 
+	 * @return object
 	 */
 	protected function _log_request($authorized = FALSE)
 	{
@@ -657,8 +657,8 @@ abstract class REST_Controller extends CI_Controller
 	 *
 	 * Check if the requests are coming in a tad too fast.
 	 *
-	 * @param string $controller_method The method deing called.
-	 * @return boolean 
+	 * @param string $controller_method The method being called.
+	 * @return boolean
 	 */
 	protected function _check_limit($controller_method)
 	{
@@ -713,10 +713,10 @@ abstract class REST_Controller extends CI_Controller
 	/**
 	 * Auth override check
 	 *
-	 * Check if there is a specific auth type set for the current class/method 
+	 * Check if there is a specific auth type set for the current class/method
 	 * being called.
 	 *
-	 * @return boolean 
+	 * @return boolean
 	 */
 	protected function _auth_override_check()
 	{
@@ -763,7 +763,7 @@ abstract class REST_Controller extends CI_Controller
 			return true;
 		}
 
-		// Return false when there is an override value set but it does not match 
+		// Return false when there is an override value set but it does not match
 		// 'basic', 'digest', or 'none'. (the value was misspelled)
 		return false;
 	}
@@ -858,7 +858,7 @@ abstract class REST_Controller extends CI_Controller
 	/**
 	 * Retrieve the validation errors.
 	 *
-	 * @return array 
+	 * @return array
 	 */
 	public function validation_errors()
 	{
@@ -874,7 +874,7 @@ abstract class REST_Controller extends CI_Controller
 	 *
 	 * @param string $username The user's name
 	 * @param string $password The user's password
-	 * @return boolean 
+	 * @return boolean
 	 */
 	protected function _check_login($username = '', $password = NULL)
 	{
@@ -900,7 +900,7 @@ abstract class REST_Controller extends CI_Controller
 	}
 
 	/**
-	 * @todo document this. 
+	 * @todo document this.
 	 */
 	protected function _prepare_basic_auth()
 	{
@@ -936,7 +936,7 @@ abstract class REST_Controller extends CI_Controller
 	}
 
 	/**
-	 * @todo Document this. 
+	 * @todo Document this.
 	 */
 	protected function _prepare_digest_auth()
 	{
@@ -962,7 +962,7 @@ abstract class REST_Controller extends CI_Controller
 			$digest_string = "";
 		}
 
-		// The $_SESSION['error_prompted'] variable is used to ask the password 
+		// The $_SESSION['error_prompted'] variable is used to ask the password
 		// again if none given or if the user enters wrong auth information.
 		if (empty($digest_string))
 		{
@@ -1017,7 +1017,7 @@ abstract class REST_Controller extends CI_Controller
 	/**
 	 * @todo Document this.
 	 *
-	 * @param string $nonce 
+	 * @param string $nonce
 	 */
 	protected function _force_login($nonce = '')
 	{
@@ -1037,7 +1037,7 @@ abstract class REST_Controller extends CI_Controller
 	 * Force it into an array
 	 *
 	 * @param object|array $data
-	 * @return array 
+	 * @return array
 	 */
 	protected function _force_loopable($data)
 	{
@@ -1055,9 +1055,9 @@ abstract class REST_Controller extends CI_Controller
 
 	/**
 	 * Encode as JSONP
-	 * 
+	 *
 	 * @param array $data The input data.
-	 * @return string The JSONP data string (loadable from Javascript). 
+	 * @return string The JSONP data string (loadable from Javascript).
 	 */
 	protected function _format_jsonp($data = array())
 	{
