@@ -149,6 +149,12 @@ abstract class REST_Controller extends CI_Controller
 		$this->request = new stdClass();
 		$this->request->method = $this->_detect_method();
 
+		// Create argument container, if nonexistent
+		if ( ! isset($this->{'_'.$this->request->method.'_args'}))
+		{
+			$this->{'_'.$this->request->method.'_args'} = array();
+		}
+
 		// Set up our GET variables
 		$this->_get_args = array_merge($this->_get_args, $this->uri->ruri_to_assoc());
 
@@ -174,7 +180,7 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		// Merge both for one mega-args variable
-		$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_post_args, $this->_delete_args);
+		$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_post_args, $this->_delete_args, $this->{'_'.$this->request->method.'_args'});
 
 		// Which format should the data be returned in?
 		$this->response = new stdClass();
