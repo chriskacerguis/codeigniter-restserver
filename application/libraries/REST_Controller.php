@@ -32,6 +32,13 @@ abstract class REST_Controller extends CI_Controller
 	protected $methods = array();
 
 	/**
+	 * List of allowed HTTP methods
+	 *
+	 * @var array
+	 */
+	protected $allowed_http_methods = array('get', 'delete', 'post', 'put');
+
+	/**
 	 * General request data and information.
 	 * Stores accept, language, body, headers, etc.
 	 *
@@ -156,42 +163,7 @@ abstract class REST_Controller extends CI_Controller
 		// Some Methods cant have a body
 		$this->request->body = NULL;
 
-		switch ($this->request->method)
-		{
-			case 'get':
-				// Grab proper GET variables
-				parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $get);
-
-				// Merge both the URI segments and GET params
-				$this->_get_args = array_merge($this->_get_args, $get);
-				break;
-
-			case 'post':
-				$this->_post_args = $_POST;
-
-				$this->request->format and $this->request->body = file_get_contents('php://input');
-				break;
-
-			case 'put':
-				// It might be a HTTP body
-				if ($this->request->format)
-				{
-					$this->request->body = file_get_contents('php://input');
-				}
-
-				// If no file type is provided, this is probably just arguments
-				else
-				{
-					parse_str(file_get_contents('php://input'), $this->_put_args);
-				}
-
-				break;
-
-			case 'delete':
-				// Set up out DELETE variables (which shouldn't really exist, but sssh!)
-				parse_str(file_get_contents('php://input'), $this->_delete_args);
-				break;
-		}
+		$this->{'_parse_' . $this->request->method}();
 
 		// Now we know all about our request, let's try and parse the body if it exists
 		if ($this->request->format and $this->request->body)
@@ -355,7 +327,7 @@ abstract class REST_Controller extends CI_Controller
 		{
 			$http_code = 404;
 
-			//create the output variable here in the case of $this->response(array());
+			// create the output variable here in the case of $this->response(array());
 			$output = NULL;
 		}
 
@@ -527,7 +499,7 @@ abstract class REST_Controller extends CI_Controller
 	/**
 	 * Detect method
 	 *
-	 * Detect which method (POST, PUT, GET, DELETE) is being used
+	 * Detect which HTTP method is being used
 	 *
 	 * @return string
 	 */
@@ -547,7 +519,7 @@ abstract class REST_Controller extends CI_Controller
 			}
 		}
 
-		if (in_array($method, array('get', 'delete', 'post', 'put')))
+		if (in_array($method, $this->allowed_http_methods) && method_exists($this, '_parse_' . $method))
 		{
 			return $method;
 		}
@@ -766,6 +738,55 @@ abstract class REST_Controller extends CI_Controller
 		// Return false when there is an override value set but it does not match
 		// 'basic', 'digest', or 'none'. (the value was misspelled)
 		return false;
+	}
+
+	/**
+	 * Parse GET
+	 */
+	protected function _parse_get()
+	{
+		// Grab proper GET variables
+		parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $get);
+
+		// Merge both the URI segments and GET params
+		$this->_get_args = array_merge($this->_get_args, $get);
+	}
+
+	/**
+	 * Parse POST
+	 */
+	protected function _parse_post()
+	{
+		$this->_post_args = $_POST;
+
+		$this->request->format and $this->request->body = file_get_contents('php://input');
+	}
+
+	/**
+	 * Parse PUT
+	 */
+	protected function _parse_put()
+	{
+		// It might be a HTTP body
+		if ($this->request->format)
+		{
+			$this->request->body = file_get_contents('php://input');
+		}
+
+		// If no file type is provided, this is probably just arguments
+		else
+		{
+			parse_str(file_get_contents('php://input'), $this->_put_args);
+		}
+	}
+
+	/**
+	 * Parse DELETE
+	 */
+	protected function _parse_delete()
+	{
+		// Set up out DELETE variables (which shouldn't really exist, but sssh!)
+		parse_str(file_get_contents('php://input'), $this->_delete_args);
 	}
 
 	// INPUT FUNCTION --------------------------------------------------------------
