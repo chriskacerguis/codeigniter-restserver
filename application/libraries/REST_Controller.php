@@ -313,7 +313,20 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		// And...... GO!
-		call_user_func_array(array($this, $controller_method), $arguments);
+		$this->_fire_method(array($this, $controller_method), $arguments);
+	}
+
+	/**
+	 * Fire Method
+	 *
+	 * Fires the designated controller method with the given arguments.
+	 *
+	 * @param array $method The controller method to fire
+	 * @param array $args The arguments to pass to the controller method
+	 */
+	protected function _fire_method($method, $args)
+	{
+		call_user_func_array($method, $args);
 	}
 
 	/**
