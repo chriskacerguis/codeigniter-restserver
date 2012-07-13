@@ -156,6 +156,8 @@ $config['rest_keys_table'] = 'keys';
 	  `key` varchar(40) NOT NULL,
 	  `level` int(2) NOT NULL,
 	  `ignore_limits` tinyint(1) NOT NULL DEFAULT '0',
+	  `is_private_key` tinyint(1)  NOT NULL DEFAULT '0',
+	  `ip_addresses` TEXT NULL DEFAULT NULL,
 	  `date_created` int(11) NOT NULL,
 	  PRIMARY KEY (`id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
