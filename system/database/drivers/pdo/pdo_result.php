@@ -9,7 +9,7 @@
  * @license		http://codeigniter.com/user_guide/license.html
  * @author		EllisLab Dev Team
  * @link		http://codeigniter.com
- * @since		Version 2.1.0
+ * @since		Version 2.1.2
  * @filesource
  */
 
@@ -34,7 +34,18 @@ class CI_DB_pdo_result extends CI_DB_result {
 	 */
 	function num_rows()
 	{
-		return $this->result_id->rowCount();
+		if (is_numeric(stripos($this->result_id->queryString, 'SELECT')))
+		{
+			$dbh = $this->conn_id;
+			$query = $dbh->query($this->result_id->queryString);
+			$result = $query->fetchAll();
+			unset($dbh, $query);
+			return count($result);
+		}
+		else
+		{
+			return $this->result_id->rowCount();	
+		}
 	}
 
 	// --------------------------------------------------------------------
