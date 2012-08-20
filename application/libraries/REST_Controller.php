@@ -61,6 +61,13 @@ abstract class REST_Controller extends CI_Controller
 	protected $rest = NULL;
 
 	/**
+	 * Object to store data about the client sending the request
+	 *
+	 * @var object
+	 */
+    protected $client = NULL;	 
+
+	/**
 	 * The arguments for the GET request method
 	 *
 	 * @var array
@@ -145,8 +152,13 @@ abstract class REST_Controller extends CI_Controller
 		// Lets grab the config and get ready to party
 		$this->load->config('rest');
 
-		// How is this request being made? POST, DELETE, GET, PUT?
+		// let's learn about the request
 		$this->request = new stdClass();
+		
+		// Is it over SSL?
+		$this->request->ssl = $this->_detect_ssl();
+		
+		// How is this request being made? POST, DELETE, GET, PUT?
 		$this->request->method = $this->_detect_method();
 
 		// Create argument container, if nonexistent
@@ -250,6 +262,12 @@ abstract class REST_Controller extends CI_Controller
 	 */
 	public function _remap($object_called, $arguments)
 	{
+		// Should we answer if not over SSL?
+		if (config_item('force_https') AND !$this->_detect_ssl())
+		{
+    	   $this->response(array('status' => false, 'error' => 'Unsupported protocol'), 403);	
+		}
+		
 		$pattern = '/^(.*)\.('.implode('|', array_keys($this->_supported_formats)).')$/';
 		if (preg_match($pattern, $object_called, $matches))
 		{
@@ -407,6 +425,22 @@ abstract class REST_Controller extends CI_Controller
 		exit($output);
 	}
 
+	/*
+	 * Detect SSL use
+	 *
+	 * Detect whether SSL is being used or not
+	 */
+	protected function _detect_ssl()
+	{
+    	if( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on")
+    	{
+        	return TRUE;
+    	}
+    	
+    	return FALSE;
+	}
+	
+	
 	/*
 	 * Detect input format
 	 *
@@ -569,18 +603,20 @@ abstract class REST_Controller extends CI_Controller
 		// Find the key from server or arguments
 		if (($key = isset($this->_args[$api_key_variable]) ? $this->_args[$api_key_variable] : $this->input->server($key_name)))
 		{
-			if ( ! ($row = $this->rest->db->where('key', $key)->get(config_item('rest_keys_table'))->row()))
+			if ( ! ($this->client = $this->rest->db->where(config_item('rest_key_column'), $key)->get(config_item('rest_keys_table'))->row()))
 			{
 				return FALSE;
 			}
 
-			$this->rest->key = $row->key;
+			$this->rest->key = $this->client->{config_item('rest_key_column')};
 
+			/*
 			isset($row->user_id) AND $this->rest->user_id = $row->user_id;
 			isset($row->level) AND $this->rest->level = $row->level;
 			isset($row->ignore_limits) AND $this->rest->ignore_limits = $row->ignore_limits;
+			*/
 
-			return TRUE;
+			return $this->client;
 		}
 
 		// No key has been sent

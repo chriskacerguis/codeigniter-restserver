@@ -2,6 +2,18 @@
 
 /*
 |--------------------------------------------------------------------------
+| HTTP protocol
+|--------------------------------------------------------------------------
+|
+| Should the service accept only HTTPS requests or not?
+|
+|	Default: FALSE
+|
+*/
+$config['force_https'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
 | REST Format
 |--------------------------------------------------------------------------
 |
@@ -139,7 +151,7 @@ $config['rest_database_group'] = 'default';
 |	'keys'
 |
 */
-$config['rest_keys_table'] = 'keys';
+$config['rest_keys_table'] = 'system_user';
 
 /*
 |--------------------------------------------------------------------------
@@ -161,8 +173,8 @@ $config['rest_keys_table'] = 'keys';
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
-$config['rest_enable_keys'] = FALSE;
-
+$config['rest_enable_keys'] = TRUE;
+$config['rest_key_column'] = 'username';
 /*
 |--------------------------------------------------------------------------
 | REST Key Length
@@ -220,6 +232,8 @@ $config['rest_logs_table'] = 'logs';
 	  `ip_address` varchar(45) NOT NULL,
 	  `time` int(11) NOT NULL,
 	  `authorized` tinyint(1) NOT NULL,
+	  'status' int(3) NOT NULL,
+	  'payload' TEXT DEFAULT NULL,
 	  PRIMARY KEY (`id`)
 	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 |
