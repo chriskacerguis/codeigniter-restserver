@@ -151,7 +151,7 @@ $config['rest_database_group'] = 'default';
 |	'keys'
 |
 */
-$config['rest_keys_table'] = 'system_user';
+$config['rest_keys_table'] = 'keys';
 
 /*
 |--------------------------------------------------------------------------
@@ -174,7 +174,18 @@ $config['rest_keys_table'] = 'system_user';
 |
 */
 $config['rest_enable_keys'] = TRUE;
-$config['rest_key_column'] = 'username';
+
+/*
+|--------------------------------------------------------------------------
+| REST Table Key Column Name
+|--------------------------------------------------------------------------
+|
+| If you are not using the default table schema as shown above, what is the 
+| name of the db column that holds the api key value?
+|
+*/
+$config['rest_key_column'] = 'key';
+
 /*
 |--------------------------------------------------------------------------
 | REST Key Length
