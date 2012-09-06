@@ -171,6 +171,12 @@ abstract class REST_Controller extends CI_Controller
 
 		$this->{'_parse_' . $this->request->method}();
 
+		// The api key may be sent via get regardless of what method the other data used
+		if($this->request->method != 'get' && $this->config->item('rest_enable_keys'))
+		{
+			$this->{'_parse_get'}();
+		}
+
 		// Now we know all about our request, let's try and parse the body if it exists
 		if ($this->request->format and $this->request->body)
 		{
