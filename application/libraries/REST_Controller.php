@@ -586,12 +586,12 @@ abstract class REST_Controller extends CI_Controller
 				// Check for a list of valid ip addresses
 				if(isset($row->ip_addresses))
 				{
-					$list_ip_addresses = explode("\n", $row->ip_addresses);
+					$list_ip_addresses = explode(",", $row->ip_addresses);
 					$found_address = FALSE;
 					
 					foreach($list_ip_addresses as $ip_address)
 					{
-						if($this->input->ip_address() == $ip_address)
+						if($this->input->ip_address() == trim($ip_address))
 						{
 							$found_address = TRUE;
 							break;
