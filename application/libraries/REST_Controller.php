@@ -432,12 +432,7 @@ abstract class REST_Controller extends CI_Controller
 	 */
 	protected function _detect_ssl()
 	{
-    	if( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on")
-    	{
-        	return TRUE;
-    	}
-    	
-    	return FALSE;
+    		return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on"));
 	}
 	
 	
