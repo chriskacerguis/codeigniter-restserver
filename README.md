@@ -53,7 +53,7 @@ This means your URLs can look like this:
 	http://example.com/books.json
 	http://example.com/books?format=json
 
-Alternatively (and recommend) is using the HTTP `Accept` header, which is built for this purpose:
+This can be flaky with URI segments, so the recommend approach is using the HTTP `Accept` header:
 
 	$ curl -H "Accept: application/json" http://example.com
 
@@ -147,6 +147,17 @@ By default, the HTTP will be `X-API-KEY`. This can be configured in **config/res
 * [NetTuts: Working with RESTful Services in CodeIgniter](http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/)
 
 ## Change Log
+
+### 2.6.1
+
+* Update CodeIgniter files to 2.1.2
+* Log Table support for IPv6 & NULL parameters
+* Abstract out the processes of firing a controller method within _remap() to an separate method
+* Moved GET, POST, PUT, and DELETE parsing to separate methods, allowing them to be overridden as needed
+* Small bugfix for a PHP 5.3 strlen error
+* Fixed some PHP 5.4 warnings
+* Fix for bug in Format.php's to_html() which failed to detect if $data was really a multidimensional array.
+* Fix for empty node on XML output format, for false = 0, true = 1.
 
 ### 2.6.0
 
