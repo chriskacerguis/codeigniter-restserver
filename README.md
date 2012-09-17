@@ -209,7 +209,12 @@ By default, the HTTP will be `X-API-KEY`. This can be configured in **config/res
 * key => FALSE can now be used to override the keys_enabled option for a specific method, and level is now optional. If no level is set it will assume the method has a level of 0.
 * Fixed issue where calls to ->get('foo') would error is foo was not set. Reported by  Paul Barto.
 
-## Donations
+## Contributions
 
-If my REST Server has helped you out, or you'd like me to do some custom work on it, [please sponsor me](http://pledgie.com/campaigns/8328)
-so I can keep working on this and other CodeIgniter projects for you all.
+This project has been funded and made possible through my clients kindly allowing me to 
+open-source the functionality as I build it into their projects. I am no longer actively developing 
+features for this as I no longer require it, but I will continue to maintain pull requests and try to 
+fix issues as and when they are reported (within a week or two). 
+
+Pull Requests are the best way to fix bugs or add features. I know loads of you use this, so please 
+contribute if you have improvements to be made and I'll keep releasing versions over time.
