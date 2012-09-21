@@ -44,10 +44,22 @@ $config['rest_realm'] = 'REST API';
 |
 | Is login required and if so, which type of login?
 |
-|	'' = no login required, 'basic' = unsecure login, 'digest' = more secure login, 'ldap' = digest with ldap
+|	'' = no login required, 'basic' = unsecure login, 'digest' = more secure login
 |
 */
 $config['rest_auth'] = false;
+
+/*
+|--------------------------------------------------------------------------
+| REST Login
+|--------------------------------------------------------------------------
+|
+| Is login required and if so, which user store do we use?
+|
+| '' = use config based users, 'ldap' = use LDAP authencation
+|
+*/
+$config['auth_source'] = 'ldap';
 
 /*
 |--------------------------------------------------------------------------
@@ -65,13 +77,12 @@ $config['rest_auth'] = false;
 |			$config['auth_override_class_method']['accounts']['user'] = 'basic';
 |
 | Here 'deals' and 'accounts' are controller names, 'view', 'insert' and 'user' are methods within. (NOTE: leave off the '_get' or '_post' from the end of the method name)
-| Acceptable values are; 'none', 'digest', 'ldap', and 'basic'
+| Acceptable values are; 'none', 'digest', and 'basic'
 |
 */
 // $config['auth_override_class_method']['deals']['view'] = 'none';
 // $config['auth_override_class_method']['deals']['insert'] = 'digest';
 // $config['auth_override_class_method']['accounts']['user'] = 'basic';
-// $config['auth_override_class_method']['accounts']['create'] = 'ldap';
 
 /*
 |--------------------------------------------------------------------------
