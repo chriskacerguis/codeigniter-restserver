@@ -77,7 +77,7 @@ $config['auth_source'] = 'ldap';
 |			$config['auth_override_class_method']['accounts']['user'] = 'basic';
 |
 | Here 'deals' and 'accounts' are controller names, 'view', 'insert' and 'user' are methods within. (NOTE: leave off the '_get' or '_post' from the end of the method name)
-| Acceptable values are; 'none', 'digest' and 'basic'
+| Acceptable values are; 'none', 'digest' and 'basic'.
 |
 */
 // $config['auth_override_class_method']['deals']['view'] = 'none';
