@@ -211,8 +211,10 @@ class REST_Controller extends CI_Controller {
 	 * response
 	 *
 	 * Takes pure data and optionally a status code, then creates the response
+	 * @param $structure 
+	 * @param $basenode ( default xml )
 	 */
-	public function response($data = array(), $http_code = null)
+	public function response($data = array(), $http_code = null,$structure=null, $basenode=null)
 	{
 		// If data is empty and not code provide, error and bail
 		if (empty($data) && $http_code === null)
@@ -240,7 +242,7 @@ class REST_Controller extends CI_Controller {
 				// Set the correct format header
 				header('Content-Type: '.$this->_supported_formats[$this->response->format]);
 
-				$output = $this->format->factory($data)->{'to_'.$this->response->format}();
+				$output = $this->format->factory($data)->{'to_'.$this->response->format}($data,$structure,$basenode);
 			}
 
 			// Format not supported, output directly
