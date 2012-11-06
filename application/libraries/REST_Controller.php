@@ -214,7 +214,7 @@ class REST_Controller extends CI_Controller {
 	 * @param $structure 
 	 * @param $basenode ( default xml )
 	 */
-	public function response($data = array(), $http_code = null,$structure=null, $basenode=null)
+	public function response($data = array(), $http_code = null,$structure=null, $basenode="xml")
 	{
 		// If data is empty and not code provide, error and bail
 		if (empty($data) && $http_code === null)
