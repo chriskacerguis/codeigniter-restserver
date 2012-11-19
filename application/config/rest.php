@@ -2,6 +2,18 @@
 
 /*
 |--------------------------------------------------------------------------
+| HTTP protocol
+|--------------------------------------------------------------------------
+|
+| Should the service accept only HTTPS requests or not?
+|
+|	Default: FALSE
+|
+*/
+$config['force_https'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
 | REST Format
 |--------------------------------------------------------------------------
 |
@@ -167,6 +179,17 @@ $config['rest_enable_keys'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
+| REST Table Key Column Name
+|--------------------------------------------------------------------------
+|
+| If you are not using the default table schema as shown above, what is the 
+| name of the db column that holds the api key value?
+|
+*/
+$config['rest_key_column'] = 'key';
+
+/*
+|--------------------------------------------------------------------------
 | REST Key Length
 |--------------------------------------------------------------------------
 |
@@ -221,7 +244,7 @@ $config['rest_logs_table'] = 'logs';
 	  `api_key` varchar(40) NOT NULL,
 	  `ip_address` varchar(45) NOT NULL,
 	  `time` int(11) NOT NULL,
-	  `authorized` tinyint(1) NOT NULL,
+	  `authorized` tinyint(1) NOT NULL
 	  PRIMARY KEY (`id`)
 	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 |

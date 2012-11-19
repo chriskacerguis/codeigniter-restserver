@@ -3,11 +3,9 @@
 A fully RESTful server implementation for CodeIgniter using one library, one
 config file and one controller.
 
-## Sponsored by: Coding Futures
-
 ## Requirements
 
-1. PHP 5.2+
+1. PHP 5.2 or greater
 2. CodeIgniter 2.1.0 to 3.0-dev
 
 _Note: for 1.7.x support download v2.2 from Downloads tab_
@@ -53,7 +51,7 @@ This means your URLs can look like this:
 	http://example.com/books.json
 	http://example.com/books?format=json
 
-Alternatively (and recommend) is using the HTTP `Accept` header, which is built for this purpose:
+This can be flaky with URI segments, so the recommend approach is using the HTTP `Accept` header:
 
 	$ curl -H "Accept: application/json" http://example.com
 
@@ -148,6 +146,17 @@ By default, the HTTP will be `X-API-KEY`. This can be configured in **config/res
 
 ## Change Log
 
+### 2.6.1
+
+* Update CodeIgniter files to 2.1.2
+* Log Table support for IPv6 & NULL parameters
+* Abstract out the processes of firing a controller method within _remap() to an separate method
+* Moved GET, POST, PUT, and DELETE parsing to separate methods, allowing them to be overridden as needed
+* Small bugfix for a PHP 5.3 strlen error
+* Fixed some PHP 5.4 warnings
+* Fix for bug in Format.php's to_html() which failed to detect if $data was really a multidimensional array.
+* Fix for empty node on XML output format, for false = 0, true = 1.
+
 ### 2.6.0
 
 * Added loads of PHPDoc comments.
@@ -198,7 +207,12 @@ By default, the HTTP will be `X-API-KEY`. This can be configured in **config/res
 * key => FALSE can now be used to override the keys_enabled option for a specific method, and level is now optional. If no level is set it will assume the method has a level of 0.
 * Fixed issue where calls to ->get('foo') would error is foo was not set. Reported by  Paul Barto.
 
-## Donations
+## Contributions
 
-If my REST Server has helped you out, or you'd like me to do some custom work on it, [please sponsor me](http://pledgie.com/campaigns/8328)
-so I can keep working on this and other CodeIgniter projects for you all.
+This project has been funded and made possible through my clients kindly allowing me to 
+open-source the functionality as I build it into their projects. I am no longer actively developing 
+features for this as I no longer require it, but I will continue to maintain pull requests and try to 
+fix issues as and when they are reported (within a week or two). 
+
+Pull Requests are the best way to fix bugs or add features. I know loads of you use this, so please 
+contribute if you have improvements to be made and I'll keep releasing versions over time.
