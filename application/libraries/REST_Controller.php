@@ -611,12 +611,16 @@ abstract class REST_Controller extends CI_Controller
 			isset($row->ignore_limits) AND $this->rest->ignore_limits = $row->ignore_limits;
 			*/
 			
+			/*
+			 * If "is private key" is enabled, compare the ip address with the list
+			 * of valid ip addresses stored in the database.
+			 */
 			if(!empty($row->is_private_key))
 			{
-				
 				// Check for a list of valid ip addresses
 				if(isset($row->ip_addresses))
 				{
+					// multiple ip addresses must be separated using a comma, explode and loop
 					$list_ip_addresses = explode(",", $row->ip_addresses);
 					$found_address = FALSE;
 					
@@ -624,6 +628,7 @@ abstract class REST_Controller extends CI_Controller
 					{
 						if($this->input->ip_address() == trim($ip_address))
 						{
+							// there is a match, set the the value to true and break out of the loop
 							$found_address = TRUE;
 							break;
 						}
