@@ -312,5 +312,40 @@ $config['rest_ignore_http_accept'] = FALSE;
 */
 $config['rest_ajax_only'] = FALSE;
 
+/*
+|--------------------------------------------------------------------------
+| Response Codes
+|--------------------------------------------------------------------------
+|
+| Configure response codes here.  You can use a boolean or string for the 
+| status code.  This is good for when you want to give the consumer a 
+| meaningful response, other than just a bool.  
+|
+*/
+$config['rest_response_codes'] = array(
+                                        
+                                        // use with force_ssl
+                                        'protocol'        => array( 'status' => false, 'error' => 'Unsupported protocol.' ),
+                                        
+                                        // use if api_key is enabled
+                                        'api_key'         => array( 'status' => false, 'error' => 'Invalid API Key.' ),
+                                        
+                                        // used when method wasn't found
+                                        'unknown_method'  => array( 'status' => false, 'error' => 'Method not supported.' ),
+                                        
+                                        // used when api limit is reached 
+                                        'api_limit'       => array( 'status' => false, 'error' => 'API limit reached for this key.' ),
+                                        
+                                        // used if api key doesn't have sufficient permissions
+                                        'permissions'     => array( 'status' => false, 'error' => 'This key does not have sufficient permissions.' ),
+                                        
+                                        // used if authentication fails
+                                        'not_authorized'  => array( 'status' => false, 'error' => 'Unauthorized access.' ),
+                                        
+                                        // used when only ajax requests are allowed and the request is not ajax
+                                        'ajax_only'       => array( 'status' => false, 'error' => 'Only AJAX requests are supported.' ),
+                                        
+                                        );
+
 /* End of file config.php */
 /* Location: ./system/application/config/rest.php */

@@ -130,6 +130,13 @@ abstract class REST_Controller extends CI_Controller
 		'html' => 'text/html',
 		'csv' => 'application/csv'
 	);
+	
+	/**
+	 * The various response codes
+	 *
+	 * @var array
+	 */
+	protected $_responses = array();
 
 	/**
 	 * Developers can extend this class and add a check in here.
@@ -151,6 +158,9 @@ abstract class REST_Controller extends CI_Controller
 
 		// Lets grab the config and get ready to party
 		$this->load->config('rest');
+		
+		// Load the response codes
+		$this->_responses = $this->config->item('rest_response_codes');
 
 		// let's learn about the request
 		$this->request = new stdClass();
@@ -246,7 +256,7 @@ abstract class REST_Controller extends CI_Controller
 		// only allow ajax requests
 		if ( ! $this->input->is_ajax_request() AND config_item('rest_ajax_only'))
 		{
-			$this->response(array('status' => false, 'error' => 'Only AJAX requests are accepted.'), 505);
+			$this->response($this->_responses['ajax_only'], 505);
 		}
 	}
 
@@ -265,7 +275,7 @@ abstract class REST_Controller extends CI_Controller
 		// Should we answer if not over SSL?
 		if (config_item('force_https') AND !$this->_detect_ssl())
 		{
-    	   $this->response(array('status' => false, 'error' => 'Unsupported protocol'), 403);	
+    	   $this->response($this->_responses['protocol'], 403);	
 		}
 		
 		$pattern = '/^(.*)\.('.implode('|', array_keys($this->_supported_formats)).')$/';
@@ -290,13 +300,13 @@ abstract class REST_Controller extends CI_Controller
 				$this->_log_request();
 			}
 
-			$this->response(array('status' => false, 'error' => 'Invalid API Key.'), 403);
+			$this->response($this->_responses['api_key'], 403);
 		}
 
 		// Sure it exists, but can they do anything with it?
 		if ( ! method_exists($this, $controller_method))
 		{
-			$this->response(array('status' => false, 'error' => 'Unknown method.'), 404);
+			$this->response($this->_responses['unknown_method'], 404);
 		}
 
 		// Doing key related stuff? Can only do it if they have a key right?
@@ -305,7 +315,7 @@ abstract class REST_Controller extends CI_Controller
 			// Check the limit
 			if (config_item('rest_enable_limits') AND !$this->_check_limit($controller_method))
 			{
-				$this->response(array('status' => false, 'error' => 'This API key has reached the hourly limit for this method.'), 401);
+				$this->response($this->_responses['api_limit'], 401);
 			}
 
 			// If no level is set use 0, they probably aren't using permissions
@@ -321,7 +331,7 @@ abstract class REST_Controller extends CI_Controller
 			}
 
 			// They don't have good enough perms
-			$authorized OR $this->response(array('status' => false, 'error' => 'This API key does not have enough permissions.'), 401);
+			$authorized OR $this->response($this->_responses['permissions'], 401);
 		}
 
 		// No key stuff, but record that stuff is happening
@@ -1081,7 +1091,7 @@ abstract class REST_Controller extends CI_Controller
 
 		if ( ! in_array($this->input->ip_address(), $whitelist))
 		{
-			$this->response(array('status' => false, 'error' => 'Not authorized'), 401);
+			$this->response($this->_responses['not_authorized'], 401);
 		}
 	}
 
@@ -1101,7 +1111,7 @@ abstract class REST_Controller extends CI_Controller
 			header('WWW-Authenticate: Digest realm="'.$this->config->item('rest_realm').'", qop="auth", nonce="'.$nonce.'", opaque="'.md5($this->config->item('rest_realm')).'"');
 		}
 
-		$this->response(array('status' => false, 'error' => 'Not authorized'), 401);
+		$this->response($this->_responses['not_authorized'], 401);
 	}
 
 	/**
