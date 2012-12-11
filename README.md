@@ -161,7 +161,7 @@ By default, the HTTP will be `X-API-KEY`. This can be configured in **config/res
 
 * Added loads of PHPDoc comments.
 * Response where method doesn't exist is now "HTTP 405 Method Not Allowed", not "HTTP 404 Not Found".
-* Compatable with PHP 5.4.
+* Compatible with PHP 5.4.
 * Added support for gzip compression.
 * Fix the apache\_request\_header function with CGI.
 * Fixed up correctly .foo extensions to work when get arguments provided.
