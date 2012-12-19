@@ -640,7 +640,9 @@ abstract class REST_Controller extends CI_Controller
 					return FALSE;
 				}
 			}
-
+			
+			// Set the class member for compatility purposes
+			$this->client = $row;
 			return $this->client;
 		}
 
