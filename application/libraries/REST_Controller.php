@@ -11,7 +11,7 @@
  * @author        	Phil Sturgeon
  * @license         http://philsturgeon.co.uk/code/dbad-license
  * @link			https://github.com/philsturgeon/codeigniter-restserver
- * @version 		2.6.1
+ * @version 		2.6.2
  */
 abstract class REST_Controller extends CI_Controller
 {
