@@ -421,7 +421,12 @@ abstract class REST_Controller extends CI_Controller
 		{
 			header('Content-Length: ' . strlen($output));
 		}
-
+		
+		
+		//Hack for odbc database
+		//We close the odbc database to fix crashes if any odbc database is opened.
+		odbc_close($this->db->conn_id);
+		
 		exit($output);
 	}
 
