@@ -61,13 +61,6 @@ abstract class REST_Controller extends CI_Controller
 	protected $rest = NULL;
 
 	/**
-	 * Object to store data about the client sending the request
-	 *
-	 * @var object
-	 */
-	 protected $client = NULL;	 
-
-	/**
 	 * The arguments for the GET request method
 	 *
 	 * @var array
@@ -641,9 +634,7 @@ abstract class REST_Controller extends CI_Controller
 				}
 			}
 			
-			// Set the class member for compatility purposes
-			$this->client = $row;
-			return $this->client;
+			return $row;
 		}
 
 		// No key has been sent
