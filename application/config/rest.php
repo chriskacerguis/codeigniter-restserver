@@ -63,6 +63,18 @@ $config['rest_auth'] = false;
 
 /*
 |--------------------------------------------------------------------------
+| REST Login
+|--------------------------------------------------------------------------
+|
+| Is login required and if so, which user store do we use?
+|
+| '' = use config based users, 'ldap' = use LDAP authencation
+|
+*/
+$config['auth_source'] = 'ldap';
+
+/*
+|--------------------------------------------------------------------------
 | Override auth types for specific class/method
 |--------------------------------------------------------------------------
 |
@@ -89,7 +101,7 @@ $config['rest_auth'] = false;
 | REST Login usernames
 |--------------------------------------------------------------------------
 |
-| Array of usernames and passwords for login
+| Array of usernames and passwords for login, if ldap is configured this is ignored
 |
 |	array('admin' => '1234')
 |
