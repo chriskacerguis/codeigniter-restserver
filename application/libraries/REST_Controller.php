@@ -11,7 +11,7 @@
  * @author        	Phil Sturgeon
  * @license         http://philsturgeon.co.uk/code/dbad-license
  * @link			https://github.com/philsturgeon/codeigniter-restserver
- * @version 		2.6.1
+ * @version 		2.6.2
  */
 abstract class REST_Controller extends CI_Controller
 {
@@ -59,13 +59,6 @@ abstract class REST_Controller extends CI_Controller
 	 * @var object
 	 */
 	protected $rest = NULL;
-
-	/**
-	 * Object to store data about the client sending the request
-	 *
-	 * @var object
-	 */
-	 protected $client = NULL;	 
 
 	/**
 	 * The arguments for the GET request method
@@ -598,12 +591,12 @@ abstract class REST_Controller extends CI_Controller
 		// Find the key from server or arguments
 		if (($key = isset($this->_args[$api_key_variable]) ? $this->_args[$api_key_variable] : $this->input->server($key_name)))
 		{
-			if ( ! ($this->client = $this->rest->db->where(config_item('rest_key_column'), $key)->get(config_item('rest_keys_table'))->row()))
+			if ( ! ($row = $this->rest->db->where(config_item('rest_key_column'), $key)->get(config_item('rest_keys_table'))->row()))
 			{
 				return FALSE;
 			}
 
-			$this->rest->key = $this->client->{config_item('rest_key_column')};
+			$this->rest->key = $row->{config_item('rest_key_column')};
 
 			isset($row->user_id) AND $this->rest->user_id = $row->user_id;
 			isset($row->level) AND $this->rest->level = $row->level;
@@ -640,8 +633,8 @@ abstract class REST_Controller extends CI_Controller
 					return FALSE;
 				}
 			}
-
-			return $this->client;
+			
+			return $row;
 		}
 
 		// No key has been sent

@@ -146,6 +146,11 @@ By default, the HTTP will be `X-API-KEY`. This can be configured in **config/res
 
 ## Change Log
 
+### 2.6.2
+
+* Update CodeIgniter files to 2.1.3
+* Fixed issue #165
+
 ### 2.6.1
 
 * Update CodeIgniter files to 2.1.2
