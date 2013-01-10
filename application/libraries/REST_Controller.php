@@ -114,7 +114,7 @@ abstract class REST_Controller extends CI_Controller
 	 *
 	 * @var string
 	*/
-	protected $_user_ldap_dn = ''
+	protected $_user_ldap_dn = '';
 
 	/**
 	 * List all supported methods, the first will be the default format
@@ -1072,7 +1072,7 @@ abstract class REST_Controller extends CI_Controller
 			return FALSE;
 		}
 
-		$auth_source = strtolower($this-config->item('auth_source'));
+		$auth_source = strtolower($this->config->item('auth_source'));
 
 		if ($auth_source == 'ldap')
 		{
