@@ -191,11 +191,11 @@ class Key extends REST_Controller
 	// --------------------------------------------------------------------
 
 	/* Helper Methods */
-	
+
 	private function _generate_key()
 	{
 		//$this->load->helper('security');
-		
+
 		do
 		{
 			$salt = do_hash(time().mt_rand());
@@ -228,7 +228,7 @@ class Key extends REST_Controller
 
 	private function _insert_key($key, $data)
 	{
-		
+
 		$data['key'] = $key;
 		$data['date_created'] = function_exists('now') ? now() : time();
 
