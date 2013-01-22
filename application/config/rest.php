@@ -194,7 +194,7 @@ $config['rest_enable_keys'] = FALSE;
 | REST Table Key Column Name
 |--------------------------------------------------------------------------
 |
-| If you are not using the default table schema as shown above, what is the 
+| If you are not using the default table schema as shown above, what is the
 | name of the db column that holds the api key value?
 |
 */

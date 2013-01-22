@@ -214,10 +214,6 @@ By default, the HTTP will be `X-API-KEY`. This can be configured in **config/res
 
 ## Contributions
 
-This project has been funded and made possible through my clients kindly allowing me to 
-open-source the functionality as I build it into their projects. I am no longer actively developing 
-features for this as I no longer require it, but I will continue to maintain pull requests and try to 
-fix issues as and when they are reported (within a week or two). 
+This project has been funded and made possible through my clients kindly allowing me to open-source the functionality as I build it into their projects. I am no longer actively developing features for this as I no longer require it, but I will continue to maintain pull requests and try to fix issues as and when they are reported (within a week or two).
 
-Pull Requests are the best way to fix bugs or add features. I know loads of you use this, so please 
-contribute if you have improvements to be made and I'll keep releasing versions over time.
+Pull Requests are the best way to fix bugs or add features. I know loads of you use this, so please contribute if you have improvements to be made and I'll keep releasing versions over time.
