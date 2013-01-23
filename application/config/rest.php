@@ -56,7 +56,10 @@ $config['rest_realm'] = 'REST API';
 |
 | Is login required and if so, which type of login?
 |
-|	'' = no login required, 'basic' = unsecure login, 'digest' = more secure login
+|	'' = no login required
+|	'basic' = unsecure login
+|	'digest' = more secure login
+|	'tank_auth' = tank_auth authentication
 |
 */
 $config['rest_auth'] = false;

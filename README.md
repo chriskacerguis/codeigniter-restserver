@@ -101,7 +101,7 @@ If your application uses language files to support multiple locales, `REST_Contr
 
 ## Authentication
 
-This class also provides rudimentary support for HTTP basic authentication and/or the securer HTTP digest access authentication.
+This class also provides rudimentary support for HTTP basic authentication, the more-secure HTTP digest access authentication, and the [Tank Auth](https://github.com/ilkon/Tank-Auth) authentication library for CodeIgniter.
 
 You can enable basic authentication by setting the `$config['rest_auth']` to `'basic'`. The `$config['rest_valid_logins']` directive can then be used to set the usernames and passwords able to log in to your system. The class will automatically send all the correct headers to trigger the authentication dialogue:
 
@@ -109,7 +109,9 @@ You can enable basic authentication by setting the `$config['rest_auth']` to `'b
 
 Enabling digest auth is similarly easy. Configure your desired logins in the config file like above, and set `$config['rest_auth']` to `'digest'`. The class will automatically send out the headers to enable digest auth.
 
-Both methods of authentication can be secured further by using an IP whitelist. If you enable `$config['rest_ip_whitelist_enabled']` in your config file, you can then set a list of allowed IPs.
+To enable [Tank Auth](https://github.com/ilkon/Tank-Auth), simply set `$config['rest_auth']` to `'tank_auth'`. The class will automatically load Tank Auth's authentication library and check if the user is logged in.
+
+All three methods of authentication can be secured further by using an IP whitelist. If you enable `$config['rest_ip_whitelist_enabled']` in your config file, you can then set a list of allowed IPs.
 
 Any client connecting to your API will be checked against the whitelisted IP array. If they're on the list, they'll be allowed access. If not, sorry, no can do hombre. The whitelist is a comma-separated string:
 
