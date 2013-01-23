@@ -218,6 +218,11 @@ abstract class REST_Controller extends CI_Controller
 			{
 				$this->_prepare_digest_auth();
 			}
+			elseif ($this->config->item('rest_auth') == 'tank_auth')
+			{
+				$this->load->library('tank_auth');
+				$this->_prepare_tank_auth();
+			}
 			elseif ($this->config->item('rest_ip_whitelist_enabled'))
 			{
 				$this->_check_whitelist_auth();
@@ -808,6 +813,13 @@ abstract class REST_Controller extends CI_Controller
 			return true;
 		}
 
+		// Tank auth override found, prepare digest
+		if ($this->overrides_array[$this->router->class][$this->router->method] == 'tank_auth')
+		{
+			$this->_prepare_tank_auth();
+			return true;
+		}
+
 		// Whitelist auth override found, check client's ip against config whitelist
 		if ($this->overrides_array[$this->router->class][$this->router->method] == 'whitelist')
 		{
@@ -1188,6 +1200,23 @@ abstract class REST_Controller extends CI_Controller
 			header('HTTP/1.0 401 Unauthorized');
 			header('HTTP/1.1 401 Unauthorized');
 			exit;
+		}
+	}
+
+	/**
+	 * Check if a client is logged in to Tank Auth
+	 */
+	protected function _prepare_tank_auth()
+	{
+		// If whitelist is enabled it has the first chance to kick them out
+		if (config_item('rest_ip_whitelist_enabled'))
+		{
+			$this->_check_whitelist_auth();
+		}
+
+		if (!$this->tank_auth->is_logged_in())
+		{
+			$this->_force_login();
 		}
 	}
 
