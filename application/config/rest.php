@@ -2,6 +2,18 @@
 
 /*
 |--------------------------------------------------------------------------
+| HTTP protocol
+|--------------------------------------------------------------------------
+|
+| Should the service accept only HTTPS requests or not?
+|
+|	Default: FALSE
+|
+*/
+$config['force_https'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
 | REST Format
 |--------------------------------------------------------------------------
 |
@@ -51,6 +63,18 @@ $config['rest_auth'] = false;
 
 /*
 |--------------------------------------------------------------------------
+| REST Login
+|--------------------------------------------------------------------------
+|
+| Is login required and if so, which user store do we use?
+|
+| '' = use config based users, 'ldap' = use LDAP authencation
+|
+*/
+$config['auth_source'] = 'ldap';
+
+/*
+|--------------------------------------------------------------------------
 | Override auth types for specific class/method
 |--------------------------------------------------------------------------
 |
@@ -77,7 +101,7 @@ $config['rest_auth'] = false;
 | REST Login usernames
 |--------------------------------------------------------------------------
 |
-| Array of usernames and passwords for login
+| Array of usernames and passwords for login, if ldap is configured this is ignored
 |
 |	array('admin' => '1234')
 |
@@ -156,12 +180,25 @@ $config['rest_keys_table'] = 'keys';
 	  `key` varchar(40) NOT NULL,
 	  `level` int(2) NOT NULL,
 	  `ignore_limits` tinyint(1) NOT NULL DEFAULT '0',
+	  `is_private_key` tinyint(1)  NOT NULL DEFAULT '0',
+	  `ip_addresses` TEXT NULL DEFAULT NULL,
 	  `date_created` int(11) NOT NULL,
 	  PRIMARY KEY (`id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
 $config['rest_enable_keys'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| REST Table Key Column Name
+|--------------------------------------------------------------------------
+|
+| If you are not using the default table schema as shown above, what is the 
+| name of the db column that holds the api key value?
+|
+*/
+$config['rest_key_column'] = 'key';
 
 /*
 |--------------------------------------------------------------------------
