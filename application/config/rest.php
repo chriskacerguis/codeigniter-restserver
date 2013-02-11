@@ -194,7 +194,7 @@ $config['rest_enable_keys'] = FALSE;
 | REST Table Key Column Name
 |--------------------------------------------------------------------------
 |
-| If you are not using the default table schema as shown above, what is the 
+| If you are not using the default table schema as shown above, what is the
 | name of the db column that holds the api key value?
 |
 */
@@ -262,6 +262,17 @@ $config['rest_logs_table'] = 'logs';
 |
 */
 $config['rest_enable_logging'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| REST API Param Log Format
+|--------------------------------------------------------------------------
+|
+| When set to true API log params will be stored in the database as JSON,
+| when false they will be php serialized.
+|
+*/
+$config['rest_logs_json_params'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
