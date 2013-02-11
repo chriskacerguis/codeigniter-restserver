@@ -368,6 +368,12 @@ abstract class REST_Controller extends CI_Controller
 			$output = NULL;
 		}
 
+		// If data is empty but http code provided, keep the output empty
+		else if (empty($data) && is_numeric($http_code))
+		{
+			$output = NULL;
+		}
+
 		// Otherwise (if no data but 200 provided) or some data, carry on camping!
 		else
 		{
