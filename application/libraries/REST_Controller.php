@@ -13,7 +13,7 @@
  * @link			https://github.com/philsturgeon/codeigniter-restserver
  * @version 		2.6.2
  */
-class REST_Controller extends CI_Controller
+abstract class REST_Controller extends CI_Controller
 {
 	/**
 	 * This defines the rest format.
@@ -36,7 +36,7 @@ class REST_Controller extends CI_Controller
 	 *
 	 * @var array
 	 */
-	protected $allowed_http_methods = array('get', 'delete', 'post', 'put', 'options', 'patch', 'head');
+	protected $allowed_http_methods = array('get', 'delete', 'post', 'put');
 
 	/**
 	 * General request data and information.
@@ -87,27 +87,6 @@ class REST_Controller extends CI_Controller
 	 * @var array
 	 */
 	protected $_delete_args = array();
-
-	/**
-	 * The arguments for the PATCH request method
-	 * 
-	 * @var array
-	 */
-	protected $_patch_args = array();
-
-	/**
-	 * The arguments for the HEAD request method
-	 * 
-	 * @var array
-	 */
-	protected $_head_args = array();
-
-	/**
-	 * The arguments for the OPTIONS request method
-	 * 
-	 * @var array
-	 */
-	protected $_options_args = array();
 
 	/**
 	 * The arguments from GET, POST, PUT, DELETE request methods combined.
@@ -175,10 +154,10 @@ class REST_Controller extends CI_Controller
 
 		// let's learn about the request
 		$this->request = new stdClass();
-		
+
 		// Is it over SSL?
 		$this->request->ssl = $this->_detect_ssl();
-		
+
 		// How is this request being made? POST, DELETE, GET, PUT?
 		$this->request->method = $this->_detect_method();
 
@@ -191,7 +170,7 @@ class REST_Controller extends CI_Controller
 		// Set up our GET variables
 		$this->_get_args = array_merge($this->_get_args, $this->uri->ruri_to_assoc());
 
-		//$this->load->library('security');
+		$this->load->library('security');
 
 		// This library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter itself
 		$this->load->library('format');
@@ -213,7 +192,7 @@ class REST_Controller extends CI_Controller
 		}
 
 		// Merge both for one mega-args variable
-		$this->_args = array_merge($this->_get_args, $this->_options_args, $this->_patch_args, $this->_head_args , $this->_put_args, $this->_post_args, $this->_delete_args, $this->{'_'.$this->request->method.'_args'});
+		$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_post_args, $this->_delete_args, $this->{'_'.$this->request->method.'_args'});
 
 		// Which format should the data be returned in?
 		$this->response = new stdClass();
@@ -286,9 +265,9 @@ class REST_Controller extends CI_Controller
 		// Should we answer if not over SSL?
 		if (config_item('force_https') AND !$this->_detect_ssl())
 		{
-			$this->response(array('status' => false, 'error' => 'Unsupported protocol'), 403);	
+			$this->response(array('status' => false, 'error' => 'Unsupported protocol'), 403);
 		}
-		
+
 		$pattern = '/^(.*)\.('.implode('|', array_keys($this->_supported_formats)).')$/';
 		if (preg_match($pattern, $object_called, $matches))
 		{
@@ -389,9 +368,16 @@ class REST_Controller extends CI_Controller
 			$output = NULL;
 		}
 
+		// If data is empty but http code provided, keep the output empty
+		else if (empty($data) && is_numeric($http_code))
+		{
+			$output = NULL;
+		}
+
 		// Otherwise (if no data but 200 provided) or some data, carry on camping!
-		else {
- 			// Is compression requested?
+		else
+		{
+			// Is compression requested?
 			if ($CFG->item('compress_output') === TRUE && $this->_zlib_oc == FALSE)
 			{
 				if (extension_loaded('zlib'))
@@ -441,7 +427,7 @@ class REST_Controller extends CI_Controller
 		{
 			header('Content-Length: ' . strlen($output));
 		}
-		
+
 		exit($output);
 	}
 
@@ -454,8 +440,8 @@ class REST_Controller extends CI_Controller
 	{
     		return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on");
 	}
-	
-	
+
+
 	/*
 	 * Detect input format
 	 *
@@ -628,7 +614,7 @@ class REST_Controller extends CI_Controller
 			isset($row->user_id) AND $this->rest->user_id = $row->user_id;
 			isset($row->level) AND $this->rest->level = $row->level;
 			isset($row->ignore_limits) AND $this->rest->ignore_limits = $row->ignore_limits;
-			
+
 			/*
 			 * If "is private key" is enabled, compare the ip address with the list
 			 * of valid ip addresses stored in the database.
@@ -641,7 +627,7 @@ class REST_Controller extends CI_Controller
 					// multiple ip addresses must be separated using a comma, explode and loop
 					$list_ip_addresses = explode(",", $row->ip_addresses);
 					$found_address = FALSE;
-					
+
 					foreach($list_ip_addresses as $ip_address)
 					{
 						if($this->input->ip_address() == trim($ip_address))
@@ -651,7 +637,7 @@ class REST_Controller extends CI_Controller
 							break;
 						}
 					}
-					
+
 					return $found_address;
 				}
 				else
@@ -660,7 +646,7 @@ class REST_Controller extends CI_Controller
 					return FALSE;
 				}
 			}
-			
+
 			return $row;
 		}
 
@@ -716,7 +702,7 @@ class REST_Controller extends CI_Controller
 		return $this->rest->db->insert(config_item('rest_logs_table'), array(
 					'uri' => $this->uri->uri_string(),
 					'method' => $this->request->method,
-					'params' => $this->_args ? serialize($this->_args) : null,
+					'params' => $this->_args ? (config_item('rest_logs_json_params') ? json_encode($this->_args) : serialize($this->_args)) : null,
 					'api_key' => isset($this->rest->key) ? $this->rest->key : '',
 					'ip_address' => $this->input->ip_address(),
 					'time' => function_exists('now') ? now() : time(),
@@ -863,48 +849,6 @@ class REST_Controller extends CI_Controller
 	}
 
 	/**
-	 * Parse HEAD
-	 */
-	protected function _parse_head()
-	{
-		// Grab proper HEAD variables
-		parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $head);
-
-		// Merge both the URI segments and HEAD params
-		$this->_head_args = array_merge($this->_head_args, $head);
-	}
-
-	/**
-	 * Parse OPTIONS
-	 */
-	protected function _parse_options()
-	{
-		// Grab proper OPTIONS variables
-		parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $options);
-
-		// Merge both the URI segments and OPTIONS params
-		$this->_options_args = array_merge($this->_options_args, $options);
-	}
-
-	/**
-	 * Parse PATCH
-	 */
-	protected function _parse_patch()
-	{
-		// It might be a HTTP body
-		if ($this->request->format)
-		{
-			$this->request->body = file_get_contents('php://input');
-		}
-
-		// If no file type is provided, this is probably just arguments
-		else
-		{
-			parse_str(file_get_contents('php://input'), $this->_patch_args);
-		}
-	}
-
-	/**
 	 * Parse PUT
 	 */
 	protected function _parse_put()
@@ -951,38 +895,6 @@ class REST_Controller extends CI_Controller
 	}
 
 	/**
-	 * This function retrieves a values from the OPTIONS request arguments
-	 *
-	 * @param string $key The OPTIONS/GET argument key
-	 * @param boolean $xss_clean Whether the value should be XSS cleaned or not
-	 * @return string The OPTIONS/GET argument value
-	 */
-	public function options($key = NULL, $xss_clean = TRUE)
-	{
-		if ($key === NULL) {
-			return $this->_options_args;
-		}
-
-		return array_key_exists($key, $this->_options_args) ? $this->_xss_clean($this->_options_args[$key], $xss_clean) : FALSE;
-	}
-
-	/**
-	 * This function retrieves a values from the HEAD request arguments
-	 *
-	 * @param string $key The HEAD/GET argument key
-	 * @param boolean $xss_clean Whether the value should be XSS cleaned or not
-	 * @return string The HEAD/GET argument value
-	 */
-	public function head($key = NULL, $xss_clean = TRUE)
-	{
-		if ($key === NULL) {
-			return $this->head_args;
-		}
-
-		return array_key_exists($key, $this->head_args) ? $this->_xss_clean($this->head_args[$key], $xss_clean) : FALSE;
-	}
-
-	/**
 	 * Retrieve a value from the POST request arguments.
 	 *
 	 * @param string $key The key for the POST request argument to retrieve
@@ -1014,23 +926,6 @@ class REST_Controller extends CI_Controller
 		}
 
 		return array_key_exists($key, $this->_put_args) ? $this->_xss_clean($this->_put_args[$key], $xss_clean) : FALSE;
-	}
-
-	/**
-	 * Retrieve a value from the PATCH request arguments.
-	 *
-	 * @param string $key The key for the PATCH request argument to retrieve
-	 * @param boolean $xss_clean Whether the value should be XSS cleaned or not.
-	 * @return string The PATCH argument value.
-	 */
-	public function patch($key = NULL, $xss_clean = TRUE)
-	{
-		if ($key === NULL)
-		{
-			return $this->_patch_args;
-		}
-
-		return array_key_exists($key, $this->_patch_args) ? $this->_xss_clean($this->_patch_args[$key], $xss_clean) : FALSE;
 	}
 
 	/**
