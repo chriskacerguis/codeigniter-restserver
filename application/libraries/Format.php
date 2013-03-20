@@ -210,7 +210,32 @@ class Format {
 	// Encode as JSON
 	public function to_json()
 	{
-	   	return json_encode($this->_data);
+		$_numeric = strnatcmp(PHP_VERSION, '5.3.3') >= 0;
+		$callback = isset($_GET['callback']) ? $_GET['callback'] : '';
+
+		// we only honour jsonp callback which are valid javascript identifiers
+		if ($callback === '')
+		{
+			return $_numeric
+				? json_encode($this->_data, JSON_NUMERIC_CHECK);
+				: json_encode($this->_data);
+		}
+		else if (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback))
+		{
+			// this is a jsonp request, the content-type must be updated to be text/javascript
+			header("Content-Type: application/javascript");
+			return $_numeric
+				? $callback . "(" . json_encode($this->_data, JSON_NUMERIC_CHECK) . ");";
+				: $callback . "(" . json_encode($this->_data)                     . ");";
+		}
+		else
+		{
+			// we have an invalid jsonp callback identifier, we'll return plain json with a warning field
+			$this->_data['warning'] = "invalid jsonp callback provided: ".$callback;
+			return $_numeric
+				? json_encode($this->_data, JSON_NUMERIC_CHECK);
+				: json_encode($this->_data);
+		}
 	}
 
 	// Encode as Serialized array
