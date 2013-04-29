@@ -1086,7 +1086,7 @@ abstract class REST_Controller extends CI_Controller
 			return $this->_perform_ldap_auth($username, $password);
 		}
 
-		$valid_logins = & $this->config->item('rest_valid_logins');
+		$valid_logins = $this->config->item('rest_valid_logins');
 
 		if ( ! array_key_exists($username, $valid_logins))
 		{
@@ -1181,7 +1181,7 @@ abstract class REST_Controller extends CI_Controller
 			$this->_force_login($uniqid);
 		}
 
-		$valid_logins = & $this->config->item('rest_valid_logins');
+		$valid_logins = $this->config->item('rest_valid_logins');
 		$valid_pass = $valid_logins[$digest['username']];
 
 		// This is the valid response expected
