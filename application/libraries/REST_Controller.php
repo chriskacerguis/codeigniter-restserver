@@ -58,7 +58,7 @@ abstract class REST_Controller extends CI_Controller
 	 *
 	 * @var object
 	 */
-	protected $rest = NULL;
+	private $rest = NULL;
 
 	/**
 	 * The arguments for the GET request method
