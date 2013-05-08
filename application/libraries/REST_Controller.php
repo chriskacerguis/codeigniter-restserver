@@ -232,7 +232,7 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		// Use whatever database is in use (isset returns false)
-		elseif (@$this->db)
+		elseif (property_exists($this, "db"))
 		{
 			$this->rest->db = $this->db;
 		}
