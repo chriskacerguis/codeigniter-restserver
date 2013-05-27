@@ -197,7 +197,7 @@ class Format {
 			$data = array($data);
 		}
 
-		$output = implode(',', $headings).PHP_EOL;
+		$output = '"'.implode('","', $headings).'"'.PHP_EOL;
 		foreach ($data as &$row)
 		{
 			$output .= '"'.implode('","', $row).'"'.PHP_EOL;
