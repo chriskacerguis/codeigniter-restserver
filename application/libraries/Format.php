@@ -209,7 +209,7 @@ class Format {
 	// Encode as JSON
 	public function to_json()
 	{
-		return json_encode($this->_data);
+		return json_encode($this->_data, JSON_NUMERIC_CHECK);
 	}
 
 	// Encode as Serialized array
