@@ -209,7 +209,11 @@ class Format {
 	// Encode as JSON
 	public function to_json()
 	{
-		return json_encode($this->_data);
+	    if (strnatcmp(phpversion(),'5.3.3') >= 0) {
+		return json_encode($this->_data, JSON_NUMERIC_CHECK);
+	    } else {
+	    	return json_encode($this->_data);
+	    }		
 	}
 
 	// Encode as Serialized array
