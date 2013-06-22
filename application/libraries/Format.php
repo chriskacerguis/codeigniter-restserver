@@ -156,6 +156,10 @@ class Format {
 		// Multi-dimensional array
 		if (isset($data[0]) && is_array($data[0]))
 		{
+			if($data[0] instanceof stdClass){
+				$data[0] = (array) $data[0];
+			}
+
 			$headings = array_keys($data[0]);
 		}
 
