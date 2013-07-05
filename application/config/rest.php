@@ -68,10 +68,24 @@ $config['rest_auth'] = false;
 |
 | Is login required and if so, which user store do we use?
 |
-| '' = use config based users, 'ldap' = use LDAP authencation
+| '' = use config based users, 'ldap' = use LDAP authencation, 'library' = use a authentication library
 |
 */
 $config['auth_source'] = 'ldap';
+
+/*
+|--------------------------------------------------------------------------
+| REST Login
+|--------------------------------------------------------------------------
+|
+| If library authentication is used define the class and function name here
+|
+| The function should accept two parameters: class->function($username, $password)
+| In other cases override the function _perform_library_auth in your controller
+|
+*/
+$config['auth_library_class'] = '';
+$config['auth_library_function'] = '';
 
 /*
 |--------------------------------------------------------------------------
