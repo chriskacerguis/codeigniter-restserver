@@ -30,6 +30,11 @@ class REST_Controller extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		
+		// init objects
+		$this->request = new stdClass();
+		$this->response = new stdClass();
+		$this->rest = new stdClass();
 
 		// Lets grab the config and get ready to party
 		$this->load->config('rest');
