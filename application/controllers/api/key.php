@@ -214,14 +214,14 @@ class Key extends REST_Controller
 
 	private function _get_key($key)
 	{
-		return $this->db->where('key', $key)->get(config_item('rest_keys_table'))->row();
+		return $this->db->where(config_item('rest_key_column'), $key)->get(config_item('rest_keys_table'))->row();
 	}
 
 	// --------------------------------------------------------------------
 
 	private function _key_exists($key)
 	{
-		return $this->db->where('key', $key)->count_all_results(config_item('rest_keys_table')) > 0;
+		return $this->db->where(config_item('rest_key_column'), $key)->count_all_results(config_item('rest_keys_table')) > 0;
 	}
 
 	// --------------------------------------------------------------------
@@ -229,7 +229,7 @@ class Key extends REST_Controller
 	private function _insert_key($key, $data)
 	{
 		
-		$data['key'] = $key;
+		$data[config_item('rest_key_column')] = $key;
 		$data['date_created'] = function_exists('now') ? now() : time();
 
 		return $this->db->set($data)->insert(config_item('rest_keys_table'));
@@ -239,13 +239,13 @@ class Key extends REST_Controller
 
 	private function _update_key($key, $data)
 	{
-		return $this->db->where('key', $key)->update(config_item('rest_keys_table'), $data);
+		return $this->db->where(config_item('rest_key_column'), $key)->update(config_item('rest_keys_table'), $data);
 	}
 
 	// --------------------------------------------------------------------
 
 	private function _delete_key($key)
 	{
-		return $this->db->where('key', $key)->delete(config_item('rest_keys_table'));
+		return $this->db->where(config_item('rest_key_column'), $key)->delete(config_item('rest_keys_table'));
 	}
 }
