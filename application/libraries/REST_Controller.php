@@ -175,8 +175,6 @@ abstract class REST_Controller extends CI_Controller
 		// Set up our GET variables
 		$this->_get_args = array_merge($this->_get_args, $this->uri->ruri_to_assoc());
 
-		$this->load->library('security');
-
 		// This library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter itself
 		$this->load->library('format');
 
