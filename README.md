@@ -35,12 +35,21 @@ This allows you to implement a RESTful interface easily:
 
 `REST_Controller` also supports `PUT` and `DELETE` methods, allowing you to support a truly RESTful interface.
 
+
 Accessing parameters is also easy. Simply use the name of the HTTP verb as a method:
 
 	$this->get('blah'); // GET param
 	$this->post('blah'); // POST param
 	$this->put('blah'); // PUT param
-	$this->delete('blah'); // DELETE param
+
+The HTTP spec for DELETE requests precludes the use of parameters.  For delete requests, you can add items to the URL
+
+		public function index_delete($id)
+		{
+    		$this->response(array(
+        		'returned from delete:' => $id,
+    		));			
+		}
 
 ## Content Types
 
