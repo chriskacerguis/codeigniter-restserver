@@ -117,6 +117,20 @@ abstract class REST_Controller extends CI_Controller
 	protected $_user_ldap_dn = '';
 
 	/**
+	 * The start of the response time from the server
+	 *
+	 * @var string
+	*/
+	protected $_start_rtime = '';	
+	
+	/**
+	 * The end of the response time from the server
+	 *
+	 * @var string
+	*/
+	protected $_end_rtime = '';		
+
+	/**
 	 * List all supported methods, the first will be the default format
 	 *
 	 * @var array
@@ -146,7 +160,10 @@ abstract class REST_Controller extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		
+
+		// Start the timer for how long the request takes
+		$this->_start_rtime = microtime(TRUE);		
+
 		// init objects
 		$this->request = new stdClass();
 		$this->response = new stdClass();
@@ -251,6 +268,23 @@ abstract class REST_Controller extends CI_Controller
 		{
 			$this->response(array('status' => false, 'error' => 'Only AJAX requests are accepted.'), 505);
 		}
+	}
+
+	/**
+	 * Destructor function
+	 * @author Chris Kacerguis
+	 */	
+	public function __destruct()
+	{
+		// Record the "stop" time of the request
+		$this->_end_rtime = microtime(TRUE);
+		// CK: if, we are logging, log the access time here, as we are done!
+		if (config_item('rest_enable_logging'))
+		{
+			$this->_log_access_time();
+		}
+		
+		
 	}
 
 	/**
@@ -1255,6 +1289,21 @@ abstract class REST_Controller extends CI_Controller
 
 		return $data;
 	}
+
+	/**
+	 * updates the log with the access time
+	 *
+	 * @author Chris Kacerguis
+	 * @return boolean
+	 */
+	 
+	protected function _log_access_time()
+	{
+		$payload['rtime'] = $this->_end_rtime - $this->_start_rtime;
+		return $this->rest->db->update(config_item('rest_logs_table'), $payload, array('id' => $this->_insert_id));
+	}
+
+
 
 	// FORMATING FUNCTIONS ---------------------------------------------------------
 	// Many of these have been moved to the Format class for better separation, but these methods will be checked too
