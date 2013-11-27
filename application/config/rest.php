@@ -264,6 +264,43 @@ $config['rest_logs_table'] = 'logs';
 */
 $config['rest_enable_logging'] = FALSE;
 
+
+/*
+|--------------------------------------------------------------------------
+| REST API Access Table Name
+|--------------------------------------------------------------------------
+|
+| The table name in your database that stores the access controls.
+|
+|	'access'
+|
+*/
+$config['rest_access_table'] = 'access';
+
+/*
+|--------------------------------------------------------------------------
+| REST Method Access Control 
+|--------------------------------------------------------------------------
+|
+| When set to true REST_Controller will check the access table to see if 
+| the API KEY can access that controller.  rest_enable_keys *must* be enabled
+| to use this. 
+|
+|	FALSE
+|
+CREATE TABLE `access` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `key` varchar(40) NOT NULL DEFAULT '',
+  `controller` varchar(50) NOT NULL DEFAULT '',
+  `date_created` datetime DEFAULT NULL,
+  `date_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+|
+*/
+$config['rest_enable_access'] = FALSE;
+
+
 /*
 |--------------------------------------------------------------------------
 | REST API Param Log Format

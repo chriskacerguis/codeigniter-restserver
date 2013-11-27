@@ -322,6 +322,12 @@ abstract class REST_Controller extends CI_Controller
 		// Get that useless shitty key out of here
 		if (config_item('rest_enable_keys') AND $use_key AND $this->_allow === FALSE)
 		{
+			// Check to see if they can access the controller
+			if (!$this->_check_access())
+			{
+				$this->response(array('status' => false, 'error' => 'This API key does not have access to the requested controller.'), 401);
+			}
+
 			if (config_item('rest_enable_logging') AND $log_method)
 			{
 				$this->_log_request();
@@ -1303,6 +1309,34 @@ abstract class REST_Controller extends CI_Controller
 		return $this->rest->db->update(config_item('rest_logs_table'), $payload, array('id' => $this->_insert_id));
 	}
 
+	/**
+	 * Check to see if the API key has access to the controller and methods
+	 *
+	 * @return boolean
+	 */	
+	protected function _check_access() 
+	{
+		// if we don't want to check acccess, just return TRUE
+		if (config_item('rest_enable_access') === FALSE)
+		{
+			return TRUE;
+		}
+
+		$controller = explode('/', $this->uri->uri_string());
+		
+		$this->rest->db->select();
+		$this->rest->db->where('key', $this->rest->key);
+		$this->rest->db->where('controller', $controller[0]);
+		
+		$query = $this->rest->db->get(config_item('rest_access_table'));
+
+		if ($query->num_rows > 0) 
+		{	
+			return TRUE;
+		}
+
+		return FALSE;
+	}
 
 
 	// FORMATING FUNCTIONS ---------------------------------------------------------
