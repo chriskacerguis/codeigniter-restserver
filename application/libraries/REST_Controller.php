@@ -75,6 +75,13 @@ abstract class REST_Controller extends CI_Controller
 	protected $_post_args = array();
 
 	/**
+	 * The insert_id of the log entry (if we have one)
+	 *
+	 * @var string
+	*/
+	protected $_insert_id = '';	
+
+	/**
 	 * The arguments for the PUT request method
 	 *
 	 * @var array
@@ -742,7 +749,7 @@ abstract class REST_Controller extends CI_Controller
 	 */
 	protected function _log_request($authorized = FALSE)
 	{
-		return $this->rest->db->insert(config_item('rest_logs_table'), array(
+		$status = $this->rest->db->insert(config_item('rest_logs_table'), array(
 					'uri' => $this->uri->uri_string(),
 					'method' => $this->request->method,
 					'params' => $this->_args ? (config_item('rest_logs_json_params') ? json_encode($this->_args) : serialize($this->_args)) : null,
@@ -751,6 +758,9 @@ abstract class REST_Controller extends CI_Controller
 					'time' => function_exists('now') ? now() : time(),
 					'authorized' => $authorized
 				));
+
+		$this->_insert_id = $this->rest->db->insert_id();
+		return $statusl
 	}
 
 	/**
