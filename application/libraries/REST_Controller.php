@@ -884,6 +884,11 @@ abstract class REST_Controller extends CI_Controller
 	 */
 	protected function _parse_get()
 	{
+		if (php_sapi_name() == 'cli') {
+			$args = $_SERVER['argv'];
+			unset($args[0]);
+			$_SERVER['QUERY_STRING'] =  $_SERVER['PATH_INFO'] = $_SERVER['REQUEST_URI'] = '/' . implode('/', $args) . '/';
+	        }
 		// Grab proper GET variables
 		parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $get);
 
