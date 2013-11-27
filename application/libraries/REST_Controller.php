@@ -760,7 +760,7 @@ abstract class REST_Controller extends CI_Controller
 				));
 
 		$this->_insert_id = $this->rest->db->insert_id();
-		return $statusl
+		return $status;
 	}
 
 	/**
