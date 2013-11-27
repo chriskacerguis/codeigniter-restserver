@@ -36,7 +36,7 @@ abstract class REST_Controller extends CI_Controller
 	 *
 	 * @var array
 	 */
-	protected $allowed_http_methods = array('get', 'delete', 'post', 'put');
+	protected $allowed_http_methods = array('get', 'delete', 'post', 'put', 'options', 'patch', 'head');
 
 	/**
 	 * General request data and information.
@@ -94,6 +94,27 @@ abstract class REST_Controller extends CI_Controller
 	 * @var array
 	 */
 	protected $_delete_args = array();
+
+	/**
+	 * The arguments for the PATCH request method
+	 * 
+	 * @var array
+	 */
+	protected $_patch_args = array();
+
+	/**
+	 * The arguments for the HEAD request method
+	 * 
+	 * @var array
+	 */
+	protected $_head_args = array();
+
+	/**
+	 * The arguments for the OPTIONS request method
+	 * 
+	 * @var array
+	 */
+	protected $_options_args = array();
 
 	/**
 	 * The arguments from GET, POST, PUT, DELETE request methods combined.
@@ -219,7 +240,7 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		// Merge both for one mega-args variable
-		$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_post_args, $this->_delete_args, $this->{'_'.$this->request->method.'_args'});
+		$this->_args = array_merge($this->_get_args, $this->_options_args, $this->_patch_args, $this->_head_args , $this->_put_args, $this->_post_args, $this->_delete_args, $this->{'_'.$this->request->method.'_args'});
 
 		// Which format should the data be returned in?
 		$this->response = new stdClass();
@@ -927,6 +948,48 @@ abstract class REST_Controller extends CI_Controller
 	}
 
 	/**
+	 * Parse HEAD
+	 */
+	protected function _parse_head()
+	{
+		// Grab proper HEAD variables
+		parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $head);
+
+		// Merge both the URI segments and HEAD params
+		$this->_head_args = array_merge($this->_head_args, $head);
+	}
+
+	/**
+	 * Parse OPTIONS
+	 */
+	protected function _parse_options()
+	{
+		// Grab proper OPTIONS variables
+		parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $options);
+
+		// Merge both the URI segments and OPTIONS params
+		$this->_options_args = array_merge($this->_options_args, $options);
+	}
+
+	/**
+	 * Parse PATCH
+	 */
+	protected function _parse_patch()
+	{
+		// It might be a HTTP body
+		if ($this->request->format)
+		{
+			$this->request->body = file_get_contents('php://input');
+		}
+
+		// If no file type is provided, this is probably just arguments
+		else
+		{
+			parse_str(file_get_contents('php://input'), $this->_patch_args);
+		}
+	}
+
+	/**
 	 * Parse DELETE
 	 */
 	protected function _parse_delete()
@@ -952,6 +1015,38 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		return array_key_exists($key, $this->_get_args) ? $this->_xss_clean($this->_get_args[$key], $xss_clean) : FALSE;
+	}
+
+	/**
+	 * This function retrieves a values from the OPTIONS request arguments
+	 *
+	 * @param string $key The OPTIONS/GET argument key
+	 * @param boolean $xss_clean Whether the value should be XSS cleaned or not
+	 * @return string The OPTIONS/GET argument value
+	 */
+	public function options($key = NULL, $xss_clean = TRUE)
+	{
+		if ($key === NULL) {
+			return $this->_options_args;
+		}
+
+		return array_key_exists($key, $this->_options_args) ? $this->_xss_clean($this->_options_args[$key], $xss_clean) : FALSE;
+	}
+
+	/**
+	 * This function retrieves a values from the HEAD request arguments
+	 *
+	 * @param string $key The HEAD/GET argument key
+	 * @param boolean $xss_clean Whether the value should be XSS cleaned or not
+	 * @return string The HEAD/GET argument value
+	 */
+	public function head($key = NULL, $xss_clean = TRUE)
+	{
+		if ($key === NULL) {
+			return $this->head_args;
+		}
+
+		return array_key_exists($key, $this->head_args) ? $this->_xss_clean($this->head_args[$key], $xss_clean) : FALSE;
 	}
 
 	/**
@@ -1003,6 +1098,23 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		return array_key_exists($key, $this->_delete_args) ? $this->_xss_clean($this->_delete_args[$key], $xss_clean) : FALSE;
+	}
+
+	/**
+	 * Retrieve a value from the PATCH request arguments.
+	 *
+	 * @param string $key The key for the PATCH request argument to retrieve
+	 * @param boolean $xss_clean Whether the value should be XSS cleaned or not.
+	 * @return string The PATCH argument value.
+	 */
+	public function patch($key = NULL, $xss_clean = TRUE)
+	{
+		if ($key === NULL)
+		{
+			return $this->_patch_args;
+		}
+
+		return array_key_exists($key, $this->_patch_args) ? $this->_xss_clean($this->_patch_args[$key], $xss_clean) : FALSE;
 	}
 
 	/**
