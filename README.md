@@ -218,15 +218,14 @@ By default, the HTTP will be `X-API-KEY`. This can be configured in **config/res
 
 * Added config options to set table names for keys, limits and logs.
 * FALSE values were coming out as empty strings in xml or rawxml mode, now they will be 0/1.
-* key => FALSE can now be used to override the keys_enabled option for a specific method, and level is now optional. If no level is set it will assume the method has a level of 0.
+* key => FALSE can now be used to override the keys_enabled option for a specific method, and level 
+is now optional. If no level is set it will assume the method has a level of 0.
 * Fixed issue where calls to ->get('foo') would error is foo was not set. Reported by  Paul Barto.
 
 ## Contributions
 
-This project has been funded and made possible through my clients kindly allowing me to 
-open-source the functionality as I build it into their projects. I am no longer actively developing 
-features for this as I no longer require it, but I will continue to maintain pull requests and try to 
-fix issues as and when they are reported (within a week or two). 
+This project was originally written by the awesome Phil Sturgeon, however his involvment has shifted 
+as he is no longer using it.  As of 11/20/2013 further developement and support will be done by Chris Kacerguis.
 
 Pull Requests are the best way to fix bugs or add features. I know loads of you use this, so please 
 contribute if you have improvements to be made and I'll keep releasing versions over time.
