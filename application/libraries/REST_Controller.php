@@ -8,7 +8,7 @@
  * @package        	CodeIgniter
  * @subpackage    	Libraries
  * @category    	Libraries
- * @author        	Phil Sturgeon
+ * @author        	Phil Sturgeon, Chris Kacerguis
  * @license         http://philsturgeon.co.uk/code/dbad-license
  * @link			https://github.com/philsturgeon/codeigniter-restserver
  * @version 		2.6.2
@@ -1346,7 +1346,7 @@ abstract class REST_Controller extends CI_Controller
 
 		// We need to retrieve authentication informations from the $auth_data variable
 		preg_match_all('@(username|nonce|uri|nc|cnonce|qop|response)=[\'"]?([^\'",]+)@', $digest_string, $matches);
-		$digest = array_combine($matches[1], $matches[2]);
+		$digest = (empty($matches[1]) || empty($matches[2])) ? array() : array_combine($matches[1], $matches[2]);
 
 		if ( ! array_key_exists('username', $digest) OR !$this->_check_login($digest['username']))
 		{
