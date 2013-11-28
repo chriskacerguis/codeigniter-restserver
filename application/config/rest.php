@@ -142,6 +142,32 @@ $config['rest_ip_whitelist'] = '';
 
 /*
 |--------------------------------------------------------------------------
+| Global IP Blacklisting
+|--------------------------------------------------------------------------
+|
+| Prevent connections to your REST server from blacklisted IP addresses.
+|
+| Usage:
+| 1. Set to true *and* add any IP address to "rest_ip_blacklist" option
+|
+*/
+$config['rest_ip_blacklist_enabled'] = false;
+
+/*
+|--------------------------------------------------------------------------
+| REST IP Blacklist
+|--------------------------------------------------------------------------
+|
+| Block connections from these IP addresses.
+|
+| Example: $config['rest_ip_blacklist'] = '123.456.789.0, 987.654.32.1';
+|
+|
+*/
+$config['rest_ip_blacklist'] = '';
+
+/*
+|--------------------------------------------------------------------------
 | REST Database Group
 |--------------------------------------------------------------------------
 |

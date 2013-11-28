@@ -205,6 +205,12 @@ abstract class REST_Controller extends CI_Controller
 		// let's learn about the request
 		$this->request = new stdClass();
 
+		// Check to see if this IP is Blacklisted
+		if ($this->config->item('rest_ip_blacklist_enabled'))
+		{
+			$this->_check_blacklist_auth();
+		}
+
 		// Is it over SSL?
 		$this->request->ssl = $this->_detect_ssl();
 
@@ -1366,6 +1372,24 @@ abstract class REST_Controller extends CI_Controller
 			header('HTTP/1.0 401 Unauthorized');
 			header('HTTP/1.1 401 Unauthorized');
 			exit;
+		}
+	}
+
+	/**
+	 * Check if the client's ip is in the 'rest_ip_blacklist' config
+	 */
+	protected function _check_blacklist_auth()
+	{
+		$blacklist = explode(',', config_item('rest_ip_blacklist'));
+
+		foreach ($blacklist AS &$ip)
+		{
+			$ip = trim($ip);
+		}
+
+		if (!in_array($this->input->ip_address(), $blacklist))
+		{
+			$this->response(array('status' => false, 'error' => 'IP Denied'), 401);
 		}
 	}
 
