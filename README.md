@@ -141,7 +141,7 @@ You'll need to create a new database table to store and access the keys. `REST_C
 	  `ignore_limits` tinyint(1) NOT NULL DEFAULT '0',
 	  `date_created` int(11) NOT NULL,
 	  PRIMARY KEY (`id`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 The class will look for an HTTP header with the API key on each request. An invalid or missing API key will result in an `HTTP 403 Forbidden`.
 
@@ -154,6 +154,15 @@ By default, the HTTP will be `X-API-KEY`. This can be configured in **config/res
 * [NetTuts: Working with RESTful Services in CodeIgniter](http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/)
 
 ## Change Log
+
+### 3.0.0 (NOT YET RELEASED)
+
+* Added Blacklist IP option
+* Added controller based access controls
+* Added support for OPTIONS, PATCH, and HEAD (from boh1996)
+* Added logging of the time it takes for a request (rtime column in DB)
+* Changed DB schemas to use InnoDB, not MyISAM
+* Updated Readme to reflect new developer (Chris Kacerguis)
 
 ### 2.6.2
 
