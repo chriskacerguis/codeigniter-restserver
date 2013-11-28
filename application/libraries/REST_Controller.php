@@ -258,11 +258,11 @@ abstract class REST_Controller extends CI_Controller
 		// When there is no specific override for the current class/method, use the default auth value set in the config
 		if ($this->auth_override !== TRUE)
 		{
-			if ($this->config->item('rest_auth') == 'basic')
+			if (strtolower( $this->config->item('rest_auth') ) == 'basic')
 			{
 				$this->_prepare_basic_auth();
 			}
-			elseif ($this->config->item('rest_auth') == 'digest')
+			elseif (strtolower( $this->config->item('rest_auth') ) == 'digest')
 			{
 				$this->_prepare_digest_auth();
 			}
@@ -1396,11 +1396,11 @@ abstract class REST_Controller extends CI_Controller
 	 */
 	protected function _force_login($nonce = '')
 	{
-		if ($this->config->item('rest_auth') == 'basic')
+		if (strtolower( $this->config->item('rest_auth') ) == 'basic')
 		{
 			header('WWW-Authenticate: Basic realm="'.$this->config->item('rest_realm').'"');
 		}
-		elseif ($this->config->item('rest_auth') == 'digest')
+		elseif (strtolower( $this->config->item('rest_auth') ) == 'digest')
 		{
 			header('WWW-Authenticate: Digest realm="'.$this->config->item('rest_realm').'", qop="auth", nonce="'.$nonce.'", opaque="'.md5($this->config->item('rest_realm')).'"');
 		}
