@@ -285,7 +285,7 @@ $config['rest_logs_table'] = 'logs';
 	  `rtime` float DEFAULT NULL,
 	  `authorized` tinyint(1) NOT NULL,
 	  PRIMARY KEY (`id`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
 $config['rest_enable_logging'] = FALSE;
@@ -368,7 +368,7 @@ $config['rest_limits_table'] = 'limits';
 	  `hour_started` int(11) NOT NULL,
 	  `api_key` varchar(40) NOT NULL,
 	  PRIMARY KEY (`id`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
 $config['rest_enable_limits'] = FALSE;
