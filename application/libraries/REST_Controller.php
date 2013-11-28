@@ -426,12 +426,12 @@ abstract class REST_Controller extends CI_Controller
 	 * @param array $data
 	 * @param null|int $http_code
 	 */
-	public function response($data = array(), $http_code = null)
+	public function response($data = null, $http_code = null)
 	{
 		global $CFG;
 
-		// If data is empty and not code provide, error and bail
-		if (empty($data) && $http_code === null)
+		// If data is NULL and not code provide, error and bail
+		if ($data === NULL && $http_code === null)
 		{
 			$http_code = 404;
 
@@ -439,8 +439,8 @@ abstract class REST_Controller extends CI_Controller
 			$output = NULL;
 		}
 
-		// If data is empty but http code provided, keep the output empty
-		else if (empty($data) && is_numeric($http_code))
+		// If data is NULL but http code provided, keep the output empty
+		else if ($data === NULL && is_numeric($http_code))
 		{
 			$output = NULL;
 		}
