@@ -127,15 +127,24 @@ class Format {
 			// replace anything not alpha numeric
 			$key = preg_replace('/[^a-z_\-0-9]/i', '', $key);
 
+			if ($key === '_attributes' && (is_array($value) || is_object($value)))
+			{
+				$attributes = $value;
+				if (is_object($attributes)) $attributes = get_object_vars($attributes);
+				
+				foreach ($attributes as $attributeName => $attributeValue)
+				{
+					$structure->addAttribute($attributeName, $attributeValue);
+				}
+			}
 			// if there is another array found recursively call this function
-			if (is_array($value) || is_object($value))
+			else if (is_array($value) || is_object($value))
 			{
 				$node = $structure->addChild($key);
 
 				// recursive call.
 				$this->to_xml($value, $node, $key);
 			}
-
 			else
 			{
 				// add single node.
