@@ -151,7 +151,7 @@ class Format {
 	// Format HTML for output
 	public function to_html()
 	{
-		$data = $this->_data;
+		$data = (array)$this->_data;
 
 		// Multi-dimensional array
 		if (isset($data[0]) && is_array($data[0]))
@@ -182,7 +182,7 @@ class Format {
 	// Format CSV for output
 	public function to_csv()
 	{
-		$data = $this->_data;
+		$data = (array)$this->_data;
 
 		// Multi-dimensional array
 		if (isset($data[0]) && is_array($data[0]))
