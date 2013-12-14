@@ -1243,6 +1243,40 @@ abstract class REST_Controller extends CI_Controller
 	}
 
 	/**
+	 * Perform Library Authentication - Override this function to change the way the library is called
+	 *
+	 * @param string $username The username to validate
+	 * @param string $password The password to validate
+	 * @return boolean
+	 */
+	protected function _perform_library_auth($username = '', $password = NULL)
+	{
+		if (empty($username))
+		{
+			log_message('debug', 'Library Auth: failure, empty username');
+			return false;
+		}
+
+		$auth_library_class = strtolower($this->config->item('auth_library_class'));
+		$auth_library_function = strtolower($this->config->item('auth_library_function'));
+
+		if (empty($auth_library_class))
+		{
+			log_message('debug', 'Library Auth: failure, empty auth_library_class');
+			return false;
+		}
+
+		if (empty($auth_library_function))
+		{
+			log_message('debug', 'Library Auth: failure, empty auth_library_function');
+			return false;
+		}
+
+		$this->load->library($auth_library_class);
+		return $this->$auth_library_class->$auth_library_function($username, $password);
+	}
+
+	/**
 	 * Check if the user is logged in.
 	 *
 	 * @param string $username The user's name
@@ -1262,6 +1296,12 @@ abstract class REST_Controller extends CI_Controller
 		{
 			log_message('debug', 'performing LDAP authentication for $username');
 			return $this->_perform_ldap_auth($username, $password);
+		}
+
+		if ($auth_source == 'library')
+		{
+			log_message('debug', 'performing Library authentication for $username');
+			return $this->_perform_library_auth($username, $password);
 		}
 
 		$valid_logins = $this->config->item('rest_valid_logins');
