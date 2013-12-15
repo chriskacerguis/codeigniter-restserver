@@ -493,8 +493,7 @@ abstract class REST_Controller extends CI_Controller
 			}
 		}
 
-		header('HTTP/1.1: ' . $http_code);
-		header('Status: ' . $http_code);
+		set_status_header($http_code);
 
 		// If zlib.output_compression is enabled it will compress the output,
 		// but it will not modify the content-length header to compensate for
@@ -1409,8 +1408,7 @@ abstract class REST_Controller extends CI_Controller
 
 		if ($digest['response'] != $valid_response)
 		{
-			header('HTTP/1.0 401 Unauthorized');
-			header('HTTP/1.1 401 Unauthorized');
+			set_status_header(401);
 			exit;
 		}
 	}
