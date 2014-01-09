@@ -312,7 +312,7 @@ abstract class REST_Controller extends CI_Controller
 			$this->_log_request($authorized = TRUE);
 		}
 
-	    //记录api的调用和返回数据
+	    //log api request data
         if (config_item("log_api_request_response"))
         {
             log_message('debug', $this->get_http_raw());
@@ -424,21 +424,21 @@ abstract class REST_Controller extends CI_Controller
             $requestRow = $_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'] . ' ' . $_SERVER['SERVER_PROTOCOL'] . "\r\n";
             log_message('debug', "response ",$requestRow);
 
-            //记录api的调用和返回数据
+            ////log api response data
             log_message('debug', $output);
         }
     }	
     
     /**
-     * 获取http的请求
+     * get http request
      */
     public function get_http_raw()
     {
         $raw = 'send \r\n';
-        // (1) 请求行 
+        // (1) request line
         $raw .= $_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'] . ' ' . $_SERVER['SERVER_PROTOCOL'] . "\r\n";
 
-        // (2) 请求Headers 
+        // (2) header
         foreach ($_SERVER as $key => $value)
         {
             if (substr($key, 0, 5) === 'HTTP_')
@@ -449,9 +449,9 @@ abstract class REST_Controller extends CI_Controller
                 $raw .= $key . ': ' . $value . "\r\n";
             }
         }
-        // (3) 空行 
+        // (3) "\r\n"
         $raw .= "\r\n";
-        // (4) 请求Body 
+        // (4) Body 
         $raw .= file_get_contents('php://input');
         return $raw;
     }     
