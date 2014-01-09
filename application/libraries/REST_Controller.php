@@ -407,6 +407,12 @@ abstract class REST_Controller extends CI_Controller
 			$this->_log_request($authorized = TRUE);
 		}
 
+	    //log api request data
+        if (config_item("log_api_request_response"))
+        {
+            log_message('debug', $this->get_http_raw());
+        }
+		
 		// And...... GO!
 		$this->_fire_method(array($this, $controller_method), $arguments);
 	}
@@ -503,9 +509,52 @@ abstract class REST_Controller extends CI_Controller
 		{
 			header('Content-Length: ' . strlen($output));
 		}
+		
+		$this->_log_response($output);
 
 		exit($output);
 	}
+	
+    //log result
+    protected function _log_response($output)
+    {
+        if (config_item("log_api_request_response"))
+        {
+
+            $requestRow = $_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'] . ' ' . $_SERVER['SERVER_PROTOCOL'] . "\r\n";
+            log_message('debug', "response ",$requestRow);
+
+            ////log api response data
+            log_message('debug', $output);
+        }
+    }	
+    
+    /**
+     * get http request
+     */
+    public function get_http_raw()
+    {
+        $raw = 'send \r\n';
+        // (1) request line
+        $raw .= $_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'] . ' ' . $_SERVER['SERVER_PROTOCOL'] . "\r\n";
+
+        // (2) header
+        foreach ($_SERVER as $key => $value)
+        {
+            if (substr($key, 0, 5) === 'HTTP_')
+            {
+                $key = substr($key, 5);
+                $key = str_replace('_', '-', $key);
+
+                $raw .= $key . ': ' . $value . "\r\n";
+            }
+        }
+        // (3) "\r\n"
+        $raw .= "\r\n";
+        // (4) Body 
+        $raw .= file_get_contents('php://input');
+        return $raw;
+    }     
 
 	/*
 	 * Detect SSL use
