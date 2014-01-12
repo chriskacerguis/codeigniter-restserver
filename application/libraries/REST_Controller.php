@@ -468,6 +468,7 @@ abstract class REST_Controller extends CI_Controller
 
 			is_numeric($http_code) OR $http_code = 200;
 
+			// @deprecated the following statement can be deleted.
 			// If the format method exists, call and return the output in that format
 			if (method_exists($this, '_format_'.$this->response->format))
 			{
@@ -1527,21 +1528,6 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		return FALSE;
-	}
-
-
-	// FORMATING FUNCTIONS ---------------------------------------------------------
-	// Many of these have been moved to the Format class for better separation, but these methods will be checked too
-
-	/**
-	 * Encode as JSONP
-	 *
-	 * @param array $data The input data.
-	 * @return string The JSONP data string (loadable from Javascript).
-	 */
-	protected function _format_jsonp($data = array())
-	{
-		return $this->get('callback').'('.json_encode($data).')';
 	}
 
 }
