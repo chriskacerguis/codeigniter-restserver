@@ -172,6 +172,13 @@ abstract class REST_Controller extends CI_Controller
 		'html' => 'text/html',
 		'csv' => 'application/csv'
 	);
+	
+	/**
+	 * Information about the current API user
+	 * 
+	 * @var object
+	 */
+	protected $_apiuser;
 
 	/**
 	 * Developers can extend this class and add a check in here.
@@ -692,6 +699,8 @@ abstract class REST_Controller extends CI_Controller
 			isset($row->level) AND $this->rest->level = $row->level;
 			isset($row->ignore_limits) AND $this->rest->ignore_limits = $row->ignore_limits;
 
+			$this->_apiuser =  $row;
+			
 			/*
 			 * If "is private key" is enabled, compare the ip address with the list
 			 * of valid ip addresses stored in the database.
