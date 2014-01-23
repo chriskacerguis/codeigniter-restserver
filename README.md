@@ -155,7 +155,7 @@ By default, the HTTP will be `X-API-KEY`. This can be configured in **config/res
 
 ## Change Log
 
-### 3.0.0 (NOT YET RELEASED)
+### 2.7.0
 
 * Added Blacklist IP option
 * Added controller based access controls
