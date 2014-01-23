@@ -960,6 +960,7 @@ abstract class REST_Controller extends CI_Controller
 		{
 			parse_str(file_get_contents('php://input'), $this->_put_args);
 		}
+
 	}
 
 	/**
