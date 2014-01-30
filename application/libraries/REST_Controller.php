@@ -8,10 +8,10 @@
  * @package        	CodeIgniter
  * @subpackage    	Libraries
  * @category    	Libraries
- * @author        	Phil Sturgeon
+ * @author        	Phil Sturgeon, Chris Kacerguis
  * @license         http://philsturgeon.co.uk/code/dbad-license
  * @link			https://github.com/philsturgeon/codeigniter-restserver
- * @version 		2.6.2
+ * @version         3.0.0-pre
  */
 abstract class REST_Controller extends CI_Controller
 {
@@ -36,7 +36,7 @@ abstract class REST_Controller extends CI_Controller
 	 *
 	 * @var array
 	 */
-	protected $allowed_http_methods = array('get', 'delete', 'post', 'put');
+	protected $allowed_http_methods = array('get', 'delete', 'post', 'put', 'options', 'patch', 'head');
 
 	/**
 	 * General request data and information.
@@ -75,6 +75,13 @@ abstract class REST_Controller extends CI_Controller
 	protected $_post_args = array();
 
 	/**
+	 * The insert_id of the log entry (if we have one)
+	 *
+	 * @var string
+	*/
+	protected $_insert_id = '';	
+
+	/**
 	 * The arguments for the PUT request method
 	 *
 	 * @var array
@@ -87,6 +94,27 @@ abstract class REST_Controller extends CI_Controller
 	 * @var array
 	 */
 	protected $_delete_args = array();
+
+	/**
+	 * The arguments for the PATCH request method
+	 * 
+	 * @var array
+	 */
+	protected $_patch_args = array();
+
+	/**
+	 * The arguments for the HEAD request method
+	 * 
+	 * @var array
+	 */
+	protected $_head_args = array();
+
+	/**
+	 * The arguments for the OPTIONS request method
+	 * 
+	 * @var array
+	 */
+	protected $_options_args = array();
 
 	/**
 	 * The arguments from GET, POST, PUT, DELETE request methods combined.
@@ -117,6 +145,20 @@ abstract class REST_Controller extends CI_Controller
 	protected $_user_ldap_dn = '';
 
 	/**
+	 * The start of the response time from the server
+	 *
+	 * @var string
+	*/
+	protected $_start_rtime = '';	
+	
+	/**
+	 * The end of the response time from the server
+	 *
+	 * @var string
+	*/
+	protected $_end_rtime = '';		
+
+	/**
 	 * List all supported methods, the first will be the default format
 	 *
 	 * @var array
@@ -130,6 +172,13 @@ abstract class REST_Controller extends CI_Controller
 		'html' => 'text/html',
 		'csv' => 'application/csv'
 	);
+	
+	/**
+	 * Information about the current API user
+	 * 
+	 * @var object
+	 */
+	protected $_apiuser;
 
 	/**
 	 * Developers can extend this class and add a check in here.
@@ -147,6 +196,14 @@ abstract class REST_Controller extends CI_Controller
 	{
 		parent::__construct();
 
+		// Start the timer for how long the request takes
+		$this->_start_rtime = microtime(TRUE);		
+
+		// init objects
+		$this->request = new stdClass();
+		$this->response = new stdClass();
+		$this->rest = new stdClass();
+
 		$this->_zlib_oc = @ini_get('zlib.output_compression');
 
 		// Lets grab the config and get ready to party
@@ -154,6 +211,12 @@ abstract class REST_Controller extends CI_Controller
 
 		// let's learn about the request
 		$this->request = new stdClass();
+
+		// Check to see if this IP is Blacklisted
+		if ($this->config->item('rest_ip_blacklist_enabled'))
+		{
+			$this->_check_blacklist_auth();
+		}
 
 		// Is it over SSL?
 		$this->request->ssl = $this->_detect_ssl();
@@ -169,8 +232,6 @@ abstract class REST_Controller extends CI_Controller
 
 		// Set up our GET variables
 		$this->_get_args = array_merge($this->_get_args, $this->uri->ruri_to_assoc());
-
-		$this->load->library('security');
 
 		// This library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter itself
 		$this->load->library('format');
@@ -192,7 +253,7 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		// Merge both for one mega-args variable
-		$this->_args = array_merge($this->_get_args, $this->_put_args, $this->_post_args, $this->_delete_args, $this->{'_'.$this->request->method.'_args'});
+		$this->_args = array_merge($this->_get_args, $this->_options_args, $this->_patch_args, $this->_head_args , $this->_put_args, $this->_post_args, $this->_delete_args, $this->{'_'.$this->request->method.'_args'});
 
 		// Which format should the data be returned in?
 		$this->response = new stdClass();
@@ -210,11 +271,11 @@ abstract class REST_Controller extends CI_Controller
 		// When there is no specific override for the current class/method, use the default auth value set in the config
 		if ($this->auth_override !== TRUE)
 		{
-			if ($this->config->item('rest_auth') == 'basic')
+			if (strtolower( $this->config->item('rest_auth') ) == 'basic')
 			{
 				$this->_prepare_basic_auth();
 			}
-			elseif ($this->config->item('rest_auth') == 'digest')
+			elseif (strtolower( $this->config->item('rest_auth') ) == 'digest')
 			{
 				$this->_prepare_digest_auth();
 			}
@@ -232,7 +293,7 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		// Use whatever database is in use (isset returns false)
-		elseif (@$this->db)
+		elseif (property_exists($this, "db"))
 		{
 			$this->rest->db = $this->db;
 		}
@@ -248,6 +309,23 @@ abstract class REST_Controller extends CI_Controller
 		{
 			$this->response(array('status' => false, 'error' => 'Only AJAX requests are accepted.'), 505);
 		}
+	}
+
+	/**
+	 * Destructor function
+	 * @author Chris Kacerguis
+	 */	
+	public function __destruct()
+	{
+		// Record the "stop" time of the request
+		$this->_end_rtime = microtime(TRUE);
+		// CK: if, we are logging, log the access time here, as we are done!
+		if (config_item('rest_enable_logging'))
+		{
+			$this->_log_access_time();
+		}
+		
+		
 	}
 
 	/**
@@ -285,6 +363,12 @@ abstract class REST_Controller extends CI_Controller
 		// Get that useless shitty key out of here
 		if (config_item('rest_enable_keys') AND $use_key AND $this->_allow === FALSE)
 		{
+			// Check to see if they can access the controller
+			if (!$this->_check_access())
+			{
+				$this->response(array('status' => false, 'error' => 'This API key does not have access to the requested controller.'), 401);
+			}
+
 			if (config_item('rest_enable_logging') AND $log_method)
 			{
 				$this->_log_request();
@@ -355,12 +439,12 @@ abstract class REST_Controller extends CI_Controller
 	 * @param array $data
 	 * @param null|int $http_code
 	 */
-	public function response($data = array(), $http_code = null)
+	public function response($data = null, $http_code = null)
 	{
 		global $CFG;
 
-		// If data is empty and not code provide, error and bail
-		if (empty($data) && $http_code === null)
+		// If data is NULL and not code provide, error and bail
+		if ($data === NULL && $http_code === null)
 		{
 			$http_code = 404;
 
@@ -368,8 +452,8 @@ abstract class REST_Controller extends CI_Controller
 			$output = NULL;
 		}
 
-		// If data is empty but http code provided, keep the output empty
-		else if (empty($data) && is_numeric($http_code))
+		// If data is NULL but http code provided, keep the output empty
+		else if ($data === NULL && is_numeric($http_code))
 		{
 			$output = NULL;
 		}
@@ -391,6 +475,7 @@ abstract class REST_Controller extends CI_Controller
 
 			is_numeric($http_code) OR $http_code = 200;
 
+			// @deprecated the following statement can be deleted.
 			// If the format method exists, call and return the output in that format
 			if (method_exists($this, '_format_'.$this->response->format))
 			{
@@ -416,8 +501,7 @@ abstract class REST_Controller extends CI_Controller
 			}
 		}
 
-		header('HTTP/1.1: ' . $http_code);
-		header('Status: ' . $http_code);
+		set_status_header($http_code);
 
 		// If zlib.output_compression is enabled it will compress the output,
 		// but it will not modify the content-length header to compensate for
@@ -615,6 +699,8 @@ abstract class REST_Controller extends CI_Controller
 			isset($row->level) AND $this->rest->level = $row->level;
 			isset($row->ignore_limits) AND $this->rest->ignore_limits = $row->ignore_limits;
 
+			$this->_apiuser =  $row;
+			
 			/*
 			 * If "is private key" is enabled, compare the ip address with the list
 			 * of valid ip addresses stored in the database.
@@ -699,7 +785,7 @@ abstract class REST_Controller extends CI_Controller
 	 */
 	protected function _log_request($authorized = FALSE)
 	{
-		return $this->rest->db->insert(config_item('rest_logs_table'), array(
+		$status = $this->rest->db->insert(config_item('rest_logs_table'), array(
 					'uri' => $this->uri->uri_string(),
 					'method' => $this->request->method,
 					'params' => $this->_args ? (config_item('rest_logs_json_params') ? json_encode($this->_args) : serialize($this->_args)) : null,
@@ -708,6 +794,9 @@ abstract class REST_Controller extends CI_Controller
 					'time' => function_exists('now') ? now() : time(),
 					'authorized' => $authorized
 				));
+
+		$this->_insert_id = $this->rest->db->insert_id();
+		return $status;
 	}
 
 	/**
@@ -831,6 +920,13 @@ abstract class REST_Controller extends CI_Controller
 	 */
 	protected function _parse_get()
 	{
+		// Fix for Issue #247
+		if ($this->input->is_cli_request()) {
+			$args = $_SERVER['argv'];
+			unset($args[0]);
+			$_SERVER['QUERY_STRING'] =  $_SERVER['PATH_INFO'] = $_SERVER['REQUEST_URI'] = '/' . implode('/', $args) . '/';
+		}
+
 		// Grab proper GET variables
 		parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $get);
 
@@ -864,6 +960,49 @@ abstract class REST_Controller extends CI_Controller
 		{
 			parse_str(file_get_contents('php://input'), $this->_put_args);
 		}
+
+	}
+
+	/**
+	 * Parse HEAD
+	 */
+	protected function _parse_head()
+	{
+		// Grab proper HEAD variables
+		parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $head);
+
+		// Merge both the URI segments and HEAD params
+		$this->_head_args = array_merge($this->_head_args, $head);
+	}
+
+	/**
+	 * Parse OPTIONS
+	 */
+	protected function _parse_options()
+	{
+		// Grab proper OPTIONS variables
+		parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $options);
+
+		// Merge both the URI segments and OPTIONS params
+		$this->_options_args = array_merge($this->_options_args, $options);
+	}
+
+	/**
+	 * Parse PATCH
+	 */
+	protected function _parse_patch()
+	{
+		// It might be a HTTP body
+		if ($this->request->format)
+		{
+			$this->request->body = file_get_contents('php://input');
+		}
+
+		// If no file type is provided, this is probably just arguments
+		else
+		{
+			parse_str(file_get_contents('php://input'), $this->_patch_args);
+		}
 	}
 
 	/**
@@ -892,6 +1031,38 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		return array_key_exists($key, $this->_get_args) ? $this->_xss_clean($this->_get_args[$key], $xss_clean) : FALSE;
+	}
+
+	/**
+	 * This function retrieves a values from the OPTIONS request arguments
+	 *
+	 * @param string $key The OPTIONS/GET argument key
+	 * @param boolean $xss_clean Whether the value should be XSS cleaned or not
+	 * @return string The OPTIONS/GET argument value
+	 */
+	public function options($key = NULL, $xss_clean = TRUE)
+	{
+		if ($key === NULL) {
+			return $this->_options_args;
+		}
+
+		return array_key_exists($key, $this->_options_args) ? $this->_xss_clean($this->_options_args[$key], $xss_clean) : FALSE;
+	}
+
+	/**
+	 * This function retrieves a values from the HEAD request arguments
+	 *
+	 * @param string $key The HEAD/GET argument key
+	 * @param boolean $xss_clean Whether the value should be XSS cleaned or not
+	 * @return string The HEAD/GET argument value
+	 */
+	public function head($key = NULL, $xss_clean = TRUE)
+	{
+		if ($key === NULL) {
+			return $this->head_args;
+		}
+
+		return array_key_exists($key, $this->head_args) ? $this->_xss_clean($this->head_args[$key], $xss_clean) : FALSE;
 	}
 
 	/**
@@ -943,6 +1114,23 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		return array_key_exists($key, $this->_delete_args) ? $this->_xss_clean($this->_delete_args[$key], $xss_clean) : FALSE;
+	}
+
+	/**
+	 * Retrieve a value from the PATCH request arguments.
+	 *
+	 * @param string $key The key for the PATCH request argument to retrieve
+	 * @param boolean $xss_clean Whether the value should be XSS cleaned or not.
+	 * @return string The PATCH argument value.
+	 */
+	public function patch($key = NULL, $xss_clean = TRUE)
+	{
+		if ($key === NULL)
+		{
+			return $this->_patch_args;
+		}
+
+		return array_key_exists($key, $this->_patch_args) ? $this->_xss_clean($this->_patch_args[$key], $xss_clean) : FALSE;
 	}
 
 	/**
@@ -1065,6 +1253,40 @@ abstract class REST_Controller extends CI_Controller
 	}
 
 	/**
+	 * Perform Library Authentication - Override this function to change the way the library is called
+	 *
+	 * @param string $username The username to validate
+	 * @param string $password The password to validate
+	 * @return boolean
+	 */
+	protected function _perform_library_auth($username = '', $password = NULL)
+	{
+		if (empty($username))
+		{
+			log_message('debug', 'Library Auth: failure, empty username');
+			return false;
+		}
+
+		$auth_library_class = strtolower($this->config->item('auth_library_class'));
+		$auth_library_function = strtolower($this->config->item('auth_library_function'));
+
+		if (empty($auth_library_class))
+		{
+			log_message('debug', 'Library Auth: failure, empty auth_library_class');
+			return false;
+		}
+
+		if (empty($auth_library_function))
+		{
+			log_message('debug', 'Library Auth: failure, empty auth_library_function');
+			return false;
+		}
+
+		$this->load->library($auth_library_class);
+		return $this->$auth_library_class->$auth_library_function($username, $password);
+	}
+
+	/**
 	 * Check if the user is logged in.
 	 *
 	 * @param string $username The user's name
@@ -1084,6 +1306,12 @@ abstract class REST_Controller extends CI_Controller
 		{
 			log_message('debug', 'performing LDAP authentication for $username');
 			return $this->_perform_ldap_auth($username, $password);
+		}
+
+		if ($auth_source == 'library')
+		{
+			log_message('debug', 'performing Library authentication for $username');
+			return $this->_perform_library_auth($username, $password);
 		}
 
 		$valid_logins = $this->config->item('rest_valid_logins');
@@ -1174,7 +1402,7 @@ abstract class REST_Controller extends CI_Controller
 
 		// We need to retrieve authentication informations from the $auth_data variable
 		preg_match_all('@(username|nonce|uri|nc|cnonce|qop|response)=[\'"]?([^\'",]+)@', $digest_string, $matches);
-		$digest = array_combine($matches[1], $matches[2]);
+		$digest = (empty($matches[1]) || empty($matches[2])) ? array() : array_combine($matches[1], $matches[2]);
 
 		if ( ! array_key_exists('username', $digest) OR !$this->_check_login($digest['username']))
 		{
@@ -1191,9 +1419,26 @@ abstract class REST_Controller extends CI_Controller
 
 		if ($digest['response'] != $valid_response)
 		{
-			header('HTTP/1.0 401 Unauthorized');
-			header('HTTP/1.1 401 Unauthorized');
+			set_status_header(401);
 			exit;
+		}
+	}
+
+	/**
+	 * Check if the client's ip is in the 'rest_ip_blacklist' config
+	 */
+	protected function _check_blacklist_auth()
+	{
+		$blacklist = explode(',', config_item('rest_ip_blacklist'));
+
+		foreach ($blacklist AS &$ip)
+		{
+			$ip = trim($ip);
+		}
+
+		if (!in_array($this->input->ip_address(), $blacklist))
+		{
+			$this->response(array('status' => false, 'error' => 'IP Denied'), 401);
 		}
 	}
 
@@ -1224,11 +1469,11 @@ abstract class REST_Controller extends CI_Controller
 	 */
 	protected function _force_login($nonce = '')
 	{
-		if ($this->config->item('rest_auth') == 'basic')
+		if (strtolower( $this->config->item('rest_auth') ) == 'basic')
 		{
 			header('WWW-Authenticate: Basic realm="'.$this->config->item('rest_realm').'"');
 		}
-		elseif ($this->config->item('rest_auth') == 'digest')
+		elseif (strtolower( $this->config->item('rest_auth') ) == 'digest')
 		{
 			header('WWW-Authenticate: Digest realm="'.$this->config->item('rest_realm').'", qop="auth", nonce="'.$nonce.'", opaque="'.md5($this->config->item('rest_realm')).'"');
 		}
@@ -1253,18 +1498,46 @@ abstract class REST_Controller extends CI_Controller
 		return $data;
 	}
 
-	// FORMATING FUNCTIONS ---------------------------------------------------------
-	// Many of these have been moved to the Format class for better separation, but these methods will be checked too
+	/**
+	 * updates the log with the access time
+	 *
+	 * @author Chris Kacerguis
+	 * @return boolean
+	 */
+	 
+	protected function _log_access_time()
+	{
+		$payload['rtime'] = $this->_end_rtime - $this->_start_rtime;
+		return $this->rest->db->update(config_item('rest_logs_table'), $payload, array('id' => $this->_insert_id));
+	}
 
 	/**
-	 * Encode as JSONP
+	 * Check to see if the API key has access to the controller and methods
 	 *
-	 * @param array $data The input data.
-	 * @return string The JSONP data string (loadable from Javascript).
-	 */
-	protected function _format_jsonp($data = array())
+	 * @return boolean
+	 */	
+	protected function _check_access() 
 	{
-		return $this->get('callback').'('.json_encode($data).')';
+		// if we don't want to check acccess, just return TRUE
+		if (config_item('rest_enable_access') === FALSE)
+		{
+			return TRUE;
+		}
+
+		$controller = explode('/', $this->uri->uri_string());
+		
+		$this->rest->db->select();
+		$this->rest->db->where('key', $this->rest->key);
+		$this->rest->db->where('controller', $controller[0]);
+		
+		$query = $this->rest->db->get(config_item('rest_access_table'));
+
+		if ($query->num_rows > 0) 
+		{	
+			return TRUE;
+		}
+
+		return FALSE;
 	}
 
 }

@@ -127,15 +127,24 @@ class Format {
 			// replace anything not alpha numeric
 			$key = preg_replace('/[^a-z_\-0-9]/i', '', $key);
 
+			if ($key === '_attributes' && (is_array($value) || is_object($value)))
+			{
+				$attributes = $value;
+				if (is_object($attributes)) $attributes = get_object_vars($attributes);
+				
+				foreach ($attributes as $attributeName => $attributeValue)
+				{
+					$structure->addAttribute($attributeName, $attributeValue);
+				}
+			}
 			// if there is another array found recursively call this function
-			if (is_array($value) || is_object($value))
+			else if (is_array($value) || is_object($value))
 			{
 				$node = $structure->addChild($key);
 
 				// recursive call.
 				$this->to_xml($value, $node, $key);
 			}
-
 			else
 			{
 				// add single node.
@@ -151,7 +160,7 @@ class Format {
 	// Format HTML for output
 	public function to_html()
 	{
-		$data = $this->_data;
+		$data = (array)$this->_data;
 
 		// Multi-dimensional array
 		if (isset($data[0]) && is_array($data[0]))
@@ -182,7 +191,7 @@ class Format {
 	// Format CSV for output
 	public function to_csv()
 	{
-		$data = $this->_data;
+		$data = (array)$this->_data;
 
 		// Multi-dimensional array
 		if (isset($data[0]) && is_array($data[0]))
@@ -197,10 +206,16 @@ class Format {
 			$data = array($data);
 		}
 
-		$output = implode(',', $headings).PHP_EOL;
+		$output = '"'.implode('","', $headings).'"'.PHP_EOL;
 		foreach ($data as &$row)
 		{
-			$output .= '"'.implode('","', $row).'"'.PHP_EOL;
+            if (is_array($row)) {
+                throw new Exception('Format class does not support multi-dimensional arrays');
+            } else {
+                $row    = str_replace('"', '""', $row); // Escape dbl quotes per RFC 4180
+                $output .= '"'.implode('","', $row).'"'.PHP_EOL;                
+            }
+
 		}
 
 		return $output;
@@ -209,7 +224,24 @@ class Format {
 	// Encode as JSON
 	public function to_json()
 	{
-		return json_encode($this->_data);
+		$callback = isset($_GET['callback']) ? $_GET['callback'] : '';
+		if ($callback === '')
+		{
+			return json_encode($this->_data);
+		}
+		// we only honour jsonp callback which are valid javascript identifiers
+		else if (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback))
+		{
+			// this is a jsonp request, the content-type must be updated to be text/javascript
+			header("Content-Type: application/javascript");
+			return $callback . "(" . json_encode($this->_data) . ");";
+		}
+		else
+		{
+			// we have an invalid jsonp callback identifier, we'll return plain json with a warning field
+			$this->_data['warning'] = "invalid jsonp callback provided: ".$callback;
+			return json_encode($this->_data);
+		}
 	}
 
 	// Encode as Serialized array

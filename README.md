@@ -35,12 +35,21 @@ This allows you to implement a RESTful interface easily:
 
 `REST_Controller` also supports `PUT` and `DELETE` methods, allowing you to support a truly RESTful interface.
 
+
 Accessing parameters is also easy. Simply use the name of the HTTP verb as a method:
 
 	$this->get('blah'); // GET param
 	$this->post('blah'); // POST param
 	$this->put('blah'); // PUT param
-	$this->delete('blah'); // DELETE param
+
+The HTTP spec for DELETE requests precludes the use of parameters.  For delete requests, you can add items to the URL
+
+		public function index_delete($id)
+		{
+    		$this->response(array(
+        		'returned from delete:' => $id,
+    		));			
+		}
 
 ## Content Types
 
@@ -132,7 +141,7 @@ You'll need to create a new database table to store and access the keys. `REST_C
 	  `ignore_limits` tinyint(1) NOT NULL DEFAULT '0',
 	  `date_created` int(11) NOT NULL,
 	  PRIMARY KEY (`id`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 The class will look for an HTTP header with the API key on each request. An invalid or missing API key will result in an `HTTP 403 Forbidden`.
 
@@ -145,6 +154,15 @@ By default, the HTTP will be `X-API-KEY`. This can be configured in **config/res
 * [NetTuts: Working with RESTful Services in CodeIgniter](http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/)
 
 ## Change Log
+
+### 2.7.0
+
+* Added Blacklist IP option
+* Added controller based access controls
+* Added support for OPTIONS, PATCH, and HEAD (from boh1996)
+* Added logging of the time it takes for a request (rtime column in DB)
+* Changed DB schemas to use InnoDB, not MyISAM
+* Updated Readme to reflect new developer (Chris Kacerguis)
 
 ### 2.6.2
 
@@ -209,15 +227,14 @@ By default, the HTTP will be `X-API-KEY`. This can be configured in **config/res
 
 * Added config options to set table names for keys, limits and logs.
 * FALSE values were coming out as empty strings in xml or rawxml mode, now they will be 0/1.
-* key => FALSE can now be used to override the keys_enabled option for a specific method, and level is now optional. If no level is set it will assume the method has a level of 0.
+* key => FALSE can now be used to override the keys_enabled option for a specific method, and level 
+is now optional. If no level is set it will assume the method has a level of 0.
 * Fixed issue where calls to ->get('foo') would error is foo was not set. Reported by  Paul Barto.
 
 ## Contributions
 
-This project has been funded and made possible through my clients kindly allowing me to 
-open-source the functionality as I build it into their projects. I am no longer actively developing 
-features for this as I no longer require it, but I will continue to maintain pull requests and try to 
-fix issues as and when they are reported (within a week or two). 
+This project was originally written by the awesome Phil Sturgeon, however his involvment has shifted 
+as he is no longer using it.  As of 11/20/2013 further developement and support will be done by Chris Kacerguis.
 
 Pull Requests are the best way to fix bugs or add features. I know loads of you use this, so please 
 contribute if you have improvements to be made and I'll keep releasing versions over time.

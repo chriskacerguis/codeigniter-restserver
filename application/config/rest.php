@@ -68,10 +68,24 @@ $config['rest_auth'] = false;
 |
 | Is login required and if so, which user store do we use?
 |
-| '' = use config based users, 'ldap' = use LDAP authencation
+| '' = use config based users, 'ldap' = use LDAP authencation, 'library' = use a authentication library
 |
 */
 $config['auth_source'] = 'ldap';
+
+/*
+|--------------------------------------------------------------------------
+| REST Login
+|--------------------------------------------------------------------------
+|
+| If library authentication is used define the class and function name here
+|
+| The function should accept two parameters: class->function($username, $password)
+| In other cases override the function _perform_library_auth in your controller
+|
+*/
+$config['auth_library_class'] = '';
+$config['auth_library_function'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -139,6 +153,32 @@ $config['rest_ip_whitelist_enabled'] = false;
 |
 */
 $config['rest_ip_whitelist'] = '';
+
+/*
+|--------------------------------------------------------------------------
+| Global IP Blacklisting
+|--------------------------------------------------------------------------
+|
+| Prevent connections to your REST server from blacklisted IP addresses.
+|
+| Usage:
+| 1. Set to true *and* add any IP address to "rest_ip_blacklist" option
+|
+*/
+$config['rest_ip_blacklist_enabled'] = false;
+
+/*
+|--------------------------------------------------------------------------
+| REST IP Blacklist
+|--------------------------------------------------------------------------
+|
+| Block connections from these IP addresses.
+|
+| Example: $config['rest_ip_blacklist'] = '123.456.789.0, 987.654.32.1';
+|
+|
+*/
+$config['rest_ip_blacklist'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -256,12 +296,50 @@ $config['rest_logs_table'] = 'logs';
 	  `api_key` varchar(40) NOT NULL,
 	  `ip_address` varchar(45) NOT NULL,
 	  `time` int(11) NOT NULL,
+	  `rtime` float DEFAULT NULL,
 	  `authorized` tinyint(1) NOT NULL,
 	  PRIMARY KEY (`id`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
 $config['rest_enable_logging'] = FALSE;
+
+
+/*
+|--------------------------------------------------------------------------
+| REST API Access Table Name
+|--------------------------------------------------------------------------
+|
+| The table name in your database that stores the access controls.
+|
+|	'access'
+|
+*/
+$config['rest_access_table'] = 'access';
+
+/*
+|--------------------------------------------------------------------------
+| REST Method Access Control 
+|--------------------------------------------------------------------------
+|
+| When set to true REST_Controller will check the access table to see if 
+| the API KEY can access that controller.  rest_enable_keys *must* be enabled
+| to use this. 
+|
+|	FALSE
+|
+CREATE TABLE `access` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `key` varchar(40) NOT NULL DEFAULT '',
+  `controller` varchar(50) NOT NULL DEFAULT '',
+  `date_created` datetime DEFAULT NULL,
+  `date_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+|
+*/
+$config['rest_enable_access'] = FALSE;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -304,7 +382,7 @@ $config['rest_limits_table'] = 'limits';
 	  `hour_started` int(11) NOT NULL,
 	  `api_key` varchar(40) NOT NULL,
 	  PRIMARY KEY (`id`)
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
 $config['rest_enable_limits'] = FALSE;
