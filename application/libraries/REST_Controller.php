@@ -564,8 +564,8 @@ abstract class REST_Controller extends CI_Controller
 	{
 		$pattern = '/\.('.implode('|', array_keys($this->_supported_formats)).')$/';
 
-		// Check if a file extension is used
-		if (preg_match($pattern, $this->uri->uri_string(), $matches))
+		// Check if a file extension is used when no get arguments provided
+		if (!$this->_get_args AND preg_match($pattern, $this->uri->uri_string(), $matches))
 		{
 			return $matches[1];
 		}
