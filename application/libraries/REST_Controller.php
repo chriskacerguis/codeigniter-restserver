@@ -1436,7 +1436,7 @@ abstract class REST_Controller extends CI_Controller
 			$ip = trim($ip);
 		}
 
-		if (!in_array($this->input->ip_address(), $blacklist))
+		if (in_array($this->input->ip_address(), $blacklist))
 		{
 			$this->response(array('status' => false, 'error' => 'IP Denied'), 401);
 		}
