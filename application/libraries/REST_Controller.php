@@ -439,10 +439,16 @@ abstract class REST_Controller extends CI_Controller
 	 * @param array $data
 	 * @param null|int $http_code
 	 */
-	public function response($data = null, $http_code = null)
+	public function response($data = null, $http_code = null, $wrapper = null)
 	{
 		global $CFG;
-
+ 
+	        //Set the xml wrapper to the one specified when calling this function
+	        if($wrapper != null){
+	            $basenode = $wrapper;
+	        }else{
+	            $basenode = 'xml';
+	        }
 		// If data is NULL and not code provide, error and bail
 		if ($data === NULL && $http_code === null)
 		{
@@ -491,7 +497,12 @@ abstract class REST_Controller extends CI_Controller
 				// Set the correct format header
 				header('Content-Type: '.$this->_supported_formats[$this->response->format]);
 
-				$output = $this->format->factory($data)->{'to_'.$this->response->format}();
+				//If the response format is xml, set the xml wrapper.
+		                if($this->response->format == 'xml'){
+		                    $output = $this->format->factory($data)->{'to_'.$this->response->format}($data,null,$basenode);
+		                }else{
+		                   $output = $this->format->factory($data)->{'to_'.$this->response->format}();
+		                }
 			}
 
 			// Format not supported, output directly
