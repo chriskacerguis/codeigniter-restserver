@@ -1322,7 +1322,7 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		// If actually NULL (not empty string) then do not check it
-		if ($password !== NULL AND $valid_logins[$username] != $password)
+		if ($password === NULL AND $valid_logins[$username] != $password)
 		{
 			return FALSE;
 		}
