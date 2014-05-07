@@ -231,7 +231,7 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		// Set up our GET variables
-		$this->_get_args = array_merge($this->_get_args, $this->uri->ruri_to_assoc());
+		$this->_get_args = array_merge($_GET, $this->uri->ruri_to_assoc(),$this->_get_args);
 
 		// This library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter itself
 		$this->load->library('format');
@@ -285,6 +285,17 @@ abstract class REST_Controller extends CI_Controller
 			}
 		}
 
+		// only allow ajax requests
+		if ( ! $this->input->is_ajax_request() AND config_item('rest_ajax_only'))
+		{
+			$this->response(array('status' => false, 'error' => 'Only AJAX requests are accepted.'), 505);
+		}
+	}
+
+	/**
+	 * Fetches the API key
+	 */
+	protected function _fetch_key () {
 		$this->rest = new StdClass();
 		// Load DB if its enabled
 		if (config_item('rest_database_group') AND (config_item('rest_enable_keys') OR config_item('rest_enable_logging')))
@@ -299,18 +310,12 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		// Checking for keys? GET TO WORK!
-		if (config_item('rest_enable_keys'))
+		if ( config_item('rest_enable_keys') )
 		{
 			$this->_allow = $this->_detect_api_key();
 		}
-
-		// only allow ajax requests
-		if ( ! $this->input->is_ajax_request() AND config_item('rest_ajax_only'))
-		{
-			$this->response(array('status' => false, 'error' => 'Only AJAX requests are accepted.'), 505);
-		}
 	}
-
+	
 	/**
 	 * Destructor function
 	 * @author Chris Kacerguis
@@ -340,6 +345,7 @@ abstract class REST_Controller extends CI_Controller
 	 */
 	public function _remap($object_called, $arguments)
 	{
+
 		// Should we answer if not over SSL?
 		if (config_item('force_https') AND !$this->_detect_ssl())
 		{
@@ -353,6 +359,10 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		$controller_method = $object_called.'_'.$this->request->method;
+
+		$this->controller_method = $controller_method;
+
+		$this->_fetch_key();
 
 		// Do we want to log this method (if allowed by config)?
 		$log_method = !(isset($this->methods[$controller_method]['log']) AND $this->methods[$controller_method]['log'] == FALSE);
@@ -414,9 +424,16 @@ abstract class REST_Controller extends CI_Controller
 			$this->_log_request($authorized = TRUE);
 		}
 
+		$this->before_method();
+
 		// And...... GO!
 		$this->_fire_method(array($this, $controller_method), $arguments);
 	}
+
+	/**
+	 * Override this method, it's called just before the controller method is called
+	 */
+	protected function before_method () {}
 
 	/**
 	 * Fire Method
@@ -503,6 +520,8 @@ abstract class REST_Controller extends CI_Controller
 
 		set_status_header($http_code);
 
+		$this->before_output($output);
+
 		// If zlib.output_compression is enabled it will compress the output,
 		// but it will not modify the content-length header to compensate for
 		// the reduction, causing the browser to hang waiting for more data.
@@ -514,6 +533,12 @@ abstract class REST_Controller extends CI_Controller
 
 		exit($output);
 	}
+
+	/**
+	 * Override this with your own method to send headers etc
+	 * @param string &$output The output being sent
+	 */
+	protected function before_output ( &$output ) {}
 
 	/*
 	 * Detect SSL use
@@ -666,6 +691,16 @@ abstract class REST_Controller extends CI_Controller
 	}
 
 	/**
+	 * This can be extended to include extra key checks
+	 * 
+	 * @param  object  $row The database row
+	 * @return boolean      Return if the key is valid
+	 */
+	protected function _is_key_valid ( $row ) {
+		return true;
+	}
+
+	/**
 	 * Detect API Key
 	 *
 	 * See if the user has provided an API key
@@ -676,6 +711,12 @@ abstract class REST_Controller extends CI_Controller
 	{
 		// Get the api key name variable set in the rest config file
 		$api_key_variable = config_item('rest_key_name');
+		$rest_key_column = config_item('rest_key_column');
+		$rest_keys_table = config_item('rest_keys_table');
+
+		if ( isset($this->methods[$this->controller_method]["key_name"]) ) $api_key_variable = $this->methods[$this->controller_method]["key_name"];
+		if ( isset($this->methods[$this->controller_method]["key_column"]) ) $rest_key_column = $this->methods[$this->controller_method]["key_column"];
+		if ( isset($this->methods[$this->controller_method]["keys_table"]) ) $rest_keys_table = $this->methods[$this->controller_method]["keys_table"];
 
 		// Work out the name of the SERVER entry based on config
 		$key_name = 'HTTP_'.strtoupper(str_replace('-', '_', $api_key_variable));
@@ -688,12 +729,20 @@ abstract class REST_Controller extends CI_Controller
 		// Find the key from server or arguments
 		if (($key = isset($this->_args[$api_key_variable]) ? $this->_args[$api_key_variable] : $this->input->server($key_name)))
 		{
-			if ( ! ($row = $this->rest->db->where(config_item('rest_key_column'), $key)->get(config_item('rest_keys_table'))->row()))
+			if ( ! ($row = $this->rest->db->where($rest_key_column, $key)->get($rest_keys_table)->row()))
 			{
 				return FALSE;
 			}
-
-			$this->rest->key = $row->{config_item('rest_key_column')};
+			if ( ! isset($this->methods[$this->controller_method]["validate_key_function"]) && ! isset($this->validate_key_function) ) {
+				if ( ! $this->_is_key_valid($row) ) return false;
+			} else {
+				if ( isset($this->methods[$this->controller_method]["validate_key_function"]) ) {
+					if ( ! $this->{$this->methods[$this->controller_method]["validate_key_function"]}($row) ) return false;
+				} else if ( isset($this->validate_key_function) ) {
+					if ( ! $this->{$this->validate_key_function}($row) ) return false;
+				}
+			}
+			$this->rest->key = $row->{$rest_key_column};
 
 			isset($row->user_id) AND $this->rest->user_id = $row->user_id;
 			isset($row->level) AND $this->rest->level = $row->level;
@@ -1540,4 +1589,188 @@ abstract class REST_Controller extends CI_Controller
 		return FALSE;
 	}
 
+	/**
+	 * This function either returns all the arguments or a specific one
+	 *
+	 * @access public
+	 * @param  string $key The key to fetch
+	 * @return array|string|boolean
+	 */
+	public function args ( $key = null ) {
+		if ( is_null($key) ) return $this->_args;
+
+		return ( array_key_exists($key, $this->_args) ) ? $this->_args[$key] : false;
+	}
+
+	/**
+	 * This function checks if the env key is set
+	 * @access public
+	 * @param  string $key The key to fetch
+	 * @return string|array|boolean
+	 */
+	public function env( $key = null ) {
+		if ( is_null($key) ) {
+			return $_ENV;
+		}
+
+		if ( array_key_exists($key, $_ENV) ) {
+			return $_ENV[$key];
+		}
+
+		return false;
+	}
+
+	/**
+	 * Use this function to fetch a GLOBALS key, set a GLOBALS key or return the GLOBALS array
+	 * @access public
+	 * @param  string $key   The key to fetch or set "value" to.
+	 * @param  string|array|object|int|boolean $value The value to set to "key"
+	 * @return string|boolean|array
+	 */
+	public function globals ( $key = null, $value = null ) {
+		if ( is_null($key) ) {
+			return $GLOBALS;
+		}
+
+		if ( is_null($value) ) {
+			return ( array_key_exists($key, $GLOBALS) ) ? $GLOBALS[$key] : false;
+		}
+
+		$GLOBALS[$key] = $value;
+	}
+
+	/**
+	 * Use this function to retrieve all cookies, set a cookie and get a specific cookie key
+	 * @access public
+	 * @param  string  $key      The cookie name to retrive or set
+	 * @param  string  $value    The value to set for the cookie "key"
+	 * @param  integer $expires  Use 0 if the cookie shall never expire, else set a ttl
+	 * @param  string  $domain   The domain, the cookie is for
+	 * @param  boolean $secure   If the cookie is HTTPS only
+	 * @param  boolean $httponly If the cookie is HTTP only
+	 * @return string|boolean|array
+	 */
+	public function cookie ( $key = null, $value = null, $expires = 0, $domain = "/", $secure = false, $httponly = false ) {
+		if ( is_null($key) ) return $_COOKIE;
+
+		if ( is_null($value) ) {
+			return ( array_key_exists($key, $_COOKIE) ) ? $_COOKIE[$key] : false;
+		}
+
+		setcookie($key, $value, $expires, $domain, $secure, $httponly);
+	}
+
+	/**
+	 * Use this to retrieve a single file key or the whole $_FILES array
+	 * @access public
+	 * @param  string $key The files key to retrieve
+	 * @return array|string|boolean
+	 */
+	public function file ( $key = null ) {
+		if ( is_null($key) ) return $_FILES;
+
+		return ( array_key_exists($key, $_FILES) ) ? $_FILES[$key] : false;
+	}
+
+	/**
+	 * This function can return a key or the whole server array
+	 * @access public
+	 * @param  string $key The key to fetch
+	 * @return boolean|array|string
+	 */
+	public function server ( $key = null ) {
+		if ( is_null($key) ) {
+			return $_SERVER;
+		}
+
+		return ( array_key_exists($key, $_SERVER) ) ? $_SERVER[$key] : false;
+	}
+
+	/**
+	 * Use this to retrieve the whole $_SESSION array, to retrieve a single key or to set a value
+	 * @access public
+	 * @param  string $key   The key to set or fetch
+	 * @param  string|array|boolean $value The value to set to "key"
+	 * @return array|string|boolean
+	 */
+	public function session ( $key = null, $value = null ) {
+		if ( is_null($key) ) return $_SESSION;
+
+		if ( is_null($value) ) {
+			return ( array_key_exists($key, $_SESSION) ) ? $_SESSION[$key] : false;
+		}
+
+		$_SESSION[$key] = $value;
+	}
+
+	/**
+	 * Use this function to get all request header, get one request header or set a response header
+	 * @access public
+	 * @param  string $key   The key to set or fetch
+	 * @param  string $value The value to set to "key"
+	 * @return string|array|boolean
+	 */
+	public function header ( $key = null, $value = null ) {
+		if ( function_exists("apache_request_headers") ) {
+			$headers = apache_request_headers();
+		} else {
+			$headers = self::_parseRequestHeaders();
+		}
+
+		if ( is_null($key) ) {
+			return $headers;
+		}
+
+		if ( is_null($value) ) {
+			return ( array_key_exists($key, $headers) ) ? $headers[$key] : false;
+		}
+
+		header($key.": ".$value);
+	}
+
+	/**
+	 * This function return all request headers
+	 * @access public
+	 * @return array
+	 */
+	public function headers () {
+		return self::_parseRequestHeaders();
+	}
+
+	/**
+	 * This function returns all the request headers
+	 * @access private
+	 * @return array
+	 */
+	private function _parseRequestHeaders() {
+	    $headers = array();
+	    foreach($_SERVER as $key => $value) {
+	        if (substr($key, 0, 5) <> 'HTTP_') {
+	            continue;
+	        }
+	        $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
+	        $headers[$header] = $value;
+	    }
+	    return $headers;
+	}
+
+	/**
+	 * If no key is specified then thew whole request array is returned,
+	 * if the key is found the value is returned and if the key isn't false is returned
+	 *
+	 * @access public
+	 * @param  string $key The key to search for
+	 * @return array|boolean|string
+	 */
+	public function request ( $key = null ) {
+		if ( is_null($key) ) {
+			return $_REQUEST;
+		}
+
+		if ( array_key_exists($key, $_REQUEST) ) {
+			return $_REQUEST[$key];
+		}
+
+		return false;
+	}
 }
