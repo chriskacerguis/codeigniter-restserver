@@ -304,6 +304,10 @@ abstract class REST_Controller extends CI_Controller
 			{
 				$this->_prepare_digest_auth();
 			}
+			elseif (strtolower( $this->config->item('rest_auth') ) == 'session')
+			{
+				$this->_check_php_session();
+			}
 			elseif ($this->config->item('rest_ip_whitelist_enabled'))
 			{
 				$this->_check_whitelist_auth();
@@ -1335,6 +1339,18 @@ abstract class REST_Controller extends CI_Controller
 		}
 
 		return TRUE;
+	}
+
+	/**
+	 * Check to see if the user is logged into the web app with a php session key.
+	 */
+	protected function _check_php_session()
+	{
+		$key = $this->config->item('auth_source');
+		if (!$this->session->userdata($key))
+		{
+			$this->response(array('status' => false, 'error' => 'Not Authorized'), 401);
+		}
 	}
 
 	/**

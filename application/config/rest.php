@@ -56,7 +56,8 @@ $config['rest_realm'] = 'REST API';
 |
 | Is login required and if so, which type of login?
 |
-|	'' = no login required, 'basic' = unsecure login, 'digest' = more secure login
+|	'' = no login required, 'basic' = unsecure login, 'digest' = more secure login,
+|	'session' = check for PHP session variable. Set variable name below.
 |
 */
 $config['rest_auth'] = false;
@@ -68,7 +69,8 @@ $config['rest_auth'] = false;
 |
 | Is login required and if so, which user store do we use?
 |
-| '' = use config based users, 'ldap' = use LDAP authencation, 'library' = use a authentication library
+|	'' = use config based users, 'ldap' = use LDAP authencation, 'library' = use a authentication library
+|	If 'rest_auth' is 'session' then set 'auth_source' to the name of the session variable to check for.
 |
 */
 $config['auth_source'] = 'ldap';
