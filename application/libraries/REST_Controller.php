@@ -268,23 +268,6 @@ abstract class REST_Controller extends CI_Controller
 		// Check if there is a specific auth type for the current class/method
 		$this->auth_override = $this->_auth_override_check();
 
-		// When there is no specific override for the current class/method, use the default auth value set in the config
-		if ($this->auth_override !== TRUE)
-		{
-			if (strtolower( $this->config->item('rest_auth') ) == 'basic')
-			{
-				$this->_prepare_basic_auth();
-			}
-			elseif (strtolower( $this->config->item('rest_auth') ) == 'digest')
-			{
-				$this->_prepare_digest_auth();
-			}
-			elseif ($this->config->item('rest_ip_whitelist_enabled'))
-			{
-				$this->_check_whitelist_auth();
-			}
-		}
-
 		$this->rest = new StdClass();
 		// Load DB if its enabled
 		if (config_item('rest_database_group') AND (config_item('rest_enable_keys') OR config_item('rest_enable_logging')))
@@ -308,6 +291,25 @@ abstract class REST_Controller extends CI_Controller
 		if ( ! $this->input->is_ajax_request() AND config_item('rest_ajax_only'))
 		{
 			$this->response(array('status' => false, 'error' => 'Only AJAX requests are accepted.'), 505);
+		}
+
+		// When there is no specific override for the current class/method, use the default auth value set in the config
+		if ($this->auth_override !== TRUE && $this->_allow === FALSE)
+		{
+			if (strtolower( $this->config->item('rest_auth') ) == 'basic')
+			{
+				$this->_prepare_basic_auth();
+			}
+			elseif (strtolower( $this->config->item('rest_auth') ) == 'digest')
+			{
+				$this->_prepare_digest_auth();
+			}
+			elseif ($this->config->item('rest_ip_whitelist_enabled'))
+			{
+				$this->_check_whitelist_auth();
+			}
+			// If we made it this far we either authenticated or were in the white list.
+			$this->_allow = TRUE;
 		}
 	}
 
@@ -360,21 +362,26 @@ abstract class REST_Controller extends CI_Controller
 		// Use keys for this method?
 		$use_key = ! (isset($this->methods[$controller_method]['key']) AND $this->methods[$controller_method]['key'] == FALSE);
 
-		// Get that useless shitty key out of here
+		// They provided a key, but it wasn't valid, so get them out of here.
 		if (config_item('rest_enable_keys') AND $use_key AND $this->_allow === FALSE)
 		{
-			// Check to see if they can access the controller
-			if (!$this->_check_access())
-			{
-				$this->response(array('status' => false, 'error' => 'This API key does not have access to the requested controller.'), 401);
-			}
-
 			if (config_item('rest_enable_logging') AND $log_method)
 			{
 				$this->_log_request();
 			}
 
 			$this->response(array('status' => false, 'error' => 'Invalid API Key.'), 403);
+		}
+
+		// Check to see if this key has access to the requested controller.
+		if (config_item('rest_enable_keys') AND $use_key AND !empty($this->rest->key) AND !$this->_check_access())
+		{
+			if (config_item('rest_enable_logging') AND $log_method)
+			{
+				$this->_log_request();
+			}
+
+			$this->response(array('status' => false, 'error' => 'This API key does not have access to the requested controller.'), 401);
 		}
 
 		// Sure it exists, but can they do anything with it?
