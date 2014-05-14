@@ -385,7 +385,7 @@ abstract class REST_Controller extends CI_Controller
 				$this->_log_request();
 			}
 
-			$this->response(array('status' => false, 'error' => 'This API key does not have access to the requested controller.'), 401);
+			$this->response(array('status' => false, 'error' => 'This API key does not have access to the requested method.'), 401);
 		}
 
 		// Sure it exists, but can they do anything with it?
@@ -1541,22 +1541,30 @@ abstract class REST_Controller extends CI_Controller
 	 */	
 	protected function _check_access() 
 	{
+		$this->rest->extra_access = NULL;
+
 		// if we don't want to check acccess, just return TRUE
 		if (config_item('rest_enable_access') === FALSE)
 		{
 			return TRUE;
 		}
 
-		$controller = explode('/', $this->uri->uri_string());
-		
+		$controller = $this->router->class;
+		$method = $this->router->method;
+
+                $pattern = '/^(.*)\.('.implode('|', array_keys($this->_supported_formats)).')$/';
+		preg_match($pattern,$method,$matches) AND $method = $matches[1];
+
 		$this->rest->db->select();
 		$this->rest->db->where('key', $this->rest->key);
-		$this->rest->db->where('controller', $controller[0]);
-		
-		$query = $this->rest->db->get(config_item('rest_access_table'));
+		$this->rest->db->where('controller', $controller);
+		$this->rest->db->where_in('method', array($method,'*'));
+		$query = $this->rest->db->get(config_item('rest_access_table'),1)->row();
 
-		if ($query->num_rows > 0) 
-		{	
+		if (!empty($query))
+		{
+			// This variable isn't used in this library. It can be used by a controller for extra access checks.
+			isset($query->extra) AND $this->rest->extra_access = $query->extra;
 			return TRUE;
 		}
 
