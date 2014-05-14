@@ -104,6 +104,11 @@ $config['auth_library_function'] = '';
 |			$config['auth_override_class_method']['deals']['insert'] = 'digest';
 |			$config['auth_override_class_method']['accounts']['user'] = 'basic';
 |
+| To set the authentication types for a class see example below:
+| 
+|
+| $config['auth_override_class_method']['class']['*'] = 'basic';
+|
 | Here 'deals' and 'accounts' are controller names, 'view', 'insert' and 'user' are methods within. (NOTE: leave off the '_get' or '_post' from the end of the method name)
 | Acceptable values are; 'none', 'digest' and 'basic'.
 |
@@ -111,7 +116,7 @@ $config['auth_library_function'] = '';
 // $config['auth_override_class_method']['deals']['view'] = 'none';
 // $config['auth_override_class_method']['deals']['insert'] = 'digest';
 // $config['auth_override_class_method']['accounts']['user'] = 'basic';
-
+// $config['auth_override_class_method']['class']['*'] = 'basic';//seet the entire classes authentication
 /*
 |--------------------------------------------------------------------------
 | REST Login usernames
