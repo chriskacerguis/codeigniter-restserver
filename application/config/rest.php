@@ -325,8 +325,10 @@ $config['rest_access_table'] = 'access';
 |--------------------------------------------------------------------------
 |
 | When set to true REST_Controller will check the access table to see if 
-| the API KEY can access that controller.  rest_enable_keys *must* be enabled
-| to use this. 
+| the API KEY can access that controller and method. rest_enable_keys *must* 
+| be enabled to use this. Set the method column to * to allow access to all
+| methods in the controller. date_created and date_modified are optional.
+|
 |
 |	FALSE
 |
@@ -334,6 +336,7 @@ CREATE TABLE `access` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `key` varchar(40) NOT NULL DEFAULT '',
   `controller` varchar(50) NOT NULL DEFAULT '',
+  `method` varchar(50) NOT NULL DEFAULT '*',
   `date_created` datetime DEFAULT NULL,
   `date_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
