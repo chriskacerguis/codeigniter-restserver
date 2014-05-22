@@ -287,18 +287,22 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // When there is no specific override for the current class/method, use the default auth value set in the config
-        if ($this->auth_override !== TRUE && $this->_allow === FALSE) {
-            if (strtolower( $this->config->item('rest_auth') ) == 'basic') {
-                $this->_prepare_basic_auth();
-            } elseif (strtolower( $this->config->item('rest_auth') ) == 'digest') {
-                $this->_prepare_digest_auth();
-            } elseif (strtolower( $this->config->item('rest_auth') ) == 'session') {
-                $this->_check_php_session();
-            } elseif ($this->config->item('rest_ip_whitelist_enabled')) {
+        if ($this->auth_override !== true && $this->_allow === false) {
+            $rest_auth = strtolower($this->config->item('rest_auth'));
+            switch ($rest_auth) {
+                case 'basic':
+                    $this->_prepare_basic_auth();
+                    break;
+                case 'digest':
+                    $this->_prepare_digest_auth();
+                    break;
+                case 'session':
+                    $this->_check_php_session();
+                    break;
+            }
+            if ($this->config->item('rest_ip_whitelist_enabled')) {
                 $this->_check_whitelist_auth();
             }
-            // If we made it this far we either authenticated or were in the white list.
-            $this->_allow = TRUE;
         }
     }
 
