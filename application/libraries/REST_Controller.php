@@ -292,7 +292,7 @@ abstract class REST_Controller extends CI_Controller
 
         // only allow ajax requests
         if (!$this->input->is_ajax_request() and config_item('rest_ajax_only')) {
-            $response = array('status' => false, 'error' => 'Only AJAX requests are accepted.')
+            $response = array('status' => false, 'error' => 'Only AJAX requests are accepted.');
             $this->response($response, 406); // Set status to 406 NOT ACCEPTABLE
         }
 
