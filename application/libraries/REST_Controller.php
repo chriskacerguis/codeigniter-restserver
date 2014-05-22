@@ -293,7 +293,7 @@ abstract class REST_Controller extends CI_Controller
         // only allow ajax requests
         if (!$this->input->is_ajax_request() and config_item('rest_ajax_only')) {
             $response = array('status' => false, 'error' => 'Only AJAX requests are accepted.')
-            $this->response($response, 505);
+            $this->response($response, 406); // Set status to 406 NOT ACCEPTABLE
         }
 
         // When there is no specific override for the current class/method, use the default auth value set in the config
@@ -349,7 +349,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         $pattern = '/^(.*)\.('.implode('|', array_keys($this->_supported_formats)).')$/';
-        
+
         if (preg_match($pattern, $object_called, $matches)) {
             $object_called = $matches[1];
         }
