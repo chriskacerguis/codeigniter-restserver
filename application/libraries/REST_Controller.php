@@ -360,7 +360,7 @@ abstract class REST_Controller extends CI_Controller
         $log_method = !(isset($this->methods[$controller_method]['log']) and $this->methods[$controller_method]['log'] == false);
 
         // Use keys for this method?
-        $use_key = ! (isset($this->methods[$controller_method]['key']) and $this->methods[$controller_method]['key'] == false);
+        $use_key = !(isset($this->methods[$controller_method]['key']) and $this->methods[$controller_method]['key'] == false);
 
         // They provided a key, but it wasn't valid, so get them out of here.
         if (config_item('rest_enable_keys') and $use_key and $this->_allow === false) {
@@ -389,7 +389,8 @@ abstract class REST_Controller extends CI_Controller
         if (config_item('rest_enable_keys') and !empty($this->rest->key)) {
             // Check the limit
             if (config_item('rest_enable_limits') and !$this->_check_limit($controller_method)) {
-                $this->response(array('status' => false, 'error' => 'This API key has reached the hourly limit for this method.'), 401);
+                $response = array('status' => false, 'error' => 'This API key has reached the hourly limit for this method.');
+                $this->response($response, 401);
             }
 
             // If no level is set use 0, they probably aren't using permissions
@@ -404,7 +405,8 @@ abstract class REST_Controller extends CI_Controller
             }
 
             // They don't have good enough perms
-            $authorized or $this->response(array('status' => false, 'error' => 'This API key does not have enough permissions.'), 401);
+            $response = array('status' => false, 'error' => 'This API key does not have enough permissions.');
+            $authorized or $this->response($response, 401);
         }
 
         // No key stuff, but record that stuff is happening
