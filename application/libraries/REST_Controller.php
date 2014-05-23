@@ -435,11 +435,13 @@ abstract class REST_Controller extends CI_Controller
      * Response
      *
      * Takes pure data and optionally a status code, then creates the response.
+     * Set $continue to true to flush the response to the client and continue running the script.
      *
      * @param array    $data
      * @param null|int $http_code
+     * @param bool $continue
      */
-    public function response($data = null, $http_code = null)
+    public function response($data = null, $http_code = null, $continue = false)
     {
         global $CFG;
 
@@ -502,7 +504,14 @@ abstract class REST_Controller extends CI_Controller
             header('Content-Length: ' . strlen($output));
         }
 
-        exit($output);
+        if($continue){
+            echo($output);
+            ob_end_flush();
+            ob_flush();
+            flush();  
+        }else{
+            exit($output);
+        }
     }
 
     /*
