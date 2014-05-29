@@ -840,6 +840,36 @@ abstract class REST_Controller extends CI_Controller
             return false;
         }
 
+        // check for wildcard flag for rules for classes
+        if(!empty($this->overrides_array[$this->router->class]['*'])){//check for class overides
+            // None auth override found, prepare nothing but send back a true override flag
+            if ($this->overrides_array[$this->router->class]['*'] == 'none')
+            {
+                return true;
+            }
+
+            // Basic auth override found, prepare basic
+            if ($this->overrides_array[$this->router->class]['*'] == 'basic')
+            {
+                $this->_prepare_basic_auth();
+                return true;
+            }
+
+            // Digest auth override found, prepare digest
+            if ($this->overrides_array[$this->router->class]['*'] == 'digest')
+            {
+                $this->_prepare_digest_auth();
+                return true;
+            }
+
+            // Whitelist auth override found, check client's ip against config whitelist
+            if ($this->overrides_array[$this->router->class]['*'] == 'whitelist')
+            {
+                $this->_check_whitelist_auth();
+                return true;
+            }
+        }
+
         // Check to see if there's an override value set for the current class/method being called
         if (empty($this->overrides_array[$this->router->class][$this->router->method])) {
             return false;
