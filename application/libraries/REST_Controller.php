@@ -250,13 +250,13 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // Merge both for one mega-args variable
-        $this->_args = array_merge($this->_get_args, 
-            $this->_options_args, 
-            $this->_patch_args, 
-            $this->_head_args , 
-            $this->_put_args, 
-            $this->_post_args, 
-            $this->_delete_args, 
+        $this->_args = array_merge($this->_get_args,
+            $this->_options_args,
+            $this->_patch_args,
+            $this->_head_args ,
+            $this->_put_args,
+            $this->_post_args,
+            $this->_delete_args,
             $this->{'_'.$this->request->method.'_args'}
         );
 
@@ -508,7 +508,7 @@ abstract class REST_Controller extends CI_Controller
             echo($output);
             ob_end_flush();
             ob_flush();
-            flush();  
+            flush();
         }else{
             exit($output);
         }
@@ -1240,7 +1240,11 @@ abstract class REST_Controller extends CI_Controller
             return false;
         }
 
-        $this->load->library($auth_library_class);
+        if (!is_callable(array($this->$auth_library_class, $auth_library_function))) {
+
+            $this->load->library($auth_library_class);
+
+        }
 
         return $this->$auth_library_class->$auth_library_function($username, $password);
     }
