@@ -270,9 +270,6 @@ abstract class REST_Controller extends CI_Controller
         // Developers can extend this class and add a check in here
         $this->early_checks();
 
-        // Check if there is a specific auth type for the current class/method
-        $this->auth_override    = $this->_auth_override_check();
-
         $this->rest             = new StdClass();
 
         // Load DB if its enabled
@@ -285,6 +282,10 @@ abstract class REST_Controller extends CI_Controller
             $this->rest->db     = $this->db;
         }
 
+        // Check if there is a specific auth type for the current class/method
+        // _auth_override_check could exit so we need $this->rest->db initialized before
+        $this->auth_override    = $this->_auth_override_check();
+        
         // Checking for keys? GET TO WorK!
         if (config_item('rest_enable_keys')) {
             $this->_allow = $this->_detect_api_key();
@@ -292,7 +293,7 @@ abstract class REST_Controller extends CI_Controller
 
         // only allow ajax requests
         if (!$this->input->is_ajax_request() and config_item('rest_ajax_only')) {
-            $response = array('status' => false, 'error' => 'Only AJAX requests are accepted.');
+            $response = array(config_item('rest_status_field_name') => false, config_item('rest_message_field_name') => 'Only AJAX requests are accepted.');
             $this->response($response, 406); // Set status to 406 NOT ACCEPTABLE
         }
 
@@ -345,11 +346,11 @@ abstract class REST_Controller extends CI_Controller
     {
         // Should we answer if not over SSL?
         if (config_item('force_https') and !$this->_detect_ssl()) {
-            $this->response(array('status' => false, 'error' => 'Unsupported protocol'), 403);
+            $this->response(array(config_item('rest_status_field_name') => false, config_item('rest_message_field_name') => 'Unsupported protocol'), 403);
         }
 
         $pattern = '/^(.*)\.('.implode('|', array_keys($this->_supported_formats)).')$/';
-
+        $matches = array();
         if (preg_match($pattern, $object_called, $matches)) {
             $object_called = $matches[1];
         }
@@ -367,8 +368,8 @@ abstract class REST_Controller extends CI_Controller
             if (config_item('rest_enable_logging') and $log_method) {
                 $this->_log_request();
             }
-
-            $this->response(array('status' => false, 'error' => 'Invalid API Key.'), 403);
+            
+            $this->response(array(config_item('rest_status_field_name') => false, config_item('rest_message_field_name') => 'Invalid API Key '.$this->rest->key), 403);
         }
 
         // Check to see if this key has access to the requested controller.
@@ -377,19 +378,19 @@ abstract class REST_Controller extends CI_Controller
                 $this->_log_request();
             }
 
-            $this->response(array('status' => false, 'error' => 'This API key does not have access to the requested controller.'), 401);
+            $this->response(array(config_item('rest_status_field_name') => false, config_item('rest_message_field_name') => 'This API key does not have access to the requested controller.'), 401);
         }
 
         // Sure it exists, but can they do anything with it?
         if ( ! method_exists($this, $controller_method)) {
-            $this->response(array('status' => false, 'error' => 'Unknown method.'), 404);
+            $this->response(array(config_item('rest_status_field_name') => false, config_item('rest_message_field_name') => 'Unknown method.'), 404);
         }
 
         // Doing key related stuff? Can only do it if they have a key right?
         if (config_item('rest_enable_keys') and !empty($this->rest->key)) {
             // Check the limit
             if (config_item('rest_enable_limits') and !$this->_check_limit($controller_method)) {
-                $response = array('status' => false, 'error' => 'This API key has reached the hourly limit for this method.');
+                $response = array(config_item('rest_status_field_name') => false, config_item('rest_message_field_name') => 'This API key has reached the hourly limit for this method.');
                 $this->response($response, 401);
             }
 
@@ -405,7 +406,7 @@ abstract class REST_Controller extends CI_Controller
             }
 
             // They don't have good enough perms
-            $response = array('status' => false, 'error' => 'This API key does not have enough permissions.');
+            $response = array(config_item('rest_status_field_name') => false, config_item('rest_message_field_name') => 'This API key does not have enough permissions.');
             $authorized or $this->response($response, 401);
         }
 
@@ -560,6 +561,7 @@ abstract class REST_Controller extends CI_Controller
         $pattern = '/\.('.implode('|', array_keys($this->_supported_formats)).')$/';
 
         // Check if a file extension is used when no get arguments provided
+        $matches = array();
         if (!$this->_get_args and preg_match($pattern, $this->uri->uri_string(), $matches)) {
             return $matches[1];
         }
@@ -728,7 +730,6 @@ abstract class REST_Controller extends CI_Controller
             $langs = explode(',', $lang);
 
             $return_langs = array();
-            $i = 1;
             foreach ($langs as $lang) {
                 // Remove weight and strip space
                 list($lang) = explode(';', $lang);
@@ -1267,7 +1268,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         if ($auth_source == 'library') {
-            log_message('debug', 'performing Library authentication for $username');
+            log_message('debug', 'performing Library authentication for '.$username);
 
             return $this->_perform_library_auth($username, $password);
         }
@@ -1319,7 +1320,7 @@ abstract class REST_Controller extends CI_Controller
         // most other servers
         elseif ($this->input->server('HTTP_AUTHENTICATION')) {
             if (strpos(strtolower($this->input->server('HTTP_AUTHENTICATION')), 'basic') === 0) {
-                list($username, $password) = explode(':', base64_decode(substr($this->input->server('HTTP_AUTHorIZATION'), 6)));
+                list($username, $password) = explode(':', base64_decode(substr($this->input->server('HTTP_AUTHORIZATION'), 6)));
             }
         }
 
@@ -1343,8 +1344,8 @@ abstract class REST_Controller extends CI_Controller
         // because the PHP ISAPI module in IIS acts different from CGI
         if ($this->input->server('PHP_AUTH_DIGEST')) {
             $digest_string = $this->input->server('PHP_AUTH_DIGEST');
-        } elseif ($this->input->server('HTTP_AUTHorIZATION')) {
-            $digest_string = $this->input->server('HTTP_AUTHorIZATION');
+        } elseif ($this->input->server('HTTP_AUTHORIZATION')) {
+            $digest_string = $this->input->server('HTTP_AUTHORIZATION');
         } else {
             $digest_string = "";
         }
@@ -1356,6 +1357,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // We need to retrieve authentication informations from the $auth_data variable
+        $matches = array();
         preg_match_all('@(username|nonce|uri|nc|cnonce|qop|response)=[\'"]?([^\'",]+)@', $digest_string, $matches);
         $digest = (empty($matches[1]) || empty($matches[2])) ? array() : array_combine($matches[1], $matches[2]);
 
@@ -1407,7 +1409,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         if ( ! in_array($this->input->ip_address(), $whitelist)) {
-            $this->response(array('status' => false, 'error' => 'Not authorized'), 401);
+            $this->response(array(config_item('rest_status_field_name') => false, config_item('rest_message_field_name') => 'IP not authorized'), 401);
         }
     }
 
@@ -1424,7 +1426,7 @@ abstract class REST_Controller extends CI_Controller
             header('WWW-Authenticate: Digest realm="'.$this->config->item('rest_realm').'", qop="auth", nonce="'.$nonce.'", opaque="'.md5($this->config->item('rest_realm')).'"');
         }
 
-        $this->response(array('status' => false, 'error' => 'Not authorized'), 401);
+        $this->response(array(config_item('rest_status_field_name') => false, config_item('rest_message_field_name') => 'Not authorized'), 401);
     }
 
     /**
