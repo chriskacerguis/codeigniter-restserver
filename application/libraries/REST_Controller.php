@@ -805,6 +805,17 @@ abstract class REST_Controller extends CI_Controller
             ));
         }
 
+        // Been an hour since they called
+        else if ($result->hour_started < time() - (60 * 60)) {
+            // Reset the started period
+            $this->rest->db
+                    ->where('uri', $this->uri->uri_string())
+                    ->where('api_key_id', $this->rest->key_id)
+                    ->set('hour_started', time())
+                    ->set('count', 1)
+                    ->update(config_item('rest_limits_table'));
+        }
+        
         // They have called within the hour, so lets update
         else {
             // Your luck is out, you've called too many times!
@@ -1361,20 +1372,24 @@ abstract class REST_Controller extends CI_Controller
         preg_match_all('@(username|nonce|uri|nc|cnonce|qop|response)=[\'"]?([^\'",]+)@', $digest_string, $matches);
         $digest = (empty($matches[1]) || empty($matches[2])) ? array() : array_combine($matches[1], $matches[2]);
 
-        if ( ! array_key_exists('username', $digest) or !$this->_check_login($digest['username'])) {
+        // For digest authentication the library function should return already stored md5(username:restrealm:password) for that username @see rest.php::auth_library_function config
+        if ( ! array_key_exists('username', $digest) or ! ($A1 = $this->_check_login($digest['username'])) ) {
             $this->_force_login($uniqid);
         }
 
-        $valid_logins = $this->config->item('rest_valid_logins');
-        $valid_pass = $valid_logins[$digest['username']];
+        // If the auth_source is not selected use the rest.php configuration valid logins
+        if ( ! $this->config->item('auth_source') ) {
+            $valid_logins = $this->config->item('rest_valid_logins');
+            $valid_pass = $valid_logins[$digest['username']];
 
-        // This is the valid response expected
-        $A1 = md5($digest['username'].':'.$this->config->item('rest_realm').':'.$valid_pass);
+            // This is the valid response expected
+            $A1 = md5($digest['username'].':'.$this->config->item('rest_realm').':'.$valid_pass);
+        }
         $A2 = md5(strtoupper($this->request->method).':'.$digest['uri']);
         $valid_response = md5($A1.':'.$digest['nonce'].':'.$digest['nc'].':'.$digest['cnonce'].':'.$digest['qop'].':'.$A2);
 
         if ($digest['response'] != $valid_response) {
-            set_status_header(401);
+            $this->response(array(config_item('rest_status_field_name') => 0, config_item('rest_message_field_name') => 'Invalid credentials'), 401);
             exit;
         }
     }
