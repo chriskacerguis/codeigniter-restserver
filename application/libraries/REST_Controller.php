@@ -285,9 +285,10 @@ abstract class REST_Controller extends CI_Controller
         // Check if there is a specific auth type for the current class/method
         // _auth_override_check could exit so we need $this->rest->db initialized before
         $this->auth_override    = $this->_auth_override_check();
-        
+
         // Checking for keys? GET TO WorK!
-        if (config_item('rest_enable_keys')) {
+		// Skip keys test for $config['auth_override_class_method']['class'['method'] = 'none'
+        if (config_item('rest_enable_keys') and $this->auth_override !== true) {
             $this->_allow = $this->_detect_api_key();
         }
 
