@@ -299,7 +299,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // When there is no specific override for the current class/method, use the default auth value set in the config
-        if ($this->auth_override !== true && $this->_allow === false) {
+        if ($this->auth_override !== true && !(config_item('rest_enable_keys') && $this->_allow === true)) {
             $rest_auth = strtolower($this->config->item('rest_auth'));
             switch ($rest_auth) {
                 case 'basic':
