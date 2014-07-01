@@ -1154,7 +1154,7 @@ abstract class REST_Controller extends CI_Controller
 
             log_message('debug', 'Setting timeout to ' . $ldaptimeout . ' seconds');
 
-            ldap_set_option($ldapconn, LDAP_OPT_NETWorK_TIMEOUT, $ldaptimeout);
+            ldap_set_option($ldapconn, LDAP_OPT_NETWORK_TIMEOUT, $ldaptimeout);
 
             log_message('debug', 'LDAP Auth: Binding to ' . $ldaphost . ' with dn ' . $ldaprdn);
 
