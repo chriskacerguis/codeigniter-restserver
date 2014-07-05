@@ -227,6 +227,9 @@ class Format {
 		$callback = isset($_GET['callback']) ? $_GET['callback'] : '';
 		if ($callback === '')
 		{
+            return json_encode($this->_data);
+            
+            /* Had to take out this code, it doesn't work on Objects.
             $str = $this->_data;
             array_walk_recursive($str, function(&$item, $key) 
             {
@@ -237,6 +240,7 @@ class Format {
             });
 
 			return json_encode($str);
+            */
 		}
 
 		// we only honour jsonp callback which are valid javascript identifiers
