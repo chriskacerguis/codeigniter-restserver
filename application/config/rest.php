@@ -97,6 +97,8 @@ $config['rest_auth'] = false;
 |	If 'rest_auth' is 'session' then set 'auth_source' to the name of the session variable to check for.
 |
 */
+
+//change this to '' for wildcard unit test
 $config['auth_source'] = 'ldap';
 
 /*
@@ -130,15 +132,20 @@ $config['auth_library_function'] = '';
 |			$config['auth_override_class_method']['deals']['view'] = 'none';
 |			$config['auth_override_class_method']['deals']['insert'] = 'digest';
 |			$config['auth_override_class_method']['accounts']['user'] = 'basic';
+|			$config['auth_override_class_method']['dashboard']['*'] = 'none|digest|basic';
 |
-| Here 'deals' and 'accounts' are controller names, 'view', 'insert' and 'user' are methods within. (NOTE: leave off the '_get' or '_post' from the end of the method name)
+| Here 'deals', 'accounts' and 'dashboard' are controller names, 'view', 'insert' and 'user' are methods within. An asterisk may also be used to specify an authentication method for an entire classes methods. Ex: $config['auth_override_class_method']['dashboard']['*'] = 'basic'; (NOTE: leave off the '_get' or '_post' from the end of the method name)
 | Acceptable values are; 'none', 'digest' and 'basic'.
 |
 */
 // $config['auth_override_class_method']['deals']['view'] = 'none';
 // $config['auth_override_class_method']['deals']['insert'] = 'digest';
 // $config['auth_override_class_method']['accounts']['user'] = 'basic';
+// $config['auth_override_class_method']['dashboard']['*'] = 'basic';
 
+
+//---Uncomment list line for the wildard unit test
+//$config['auth_override_class_method']['wildcard_test_cases']['*'] = 'basic';
 /*
 |--------------------------------------------------------------------------
 | REST Login usernames
