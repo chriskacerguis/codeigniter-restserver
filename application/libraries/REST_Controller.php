@@ -1257,9 +1257,13 @@ abstract class REST_Controller extends CI_Controller
      * @param  string  $password The user's password
      * @return boolean
      */
-    protected function _check_login($username = '', $password = null)
+    protected function _check_login($username = '', $password = false)
     {
         if (empty($username)) {
+            return false;
+        }
+
+        if ($password === false) {
             return false;
         }
 
@@ -1279,12 +1283,11 @@ abstract class REST_Controller extends CI_Controller
 
         $valid_logins = $this->config->item('rest_valid_logins');
 
-        if ( ! array_key_exists($username, $valid_logins)) {
+        if (!array_key_exists($username, $valid_logins)) {
             return false;
         }
 
-        // If actually null (not empty string) then do not check it
-        if ($password === null and $valid_logins[$username] != $password) {
+        if ($valid_logins[$username] != $password) {
             return false;
         }
 
