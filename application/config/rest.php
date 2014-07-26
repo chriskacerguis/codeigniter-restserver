@@ -109,6 +109,9 @@ $config['auth_source'] = 'ldap';
 | The function should accept two parameters: class->function($username, $password)
 | In other cases override the function _perform_library_auth in your controller
 |
+| For digest authentication the library function should return already stored md5(username:restrealm:password) for that username
+|	E.g: md5('admin:REST API:1234') = '1e957ebc35631ab22d5bd6526bd14ea2'
+|
 */
 $config['auth_library_class'] = '';
 $config['auth_library_function'] = '';
