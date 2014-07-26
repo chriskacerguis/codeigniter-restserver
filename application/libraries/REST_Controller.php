@@ -206,7 +206,6 @@ abstract class REST_Controller extends CI_Controller
         $this->load->library('format');
 
         // init objects
-        $this->request      = new stdClass();
         $this->response     = new stdClass();
         $this->rest         = new stdClass();
 
