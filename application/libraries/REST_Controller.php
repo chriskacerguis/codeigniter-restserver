@@ -206,7 +206,6 @@ abstract class REST_Controller extends CI_Controller
         $this->load->library('format');
 
         // init objects
-        $this->request      = new stdClass();
         $this->response     = new stdClass();
         $this->rest         = new stdClass();
 
@@ -250,13 +249,13 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // Merge both for one mega-args variable
-        $this->_args = array_merge($this->_get_args, 
-            $this->_options_args, 
-            $this->_patch_args, 
-            $this->_head_args , 
-            $this->_put_args, 
-            $this->_post_args, 
-            $this->_delete_args, 
+        $this->_args = array_merge($this->_get_args,
+            $this->_options_args,
+            $this->_patch_args,
+            $this->_head_args ,
+            $this->_put_args,
+            $this->_post_args,
+            $this->_delete_args,
             $this->{'_'.$this->request->method.'_args'}
         );
 
@@ -285,9 +284,10 @@ abstract class REST_Controller extends CI_Controller
         // Check if there is a specific auth type for the current class/method
         // _auth_override_check could exit so we need $this->rest->db initialized before
         $this->auth_override    = $this->_auth_override_check();
-        
+
         // Checking for keys? GET TO WorK!
-        if (config_item('rest_enable_keys')) {
+		// Skip keys test for $config['auth_override_class_method']['class'['method'] = 'none'
+        if (config_item('rest_enable_keys') and $this->auth_override !== true) {
             $this->_allow = $this->_detect_api_key();
         }
 
@@ -298,7 +298,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // When there is no specific override for the current class/method, use the default auth value set in the config
-        if ($this->auth_override !== true && $this->_allow === false) {
+        if ($this->auth_override !== true && !(config_item('rest_enable_keys') && $this->_allow === true)) {
             $rest_auth = strtolower($this->config->item('rest_auth'));
             switch ($rest_auth) {
                 case 'basic':
@@ -509,7 +509,7 @@ abstract class REST_Controller extends CI_Controller
             echo($output);
             ob_end_flush();
             ob_flush();
-            flush();  
+            flush();
         }else{
             exit($output);
         }
@@ -852,6 +852,36 @@ abstract class REST_Controller extends CI_Controller
             return false;
         }
 
+        // check for wildcard flag for rules for classes
+        if(!empty($this->overrides_array[$this->router->class]['*'])){//check for class overides
+            // None auth override found, prepare nothing but send back a true override flag
+            if ($this->overrides_array[$this->router->class]['*'] == 'none')
+            {
+                return true;
+            }
+
+            // Basic auth override found, prepare basic
+            if ($this->overrides_array[$this->router->class]['*'] == 'basic')
+            {
+                $this->_prepare_basic_auth();
+                return true;
+            }
+
+            // Digest auth override found, prepare digest
+            if ($this->overrides_array[$this->router->class]['*'] == 'digest')
+            {
+                $this->_prepare_digest_auth();
+                return true;
+            }
+
+            // Whitelist auth override found, check client's ip against config whitelist
+            if ($this->overrides_array[$this->router->class]['*'] == 'whitelist')
+            {
+                $this->_check_whitelist_auth();
+                return true;
+            }
+        }
+
         // Check to see if there's an override value set for the current class/method being called
         if (empty($this->overrides_array[$this->router->class][$this->router->method])) {
             return false;
@@ -1164,7 +1194,7 @@ abstract class REST_Controller extends CI_Controller
 
             log_message('debug', 'Setting timeout to ' . $ldaptimeout . ' seconds');
 
-            ldap_set_option($ldapconn, LDAP_OPT_NETWorK_TIMEOUT, $ldaptimeout);
+            ldap_set_option($ldapconn, LDAP_OPT_NETWORK_TIMEOUT, $ldaptimeout);
 
             log_message('debug', 'LDAP Auth: Binding to ' . $ldaphost . ' with dn ' . $ldaprdn);
 
@@ -1252,7 +1282,11 @@ abstract class REST_Controller extends CI_Controller
             return false;
         }
 
-        $this->load->library($auth_library_class);
+        if (!is_callable(array($this->$auth_library_class, $auth_library_function))) {
+
+            $this->load->library($auth_library_class);
+
+        }
 
         return $this->$auth_library_class->$auth_library_function($username, $password);
     }
@@ -1264,9 +1298,13 @@ abstract class REST_Controller extends CI_Controller
      * @param  string  $password The user's password
      * @return boolean
      */
-    protected function _check_login($username = '', $password = null)
+    protected function _check_login($username = '', $password = false)
     {
         if (empty($username)) {
+            return false;
+        }
+
+        if ($password === false) {
             return false;
         }
 
@@ -1286,12 +1324,11 @@ abstract class REST_Controller extends CI_Controller
 
         $valid_logins = $this->config->item('rest_valid_logins');
 
-        if ( ! array_key_exists($username, $valid_logins)) {
+        if (!array_key_exists($username, $valid_logins)) {
             return false;
         }
 
-        // If actually null (not empty string) then do not check it
-        if ($password === null and $valid_logins[$username] != $password) {
+        if ($valid_logins[$username] != $password) {
             return false;
         }
 

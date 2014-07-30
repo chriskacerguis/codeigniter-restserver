@@ -227,8 +227,22 @@ class Format {
 		$callback = isset($_GET['callback']) ? $_GET['callback'] : '';
 		if ($callback === '')
 		{
-			return json_encode($this->_data);
+            return json_encode($this->_data);
+            
+            /* Had to take out this code, it doesn't work on Objects.
+            $str = $this->_data;
+            array_walk_recursive($str, function(&$item, $key) 
+            {
+                if(!mb_detect_encoding($item, 'utf-8', true)) 
+                {
+                    $item = utf8_encode($item);
+                }
+            });
+
+			return json_encode($str);
+            */
 		}
+
 		// we only honour jsonp callback which are valid javascript identifiers
 		else if (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback))
 		{
