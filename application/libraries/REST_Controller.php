@@ -286,7 +286,7 @@ abstract class REST_Controller extends CI_Controller
         $this->auth_override    = $this->_auth_override_check();
 
         // Checking for keys? GET TO WorK!
-		// Skip keys test for $config['auth_override_class_method']['class'['method'] = 'none'
+	// Skip keys test for $config['auth_override_class_method']['class'['method'] = 'none'
         if (config_item('rest_enable_keys') and $this->auth_override !== true) {
             $this->_allow = $this->_detect_api_key();
         }
@@ -444,8 +444,6 @@ abstract class REST_Controller extends CI_Controller
      */
     public function response($data = null, $http_code = null, $continue = false)
     {
-        global $CFG;
-
         // If data is null and not code provide, error and bail
         if ($data === null && $http_code === null) {
             $http_code = 404;
@@ -462,7 +460,7 @@ abstract class REST_Controller extends CI_Controller
         // Otherwise (if no data but 200 provided) or some data, carry on camping!
         else {
             // Is compression requested?
-            if ($CFG->item('compress_output') === true && $this->_zlib_oc == false) {
+            if ($this->config->item('compress_output') === true && $this->_zlib_oc == false) {
                 if (extension_loaded('zlib')) {
                     if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) and strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) {
                         ob_start('ob_gzhandler');
@@ -501,7 +499,7 @@ abstract class REST_Controller extends CI_Controller
         // but it will not modify the content-length header to compensate for
         // the reduction, causing the browser to hang waiting for more data.
         // We'll just skip content-length in those cases.
-        if ( ! $this->_zlib_oc && ! $CFG->item('compress_output')) {
+        if ( ! $this->_zlib_oc && ! $this->config->item('compress_output')) {
             header('Content-Length: ' . strlen($output));
         }
 
@@ -794,8 +792,8 @@ abstract class REST_Controller extends CI_Controller
                 ->get(config_item('rest_limits_table'))
                 ->row();
 
-        // No calls yet, or been an hour since they called
-        if ( ! $result or $result->hour_started < time() - (60 * 60)) {
+        // No calls yet for this key
+        if ( ! $result ) {
             // Right, set one up from scratch
             $this->rest->db->insert(config_item('rest_limits_table'), array(
                 'uri' => $this->uri->uri_string(),
@@ -810,7 +808,7 @@ abstract class REST_Controller extends CI_Controller
             // Reset the started period
             $this->rest->db
                     ->where('uri', $this->uri->uri_string())
-                    ->where('api_key_id', $this->rest->key_id)
+                    ->where('api_key', isset($this->rest->key) ? $this->rest->key : '')
                     ->set('hour_started', time())
                     ->set('count', 1)
                     ->update(config_item('rest_limits_table'));
@@ -1303,12 +1301,18 @@ abstract class REST_Controller extends CI_Controller
         if (empty($username)) {
             return false;
         }
+        
+        $auth_source = strtolower($this->config->item('auth_source'));
+        $rest_auth = strtolower($this->config->item('rest_auth'));
+        $valid_logins = $this->config->item('rest_valid_logins');
+        
+        if (!$this->config->item('auth_source') && $rest_auth == 'digest') { // for digest we do not have a password passed as argument
+            return md5($username.':'.$this->config->item('rest_realm').':'.(isset($valid_logins[$username])?$valid_logins[$username]:''));
+        }
 
         if ($password === false) {
             return false;
         }
-
-        $auth_source = strtolower($this->config->item('auth_source'));
 
         if ($auth_source == 'ldap') {
             log_message('debug', 'performing LDAP authentication for $username');
@@ -1321,8 +1325,6 @@ abstract class REST_Controller extends CI_Controller
 
             return $this->_perform_library_auth($username, $password);
         }
-
-        $valid_logins = $this->config->item('rest_valid_logins');
 
         if (!array_key_exists($username, $valid_logins)) {
             return false;
@@ -1410,18 +1412,11 @@ abstract class REST_Controller extends CI_Controller
         $digest = (empty($matches[1]) || empty($matches[2])) ? array() : array_combine($matches[1], $matches[2]);
 
         // For digest authentication the library function should return already stored md5(username:restrealm:password) for that username @see rest.php::auth_library_function config
-        if ( ! array_key_exists('username', $digest) or ! ($A1 = $this->_check_login($digest['username'])) ) {
+        $A1 = $this->_check_login($digest['username']);
+        if ( ! array_key_exists('username', $digest) or ! $A1 ) {
             $this->_force_login($uniqid);
         }
 
-        // If the auth_source is not selected use the rest.php configuration valid logins
-        if ( ! $this->config->item('auth_source') ) {
-            $valid_logins = $this->config->item('rest_valid_logins');
-            $valid_pass = $valid_logins[$digest['username']];
-
-            // This is the valid response expected
-            $A1 = md5($digest['username'].':'.$this->config->item('rest_realm').':'.$valid_pass);
-        }
         $A2 = md5(strtoupper($this->request->method).':'.$digest['uri']);
         $valid_response = md5($A1.':'.$digest['nonce'].':'.$digest['nc'].':'.$digest['cnonce'].':'.$digest['qop'].':'.$A2);
 
