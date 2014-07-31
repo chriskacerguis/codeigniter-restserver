@@ -1412,7 +1412,7 @@ abstract class REST_Controller extends CI_Controller
         $digest = (empty($matches[1]) || empty($matches[2])) ? array() : array_combine($matches[1], $matches[2]);
 
         // For digest authentication the library function should return already stored md5(username:restrealm:password) for that username @see rest.php::auth_library_function config
-        $A1 = $this->_check_login($digest['username']);
+        $A1 = $this->_check_login($digest['username'], true);
         if ( ! array_key_exists('username', $digest) or ! $A1 ) {
             $this->_force_login($uniqid);
         }
