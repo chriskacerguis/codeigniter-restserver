@@ -235,7 +235,7 @@ is now optional. If no level is set it will assume the method has a level of 0.
 
 ## Contributions
 
-This project was originally written by the awesome Phil Sturgeon, however his involvment has shifted 
+This project was originally written by Phil Sturgeon, however his involvment has shifted 
 as he is no longer using it.  As of 11/20/2013 further developement and support will be done by Chris Kacerguis.
 
 Pull Requests are the best way to fix bugs or add features. I know loads of you use this, so please 
