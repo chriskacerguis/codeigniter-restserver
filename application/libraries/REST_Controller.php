@@ -1260,33 +1260,28 @@ abstract class REST_Controller extends CI_Controller
     protected function _perform_library_auth($username = '', $password = null)
     {
         if (empty($username)) {
-            log_message('debug', 'Library Auth: failure, empty username');
-
+            log_message('error', 'Library Auth: failure, empty username');
             return false;
         }
 
-        $auth_library_class = strtolower($this->config->item('auth_library_class'));
-        $auth_library_function = strtolower($this->config->item('auth_library_function'));
+        $auth_library_class     = strtolower($this->config->item('auth_library_class'));
+        $auth_library_function  = strtolower($this->config->item('auth_library_function'));
 
         if (empty($auth_library_class)) {
             log_message('debug', 'Library Auth: failure, empty auth_library_class');
-
             return false;
         }
 
         if (empty($auth_library_function)) {
             log_message('debug', 'Library Auth: failure, empty auth_library_function');
-
             return false;
         }
 
-        if (!is_callable(array($this->$auth_library_class, $auth_library_function))) {
-
+        if (!is_callable(array($auth_library_class, $auth_library_function))) {
             $this->load->library($auth_library_class);
-
         }
 
-        return $this->$auth_library_class->$auth_library_function($username, $password);
+        return $auth_library_class->$auth_library_function($username, $password);
     }
 
     /**
