@@ -1281,7 +1281,7 @@ abstract class REST_Controller extends CI_Controller
             $this->load->library($auth_library_class);
         }
 
-        return $auth_library_class->$auth_library_function($username, $password);
+        return $this->{$auth_library_class}->$auth_library_function($username, $password);
     }
 
     /**
