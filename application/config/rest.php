@@ -395,7 +395,7 @@ $config['rest_logs_json_params'] = FALSE;
 |
 | The table name in your database that stores limits.
 |
-|	'logs'
+|	'limits'
 |
 */
 $config['rest_limits_table'] = 'limits';
