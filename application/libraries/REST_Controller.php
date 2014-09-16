@@ -1497,7 +1497,7 @@ abstract class REST_Controller extends CI_Controller
     protected function _log_access_time()
     {
         $payload['rtime'] = $this->_end_rtime - $this->_start_rtime;
-
+	$this->rest->db = $this->load->database(config_item('rest_logs_table'), true);
         return $this->rest->db->update(config_item('rest_logs_table'), $payload, array('id' => $this->_insert_id));
     }
 
