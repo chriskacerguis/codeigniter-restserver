@@ -192,7 +192,7 @@ abstract class REST_Controller extends CI_Controller
      * Constructor function
      * @todo Document more please.
      */
-    public function __construct()
+    public function __construct($config = 'rest')
     {
         parent::__construct();
 
@@ -200,7 +200,7 @@ abstract class REST_Controller extends CI_Controller
         $this->_start_rtime = microtime(true);
 
         // Lets grab the config and get ready to party
-        $this->load->config('rest');
+        $this->load->config($config);
 
         // This library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter itself
         $this->load->library('format');
