@@ -55,7 +55,7 @@ $config['rest_message_field_name'] = 'error';
 |
 | Should we enable emulation of the request (e.g. used in Mootools request)?
 |
-|	Default: false
+|	Default: TRUE
 |
 */
 $config['enable_emulate_request'] = TRUE;
