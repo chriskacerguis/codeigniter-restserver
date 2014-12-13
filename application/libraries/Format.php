@@ -131,7 +131,7 @@ class Format {
 			{
 				$attributes = $value;
 				if (is_object($attributes)) $attributes = get_object_vars($attributes);
-				
+
 				foreach ($attributes as $attributeName => $attributeValue)
 				{
 					$structure->addAttribute($attributeName, $attributeValue);
@@ -213,7 +213,7 @@ class Format {
                 throw new Exception('Format class does not support multi-dimensional arrays');
             } else {
                 $row    = str_replace('"', '""', $row); // Escape dbl quotes per RFC 4180
-                $output .= '"'.implode('","', $row).'"'.PHP_EOL;                
+                $output .= '"'.implode('","', $row).'"'.PHP_EOL;
             }
 
 		}
@@ -228,12 +228,12 @@ class Format {
 		if ($callback === '')
 		{
             return json_encode($this->_data);
-            
+
             /* Had to take out this code, it doesn't work on Objects.
             $str = $this->_data;
-            array_walk_recursive($str, function(&$item, $key) 
+            array_walk_recursive($str, function(&$item, $key)
             {
-                if(!mb_detect_encoding($item, 'utf-8', true)) 
+                if(!mb_detect_encoding($item, 'utf-8', true))
                 {
                     $item = utf8_encode($item);
                 }
@@ -309,6 +309,13 @@ class Format {
 	private function _from_serialize($string)
 	{
 		return unserialize(trim($string));
+	}
+
+	// If you provide text/plain value on the Content-type header on a request
+	// just return the string
+	private function _from_php($string)
+	{
+		return trim($string)
 	}
 
 }
