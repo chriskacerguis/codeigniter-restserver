@@ -315,7 +315,7 @@ class Format {
 	// just return the string
 	private function _from_php($string)
 	{
-		return trim($string)
+		return trim($string);
 	}
 
 }
