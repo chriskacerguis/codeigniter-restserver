@@ -209,13 +209,8 @@ class Format {
 		$output = '"'.implode('","', $headings).'"'.PHP_EOL;
 		foreach ($data as &$row)
 		{
-            if (is_array($row)) {
-                throw new Exception('Format class does not support multi-dimensional arrays');
-            } else {
-                $row    = str_replace('"', '""', $row); // Escape dbl quotes per RFC 4180
-                $output .= '"'.implode('","', $row).'"'.PHP_EOL;
-            }
-
+                	$row    = str_replace('"', '""', $row); // Escape dbl quotes per RFC 4180
+                	$output .= '"'.implode('","', $row).'"'.PHP_EOL;
 		}
 
 		return $output;
