@@ -495,14 +495,6 @@ abstract class REST_Controller extends CI_Controller
 
         set_status_header($http_code);
 
-        // If zlib.output_compression is enabled it will compress the output,
-        // but it will not modify the content-length header to compensate for
-        // the reduction, causing the browser to hang waiting for more data.
-        // We'll just skip content-length in those cases.
-        if ( ! $this->_zlib_oc && ! $this->config->item('compress_output')) {
-            header('Content-Length: ' . strlen($output));
-        }
-
         if($continue){
             echo($output);
             ob_end_flush();
