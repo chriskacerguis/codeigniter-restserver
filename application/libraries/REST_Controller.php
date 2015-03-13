@@ -383,7 +383,7 @@ abstract class REST_Controller extends CI_Controller
 
         // Sure it exists, but can they do anything with it?
         if ( ! method_exists($this, $controller_method)) {
-            $this->response(array(config_item('rest_status_field_name') => false, config_item('rest_message_field_name') => 'Unknown method.'), 404);
+            $this->response(array(config_item('rest_status_field_name') => false, config_item('rest_message_field_name') => 'Method Not Allowed.'), 405);
         }
 
         // Doing key related stuff? Can only do it if they have a key right?
