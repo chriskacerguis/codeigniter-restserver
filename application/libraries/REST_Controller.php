@@ -1177,30 +1177,32 @@ abstract class REST_Controller extends CI_Controller
 
         $this->config->load('ldap.php', TRUE);
 
-        $ldaptimeout = $this->config->item('timeout', 'ldap');
-        $ldaphost = $this->config->item('server', 'ldap');
-        $ldapport = $this->config->item('port', 'ldap');
-        $ldaprdn = $this->config->item('binduser', 'ldap');
-        $ldappass = $this->config->item('bindpw', 'ldap');
-        $ldapbasedn = $this->config->item('basedn', 'ldap');
+        $ldap = array(
+            'timeout' => $this->config->item('timeout', 'ldap');
+            'host'    => $this->config->item('server', 'ldap');
+            'port'    => $this->config->item('port', 'ldap');
+            'rdn'     => $this->config->item('binduser', 'ldap');
+            'pass'    => $this->config->item('bindpw', 'ldap');
+            'basedn'  => $this->config->item('basedn', 'ldap');
+          );
 
         log_message('debug', 'LDAP Auth: Connect to ' . $ldaphost);
 
         $ldapconfig['authrealm'] = $this->config->item('domain', 'ldap');
 
         // connect to ldap server
-        $ldapconn = ldap_connect($ldaphost, $ldapport);
+        $ldapconn = ldap_connect($ldap['host'], $ldap['port']);
 
         if ($ldapconn) {
 
-            log_message('debug', 'Setting timeout to ' . $ldaptimeout . ' seconds');
+            log_message('debug', 'Setting timeout to ' . $ldap['timeout'] . ' seconds');
 
-            ldap_set_option($ldapconn, LDAP_OPT_NETWORK_TIMEOUT, $ldaptimeout);
+            ldap_set_option($ldapconn, LDAP_OPT_NETWORK_TIMEOUT, $ldap['timeout']);
 
-            log_message('debug', 'LDAP Auth: Binding to ' . $ldaphost . ' with dn ' . $ldaprdn);
+            log_message('debug', 'LDAP Auth: Binding to ' . $ldap['host'] . ' with dn ' . $ldap['rdn']);
 
             // binding to ldap server
-            $ldapbind = ldap_bind($ldapconn, $ldaprdn, $ldappass);
+            $ldapbind = ldap_bind($ldapconn, $ldap['rdn'], $ldap['pass']);
 
             // verify binding
             if ($ldapbind) {
@@ -1214,7 +1216,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // search for user
-        if (($res_id = ldap_search( $ldapconn, $ldapbasedn, "uid=$username")) == FALSE) {
+        if (($res_id = ldap_search( $ldapconn, $ldap['basedn'], "uid=$username")) == FALSE) {
             log_message('error', 'LDAP Auth: User ' . $username . ' not found in search');
 
             return FALSE;
