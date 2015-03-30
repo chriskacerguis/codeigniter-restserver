@@ -13,7 +13,7 @@ class Format {
 	protected $_data = array();
 
 	// View filename
-	protected $_from_type = null;
+	protected $_from_type = NULL;
 
 	/**
 	 * Returns an instance of the Format object.
@@ -24,7 +24,7 @@ class Format {
 	 * @param   string  data format the file was provided in
 	 * @return  Factory
 	 */
-	public function factory($data, $from_type = null)
+	public function factory($data, $from_type = NULL)
 	{
 		// Stupid stuff to emulate the "new static()" stuff in this libraries PHP 5.3 equivalent
 		$class = __CLASS__;
@@ -34,12 +34,12 @@ class Format {
 	/**
 	 * Do not use this directly, call factory()
 	 */
-	public function __construct($data = null, $from_type = null)
+	public function __construct($data = NULL, $from_type = NULL)
 	{
 		get_instance()->load->helper('inflector');
 
 		// If the provided data is already formatted we should probably convert it to an array
-		if ($from_type !== null)
+		if ($from_type !== NULL)
 		{
 			if (method_exists($this, '_from_' . $from_type))
 			{
@@ -57,10 +57,10 @@ class Format {
 
 	// FORMATING OUTPUT ---------------------------------------------------------
 
-	public function to_array($data = null)
+	public function to_array($data = NULL)
 	{
-		// If not just null, but nothing is provided
-		if ($data === null and ! func_num_args())
+		// If not just NULL, but nothing is provided
+		if ($data === NULL and ! func_num_args())
 		{
 			$data = $this->_data;
 		}
@@ -84,9 +84,9 @@ class Format {
 	}
 
 	// Format XML for output
-	public function to_xml($data = null, $structure = null, $basenode = 'xml')
+	public function to_xml($data = NULL, $structure = NULL, $basenode = 'xml')
 	{
-		if ($data === null and ! func_num_args())
+		if ($data === NULL and ! func_num_args())
 		{
 			$data = $this->_data;
 		}
@@ -97,7 +97,7 @@ class Format {
 			ini_set('zend.ze1_compatibility_mode', 0);
 		}
 
-		if ($structure === null)
+		if ($structure === NULL)
 		{
 			$structure = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><$basenode />");
 		}
