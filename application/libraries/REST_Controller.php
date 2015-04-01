@@ -1185,12 +1185,12 @@ abstract class REST_Controller extends CI_Controller
         $this->config->load('ldap.php', TRUE);
 
         $ldap = array(
-            'timeout' => $this->config->item('timeout', 'ldap');
-            'host'    => $this->config->item('server', 'ldap');
-            'port'    => $this->config->item('port', 'ldap');
-            'rdn'     => $this->config->item('binduser', 'ldap');
-            'pass'    => $this->config->item('bindpw', 'ldap');
-            'basedn'  => $this->config->item('basedn', 'ldap');
+            'timeout' => $this->config->item('timeout', 'ldap'),
+            'host'    => $this->config->item('server', 'ldap'),
+            'port'    => $this->config->item('port', 'ldap'),
+            'rdn'     => $this->config->item('binduser', 'ldap'),
+            'pass'    => $this->config->item('bindpw', 'ldap'),
+            'basedn'  => $this->config->item('basedn', 'ldap'),
           );
 
         log_message('debug', 'LDAP Auth: Connect to ' . $ldaphost);
