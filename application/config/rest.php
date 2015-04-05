@@ -334,6 +334,7 @@ $config['rest_logs_table'] = 'logs';
 	  `time` int(11) NOT NULL,
 	  `rtime` float DEFAULT NULL,
 	  `authorized` tinyint(1) NOT NULL,
+	  `response_code` smallint(3) NOT NULL,
 	  PRIMARY KEY (`id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
