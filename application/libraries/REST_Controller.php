@@ -190,7 +190,8 @@ abstract class REST_Controller extends CI_Controller
 
     /**
      * Constructor function
-     * @todo Document more please.
+     * @todo   Document more please.
+     * @access public
      */
     public function __construct($config = 'rest')
     {
@@ -320,6 +321,8 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Destructor function
      * @author Chris Kacerguis
+     *
+     * @access public
      */
     public function __destruct()
     {
@@ -339,8 +342,9 @@ abstract class REST_Controller extends CI_Controller
      * an "object". This simply maps the object and method to the correct
      * Controller method.
      *
-     * @param string $object_called
-     * @param array  $arguments     The arguments passed to the controller method.
+     * @access public
+     * @param  string $object_called
+     * @param  array  $arguments     The arguments passed to the controller method.
      */
     public function _remap($object_called, $arguments)
     {
@@ -424,8 +428,9 @@ abstract class REST_Controller extends CI_Controller
      *
      * Fires the designated controller method with the given arguments.
      *
-     * @param array $method The controller method to fire
-     * @param array $args   The arguments to pass to the controller method
+     * @access protected
+     * @param  array $method The controller method to fire
+     * @param  array $args   The arguments to pass to the controller method
      */
     protected function _fire_method($method, $args)
     {
@@ -438,9 +443,10 @@ abstract class REST_Controller extends CI_Controller
      * Takes pure data and optionally a status code, then creates the response.
      * Set $continue to TRUE to flush the response to the client and continue running the script.
      *
-     * @param array    $data
-     * @param NULL|int $http_code
-     * @param bool $continue
+     * @access public
+     * @param  array    $data
+     * @param  NULL|int $http_code
+     * @param  bool $continue
      */
     public function response($data = NULL, $http_code = NULL, $continue = FALSE)
     {
@@ -513,10 +519,12 @@ abstract class REST_Controller extends CI_Controller
         }
     }
 
-    /*
+    /**
      * Detect SSL use
      *
-     * Detect whether SSL is being used or not
+     * Detect whether SSL is being used or not.
+     *
+     * @access protected
      */
     protected function _detect_ssl()
     {
@@ -526,10 +534,12 @@ abstract class REST_Controller extends CI_Controller
     }
 
 
-    /*
+    /**
      * Detect input format
      *
      * Detect which format the HTTP Body is provided in
+     *
+     * @access protected
      */
     protected function _detect_input_format()
     {
@@ -554,6 +564,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * Detect which format should be used to output the data.
      *
+     * @access protected
      * @return string The output format.
      */
     protected function _detect_output_format()
@@ -626,6 +637,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * Detect which HTTP method is being used
      *
+     * @access protected
      * @return string
      */
     protected function _detect_method()
@@ -652,6 +664,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * See if the user has provided an API key
      *
+     * @access protected
      * @return boolean
      */
     protected function _detect_api_key()
@@ -719,6 +732,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * What language do they want it in?
      *
+     * @access protected
      * @return NULL|string The language code.
      */
     protected function _detect_lang()
@@ -750,6 +764,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * Record the entry for awesomeness purposes
      *
+     * @access protected
      * @param  boolean $authorized
      * @return object
      */
@@ -775,6 +790,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * Check if the requests are coming in a tad too fast.
      *
+     * @access protected
      * @param  string  $controller_method The method being called.
      * @return boolean
      */
@@ -841,6 +857,7 @@ abstract class REST_Controller extends CI_Controller
      * Check if there is a specific auth type set for the current class/method
      * being called.
      *
+     * @access protected
      * @return boolean
      */
     protected function _auth_override_check()
@@ -922,6 +939,8 @@ abstract class REST_Controller extends CI_Controller
 
     /**
      * Parse GET
+     *
+     * @access protected
      */
     protected function _parse_get()
     {
@@ -941,6 +960,8 @@ abstract class REST_Controller extends CI_Controller
 
     /**
      * Parse POST
+     *
+     * @access protected
      */
     protected function _parse_post()
     {
@@ -951,6 +972,8 @@ abstract class REST_Controller extends CI_Controller
 
     /**
      * Parse PUT
+     *
+     * @access protected
      */
     protected function _parse_put()
     {
@@ -970,6 +993,8 @@ abstract class REST_Controller extends CI_Controller
 
     /**
      * Parse HEAD
+     *
+     * @access protected
      */
     protected function _parse_head()
     {
@@ -982,6 +1007,8 @@ abstract class REST_Controller extends CI_Controller
 
     /**
      * Parse OPTIONS
+     *
+     * @access protected
      */
     protected function _parse_options()
     {
@@ -994,6 +1021,8 @@ abstract class REST_Controller extends CI_Controller
 
     /**
      * Parse PATCH
+     *
+     * @access protected
      */
     protected function _parse_patch()
     {
@@ -1012,6 +1041,8 @@ abstract class REST_Controller extends CI_Controller
 
     /**
      * Parse DELETE
+     *
+     * @access protected
      */
     protected function _parse_delete()
     {
@@ -1026,6 +1057,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Retrieve a value from the GET request arguments.
      *
+     * @access public
      * @param  string  $key       The key for the GET request argument to retrieve
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
      * @return string  The GET argument value.
@@ -1042,6 +1074,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * This function retrieves a values from the OPTIONS request arguments
      *
+     * @access public
      * @param  string  $key       The OPTIONS/GET argument key
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not
      * @return string  The OPTIONS/GET argument value
@@ -1058,6 +1091,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * This function retrieves a values from the HEAD request arguments
      *
+     * @access public
      * @param  string  $key       The HEAD/GET argument key
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not
      * @return string  The HEAD/GET argument value
@@ -1074,6 +1108,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Retrieve a value from the POST request arguments.
      *
+     * @access public
      * @param  string  $key       The key for the POST request argument to retrieve
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
      * @return string  The POST argument value.
@@ -1090,6 +1125,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Retrieve a value from the PUT request arguments.
      *
+     * @access public
      * @param  string  $key       The key for the PUT request argument to retrieve
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
      * @return string  The PUT argument value.
@@ -1106,6 +1142,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Retrieve a value from the DELETE request arguments.
      *
+     * @access public
      * @param  string  $key       The key for the DELETE request argument to retrieve
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
      * @return string  The DELETE argument value.
@@ -1122,6 +1159,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Retrieve a value from the PATCH request arguments.
      *
+     * @access public
      * @param  string  $key       The key for the PATCH request argument to retrieve
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
      * @return string  The PATCH argument value.
@@ -1138,6 +1176,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Process to protect from XSS attacks.
      *
+     * @access protected
      * @param  string  $val     The input.
      * @param  boolean $process Do clean or note the input.
      * @return string
@@ -1154,6 +1193,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Retrieve the validation errors.
      *
+     * @access public
      * @return array
      */
     public function validation_errors()
@@ -1168,6 +1208,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Perform LDAP Authentication
      *
+     * @access protected
      * @param  string  $username The username to validate
      * @param  string  $password The password to validate
      * @return boolean
@@ -1265,6 +1306,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Perform Library Authentication - Override this function to change the way the library is called
      *
+     * @access protected
      * @param  string  $username The username to validate
      * @param  string  $password The password to validate
      * @return boolean
@@ -1299,6 +1341,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Check if the user is logged in.
      *
+     * @access protected
      * @param  string  $username The user's name
      * @param  string  $password The user's password
      * @return boolean
@@ -1346,6 +1389,8 @@ abstract class REST_Controller extends CI_Controller
 
     /**
      * Check to see if the user is logged into the web app with a php session key.
+     *
+     * @access protected
      */
     protected function _check_php_session()
     {
@@ -1357,6 +1402,8 @@ abstract class REST_Controller extends CI_Controller
 
     /**
      * @todo document this.
+     *
+     * @access protected
      */
     protected function _prepare_basic_auth()
     {
@@ -1388,6 +1435,8 @@ abstract class REST_Controller extends CI_Controller
 
     /**
      * @todo Document this.
+     *
+     * @access protected
      */
     protected function _prepare_digest_auth()
     {
@@ -1435,6 +1484,8 @@ abstract class REST_Controller extends CI_Controller
 
     /**
      * Check if the client's ip is in the 'rest_ip_blacklist' config
+     *
+     * @access protected
      */
     protected function _check_blacklist_auth()
     {
@@ -1451,6 +1502,8 @@ abstract class REST_Controller extends CI_Controller
 
     /**
      * Check if the client's ip is in the 'rest_ip_whitelist' config
+     *
+     * @access protected
      */
     protected function _check_whitelist_auth()
     {
@@ -1470,7 +1523,8 @@ abstract class REST_Controller extends CI_Controller
     /**
      * @todo Document this.
      *
-     * @param string $nonce
+     * @access protected
+     * @param  string $nonce
      */
     protected function _force_login($nonce = '')
     {
@@ -1486,8 +1540,9 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Force it into an array
      *
-     * @param  object|array $data
-     * @return array
+     * @access  protected
+     * @param   object|array $data
+     * @return  array
      */
     protected function _force_loopable($data)
     {
@@ -1502,6 +1557,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * updates the log with the access time
      *
+     * @access protected
      * @author Chris Kacerguis
      * @return boolean
      */
@@ -1516,6 +1572,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Check to see if the API key has access to the controller and methods
      *
+     * @access protected
      * @return boolean
      */
     protected function _check_access()
