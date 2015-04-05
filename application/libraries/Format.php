@@ -153,7 +153,7 @@ class Format {
 				}
 			}
 			// if there is another array found recursively call this function
-			else if (is_array($value) || is_object($value))
+			elseif (is_array($value) || is_object($value))
 			{
 				$node = $structure->addChild($key);
 
@@ -266,7 +266,7 @@ class Format {
 		}
 
 		// we only honour jsonp callback which are valid javascript identifiers
-		else if (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback))
+		elseif (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback))
 		{
 			// this is a jsonp request, the content-type must be updated to be text/javascript
 			header("Content-Type: application/javascript");

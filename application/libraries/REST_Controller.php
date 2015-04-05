@@ -415,7 +415,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // No key stuff, but record that stuff is happening
-        else if (config_item('rest_enable_logging') and $log_method) {
+        elseif (config_item('rest_enable_logging') and $log_method) {
             $this->_log_request($authorized = TRUE);
         }
 
@@ -459,7 +459,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // If data is NULL but http code provided, keep the output empty
-        else if ($data === NULL && is_numeric($http_code)) {
+        elseif ($data === NULL && is_numeric($http_code)) {
             $output = NULL;
         }
 
@@ -824,7 +824,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // Been an hour since they called
-        else if ($result->hour_started < time() - (60 * 60)) {
+        elseif ($result->hour_started < time() - (60 * 60)) {
             // Reset the started period
             $this->rest->db
                     ->where('uri', $this->uri->uri_string())
