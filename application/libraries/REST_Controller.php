@@ -1609,7 +1609,7 @@ abstract class REST_Controller extends CI_Controller
 
         $query = $this->rest->db->get(config_item('rest_access_table'));
 
-        if ($query->num_rows > 0) {
+        if ($query->num_rows() > 0) {
             return TRUE;
         }
 
