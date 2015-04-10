@@ -950,7 +950,7 @@ abstract class REST_Controller extends CI_Controller
     protected function _parse_get()
     {
         // Fix for Issue #247
-        if ($this->input->is_cli_request()) {
+        if (is_cli()) {
             $args = $_SERVER['argv'];
             unset($args[0]);
             $_SERVER['QUERY_STRING'] =  $_SERVER['PATH_INFO'] = $_SERVER['REQUEST_URI'] = '/' . implode('/', $args) . '/';
@@ -1601,7 +1601,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // Fetch controller based on path and controller name
-        $controller = implode( '/', array($this->router->fetch_directory(), $this->router->fetch_class()) );
+        $controller = implode( '/', array($this->router->directory, $this->router->class) );
 
         // Remove any double slashes for safety
         $controller = str_replace('//', '/', $controller);
