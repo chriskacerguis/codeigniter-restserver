@@ -9,7 +9,7 @@
  */
 class Format {
 
-	protected $_data = array();   // Array to convert
+	protected $_data = [];        // Array to convert
 	protected $_from_type = NULL; // View filename
 
 	/**
@@ -45,7 +45,7 @@ class Format {
 		{
 			if (method_exists($this, '_from_' . $from_type))
 			{
-				$data = call_user_func(array($this, '_from_' . $from_type), $data);
+				$data = call_user_func([$this, '_from_' . $from_type], $data);
 			}
 
 			else
@@ -73,7 +73,7 @@ class Format {
 			$data = $this->_data;
 		}
 
-		$array = array();
+		$array = [];
 
 		foreach ((array) $data as $key => $value)
 		{
@@ -191,7 +191,7 @@ class Format {
 		else
 		{
 			$headings = array_keys($data);
-			$data = array($data);
+			$data = [$data];
 		}
 
 		$ci = get_instance();
@@ -226,7 +226,7 @@ class Format {
 		else
 		{
 			$headings = array_keys($data);
-			$data = array($data);
+			$data = [$data];
 		}
 
 		$output = '"'.implode('","', $headings).'"'.PHP_EOL;
@@ -308,7 +308,7 @@ class Format {
 	 */
 	protected function _from_xml($string)
 	{
-		return $string ? (array) simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOCDATA) : array();
+		return $string ? (array) simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOCDATA) : [];
 	}
 
 	/**
@@ -320,7 +320,7 @@ class Format {
 	 */
 	protected function _from_csv($string)
 	{
-		$data = array();
+		$data = [];
 
 		// Splits
 		$rows = explode("\n", trim($string));
