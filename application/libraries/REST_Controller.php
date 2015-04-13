@@ -273,7 +273,7 @@ abstract class REST_Controller extends CI_Controller
         $this->rest             = new StdClass();
 
         // Load DB if its enabled
-        if (config_item('rest_database_group') && (config_item('rest_enable_keys') or config_item('rest_enable_logging'))) {
+        if (config_item('rest_database_group') && (config_item('rest_enable_keys') || config_item('rest_enable_logging'))) {
             $this->rest->db     = $this->load->database(config_item('rest_database_group'), TRUE);
         }
 
@@ -411,7 +411,7 @@ abstract class REST_Controller extends CI_Controller
 
             // They don't have good enough perms
             $response = array(config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key does not have enough permissions.');
-            $authorized or $this->response($response, 401);
+            $authorized || $this->response($response, 401);
         }
 
         // No key stuff, but record that stuff is happening
@@ -474,7 +474,7 @@ abstract class REST_Controller extends CI_Controller
                 }
             }
 
-            is_numeric($http_code) or $http_code = 200;
+            is_numeric($http_code) || $http_code = 200;
 
             // @deprecated the following statement can be deleted.
             // If the format method exists, call and return the output in that format
@@ -802,7 +802,7 @@ abstract class REST_Controller extends CI_Controller
     protected function _check_limit($controller_method)
     {
         // They are special, or it might not even have a limit
-        if ( ! empty($this->rest->ignore_limits) or !isset($this->methods[$controller_method]['limit'])) {
+        if ( ! empty($this->rest->ignore_limits) || !isset($this->methods[$controller_method]['limit'])) {
             // On your way sonny-jim.
             return TRUE;
         }
@@ -972,7 +972,7 @@ abstract class REST_Controller extends CI_Controller
     {
         $this->_post_args = $_POST;
 
-        $this->request->format and $this->request->body = file_get_contents('php://input');
+        $this->request->format && $this->request->body = file_get_contents('php://input');
     }
 
     /**
