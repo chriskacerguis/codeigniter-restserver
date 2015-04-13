@@ -29,14 +29,14 @@ abstract class REST_Controller extends CI_Controller
      *
      * @var array
      */
-    protected $methods              = array();
+    protected $methods              = [];
 
     /**
      * List of allowed HTTP methods
      *
      * @var array
      */
-    protected $allowed_http_methods = array('get', 'delete', 'post', 'put', 'options', 'patch', 'head');
+    protected $allowed_http_methods = ['get', 'delete', 'post', 'put', 'options', 'patch', 'head'];
 
     /**
      * General request data and information.
@@ -65,14 +65,14 @@ abstract class REST_Controller extends CI_Controller
      *
      * @var array
      */
-    protected $_get_args            = array();
+    protected $_get_args            = [];
 
     /**
      * The arguments for the POST request method
      *
      * @var array
      */
-    protected $_post_args           = array();
+    protected $_post_args           = [];
 
     /**
      * The insert_id of the log entry (if we have one)
@@ -86,42 +86,42 @@ abstract class REST_Controller extends CI_Controller
      *
      * @var array
      */
-    protected $_put_args            = array();
+    protected $_put_args            = [];
 
     /**
      * The arguments for the DELETE request method
      *
      * @var array
      */
-    protected $_delete_args         = array();
+    protected $_delete_args         = [];
 
     /**
      * The arguments for the PATCH request method
      *
      * @var array
      */
-    protected $_patch_args          = array();
+    protected $_patch_args          = [];
 
     /**
      * The arguments for the HEAD request method
      *
      * @var array
      */
-    protected $_head_args           = array();
+    protected $_head_args           = [];
 
     /**
      * The arguments for the OPTIONS request method
      *
      * @var array
      */
-    protected $_options_args        = array();
+    protected $_options_args        = [];
 
     /**
      * The arguments from GET, POST, PUT, DELETE request methods combined.
      *
      * @var array
      */
-    protected $_args                = array();
+    protected $_args                = [];
 
     /**
      * If the request is allowed based on the API key provided.
@@ -163,7 +163,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * @var array
      */
-    protected $_supported_formats   = array(
+    protected $_supported_formats   = [
         'xml'           => 'application/xml',
         'json'          => 'application/json',
         'jsonp'         => 'application/javascript',
@@ -171,7 +171,7 @@ abstract class REST_Controller extends CI_Controller
         'php'           => 'text/plain',
         'html'          => 'text/html',
         'csv'           => 'application/csv'
-    );
+    ];
 
     /**
      * Information about the current API user
@@ -228,7 +228,7 @@ abstract class REST_Controller extends CI_Controller
 
         // Create argument container, if nonexistent
         if (!isset($this->{'_'.$this->request->method.'_args'})) {
-            $this->{'_'.$this->request->method.'_args'} = array();
+            $this->{'_'.$this->request->method.'_args'} = [];
         }
 
         // Set up our GET variables
@@ -243,7 +243,7 @@ abstract class REST_Controller extends CI_Controller
         $this->{'_parse_' . $this->request->method}();
 
         // Now we know all about our request, let's try and parse the body if it exists
-        if ($this->request->format and $this->request->body) {
+        if ($this->request->format && $this->request->body) {
             $this->request->body = $this->format->factory($this->request->body, $this->request->format)->to_array();
             // Assign payload arguments to proper method container
             $this->{'_'.$this->request->method.'_args'} = $this->request->body;
@@ -273,7 +273,7 @@ abstract class REST_Controller extends CI_Controller
         $this->rest             = new StdClass();
 
         // Load DB if its enabled
-        if (config_item('rest_database_group') and (config_item('rest_enable_keys') or config_item('rest_enable_logging'))) {
+        if (config_item('rest_database_group') && (config_item('rest_enable_keys') || config_item('rest_enable_logging'))) {
             $this->rest->db     = $this->load->database(config_item('rest_database_group'), TRUE);
         }
 
@@ -288,13 +288,13 @@ abstract class REST_Controller extends CI_Controller
 
         // Checking for keys? GET TO WorK!
 	      // Skip keys test for $config['auth_override_class_method']['class'['method'] = 'none'
-        if (config_item('rest_enable_keys') and $this->auth_override !== TRUE) {
+        if (config_item('rest_enable_keys') && $this->auth_override !== TRUE) {
             $this->_allow = $this->_detect_api_key();
         }
 
         // only allow ajax requests
-        if (!$this->input->is_ajax_request() and config_item('rest_ajax_only')) {
-            $response = array(config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Only AJAX requests are accepted.');
+        if (!$this->input->is_ajax_request() && config_item('rest_ajax_only')) {
+            $response = [config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Only AJAX requests are accepted.'];
             $this->response($response, 406); // Set status to 406 NOT ACCEPTABLE
         }
 
@@ -349,12 +349,12 @@ abstract class REST_Controller extends CI_Controller
     public function _remap($object_called, $arguments)
     {
         // Should we answer if not over SSL?
-        if (config_item('force_https') and !$this->_detect_ssl()) {
-            $this->response(array(config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Unsupported protocol'), 403);
+        if (config_item('force_https') && !$this->_detect_ssl()) {
+            $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Unsupported protocol'], 403);
         }
 
         $pattern = '/^(.*)\.('.implode('|', array_keys($this->_supported_formats)).')$/';
-        $matches = array();
+        $matches = [];
         if (preg_match($pattern, $object_called, $matches)) {
             $object_called = $matches[1];
         }
@@ -362,39 +362,39 @@ abstract class REST_Controller extends CI_Controller
         $controller_method = $object_called.'_'.$this->request->method;
 
         // Do we want to log this method (if allowed by config)?
-        $log_method = !(isset($this->methods[$controller_method]['log']) and $this->methods[$controller_method]['log'] == FALSE);
+        $log_method = !(isset($this->methods[$controller_method]['log']) && $this->methods[$controller_method]['log'] == FALSE);
 
         // Use keys for this method?
-        $use_key = !(isset($this->methods[$controller_method]['key']) and $this->methods[$controller_method]['key'] == FALSE);
+        $use_key = !(isset($this->methods[$controller_method]['key']) && $this->methods[$controller_method]['key'] == FALSE);
 
         // They provided a key, but it wasn't valid, so get them out of here.
-        if (config_item('rest_enable_keys') and $use_key and $this->_allow === FALSE) {
-            if (config_item('rest_enable_logging') and $log_method) {
+        if (config_item('rest_enable_keys') && $use_key && $this->_allow === FALSE) {
+            if (config_item('rest_enable_logging') && $log_method) {
                 $this->_log_request();
             }
 
-            $this->response(array(config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Invalid API Key '.$this->rest->key), 403);
+            $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Invalid API Key '.$this->rest->key], 403);
         }
 
         // Check to see if this key has access to the requested controller.
-        if (config_item('rest_enable_keys') and $use_key and !empty($this->rest->key) and !$this->_check_access()) {
-            if (config_item('rest_enable_logging') and $log_method) {
+        if (config_item('rest_enable_keys') && $use_key && !empty($this->rest->key) && !$this->_check_access()) {
+            if (config_item('rest_enable_logging') && $log_method) {
                 $this->_log_request();
             }
 
-            $this->response(array(config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key does not have access to the requested controller.'), 401);
+            $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key does not have access to the requested controller.'], 401);
         }
 
         // Sure it exists, but can they do anything with it?
         if ( ! method_exists($this, $controller_method)) {
-            $this->response(array(config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Unknown method.'), 404);
+            $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Unknown method.'], 404);
         }
 
         // Doing key related stuff? Can only do it if they have a key right?
-        if (config_item('rest_enable_keys') and !empty($this->rest->key)) {
+        if (config_item('rest_enable_keys') && !empty($this->rest->key)) {
             // Check the limit
-            if (config_item('rest_enable_limits') and !$this->_check_limit($controller_method)) {
-                $response = array(config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key has reached the hourly limit for this method.');
+            if (config_item('rest_enable_limits') && !$this->_check_limit($controller_method)) {
+                $response = [config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key has reached the hourly limit for this method.'];
                 $this->response($response, 401);
             }
 
@@ -405,22 +405,22 @@ abstract class REST_Controller extends CI_Controller
             $authorized = $level <= $this->rest->level;
 
             // IM TELLIN!
-            if (config_item('rest_enable_logging') and $log_method) {
+            if (config_item('rest_enable_logging') && $log_method) {
                 $this->_log_request($authorized);
             }
 
             // They don't have good enough perms
-            $response = array(config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key does not have enough permissions.');
-            $authorized or $this->response($response, 401);
+            $response = [config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key does not have enough permissions.'];
+            $authorized || $this->response($response, 401);
         }
 
         // No key stuff, but record that stuff is happening
-        elseif (config_item('rest_enable_logging') and $log_method) {
+        elseif (config_item('rest_enable_logging') && $log_method) {
             $this->_log_request($authorized = TRUE);
         }
 
         // and...... GO!
-        $this->_fire_method(array($this, $controller_method), $arguments);
+        $this->_fire_method([$this, $controller_method], $arguments);
     }
 
     /**
@@ -468,13 +468,13 @@ abstract class REST_Controller extends CI_Controller
             // Is compression requested?
             if ($this->config->item('compress_output') === TRUE && $this->_zlib_oc == FALSE) {
                 if (extension_loaded('zlib')) {
-                    if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) and strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE) {
+                    if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE) {
                         ob_start('ob_gzhandler');
                     }
                 }
             }
 
-            is_numeric($http_code) or $http_code = 200;
+            is_numeric($http_code) || $http_code = 200;
 
             // @deprecated the following statement can be deleted.
             // If the format method exists, call and return the output in that format
@@ -500,12 +500,12 @@ abstract class REST_Controller extends CI_Controller
         }
 
         set_status_header($http_code);
-        
+
         // JC: Log response code only if rest logging enabled
-        if (config_item('rest_enable_logging')) {        
+        if (config_item('rest_enable_logging')) {
             $this->_log_response_code($http_code);
         }
-        
+
         // If zlib.output_compression is enabled it will compress the output,
         // but it will not modify the content-length header to compensate for
         // the reduction, causing the browser to hang waiting for more data.
@@ -577,13 +577,13 @@ abstract class REST_Controller extends CI_Controller
         $pattern = '/\.('.implode('|', array_keys($this->_supported_formats)).')$/';
 
         // Check if a file extension is used when no get arguments provided
-        $matches = array();
-        if (!$this->_get_args and preg_match($pattern, $this->uri->uri_string(), $matches)) {
+        $matches = [];
+        if (!$this->_get_args && preg_match($pattern, $this->uri->uri_string(), $matches)) {
             return $matches[1];
         }
 
         // Check if a file extension is used
-        elseif ($this->_get_args and !is_array(end($this->_get_args)) and preg_match($pattern, end($this->_get_args), $matches)) {
+        elseif ($this->_get_args && !is_array(end($this->_get_args)) && preg_match($pattern, end($this->_get_args), $matches)) {
         //elseif ($this->_get_args and !is_array(end($this->_get_args)) and preg_match($pattern, end(array_keys($this->_get_args)), $matches)) {
             // The key of the last argument
             $arg_keys = array_keys($this->_get_args);
@@ -597,30 +597,30 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // A format has been passed as an argument in the URL and it is supported
-        if (isset($this->_get_args['format']) and array_key_exists($this->_get_args['format'], $this->_supported_formats)) {
+        if (isset($this->_get_args['format']) && array_key_exists($this->_get_args['format'], $this->_supported_formats)) {
             return $this->_get_args['format'];
         }
 
         // Otherwise, check the HTTP_ACCEPT (if it exists and we are allowed)
-        if ($this->config->item('rest_ignore_http_accept') === FALSE and $this->input->server('HTTP_ACCEPT')) {
+        if ($this->config->item('rest_ignore_http_accept') === FALSE && $this->input->server('HTTP_ACCEPT')) {
             // Check all formats against the HTTP_ACCEPT header
             foreach (array_keys($this->_supported_formats) as $format) {
                 // Has this format been requested?
                 if (strpos($this->input->server('HTTP_ACCEPT'), $format) !== FALSE) {
                     // If not HTML or XML assume its right and send it on its way
-                    if ($format != 'html' and $format != 'xml') {
+                    if ($format != 'html' && $format != 'xml') {
                         return $format;
                     }
 
                     // HTML or XML have shown up as a match
                     else {
                         // If it is truly HTML, it wont want any XML
-                        if ($format == 'html' and strpos($this->input->server('HTTP_ACCEPT'), 'xml') === FALSE) {
+                        if ($format == 'html' && strpos($this->input->server('HTTP_ACCEPT'), 'xml') === FALSE) {
                             return $format;
                         }
 
                         // If it is truly XML, it wont want any HTML
-                        elseif ($format == 'xml' and strpos($this->input->server('HTTP_ACCEPT'), 'html') === FALSE) {
+                        elseif ($format == 'xml' && strpos($this->input->server('HTTP_ACCEPT'), 'html') === FALSE) {
                             return $format;
                         }
                     }
@@ -693,9 +693,9 @@ abstract class REST_Controller extends CI_Controller
 
             $this->rest->key = $row->{config_item('rest_key_column')};
 
-            isset($row->user_id) and $this->rest->user_id = $row->user_id;
-            isset($row->level) and $this->rest->level = $row->level;
-            isset($row->ignore_limits) and $this->rest->ignore_limits = $row->ignore_limits;
+            isset($row->user_id) && $this->rest->user_id = $row->user_id;
+            isset($row->level) && $this->rest->level = $row->level;
+            isset($row->ignore_limits) && $this->rest->ignore_limits = $row->ignore_limits;
 
             $this->_apiuser =  $row;
 
@@ -750,7 +750,7 @@ abstract class REST_Controller extends CI_Controller
         if (strpos($lang, ',') !== FALSE) {
             $langs = explode(',', $lang);
 
-            $return_langs = array();
+            $return_langs = [];
             foreach ($langs as $lang) {
                 // Remove weight and strip space
                 list($lang) = explode(';', $lang);
@@ -775,7 +775,7 @@ abstract class REST_Controller extends CI_Controller
      */
     protected function _log_request($authorized = FALSE)
     {
-        $status = $this->rest->db->insert(config_item('rest_logs_table'), array(
+        $status = $this->rest->db->insert(config_item('rest_logs_table'), [
                     'uri' => $this->uri->uri_string(),
                     'method' => $this->request->method,
                     'params' => $this->_args ? (config_item('rest_logs_json_params') ? json_encode($this->_args) : serialize($this->_args)) : NULL,
@@ -783,7 +783,7 @@ abstract class REST_Controller extends CI_Controller
                     'ip_address' => $this->input->ip_address(),
                     'time' => function_exists('now') ? now() : time(),
                     'authorized' => $authorized
-                ));
+                ]);
 
         $this->_insert_id = $this->rest->db->insert_id();
 
@@ -802,7 +802,7 @@ abstract class REST_Controller extends CI_Controller
     protected function _check_limit($controller_method)
     {
         // They are special, or it might not even have a limit
-        if ( ! empty($this->rest->ignore_limits) or !isset($this->methods[$controller_method]['limit'])) {
+        if ( ! empty($this->rest->ignore_limits) || !isset($this->methods[$controller_method]['limit'])) {
             // On your way sonny-jim.
             return TRUE;
         }
@@ -820,12 +820,12 @@ abstract class REST_Controller extends CI_Controller
         // No calls yet for this key
         if ( ! $result ) {
             // Right, set one up from scratch
-            $this->rest->db->insert(config_item('rest_limits_table'), array(
+            $this->rest->db->insert(config_item('rest_limits_table'), [
                 'uri' => $this->uri->uri_string(),
                 'api_key' => isset($this->rest->key) ? $this->rest->key : '',
                 'count' => 1,
                 'hour_started' => time()
-            ));
+            ]);
         }
 
         // Been an hour since they called
@@ -972,7 +972,7 @@ abstract class REST_Controller extends CI_Controller
     {
         $this->_post_args = $_POST;
 
-        $this->request->format and $this->request->body = file_get_contents('php://input');
+        $this->request->format && $this->request->body = file_get_contents('php://input');
     }
 
     /**
@@ -1230,14 +1230,14 @@ abstract class REST_Controller extends CI_Controller
 
         $this->config->load('ldap.php', TRUE);
 
-        $ldap = array(
+        $ldap = [
             'timeout' => $this->config->item('timeout', 'ldap'),
             'host'    => $this->config->item('server', 'ldap'),
             'port'    => $this->config->item('port', 'ldap'),
             'rdn'     => $this->config->item('binduser', 'ldap'),
             'pass'    => $this->config->item('bindpw', 'ldap'),
             'basedn'  => $this->config->item('basedn', 'ldap'),
-          );
+          ];
 
         log_message('debug', 'LDAP Auth: Connect to ' . $ldaphost);
 
@@ -1336,7 +1336,7 @@ abstract class REST_Controller extends CI_Controller
             return FALSE;
         }
 
-        if (!is_callable(array($auth_library_class, $auth_library_function))) {
+        if (!is_callable([$auth_library_class, $auth_library_function])) {
             $this->load->library($auth_library_class);
         }
 
@@ -1401,7 +1401,7 @@ abstract class REST_Controller extends CI_Controller
     {
         $key = $this->config->item('auth_source');
         if (!$this->session->userdata($key)) {
-            $this->response(array('status' => FALSE, 'error' => 'Not Authorized'), 401);
+            $this->response(['status' => FALSE, 'error' => 'Not Authorized'], 401);
         }
     }
 
@@ -1468,13 +1468,13 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // We need to retrieve authentication informations from the $auth_data variable
-        $matches = array();
+        $matches = [];
         preg_match_all('@(username|nonce|uri|nc|cnonce|qop|response)=[\'"]?([^\'",]+)@', $digest_string, $matches);
-        $digest = (empty($matches[1]) || empty($matches[2])) ? array() : array_combine($matches[1], $matches[2]);
+        $digest = (empty($matches[1]) || empty($matches[2])) ? [] : array_combine($matches[1], $matches[2]);
 
         // For digest authentication the library function should return already stored md5(username:restrealm:password) for that username @see rest.php::auth_library_function config
         $A1 = $this->_check_login($digest['username'], TRUE);
-        if ( ! array_key_exists('username', $digest) or ! $A1 ) {
+        if ( ! array_key_exists('username', $digest) || ! $A1 ) {
             $this->_force_login($uniqid);
         }
 
@@ -1482,7 +1482,7 @@ abstract class REST_Controller extends CI_Controller
         $valid_response = md5($A1.':'.$digest['nonce'].':'.$digest['nc'].':'.$digest['cnonce'].':'.$digest['qop'].':'.$A2);
 
         if ($digest['response'] != $valid_response) {
-            $this->response(array(config_item('rest_status_field_name') => 0, config_item('rest_message_field_name') => 'Invalid credentials'), 401);
+            $this->response([config_item('rest_status_field_name') => 0, config_item('rest_message_field_name') => 'Invalid credentials'], 401);
             exit;
         }
     }
@@ -1501,7 +1501,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         if (in_array($this->input->ip_address(), $blacklist)) {
-            $this->response(array('status' => FALSE, 'error' => 'IP Denied'), 401);
+            $this->response(['status' => FALSE, 'error' => 'IP Denied'], 401);
         }
     }
 
@@ -1521,7 +1521,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         if ( ! in_array($this->input->ip_address(), $whitelist)) {
-            $this->response(array(config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'IP not authorized'), 401);
+            $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'IP not authorized'], 401);
         }
     }
 
@@ -1539,7 +1539,7 @@ abstract class REST_Controller extends CI_Controller
             header('WWW-Authenticate: Digest realm="'.$this->config->item('rest_realm').'", qop="auth", nonce="'.$nonce.'", opaque="'.md5($this->config->item('rest_realm')).'"');
         }
 
-        $this->response(array(config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Not authorized'), 401);
+        $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Not authorized'], 401);
     }
 
     /**
@@ -1552,7 +1552,7 @@ abstract class REST_Controller extends CI_Controller
     protected function _force_loopable($data)
     {
         // Force it to be something useful
-        if ( ! is_array($data) and !is_object($data)) {
+        if ( ! is_array($data) && !is_object($data)) {
             $data = (array) $data;
         }
 
@@ -1571,22 +1571,22 @@ abstract class REST_Controller extends CI_Controller
     {
         $payload['rtime'] = $this->_end_rtime - $this->_start_rtime;
 
-        return $this->rest->db->update(config_item('rest_logs_table'), $payload, array('id' => $this->_insert_id));
+        return $this->rest->db->update(config_item('rest_logs_table'), $payload, ['id' => $this->_insert_id]);
     }
-    
+
     /**
      * updates the log with response code result
      *
      * @author Justin Chen
      * @return boolean
      */
-     
+
     protected function _log_response_code($http_code)
     {
         $payload['response_code'] = $http_code;
-        return $this->rest->db->update(config_item('rest_logs_table'), $payload, array('id' => $this->_insert_id));
+        return $this->rest->db->update(config_item('rest_logs_table'), $payload, ['id' => $this->_insert_id]);
     }
-    
+
     /**
      * Check to see if the API key has access to the controller and methods
      *
@@ -1601,7 +1601,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // Fetch controller based on path and controller name
-        $controller = implode( '/', array($this->router->directory, $this->router->class) );
+        $controller = implode( '/', [$this->router->directory, $this->router->class] );
 
         // Remove any double slashes for safety
         $controller = str_replace('//', '/', $controller);
