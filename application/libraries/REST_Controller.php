@@ -283,8 +283,8 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // Check if there is a specific auth type for the current class/method
-        // _auth_override_check could exit so we need $this->rest->db initialized before
-        $this->auth_override    = $this->_auth_override_check();
+        // authOverrideCheck could exit so we need $this->rest->db initialized before
+        $this->auth_override    = $this->authOverrideCheck();
 
         // Checking for keys? GET TO WorK!
 	      // Skip keys test for $config['auth_override_class_method']['class'['method'] = 'none'
@@ -370,7 +370,7 @@ abstract class REST_Controller extends CI_Controller
         // They provided a key, but it wasn't valid, so get them out of here.
         if (config_item('rest_enable_keys') && $use_key && $this->_allow === FALSE) {
             if (config_item('rest_enable_logging') && $log_method) {
-                $this->_log_request();
+                $this->logRequest();
             }
 
             $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Invalid API Key '.$this->rest->key], 403);
@@ -379,7 +379,7 @@ abstract class REST_Controller extends CI_Controller
         // Check to see if this key has access to the requested controller.
         if (config_item('rest_enable_keys') && $use_key && !empty($this->rest->key) && !$this->checkAccess()) {
             if (config_item('rest_enable_logging') && $log_method) {
-                $this->_log_request();
+                $this->logRequest();
             }
 
             $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key does not have access to the requested controller.'], 401);
@@ -393,7 +393,7 @@ abstract class REST_Controller extends CI_Controller
         // Doing key related stuff? Can only do it if they have a key right?
         if (config_item('rest_enable_keys') && !empty($this->rest->key)) {
             // Check the limit
-            if (config_item('rest_enable_limits') && !$this->_check_limit($controller_method)) {
+            if (config_item('rest_enable_limits') && !$this->checkLimit($controller_method)) {
                 $response = [config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key has reached the hourly limit for this method.'];
                 $this->response($response, 401);
             }
@@ -406,7 +406,7 @@ abstract class REST_Controller extends CI_Controller
 
             // IM TELLIN!
             if (config_item('rest_enable_logging') && $log_method) {
-                $this->_log_request($authorized);
+                $this->logRequest($authorized);
             }
 
             // They don't have good enough perms
@@ -416,7 +416,7 @@ abstract class REST_Controller extends CI_Controller
 
         // No key stuff, but record that stuff is happening
         elseif (config_item('rest_enable_logging') && $log_method) {
-            $this->_log_request($authorized = TRUE);
+            $this->logRequest($authorized = TRUE);
         }
 
         // and...... GO!
@@ -773,7 +773,7 @@ abstract class REST_Controller extends CI_Controller
      * @param  boolean $authorized
      * @return object
      */
-    protected function _log_request($authorized = FALSE)
+    protected function logRequest($authorized = FALSE)
     {
         $status = $this->rest->db->insert(config_item('rest_logs_table'), [
                     'uri' => $this->uri->uri_string(),
@@ -799,7 +799,7 @@ abstract class REST_Controller extends CI_Controller
      * @param  string  $controller_method The method being called.
      * @return boolean
      */
-    protected function _check_limit($controller_method)
+    protected function checkLimit($controller_method)
     {
         // They are special, or it might not even have a limit
         if ( ! empty($this->rest->ignore_limits) || !isset($this->methods[$controller_method]['limit'])) {
@@ -865,7 +865,7 @@ abstract class REST_Controller extends CI_Controller
      * @access protected
      * @return boolean
      */
-    protected function _auth_override_check()
+    protected function authOverrideCheck()
     {
 
         // Assign the class/method auth type override array from the config
@@ -947,7 +947,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access protected
      */
-    protected function _parse_get()
+    protected function parseGet()
     {
         // Fix for Issue #247
         if (is_cli()) {

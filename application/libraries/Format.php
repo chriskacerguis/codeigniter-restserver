@@ -306,7 +306,7 @@ class Format {
 	 * @access protected
 	 * @param  $string
 	 */
-	protected function _from_xml($string)
+	protected function fromXml($string)
 	{
 		return $string ? (array) simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOCDATA) : [];
 	}
