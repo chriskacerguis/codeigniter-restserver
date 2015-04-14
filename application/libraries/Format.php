@@ -212,7 +212,7 @@ class Format {
 	 *
 	 * @access public
 	 */
-	public function to_csv()
+	public function toCsv()
 	{
 		$data = (array)$this->_data;
 
