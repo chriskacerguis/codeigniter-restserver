@@ -295,7 +295,7 @@ class Format {
 	 *
 	 * @access public
 	 */
-	public function to_php()
+	public function toPhp()
 	{
 		return var_export($this->_data, TRUE);
 	}
