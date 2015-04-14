@@ -303,7 +303,7 @@ abstract class REST_Controller extends CI_Controller
             $rest_auth = strtolower($this->config->item('rest_auth'));
             switch ($rest_auth) {
                 case 'basic':
-                    $this->prepareBasicAuth();
+                    $this->_prepareBasicAuth();
                     break;
                 case 'digest':
                     $this->_prepare_digest_auth();
@@ -887,7 +887,7 @@ abstract class REST_Controller extends CI_Controller
             // Basic auth override found, prepare basic
             if ($this->overrides_array[$this->router->class]['*'] == 'basic')
             {
-                $this->prepareBasicAuth();
+                $this->_prepareBasicAuth();
                 return TRUE;
             }
 
@@ -918,7 +918,7 @@ abstract class REST_Controller extends CI_Controller
 
         // Basic auth override found, prepare basic
         if ($this->overrides_array[$this->router->class][$this->router->method] == 'basic') {
-            $this->prepareBasicAuth();
+            $this->_prepareBasicAuth();
 
             return TRUE;
         }
@@ -1410,7 +1410,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access protected
      */
-    protected function prepareBasicAuth()
+    protected function _prepareBasicAuth()
     {
         // If whitelist is enabled it has the first chance to kick them out
         if (config_item('rest_ip_whitelist_enabled')) {
