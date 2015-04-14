@@ -15,7 +15,7 @@ class Format {
 	/**
 	 * Returns an instance of the Format object.
 	 *
-	 *     echo $this->format->factory(array('foo' => 'bar'))->to_xml();
+	 *     echo $this->format->factory(array('foo' => 'bar'))->toXml();
 	 *
 	 * @access  public
 	 * @param   $data,      mixed  general date to be converted
@@ -99,7 +99,7 @@ class Format {
 	 * @param  $structure
 	 * @param  $basenode
 	 */
-	public function to_xml($data = NULL, $structure = NULL, $basenode = 'xml')
+	public function toXml($data = NULL, $structure = NULL, $basenode = 'xml')
 	{
 		if ($data === NULL && ! func_num_args())
 		{
@@ -158,7 +158,7 @@ class Format {
 				$node = $structure->addChild($key);
 
 				// recursive call.
-				$this->to_xml($value, $node, $key);
+				$this->toXml($value, $node, $key);
 			}
 			else
 			{
