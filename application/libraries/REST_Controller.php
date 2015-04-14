@@ -289,7 +289,7 @@ abstract class REST_Controller extends CI_Controller
         // Checking for keys? GET TO WorK!
 	      // Skip keys test for $config['auth_override_class_method']['class'['method'] = 'none'
         if (config_item('rest_enable_keys') && $this->auth_override !== TRUE) {
-            $this->_allow = $this->_detect_api_key();
+            $this->_allow = $this->detectApiKey();
         }
 
         // only allow ajax requests
@@ -672,7 +672,7 @@ abstract class REST_Controller extends CI_Controller
      * @access protected
      * @return boolean
      */
-    protected function _detect_api_key()
+    protected function detectApiKey()
     {
         // Get the api key name variable set in the rest config file
         $api_key_variable = config_item('rest_key_name');
