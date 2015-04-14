@@ -244,7 +244,7 @@ class Format {
 	 *
 	 * @access public
 	 */
-	public function to_json()
+	public function toJson()
 	{
 		$callback = isset($_GET['callback']) ? $_GET['callback'] : '';
 		if ($callback === '')
