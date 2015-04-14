@@ -183,7 +183,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Developers can extend this class and add a check in here.
      */
-    protected function early_checks()
+    protected function earlyChecks()
     {
 
     }
@@ -268,7 +268,7 @@ abstract class REST_Controller extends CI_Controller
         $this->response->lang   = $this->_detect_lang();
 
         // Developers can extend this class and add a check in here
-        $this->early_checks();
+        $this->earlyChecks();
 
         $this->rest             = new StdClass();
 
