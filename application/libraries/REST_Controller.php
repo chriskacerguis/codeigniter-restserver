@@ -303,7 +303,7 @@ abstract class REST_Controller extends CI_Controller
             $rest_auth = strtolower($this->config->item('rest_auth'));
             switch ($rest_auth) {
                 case 'basic':
-                    $this->_prepareBasicAuth();
+                    $this->prepareBasicAuth();
                     break;
                 case 'digest':
                     $this->_prepare_digest_auth();
@@ -346,7 +346,7 @@ abstract class REST_Controller extends CI_Controller
      * @param  string $object_called
      * @param  array  $arguments     The arguments passed to the controller method.
      */
-    public function _remap($object_called, $arguments)
+    public function remap($object_called, $arguments)
     {
         // Should we answer if not over SSL?
         if (config_item('force_https') && !$this->_detect_ssl()) {
@@ -887,7 +887,7 @@ abstract class REST_Controller extends CI_Controller
             // Basic auth override found, prepare basic
             if ($this->overrides_array[$this->router->class]['*'] == 'basic')
             {
-                $this->_prepareBasicAuth();
+                $this->prepareBasicAuth();
                 return TRUE;
             }
 
@@ -918,7 +918,7 @@ abstract class REST_Controller extends CI_Controller
 
         // Basic auth override found, prepare basic
         if ($this->overrides_array[$this->router->class][$this->router->method] == 'basic') {
-            $this->_prepareBasicAuth();
+            $this->prepareBasicAuth();
 
             return TRUE;
         }
@@ -1410,7 +1410,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access protected
      */
-    protected function _prepareBasicAuth()
+    protected function prepareBasicAuth()
     {
         // If whitelist is enabled it has the first chance to kick them out
         if (config_item('rest_ip_whitelist_enabled')) {
