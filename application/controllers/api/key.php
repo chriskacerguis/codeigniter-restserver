@@ -35,7 +35,7 @@ class Key extends REST_Controller
 	public function index_put()
     {
 		// Build a new key
-		$key = self::_generate_key();
+		$key = self::generateKey();
 
 		// If no key level provided, give them a rubbish one
 		$level = $this->put('level') ? $this->put('level') : 1;
@@ -68,7 +68,7 @@ class Key extends REST_Controller
 		$key = $this->delete('key');
 
 		// Does this key even exist?
-		if ( ! self::_key_exists($key))
+		if ( ! self::keyExists($key))
 		{
 			// NOOOOOOOOO!
 			$this->response(array('status' => 0, 'error' => 'Invalid API Key.'), 400);
@@ -97,14 +97,14 @@ class Key extends REST_Controller
 		$new_level = $this->post('level');
 
 		// Does this key even exist?
-		if ( ! self::_key_exists($key))
+		if ( ! self::keyExists($key))
 		{
 			// NOOOOOOOOO!
 			$this->response(array('error' => 'Invalid API Key.'), 400);
 		}
 
 		// Update the key level
-		if (self::_update_key($key, array('level' => $new_level)))
+		if (self::updateKey($key, array('level' => $new_level)))
 		{
 			$this->response(array('status' => 1, 'success' => 'API Key was updated.'), 200); // 200 = OK
 		}
@@ -125,19 +125,19 @@ class Key extends REST_Controller
 	 * @access	public
 	 * @return	void
 	 */
-	public function suspend_post()
+	public function suspendPost()
     {
 		$key = $this->post('key');
 
 		// Does this key even exist?
-		if ( ! self::_key_exists($key))
+		if ( ! self::keyExists($key))
 		{
 			// NOOOOOOOOO!
 			$this->response(array('error' => 'Invalid API Key.'), 400);
 		}
 
 		// Update the key level
-		if (self::_update_key($key, array('level' => 0)))
+		if (self::updateKey($key, array('level' => 0)))
 		{
 			$this->response(array('status' => 1, 'success' => 'Key was suspended.'), 200); // 200 = OK
 		}
@@ -158,7 +158,7 @@ class Key extends REST_Controller
 	 * @access	public
 	 * @return	void
 	 */
-	public function regenerate_post()
+	public function regeneratePost()
     {
 		$old_key = $this->post('key');
 		$key_details = self::_get_key($old_key);
@@ -171,13 +171,13 @@ class Key extends REST_Controller
 		}
 
 		// Build a new key
-		$new_key = self::_generate_key();
+		$new_key = self::generateKey();
 
 		// Insert the new key
 		if (self::_insert_key($new_key, array('level' => $key_details->level, 'ignore_limits' => $key_details->ignore_limits)))
 		{
 			// Suspend old key
-			self::_update_key($old_key, array('level' => 0));
+			self::updateKey($old_key, array('level' => 0));
 
 			$this->response(array('status' => 1, 'key' => $new_key), 201); // 201 = Created
 		}
@@ -191,11 +191,11 @@ class Key extends REST_Controller
 	// --------------------------------------------------------------------
 
 	/* Helper Methods */
-	
-	private function _generate_key()
+
+	private function generateKey()
 	{
 		//$this->load->helper('security');
-		
+
 		do
 		{
 			$salt = do_hash(time().mt_rand());
@@ -203,7 +203,7 @@ class Key extends REST_Controller
 		}
 
 		// Already in the DB? Fail. Try again
-		while (self::_key_exists($new_key));
+		while (self::keyExists($new_key));
 
 		return $new_key;
 	}
@@ -219,7 +219,7 @@ class Key extends REST_Controller
 
 	// --------------------------------------------------------------------
 
-	private function _key_exists($key)
+	private function keyExists($key)
 	{
 		return $this->db->where(config_item('rest_key_column'), $key)->count_all_results(config_item('rest_keys_table')) > 0;
 	}
@@ -228,7 +228,7 @@ class Key extends REST_Controller
 
 	private function _insert_key($key, $data)
 	{
-		
+
 		$data[config_item('rest_key_column')] = $key;
 		$data['date_created'] = function_exists('now') ? now() : time();
 
@@ -237,7 +237,7 @@ class Key extends REST_Controller
 
 	// --------------------------------------------------------------------
 
-	private function _update_key($key, $data)
+	private function updateKey($key, $data)
 	{
 		return $this->db->where(config_item('rest_key_column'), $key)->update(config_item('rest_keys_table'), $data);
 	}
