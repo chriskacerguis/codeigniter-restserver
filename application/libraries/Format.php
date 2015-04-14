@@ -345,7 +345,7 @@ class Format {
 	 * @access private
 	 * @param  string
 	 */
-	private function _from_json($string)
+	private function fromJson($string)
 	{
 		return json_decode(trim($string));
 	}
