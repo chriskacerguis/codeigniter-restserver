@@ -224,7 +224,7 @@ abstract class REST_Controller extends CI_Controller
         $this->request->ssl     = $this->_detect_ssl();
 
         // How is this request being made? POST, DELETE, GET, PUT?
-        $this->request->method  = $this->_detect_method();
+        $this->request->method  = $this->detectMethod();
 
         // Create argument container, if nonexistent
         if (!isset($this->{'_'.$this->request->method.'_args'})) {
@@ -645,7 +645,7 @@ abstract class REST_Controller extends CI_Controller
      * @access protected
      * @return string
      */
-    protected function _detect_method()
+    protected function detectMethod()
     {
         $method = strtolower($this->input->server('REQUEST_METHOD'));
 
