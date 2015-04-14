@@ -235,7 +235,7 @@ abstract class REST_Controller extends CI_Controller
         $this->_get_args        = array_merge($this->_get_args, $this->uri->ruri_to_assoc());
 
         // Try to find a format for the request (means we have a request body)
-        $this->request->format  = $this->_detect_input_format();
+        $this->request->format  = $this->detectInputFormat();
 
         // Some Methods cant have a body
         $this->request->body    = NULL;
@@ -546,7 +546,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access protected
      */
-    protected function _detect_input_format()
+    protected function detectInputFormat()
     {
         if ($this->input->server('CONTENT_TYPE')) {
             // Check all formats against the HTTP_ACCEPT header
