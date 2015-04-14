@@ -318,7 +318,7 @@ class Format {
 	 * @access protected
 	 * @param  $string
 	 */
-	protected function _from_csv($string)
+	protected function fromCsv($string)
 	{
 		$data = [];
 
