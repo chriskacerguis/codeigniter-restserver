@@ -177,7 +177,7 @@ class Format {
 	 *
 	 * @access public
 	 */
-	public function to_html()
+	public function toHtml()
 	{
 		$data = (array)$this->_data;
 
