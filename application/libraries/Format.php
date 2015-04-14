@@ -357,7 +357,7 @@ class Format {
 	 * @param  $string
 	 *
 	 */
-	private function _from_serialize($string)
+	private function fromSerialize($string)
 	{
 		return unserialize(trim($string));
 	}
