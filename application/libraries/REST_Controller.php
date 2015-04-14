@@ -262,7 +262,7 @@ abstract class REST_Controller extends CI_Controller
 
         // Which format should the data be returned in?
         $this->response         = new stdClass();
-        $this->response->format = $this->_detect_output_format();
+        $this->response->format = $this->detectOutputFormat();
 
         // Which format should the data be returned in?
         $this->response->lang   = $this->_detect_lang();
@@ -572,7 +572,7 @@ abstract class REST_Controller extends CI_Controller
      * @access protected
      * @return string The output format.
      */
-    protected function _detect_output_format()
+    protected function detectOutputFormat()
     {
         $pattern = '/\.('.implode('|', array_keys($this->_supported_formats)).')$/';
 
