@@ -265,7 +265,7 @@ abstract class REST_Controller extends CI_Controller
         $this->response->format = $this->detectOutputFormat();
 
         // Which format should the data be returned in?
-        $this->response->lang   = $this->_detect_lang();
+        $this->response->lang   = $this->detectLang();
 
         // Developers can extend this class and add a check in here
         $this->earlyChecks();
@@ -740,7 +740,7 @@ abstract class REST_Controller extends CI_Controller
      * @access protected
      * @return NULL|string The language code.
      */
-    protected function _detect_lang()
+    protected function detectLang()
     {
         if ( ! $lang = $this->input->server('HTTP_ACCEPT_LANGUAGE')) {
             return NULL;
