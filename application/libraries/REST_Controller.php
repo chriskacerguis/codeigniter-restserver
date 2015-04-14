@@ -217,7 +217,7 @@ abstract class REST_Controller extends CI_Controller
 
         // Check to see if this IP is Blacklisted
         if ($this->config->item('rest_ip_blacklist_enabled')) {
-            $this->_check_blacklist_auth();
+            $this->checkBlacklistAuth();
         }
 
         // Is it over SSL?
@@ -306,14 +306,14 @@ abstract class REST_Controller extends CI_Controller
                     $this->prepareBasicAuth();
                     break;
                 case 'digest':
-                    $this->_prepare_digest_auth();
+                    $this->prepareDigestAuth();
                     break;
                 case 'session':
                     $this->_check_php_session();
                     break;
             }
             if ($this->config->item('rest_ip_whitelist_enabled')) {
-                $this->_check_whitelist_auth();
+                $this->checkWhitelistAuth();
             }
         }
     }
@@ -330,7 +330,7 @@ abstract class REST_Controller extends CI_Controller
         $this->_end_rtime = microtime(TRUE);
         // CK: if, we are logging, log the access time here, as we are done!
         if (config_item('rest_enable_logging')) {
-            $this->_log_access_time();
+            $this->logAccessTime();
         }
 
     }
@@ -377,7 +377,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // Check to see if this key has access to the requested controller.
-        if (config_item('rest_enable_keys') && $use_key && !empty($this->rest->key) && !$this->_check_access()) {
+        if (config_item('rest_enable_keys') && $use_key && !empty($this->rest->key) && !$this->checkAccess()) {
             if (config_item('rest_enable_logging') && $log_method) {
                 $this->_log_request();
             }
@@ -503,7 +503,7 @@ abstract class REST_Controller extends CI_Controller
 
         // JC: Log response code only if rest logging enabled
         if (config_item('rest_enable_logging')) {
-            $this->_log_response_code($http_code);
+            $this->logResponseCode($http_code);
         }
 
         // If zlib.output_compression is enabled it will compress the output,
@@ -894,14 +894,14 @@ abstract class REST_Controller extends CI_Controller
             // Digest auth override found, prepare digest
             if ($this->overrides_array[$this->router->class]['*'] == 'digest')
             {
-                $this->_prepare_digest_auth();
+                $this->prepareDigestAuth();
                 return TRUE;
             }
 
             // Whitelist auth override found, check client's ip against config whitelist
             if ($this->overrides_array[$this->router->class]['*'] == 'whitelist')
             {
-                $this->_check_whitelist_auth();
+                $this->checkWhitelistAuth();
                 return TRUE;
             }
         }
@@ -925,14 +925,14 @@ abstract class REST_Controller extends CI_Controller
 
         // Digest auth override found, prepare digest
         if ($this->overrides_array[$this->router->class][$this->router->method] == 'digest') {
-            $this->_prepare_digest_auth();
+            $this->prepareDigestAuth();
 
             return TRUE;
         }
 
         // Whitelist auth override found, check client's ip against config whitelist
         if ($this->overrides_array[$this->router->class][$this->router->method] == 'whitelist') {
-            $this->_check_whitelist_auth();
+            $this->checkWhitelistAuth();
 
             return TRUE;
         }
@@ -1414,7 +1414,7 @@ abstract class REST_Controller extends CI_Controller
     {
         // If whitelist is enabled it has the first chance to kick them out
         if (config_item('rest_ip_whitelist_enabled')) {
-            $this->_check_whitelist_auth();
+            $this->checkWhitelistAuth();
         }
 
         $username = NULL;
@@ -1443,11 +1443,11 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access protected
      */
-    protected function _prepare_digest_auth()
+    protected function prepareDigestAuth()
     {
         // If whitelist is enabled it has the first chance to kick them out
         if (config_item('rest_ip_whitelist_enabled')) {
-            $this->_check_whitelist_auth();
+            $this->checkWhitelistAuth();
         }
 
         $uniqid = uniqid(""); // Empty argument for backward compatibility
@@ -1492,7 +1492,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access protected
      */
-    protected function _check_blacklist_auth()
+    protected function checkBlacklistAuth()
     {
         $blacklist = explode(',', config_item('rest_ip_blacklist'));
 
@@ -1510,7 +1510,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access protected
      */
-    protected function _check_whitelist_auth()
+    protected function checkWhitelistAuth()
     {
         $whitelist = explode(',', config_item('rest_ip_whitelist'));
 
@@ -1549,7 +1549,7 @@ abstract class REST_Controller extends CI_Controller
      * @param   object|array $data
      * @return  array
      */
-    protected function _force_loopable($data)
+    protected function forceLoopable($data)
     {
         // Force it to be something useful
         if ( ! is_array($data) && !is_object($data)) {
@@ -1567,7 +1567,7 @@ abstract class REST_Controller extends CI_Controller
      * @return boolean
      */
 
-    protected function _log_access_time()
+    protected function logAccessTime()
     {
         $payload['rtime'] = $this->_end_rtime - $this->_start_rtime;
 
@@ -1581,7 +1581,7 @@ abstract class REST_Controller extends CI_Controller
      * @return boolean
      */
 
-    protected function _log_response_code($http_code)
+    protected function logResponseCode($http_code)
     {
         $payload['response_code'] = $http_code;
         return $this->rest->db->update(config_item('rest_logs_table'), $payload, ['id' => $this->_insert_id]);
@@ -1593,7 +1593,7 @@ abstract class REST_Controller extends CI_Controller
      * @access protected
      * @return boolean
      */
-    protected function _check_access()
+    protected function checkAccess()
     {
         // if we don't want to check acccess, just return TRUE
         if (config_item('rest_enable_access') === FALSE) {
