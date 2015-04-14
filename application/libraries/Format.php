@@ -60,12 +60,12 @@ class Format {
 	// FORMATING OUTPUT ---------------------------------------------------------
 
 	/**
-	 * to_array
+	 * toArray
 	 *
 	 * @access public
 	 * @param  $data
 	 */
-	public function to_array($data = NULL)
+	public function toArray($data = NULL)
 	{
 		// If not just NULL, but nothing is provided
 		if ($data === NULL && ! func_num_args())
@@ -79,7 +79,7 @@ class Format {
 		{
 			if (is_object($value) || is_array($value))
 			{
-				$array[$key] = $this->to_array($value);
+				$array[$key] = $this->toArray($value);
 			}
 
 			else
