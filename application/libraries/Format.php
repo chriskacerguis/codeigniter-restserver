@@ -370,7 +370,7 @@ class Format {
 	 * @access private
 	 * @param  $string
 	 */
-	private function _from_php($string)
+	private function fromPhp($string)
 	{
 		return trim($string);
 	}
