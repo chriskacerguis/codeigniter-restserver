@@ -950,7 +950,8 @@ abstract class REST_Controller extends CI_Controller
     protected function _parse_get()
     {
         // Fix for Issue #247
-        if (is_cli()) {
+        //if (is_cli()) { //Not working on 6 of may 2015
+	if ($this->input->is_cli_request()) {	//This works for me
             $args = $_SERVER['argv'];
             unset($args[0]);
             $_SERVER['QUERY_STRING'] =  $_SERVER['PATH_INFO'] = $_SERVER['REQUEST_URI'] = '/' . implode('/', $args) . '/';
