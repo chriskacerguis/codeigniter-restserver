@@ -424,13 +424,7 @@ abstract class REST_Controller extends CI_Controller
             $this->_fire_method([$this, $controller_method], $arguments);
         }
         catch(Exception $ex) {
-            $response = [
-                config_item('rest_status_field_name') => FALSE,
-                config_item('rest_message_field_name') => [
-                    'classname' => get_class($ex), 'message' => $ex->getMessage()
-                ]
-            ];
-            $this->response($response, 500);
+            $this->_server_error_response($ex);
         }
 
         // should not get here.
@@ -551,6 +545,24 @@ abstract class REST_Controller extends CI_Controller
             return (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']));
     }
 
+    /**
+     * Return server response
+     *
+     * Method to send a response to the client in the event of a server error.
+     *
+     * @access public
+     * @param  object $ex
+     */
+    protected function _server_error_response($ex)
+    {
+        $response = [
+                config_item('rest_status_field_name') => FALSE,
+                config_item('rest_message_field_name') => [
+                        'classname' => get_class($ex), 'message' => $ex->getMessage()
+                ]
+        ];
+        $this->response($response, 500);
+    }
 
     /**
      * Detect input format
