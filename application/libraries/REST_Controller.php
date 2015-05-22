@@ -1414,7 +1414,7 @@ abstract class REST_Controller extends CI_Controller
     {
         $key = $this->config->item('auth_source');
         if (!$this->session->userdata($key)) {
-            $this->response(['status' => FALSE, 'error' => 'Not Authorized'], 401);
+            $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Not Authorized'], 401);
         }
     }
 
