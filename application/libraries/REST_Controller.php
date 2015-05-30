@@ -841,9 +841,9 @@ abstract class REST_Controller extends CI_Controller
         // How many times can you get to this method an hour?
         $limit = $this->methods[$controller_method]['limit'];
 
-        $uri_noext=$this->uri->uri_string();
-        if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format))===0) { 
-            $uri_noext=substr($this->uri->uri_string(),0, -strlen($this->response->format)-1);
+        $uri_noext = $this->uri->uri_string();
+        if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format)) === 0) { 
+            $uri_noext = substr($this->uri->uri_string(),0, -strlen($this->response->format)-1);
         }
 
         // Get data on a keys usage
@@ -853,7 +853,7 @@ abstract class REST_Controller extends CI_Controller
                 ->get(config_item('rest_limits_table'))
                 ->row();
 
-        $timelimit = (isset($this->methods[$controller_method]['time'])? $this->methods[$controller_method]['time']:60 * 60);
+        $timelimit = (isset($this->methods[$controller_method]['time']) ? $this->methods[$controller_method]['time'] : 60 * 60);
 
         // No calls yet for this key
         if ( ! $result ) {
