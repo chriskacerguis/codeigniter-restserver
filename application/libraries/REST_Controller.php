@@ -400,7 +400,7 @@ abstract class REST_Controller extends CI_Controller
         if (config_item('rest_enable_keys') && !empty($this->rest->key)) {
             // Check the limit
             if (config_item('rest_enable_limits') && !$this->_check_limit($controller_method)) {
-                $response = [config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key has reached the hourly limit for this method.'];
+                $response = [config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key has reached the time limit for this method.'];
                 $this->response($response, 401);
             }
 
@@ -842,8 +842,7 @@ abstract class REST_Controller extends CI_Controller
         $limit = $this->methods[$controller_method]['limit'];
 
         $uri_noext=$this->uri->uri_string();
-        if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format))===0)
-        { 
+        if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format))===0) { 
             $uri_noext=substr($this->uri->uri_string(),0, -strlen($this->response->format)-1);
         }
 
@@ -853,6 +852,8 @@ abstract class REST_Controller extends CI_Controller
                 ->where('api_key', $this->rest->key)
                 ->get(config_item('rest_limits_table'))
                 ->row();
+
+        $timelimit = (isset($this->methods[$controller_method]['time'])? $this->methods[$controller_method]['time']:60 * 60);
 
         // No calls yet for this key
         if ( ! $result ) {
@@ -866,7 +867,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // Been an hour or a time limit since they called
-        elseif ($result->hour_started < time() - (isset($this->methods[$controller_method]['time'])? $this->methods[$controller_method]['time'] : 60 * 60  )) {
+        elseif ($result->hour_started < time() - $timelimit) {
             // Reset the started period
             $this->rest->db
                     ->where('uri', $uri_noext)
