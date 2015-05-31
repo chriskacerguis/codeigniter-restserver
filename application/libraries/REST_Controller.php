@@ -198,7 +198,7 @@ abstract class REST_Controller extends CI_Controller
         parent::__construct();
 
         // Check to see if this is CI 3.x
-        if(explode('.', CI_VERSION, 2)[0] > 2)
+        if(explode('.', CI_VERSION, 2)[0] < 3)
         {
             die('REST Server requires CodeIgniter 3.x');
         }
