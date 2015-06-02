@@ -197,6 +197,12 @@ abstract class REST_Controller extends CI_Controller
     {
         parent::__construct();
 
+        // Check to see if this is CI 3.x
+        if(explode('.', CI_VERSION, 2)[0] < 3)
+        {
+            die('REST Server requires CodeIgniter 3.x');
+        }
+
         // Start the timer for how long the request takes
         $this->_start_rtime = microtime(TRUE);
 
@@ -420,7 +426,14 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // and...... GO!
-        $this->_fire_method([$this, $controller_method], $arguments);
+        try {
+            $this->_fire_method([$this, $controller_method], $arguments);
+        }
+        catch(Exception $ex) {
+            $this->_server_error_response($ex);
+        }
+
+        // should not get here.
     }
 
     /**
@@ -538,6 +551,24 @@ abstract class REST_Controller extends CI_Controller
             return (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']));
     }
 
+    /**
+     * Return server response
+     *
+     * Method to send a response to the client in the event of a server error.
+     *
+     * @access public
+     * @param  object $ex
+     */
+    protected function _server_error_response($ex)
+    {
+        $response = [
+                config_item('rest_status_field_name') => FALSE,
+                config_item('rest_message_field_name') => [
+                        'classname' => get_class($ex), 'message' => $ex->getMessage()
+                ]
+        ];
+        $this->response($response, 500);
+    }
 
     /**
      * Detect input format
@@ -1401,7 +1432,7 @@ abstract class REST_Controller extends CI_Controller
     {
         $key = $this->config->item('auth_source');
         if (!$this->session->userdata($key)) {
-            $this->response(['status' => FALSE, 'error' => 'Not Authorized'], 401);
+            $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Not Authorized'], 401);
         }
     }
 
