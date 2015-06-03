@@ -1219,10 +1219,6 @@ abstract class REST_Controller extends CI_Controller
      */
     protected function _xss_clean($val, $process)
     {
-        if (CI_VERSION < 2) {
-            return $process ? $this->input->xss_clean($val) : $val;
-        }
-
         return $process ? $this->security->xss_clean($val) : $val;
     }
 
