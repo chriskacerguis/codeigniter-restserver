@@ -270,13 +270,13 @@ class Format {
 		{
 			// this is a jsonp request, the content-type must be updated to be text/javascript
 			header("Content-Type: application/javascript");
-			return $callback . "(" . json_encode($this->_data, JSON_NUMERIC_CHECK) . ");";
+			return $callback . '(' . json_encode($this->_data) . ');';
 		}
 		else
 		{
 			// we have an invalid jsonp callback identifier, we'll return plain json with a warning field
 			$this->_data['warning'] = "invalid jsonp callback provided: ".$callback;
-			return json_encode($this->_data, JSON_NUMERIC_CHECK);
+			return json_encode($this->_data);
 		}
 	}
 
