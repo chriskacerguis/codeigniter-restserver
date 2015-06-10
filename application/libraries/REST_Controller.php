@@ -197,6 +197,9 @@ abstract class REST_Controller extends CI_Controller
     {
         parent::__construct();
 
+        // disable XML Entity (security vulnerability)
+        libxml_disable_entity_loader(true);
+
         // Check to see if this is CI 3.x
         if(explode('.', CI_VERSION, 2)[0] < 3)
         {
