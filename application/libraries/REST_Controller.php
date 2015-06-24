@@ -1099,7 +1099,7 @@ abstract class REST_Controller extends CI_Controller
      * @access public
      * @param  string  $key       The key for the GET request argument to retrieve
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
-     * @return string  The GET argument value.
+     * @return string | array  The GET argument value.
      */
     public function get($key = NULL, $xss_clean = TRUE)
     {
@@ -1116,7 +1116,7 @@ abstract class REST_Controller extends CI_Controller
      * @access public
      * @param  string  $key       The OPTIONS/GET argument key
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not
-     * @return string  The OPTIONS/GET argument value
+     * @return string | array  The OPTIONS/GET argument value
      */
     public function options($key = NULL, $xss_clean = TRUE)
     {
@@ -1133,7 +1133,7 @@ abstract class REST_Controller extends CI_Controller
      * @access public
      * @param  string  $key       The HEAD/GET argument key
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not
-     * @return string  The HEAD/GET argument value
+     * @return string | array  The HEAD/GET argument value
      */
     public function head($key = NULL, $xss_clean = TRUE)
     {
@@ -1150,7 +1150,7 @@ abstract class REST_Controller extends CI_Controller
      * @access public
      * @param  string  $key       The key for the POST request argument to retrieve
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
-     * @return string  The POST argument value.
+     * @return string | array  The POST argument value.
      */
     public function post($key = NULL, $xss_clean = TRUE)
     {
@@ -1167,7 +1167,7 @@ abstract class REST_Controller extends CI_Controller
      * @access public
      * @param  string  $key       The key for the PUT request argument to retrieve
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
-     * @return string  The PUT argument value.
+     * @return string | array  The PUT argument value.
      */
     public function put($key = NULL, $xss_clean = TRUE)
     {
@@ -1184,7 +1184,7 @@ abstract class REST_Controller extends CI_Controller
      * @access public
      * @param  string  $key       The key for the DELETE request argument to retrieve
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
-     * @return string  The DELETE argument value.
+     * @return string | array  The DELETE argument value.
      */
     public function delete($key = NULL, $xss_clean = TRUE)
     {
@@ -1201,7 +1201,7 @@ abstract class REST_Controller extends CI_Controller
      * @access public
      * @param  string  $key       The key for the PATCH request argument to retrieve
      * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
-     * @return string  The PATCH argument value.
+     * @return string | array  The PATCH argument value.
      */
     public function patch($key = NULL, $xss_clean = TRUE)
     {
