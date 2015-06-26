@@ -181,6 +181,17 @@ abstract class REST_Controller extends CI_Controller
     protected $_apiuser;
 
     /**
+     * Enable XSS flag
+     *
+     * Determines whether the XSS filter is always active when
+     * GET, OPTIONS, HEAD, POST, PUT, DELETE and PATCH data is encountered.
+     * Set automatically based on config setting.
+     *
+     * @var	bool
+     */
+    protected $_enable_xss = FALSE;
+
+    /**
      * Developers can extend this class and add a check in here.
      */
     protected function early_checks()
@@ -199,6 +210,9 @@ abstract class REST_Controller extends CI_Controller
 
         // disable XML Entity (security vulnerability)
         libxml_disable_entity_loader(true);
+
+        // Set the default value of global xss filtering. Same approach as CodeIgniter 3
+        $this->_enable_xss = (config_item('global_xss_filtering') === TRUE);
 
         // Check to see if this is CI 3.x
         if(explode('.', CI_VERSION, 2)[0] < 3)
@@ -1098,10 +1112,10 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access public
      * @param  string  $key       The key for the GET request argument to retrieve
-     * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
+     * @param  boolean $xss_clean Whether to apply XSS filtering
      * @return string  The GET argument value.
      */
-    public function get($key = NULL, $xss_clean = TRUE)
+    public function get($key = NULL, $xss_clean = NULL)
     {
         if ($key === NULL) {
             return $this->_get_args;
@@ -1115,10 +1129,10 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access public
      * @param  string  $key       The OPTIONS/GET argument key
-     * @param  boolean $xss_clean Whether the value should be XSS cleaned or not
+     * @param  boolean $xss_clean Whether to apply XSS filtering
      * @return string  The OPTIONS/GET argument value
      */
-    public function options($key = NULL, $xss_clean = TRUE)
+    public function options($key = NULL, $xss_clean = NULL)
     {
         if ($key === NULL) {
             return $this->_options_args;
@@ -1132,10 +1146,10 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access public
      * @param  string  $key       The HEAD/GET argument key
-     * @param  boolean $xss_clean Whether the value should be XSS cleaned or not
+     * @param  boolean $xss_clean Whether to apply XSS filtering
      * @return string  The HEAD/GET argument value
      */
-    public function head($key = NULL, $xss_clean = TRUE)
+    public function head($key = NULL, $xss_clean = NULL)
     {
         if ($key === NULL) {
             return $this->head_args;
@@ -1149,10 +1163,10 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access public
      * @param  string  $key       The key for the POST request argument to retrieve
-     * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
+     * @param  boolean $xss_clean Whether to apply XSS filtering
      * @return string  The POST argument value.
      */
-    public function post($key = NULL, $xss_clean = TRUE)
+    public function post($key = NULL, $xss_clean = NULL)
     {
         if ($key === NULL) {
             return $this->_post_args;
@@ -1166,10 +1180,10 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access public
      * @param  string  $key       The key for the PUT request argument to retrieve
-     * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
+     * @param  boolean $xss_clean Whether to apply XSS filtering
      * @return string  The PUT argument value.
      */
-    public function put($key = NULL, $xss_clean = TRUE)
+    public function put($key = NULL, $xss_clean = NULL)
     {
         if ($key === NULL) {
             return $this->_put_args;
@@ -1183,10 +1197,10 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access public
      * @param  string  $key       The key for the DELETE request argument to retrieve
-     * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
+     * @param  boolean $xss_clean Whether to apply XSS filtering
      * @return string  The DELETE argument value.
      */
-    public function delete($key = NULL, $xss_clean = TRUE)
+    public function delete($key = NULL, $xss_clean = NULL)
     {
         if ($key === NULL) {
             return $this->_delete_args;
@@ -1200,10 +1214,10 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access public
      * @param  string  $key       The key for the PATCH request argument to retrieve
-     * @param  boolean $xss_clean Whether the value should be XSS cleaned or not.
+     * @param  boolean $xss_clean Whether to apply XSS filtering
      * @return string  The PATCH argument value.
      */
-    public function patch($key = NULL, $xss_clean = TRUE)
+    public function patch($key = NULL, $xss_clean = NULL)
     {
         if ($key === NULL) {
             return $this->_patch_args;
@@ -1213,16 +1227,18 @@ abstract class REST_Controller extends CI_Controller
     }
 
     /**
-     * Process to protect from XSS attacks.
+     * Sanitizes data so that Cross Site Scripting Hacks can be
+     * prevented.
      *
      * @access protected
-     * @param  string  $val     The input.
-     * @param  boolean $process Do clean or note the input.
+     * @param  string  $value     Input data
+     * @param  boolean $xss_clean Whether to apply XSS filtering
      * @return string
      */
-    protected function _xss_clean($val, $process)
+    protected function _xss_clean($value, $xss_clean)
     {
-        return $process ? $this->security->xss_clean($val) : $val;
+        is_bool($xss_clean) OR $xss_clean = $this->_enable_xss;
+        return $xss_clean === TRUE ? $this->security->xss_clean($value) : $value;
     }
 
     /**
