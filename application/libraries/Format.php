@@ -15,7 +15,7 @@ class Format {
 	/**
 	 * Returns an instance of the Format object.
 	 *
-	 *     echo $this->format->factory(array('foo' => 'bar'))->to_xml();
+	 *     echo $this->format->factory(array('foo' => 'bar'))->toXml();
 	 *
 	 * @access  public
 	 * @param   $data,      mixed  general date to be converted
@@ -60,12 +60,12 @@ class Format {
 	// FORMATING OUTPUT ---------------------------------------------------------
 
 	/**
-	 * to_array
+	 * toArray
 	 *
 	 * @access public
 	 * @param  $data
 	 */
-	public function to_array($data = NULL)
+	public function toArray($data = NULL)
 	{
 		// If not just NULL, but nothing is provided
 		if ($data === NULL && ! func_num_args())
@@ -79,7 +79,7 @@ class Format {
 		{
 			if (is_object($value) || is_array($value))
 			{
-				$array[$key] = $this->to_array($value);
+				$array[$key] = $this->toArray($value);
 			}
 
 			else
@@ -99,7 +99,7 @@ class Format {
 	 * @param  $structure
 	 * @param  $basenode
 	 */
-	public function to_xml($data = NULL, $structure = NULL, $basenode = 'xml')
+	public function toXml($data = NULL, $structure = NULL, $basenode = 'xml')
 	{
 		if ($data === NULL && ! func_num_args())
 		{
@@ -158,7 +158,7 @@ class Format {
 				$node = $structure->addChild($key);
 
 				// recursive call.
-				$this->to_xml($value, $node, $key);
+				$this->toXml($value, $node, $key);
 			}
 			else
 			{
@@ -177,7 +177,7 @@ class Format {
 	 *
 	 * @access public
 	 */
-	public function to_html()
+	public function toHtml()
 	{
 		$data = (array)$this->_data;
 
@@ -212,7 +212,7 @@ class Format {
 	 *
 	 * @access public
 	 */
-	public function to_csv()
+	public function toCsv()
 	{
 		$data = (array)$this->_data;
 
@@ -244,7 +244,7 @@ class Format {
 	 *
 	 * @access public
 	 */
-	public function to_json()
+	public function toJson()
 	{
 		$callback = isset($_GET['callback']) ? $_GET['callback'] : '';
 		if ($callback === '')
@@ -295,7 +295,7 @@ class Format {
 	 *
 	 * @access public
 	 */
-	public function to_php()
+	public function toPhp()
 	{
 		return var_export($this->_data, TRUE);
 	}
@@ -306,7 +306,7 @@ class Format {
 	 * @access protected
 	 * @param  $string
 	 */
-	protected function _from_xml($string)
+	protected function fromXml($string)
 	{
 		return $string ? (array) simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOCDATA) : [];
 	}
@@ -318,7 +318,7 @@ class Format {
 	 * @access protected
 	 * @param  $string
 	 */
-	protected function _from_csv($string)
+	protected function fromCsv($string)
 	{
 		$data = [];
 
@@ -345,7 +345,7 @@ class Format {
 	 * @access private
 	 * @param  string
 	 */
-	private function _from_json($string)
+	private function fromJson($string)
 	{
 		return json_decode(trim($string));
 	}
@@ -357,7 +357,7 @@ class Format {
 	 * @param  $string
 	 *
 	 */
-	private function _from_serialize($string)
+	private function fromSerialize($string)
 	{
 		return unserialize(trim($string));
 	}
@@ -370,7 +370,7 @@ class Format {
 	 * @access private
 	 * @param  $string
 	 */
-	private function _from_php($string)
+	private function fromPhp($string)
 	{
 		return trim($string);
 	}

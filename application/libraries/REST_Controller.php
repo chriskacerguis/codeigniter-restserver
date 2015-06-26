@@ -194,7 +194,7 @@ abstract class REST_Controller extends CI_Controller
     /**
      * Developers can extend this class and add a check in here.
      */
-    protected function early_checks()
+    protected function earlyChecks()
     {
 
     }
@@ -240,14 +240,14 @@ abstract class REST_Controller extends CI_Controller
 
         // Check to see if this IP is Blacklisted
         if ($this->config->item('rest_ip_blacklist_enabled')) {
-            $this->_check_blacklist_auth();
+            $this->checkBlacklistAuth();
         }
 
         // Is it over SSL?
         $this->request->ssl     = $this->_detect_ssl();
 
         // How is this request being made? POST, DELETE, GET, PUT?
-        $this->request->method  = $this->_detect_method();
+        $this->request->method  = $this->detectMethod();
 
         // Create argument container, if nonexistent
         if (!isset($this->{'_'.$this->request->method.'_args'})) {
@@ -258,7 +258,7 @@ abstract class REST_Controller extends CI_Controller
         $this->_get_args        = array_merge($this->_get_args, $this->uri->ruri_to_assoc());
 
         // Try to find a format for the request (means we have a request body)
-        $this->request->format  = $this->_detect_input_format();
+        $this->request->format  = $this->detectInputFormat();
 
         // Some Methods cant have a body
         $this->request->body    = NULL;
@@ -285,13 +285,13 @@ abstract class REST_Controller extends CI_Controller
 
         // Which format should the data be returned in?
         $this->response         = new stdClass();
-        $this->response->format = $this->_detect_output_format();
+        $this->response->format = $this->detectOutputFormat();
 
         // Which format should the data be returned in?
-        $this->response->lang   = $this->_detect_lang();
+        $this->response->lang   = $this->detectLang();
 
         // Developers can extend this class and add a check in here
-        $this->early_checks();
+        $this->earlyChecks();
 
         $this->rest             = new StdClass();
 
@@ -306,13 +306,13 @@ abstract class REST_Controller extends CI_Controller
         }
 
         // Check if there is a specific auth type for the current class/method
-        // _auth_override_check could exit so we need $this->rest->db initialized before
-        $this->auth_override    = $this->_auth_override_check();
+        // authOverrideCheck could exit so we need $this->rest->db initialized before
+        $this->auth_override    = $this->authOverrideCheck();
 
         // Checking for keys? GET TO WorK!
 	      // Skip keys test for $config['auth_override_class_method']['class'['method'] = 'none'
         if (config_item('rest_enable_keys') && $this->auth_override !== TRUE) {
-            $this->_allow = $this->_detect_api_key();
+            $this->_allow = $this->detectApiKey();
         }
 
         // only allow ajax requests
@@ -326,17 +326,17 @@ abstract class REST_Controller extends CI_Controller
             $rest_auth = strtolower($this->config->item('rest_auth'));
             switch ($rest_auth) {
                 case 'basic':
-                    $this->_prepare_basic_auth();
+                    $this->prepareBasicAuth();
                     break;
                 case 'digest':
-                    $this->_prepare_digest_auth();
+                    $this->prepareDigestAuth();
                     break;
                 case 'session':
                     $this->_check_php_session();
                     break;
             }
             if ($this->config->item('rest_ip_whitelist_enabled')) {
-                $this->_check_whitelist_auth();
+                $this->checkWhitelistAuth();
             }
         }
     }
@@ -353,7 +353,7 @@ abstract class REST_Controller extends CI_Controller
         $this->_end_rtime = microtime(TRUE);
         // CK: if, we are logging, log the access time here, as we are done!
         if (config_item('rest_enable_logging')) {
-            $this->_log_access_time();
+            $this->logAccessTime();
         }
 
     }
@@ -369,7 +369,7 @@ abstract class REST_Controller extends CI_Controller
      * @param  string $object_called
      * @param  array  $arguments     The arguments passed to the controller method.
      */
-    public function _remap($object_called, $arguments)
+    public function remap($object_called, $arguments)
     {
         // Should we answer if not over SSL?
         if (config_item('force_https') && !$this->_detect_ssl()) {
@@ -393,16 +393,16 @@ abstract class REST_Controller extends CI_Controller
         // They provided a key, but it wasn't valid, so get them out of here.
         if (config_item('rest_enable_keys') && $use_key && $this->_allow === FALSE) {
             if (config_item('rest_enable_logging') && $log_method) {
-                $this->_log_request();
+                $this->logRequest();
             }
 
             $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Invalid API Key '.$this->rest->key], 403);
         }
 
         // Check to see if this key has access to the requested controller.
-        if (config_item('rest_enable_keys') && $use_key && !empty($this->rest->key) && !$this->_check_access()) {
+        if (config_item('rest_enable_keys') && $use_key && !empty($this->rest->key) && !$this->checkAccess()) {
             if (config_item('rest_enable_logging') && $log_method) {
-                $this->_log_request();
+                $this->logRequest();
             }
 
             $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key does not have access to the requested controller.'], 401);
@@ -416,7 +416,7 @@ abstract class REST_Controller extends CI_Controller
         // Doing key related stuff? Can only do it if they have a key right?
         if (config_item('rest_enable_keys') && !empty($this->rest->key)) {
             // Check the limit
-            if (config_item('rest_enable_limits') && !$this->_check_limit($controller_method)) {
+            if (config_item('rest_enable_limits') && !$this->checkLimit($controller_method)) {
                 $response = [config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key has reached the hourly limit for this method.'];
                 $this->response($response, 401);
             }
@@ -429,7 +429,7 @@ abstract class REST_Controller extends CI_Controller
 
             // IM TELLIN!
             if (config_item('rest_enable_logging') && $log_method) {
-                $this->_log_request($authorized);
+                $this->logRequest($authorized);
             }
 
             // They don't have good enough perms
@@ -439,7 +439,7 @@ abstract class REST_Controller extends CI_Controller
 
         // No key stuff, but record that stuff is happening
         elseif (config_item('rest_enable_logging') && $log_method) {
-            $this->_log_request($authorized = TRUE);
+            $this->logRequest($authorized = TRUE);
         }
 
         // and...... GO!
@@ -533,7 +533,7 @@ abstract class REST_Controller extends CI_Controller
 
         // JC: Log response code only if rest logging enabled
         if (config_item('rest_enable_logging')) {
-            $this->_log_response_code($http_code);
+            $this->logResponseCode($http_code);
         }
 
         // If zlib.output_compression is enabled it will compress the output,
@@ -594,7 +594,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access protected
      */
-    protected function _detect_input_format()
+    protected function detectInputFormat()
     {
         if ($this->input->server('CONTENT_TYPE')) {
             // Check all formats against the HTTP_ACCEPT header
@@ -620,7 +620,7 @@ abstract class REST_Controller extends CI_Controller
      * @access protected
      * @return string The output format.
      */
-    protected function _detect_output_format()
+    protected function detectOutputFormat()
     {
         $pattern = '/\.('.implode('|', array_keys($this->_supported_formats)).')$/';
 
@@ -693,7 +693,7 @@ abstract class REST_Controller extends CI_Controller
      * @access protected
      * @return string
      */
-    protected function _detect_method()
+    protected function detectMethod()
     {
         $method = strtolower($this->input->server('REQUEST_METHOD'));
 
@@ -720,7 +720,7 @@ abstract class REST_Controller extends CI_Controller
      * @access protected
      * @return boolean
      */
-    protected function _detect_api_key()
+    protected function detectApiKey()
     {
         // Get the api key name variable set in the rest config file
         $api_key_variable = config_item('rest_key_name');
@@ -788,7 +788,7 @@ abstract class REST_Controller extends CI_Controller
      * @access protected
      * @return NULL|string The language code.
      */
-    protected function _detect_lang()
+    protected function detectLang()
     {
         if ( ! $lang = $this->input->server('HTTP_ACCEPT_LANGUAGE')) {
             return NULL;
@@ -821,7 +821,7 @@ abstract class REST_Controller extends CI_Controller
      * @param  boolean $authorized
      * @return object
      */
-    protected function _log_request($authorized = FALSE)
+    protected function logRequest($authorized = FALSE)
     {
         $status = $this->rest->db->insert(config_item('rest_logs_table'), [
                     'uri' => $this->uri->uri_string(),
@@ -847,7 +847,7 @@ abstract class REST_Controller extends CI_Controller
      * @param  string  $controller_method The method being called.
      * @return boolean
      */
-    protected function _check_limit($controller_method)
+    protected function checkLimit($controller_method)
     {
         // They are special, or it might not even have a limit
         if ( ! empty($this->rest->ignore_limits) || !isset($this->methods[$controller_method]['limit'])) {
@@ -913,7 +913,7 @@ abstract class REST_Controller extends CI_Controller
      * @access protected
      * @return boolean
      */
-    protected function _auth_override_check()
+    protected function authOverrideCheck()
     {
 
         // Assign the class/method auth type override array from the config
@@ -935,21 +935,21 @@ abstract class REST_Controller extends CI_Controller
             // Basic auth override found, prepare basic
             if ($this->overrides_array[$this->router->class]['*'] == 'basic')
             {
-                $this->_prepare_basic_auth();
+                $this->prepareBasicAuth();
                 return TRUE;
             }
 
             // Digest auth override found, prepare digest
             if ($this->overrides_array[$this->router->class]['*'] == 'digest')
             {
-                $this->_prepare_digest_auth();
+                $this->prepareDigestAuth();
                 return TRUE;
             }
 
             // Whitelist auth override found, check client's ip against config whitelist
             if ($this->overrides_array[$this->router->class]['*'] == 'whitelist')
             {
-                $this->_check_whitelist_auth();
+                $this->checkWhitelistAuth();
                 return TRUE;
             }
         }
@@ -966,21 +966,21 @@ abstract class REST_Controller extends CI_Controller
 
         // Basic auth override found, prepare basic
         if ($this->overrides_array[$this->router->class][$this->router->method] == 'basic') {
-            $this->_prepare_basic_auth();
+            $this->prepareBasicAuth();
 
             return TRUE;
         }
 
         // Digest auth override found, prepare digest
         if ($this->overrides_array[$this->router->class][$this->router->method] == 'digest') {
-            $this->_prepare_digest_auth();
+            $this->prepareDigestAuth();
 
             return TRUE;
         }
 
         // Whitelist auth override found, check client's ip against config whitelist
         if ($this->overrides_array[$this->router->class][$this->router->method] == 'whitelist') {
-            $this->_check_whitelist_auth();
+            $this->checkWhitelistAuth();
 
             return TRUE;
         }
@@ -995,7 +995,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access protected
      */
-    protected function _parse_get()
+    protected function parseGet()
     {
         // Fix for Issue #247
         if (is_cli()) {
@@ -1456,11 +1456,11 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access protected
      */
-    protected function _prepare_basic_auth()
+    protected function prepareBasicAuth()
     {
         // If whitelist is enabled it has the first chance to kick them out
         if (config_item('rest_ip_whitelist_enabled')) {
-            $this->_check_whitelist_auth();
+            $this->checkWhitelistAuth();
         }
 
         $username = NULL;
@@ -1489,11 +1489,11 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access protected
      */
-    protected function _prepare_digest_auth()
+    protected function prepareDigestAuth()
     {
         // If whitelist is enabled it has the first chance to kick them out
         if (config_item('rest_ip_whitelist_enabled')) {
-            $this->_check_whitelist_auth();
+            $this->checkWhitelistAuth();
         }
 
         $uniqid = uniqid(""); // Empty argument for backward compatibility
@@ -1538,7 +1538,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access protected
      */
-    protected function _check_blacklist_auth()
+    protected function checkBlacklistAuth()
     {
         $blacklist = explode(',', config_item('rest_ip_blacklist'));
 
@@ -1556,7 +1556,7 @@ abstract class REST_Controller extends CI_Controller
      *
      * @access protected
      */
-    protected function _check_whitelist_auth()
+    protected function checkWhitelistAuth()
     {
         $whitelist = explode(',', config_item('rest_ip_whitelist'));
 
@@ -1595,7 +1595,7 @@ abstract class REST_Controller extends CI_Controller
      * @param   object|array $data
      * @return  array
      */
-    protected function _force_loopable($data)
+    protected function forceLoopable($data)
     {
         // Force it to be something useful
         if ( ! is_array($data) && !is_object($data)) {
@@ -1613,7 +1613,7 @@ abstract class REST_Controller extends CI_Controller
      * @return boolean
      */
 
-    protected function _log_access_time()
+    protected function logAccessTime()
     {
         $payload['rtime'] = $this->_end_rtime - $this->_start_rtime;
 
@@ -1627,7 +1627,7 @@ abstract class REST_Controller extends CI_Controller
      * @return boolean
      */
 
-    protected function _log_response_code($http_code)
+    protected function logResponseCode($http_code)
     {
         $payload['response_code'] = $http_code;
         return $this->rest->db->update(config_item('rest_logs_table'), $payload, ['id' => $this->_insert_id]);
@@ -1639,7 +1639,7 @@ abstract class REST_Controller extends CI_Controller
      * @access protected
      * @return boolean
      */
-    protected function _check_access()
+    protected function checkAccess()
     {
         // if we don't want to check acccess, just return TRUE
         if (config_item('rest_enable_access') === FALSE) {
