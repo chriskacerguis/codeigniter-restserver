@@ -1269,7 +1269,7 @@ abstract class REST_Controller extends CI_Controller
             'basedn'  => $this->config->item('basedn', 'ldap'),
           ];
 
-        log_message('debug', 'LDAP Auth: Connect to ' . $ldaphost);
+        log_message('debug', 'LDAP Auth: Connect to ' . (isset($ldaphost) ? $ldaphost : '[ldap not configured]'));
 
         $ldapconfig['authrealm'] = $this->config->item('domain', 'ldap');
 
