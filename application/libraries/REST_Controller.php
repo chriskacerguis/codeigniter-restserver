@@ -223,7 +223,7 @@ abstract class REST_Controller extends CI_Controller
         // Check to see if this is CI 3.x
         if(explode('.', CI_VERSION, 2)[0] < 3)
         {
-            die('REST Server requires CodeIgniter 3.x');
+            exit('REST Server requires CodeIgniter 3.x');
         }
 
         // Set the default value of global xss filtering. Same approach as CodeIgniter 3
