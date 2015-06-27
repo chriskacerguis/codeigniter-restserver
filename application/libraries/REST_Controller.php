@@ -302,8 +302,6 @@ abstract class REST_Controller extends CI_Controller
         // Developers can extend this class and add a check in here
         $this->early_checks();
 
-        $this->rest             = new StdClass();
-
         // Load DB if its enabled
         if (config_item('rest_database_group') && (config_item('rest_enable_keys') || config_item('rest_enable_logging'))) {
             $this->rest->db     = $this->load->database(config_item('rest_database_group'), TRUE);
