@@ -204,9 +204,10 @@ abstract class REST_Controller extends CI_Controller
     }
 
     /**
-     * Constructor function
-     * @todo   Document more please.
-     * @access public
+     * Constructor for the REST API
+     *
+     * @param string $config Configuration filename minus the file extension
+     * e.g: my_rest.php is passed as 'my_rest'
      */
     public function __construct($config = 'rest')
     {
