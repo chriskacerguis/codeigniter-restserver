@@ -194,7 +194,9 @@ abstract class REST_Controller extends CI_Controller
     protected $_enable_xss = FALSE;
 
     /**
-     * Developers can extend this class and add a check in here.
+     * Extend this function to apply additional checking early on in the process
+     *
+     * @access protected
      */
     protected function early_checks()
     {
@@ -299,7 +301,7 @@ abstract class REST_Controller extends CI_Controller
         // Which format should the data be returned in?
         $this->response->lang   = $this->_detect_lang();
 
-        // Developers can extend this class and add a check in here
+        // Extend this function to apply additional checking early on in the process
         $this->early_checks();
 
         // Load DB if its enabled
