@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author        	Phil Sturgeon, Chris Kacerguis
  * @license         MIT
  * @link			https://github.com/chriskacerguis/codeigniter-restserver
- * @version         3.0.0-pre
+ * @version         3.0.0
  */
 abstract class REST_Controller extends CI_Controller
 {
