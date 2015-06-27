@@ -166,8 +166,8 @@ abstract class REST_Controller extends CI_Controller
      * @var array
      */
     protected $_supported_formats   = [
+		'json'          => 'application/json',
         'xml'           => 'application/xml',
-        'json'          => 'application/json',
         'jsonp'         => 'application/javascript',
         'serialized'    => 'application/vnd.php.serialized',
         'php'           => 'text/plain',
