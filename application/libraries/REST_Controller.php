@@ -1,4 +1,6 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed');
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * CodeIgniter Rest Controller
@@ -164,8 +166,8 @@ abstract class REST_Controller extends CI_Controller
      * @var array
      */
     protected $_supported_formats   = [
+		'json'          => 'application/json',
         'xml'           => 'application/xml',
-        'json'          => 'application/json',
         'jsonp'         => 'application/javascript',
         'serialized'    => 'application/vnd.php.serialized',
         'php'           => 'text/plain',
@@ -211,14 +213,21 @@ abstract class REST_Controller extends CI_Controller
         // disable XML Entity (security vulnerability)
         libxml_disable_entity_loader(true);
 
-        // Set the default value of global xss filtering. Same approach as CodeIgniter 3
-        $this->_enable_xss = (config_item('global_xss_filtering') === TRUE);
+        // Check to see if PHP is equal to or greater than 5.4.x
+        if (is_php('5.4') === FALSE)
+        {
+            // CodeIgniter 3 is recommended for v5.4 or above
+            exit('Using PHP v' . PHP_VERSION . ', though PHP v5.4 or greater is required');
+        }
 
         // Check to see if this is CI 3.x
         if(explode('.', CI_VERSION, 2)[0] < 3)
         {
-            die('REST Server requires CodeIgniter 3.x');
+            exit('REST Server requires CodeIgniter 3.x');
         }
+
+        // Set the default value of global xss filtering. Same approach as CodeIgniter 3
+        $this->_enable_xss = (config_item('global_xss_filtering') === TRUE);
 
         // Start the timer for how long the request takes
         $this->_start_rtime = microtime(TRUE);
