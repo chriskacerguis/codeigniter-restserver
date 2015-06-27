@@ -1542,21 +1542,25 @@ abstract class REST_Controller extends CI_Controller
         }
     }
 
-    /**
-     * Check if the client's ip is in the 'rest_ip_blacklist' config
+	/**
+     * Checks if the client's ip is in the 'rest_ip_blacklist' config and generates a 401 response
      *
      * @access protected
      */
     protected function _check_blacklist_auth()
     {
-        $blacklist = explode(',', config_item('rest_ip_blacklist'));
+        // Match an ip address in a blacklist e.g. 127.0.0.0, 0.0.0.0
+        $pattern = sprintf('/(?:,\s*|^)\Q%s\E(?=,\s*|$)/m', $this->input->ip_address());
 
-        foreach ($blacklist AS &$ip) {
-            $ip = trim($ip);
-        }
-
-        if (in_array($this->input->ip_address(), $blacklist)) {
-            $this->response(['status' => FALSE, 'error' => 'IP Denied'], 401);
+        // Returns 1, 0 or FALSE (on error only). Therefore implicitly convert 1 to TRUE
+        if (preg_match($pattern, config_item('rest_ip_blacklist')))
+        {
+            // Display an error response
+            $this->response([
+                    'status' => FALSE,
+                    'error' => 'IP Denied'
+                ],
+                401);
         }
     }
 
