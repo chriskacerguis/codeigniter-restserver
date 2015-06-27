@@ -1565,7 +1565,7 @@ abstract class REST_Controller extends CI_Controller
     }
 
     /**
-     * Check if the client's ip is in the 'rest_ip_whitelist' config
+     * Check if the client's ip is in the 'rest_ip_whitelist' config and generates a 401 response
      *
      * @access protected
      */
