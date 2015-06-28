@@ -427,7 +427,7 @@ abstract class REST_Controller extends CI_Controller
         if (config_item('rest_enable_keys') && !empty($this->rest->key)) {
             // Check the limit
             if (config_item('rest_enable_limits') && !$this->_check_limit($controller_method)) {
-                $response = [config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key has reached the hourly limit for this method.'];
+                $response = [config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'This API key has reached the time limit for this method.'];
                 $this->response($response, 401);
             }
 
@@ -868,36 +868,43 @@ abstract class REST_Controller extends CI_Controller
         // How many times can you get to this method an hour?
         $limit = $this->methods[$controller_method]['limit'];
 
+        $uri_noext = $this->uri->uri_string();
+        if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format)) === 0) { 
+            $uri_noext = substr($this->uri->uri_string(),0, -strlen($this->response->format)-1);
+        }
+
         // Get data on a keys usage
         $result = $this->rest->db
-                ->where('uri', $this->uri->uri_string())
+                ->where('uri', $uri_noext)
                 ->where('api_key', $this->rest->key)
                 ->get(config_item('rest_limits_table'))
                 ->row();
+
+        $timelimit = (isset($this->methods[$controller_method]['time']) ? $this->methods[$controller_method]['time'] : 60 * 60);
 
         // No calls yet for this key
         if ( ! $result ) {
             // Right, set one up from scratch
             $this->rest->db->insert(config_item('rest_limits_table'), [
-                'uri' => $this->uri->uri_string(),
+                'uri' => $uri_noext,
                 'api_key' => isset($this->rest->key) ? $this->rest->key : '',
                 'count' => 1,
                 'hour_started' => time()
             ]);
         }
 
-        // Been an hour since they called
-        elseif ($result->hour_started < time() - (60 * 60)) {
+        // Been an hour or a time limit since they called
+        elseif ($result->hour_started < time() - $timelimit) {
             // Reset the started period
             $this->rest->db
-                    ->where('uri', $this->uri->uri_string())
+                    ->where('uri', $uri_noext)
                     ->where('api_key', isset($this->rest->key) ? $this->rest->key : '')
                     ->set('hour_started', time())
                     ->set('count', 1)
                     ->update(config_item('rest_limits_table'));
         }
 
-        // They have called within the hour, so lets update
+        // They have called within the time limit, so lets update
         else {
             // Your luck is out, you've called too many times!
             if ($result->count >= $limit) {
@@ -905,7 +912,7 @@ abstract class REST_Controller extends CI_Controller
             }
 
             $this->rest->db
-                    ->where('uri', $this->uri->uri_string())
+                    ->where('uri', $uri_noext)
                     ->where('api_key', $this->rest->key)
                     ->set('count', 'count + 1', FALSE)
                     ->update(config_item('rest_limits_table'));
