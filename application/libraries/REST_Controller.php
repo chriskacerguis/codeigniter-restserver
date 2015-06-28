@@ -125,14 +125,14 @@ abstract class REST_Controller extends CI_Controller {
     /**
      * If the request is allowed based on the API key provided.
      *
-     * @var boolean
+     * @var bool
      */
     protected $_allow = TRUE;
 
     /**
      * Determines if output compression is enabled
      *
-     * @var boolean
+     * @var bool
      */
     protected $_zlib_oc = FALSE;
 
@@ -201,6 +201,8 @@ abstract class REST_Controller extends CI_Controller {
 
     /**
      * Constructor for the REST API
+     *
+     * @access public
      *
      * @param string $config Configuration filename minus the file extension
      * e.g: my_rest.php is passed as 'my_rest'
@@ -376,7 +378,6 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Remap
      * Requests are not made to methods directly, the request will be for
      * an "object". This simply maps the object and method to the correct
      * Controller method.
@@ -583,7 +584,6 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Detect input format
      * Detect which format the HTTP Body is provided in
      *
      * @access protected
@@ -611,10 +611,10 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Detect format
-     * Detect which format should be used to output the data.
+     * Detect which format should be used to output the data
      *
      * @access protected
+     *
      * @return string The output format.
      */
     protected function _detect_output_format()
@@ -694,10 +694,10 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Detect method
      * Detect which HTTP method is being used
      *
      * @access protected
+     *
      * @return string
      */
     protected function _detect_method()
@@ -725,11 +725,11 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Detect API Key
      * See if the user has provided an API key
      *
      * @access protected
-     * @return boolean
+     *
+     * @return bool
      */
     protected function _detect_api_key()
     {
@@ -800,10 +800,10 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Detect language(s)
      * What language do they want it in?
      *
      * @access protected
+     *
      * @return NULL|string The language code.
      */
     protected function _detect_lang()
@@ -839,7 +839,7 @@ abstract class REST_Controller extends CI_Controller {
      *
      * @access protected
      *
-     * @param  boolean $authorized
+     * @param  bool $authorized
      *
      * @return object
      */
@@ -869,7 +869,7 @@ abstract class REST_Controller extends CI_Controller {
      *
      * @param  string $controller_method The method being called.
      *
-     * @return boolean
+     * @return bool
      */
     protected function _check_limit($controller_method)
     {
@@ -940,7 +940,8 @@ abstract class REST_Controller extends CI_Controller {
      * being called.
      *
      * @access protected
-     * @return boolean
+     *
+     * @return bool
      */
     protected function _auth_override_check()
     {
@@ -1301,7 +1302,7 @@ abstract class REST_Controller extends CI_Controller {
      * @access protected
      *
      * @param  string $value Input data
-     * @param  boolean $xss_clean Whether to apply XSS filtering
+     * @param  bool $xss_clean Whether to apply XSS filtering
      *
      * @return string
      */
@@ -1313,9 +1314,10 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Retrieve the validation errors.
+     * Retrieve the validation errors
      *
      * @access public
+     *
      * @return array
      */
     public function validation_errors()
@@ -1335,7 +1337,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param  string $username The username to validate
      * @param  string $password The password to validate
      *
-     * @return boolean
+     * @return bool
      */
     protected function _perform_ldap_auth($username = '', $password = NULL)
     {
@@ -1445,7 +1447,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param  string $username The username to validate
      * @param  string $password The password to validate
      *
-     * @return boolean
+     * @return bool
      */
     protected function _perform_library_auth($username = '', $password = NULL)
     {
@@ -1482,14 +1484,14 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Check if the user is logged in.
+     * Check if the user is logged in
      *
      * @access protected
      *
      * @param  string $username The user's name
      * @param  string $password The user's password
      *
-     * @return boolean
+     * @return bool
      */
     protected function _check_login($username = '', $password = FALSE)
     {
@@ -1555,6 +1557,8 @@ abstract class REST_Controller extends CI_Controller {
 
     /**
      * Prepares for basic authentication
+     *
+     * @access protected
      */
     protected function _prepare_basic_auth()
     {
@@ -1700,6 +1704,8 @@ abstract class REST_Controller extends CI_Controller {
     /**
      * Force logging in by setting the WWW-Authenticate header
      *
+     * @access protected
+     *
      * @param string $nonce A server-specified data string which should be uniquely generated
      * each time
      */
@@ -1732,7 +1738,8 @@ abstract class REST_Controller extends CI_Controller {
      *
      * @access protected
      * @author Chris Kacerguis
-     * @return boolean
+     *
+     * @return bool
      */
 
     protected function _log_access_time()
@@ -1745,8 +1752,10 @@ abstract class REST_Controller extends CI_Controller {
     /**
      * updates the log with response code result
      *
+     * @access protected
      * @author Justin Chen
-     * @return boolean
+     *
+     * @return bool
      */
 
     protected function _log_response_code($http_code)
@@ -1760,7 +1769,8 @@ abstract class REST_Controller extends CI_Controller {
      * Check to see if the API key has access to the controller and methods
      *
      * @access protected
-     * @return boolean
+     *
+     * @return bool
      */
     protected function _check_access()
     {
