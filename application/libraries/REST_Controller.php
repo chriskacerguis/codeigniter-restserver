@@ -7,12 +7,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *
  * A fully RESTful server implementation for CodeIgniter using one library, one config file and one controller.
  *
- * @package        	CodeIgniter
- * @subpackage    	Libraries
- * @category    	Libraries
- * @author        	Phil Sturgeon, Chris Kacerguis
+ * @package         CodeIgniter
+ * @subpackage      Libraries
+ * @category        Libraries
+ * @author          Phil Sturgeon, Chris Kacerguis
  * @license         MIT
- * @link			https://github.com/chriskacerguis/codeigniter-restserver
+ * @link            https://github.com/chriskacerguis/codeigniter-restserver
  * @version         3.0.0
  */
 abstract class REST_Controller extends CI_Controller
@@ -166,7 +166,7 @@ abstract class REST_Controller extends CI_Controller
      * @var array
      */
     protected $_supported_formats   = [
-		'json'          => 'application/json',
+        'json'          => 'application/json',
         'xml'           => 'application/xml',
         'jsonp'         => 'application/javascript',
         'serialized'    => 'application/vnd.php.serialized',
@@ -189,7 +189,7 @@ abstract class REST_Controller extends CI_Controller
      * GET, OPTIONS, HEAD, POST, PUT, DELETE and PATCH data is encountered.
      * Set automatically based on config setting.
      *
-     * @var	bool
+     * @var bool
      */
     protected $_enable_xss = FALSE;
 
@@ -320,7 +320,7 @@ abstract class REST_Controller extends CI_Controller
         $this->auth_override    = $this->_auth_override_check();
 
         // Checking for keys? GET TO WorK!
-	      // Skip keys test for $config['auth_override_class_method']['class'['method'] = 'none'
+          // Skip keys test for $config['auth_override_class_method']['class'['method'] = 'none'
         if (config_item('rest_enable_keys') && $this->auth_override !== TRUE) {
             $this->_allow = $this->_detect_api_key();
         }
@@ -573,8 +573,8 @@ abstract class REST_Controller extends CI_Controller
      */
     protected function _detect_ssl()
     {
-    	    // $_SERVER['HTTPS'] (http://php.net/manual/en/reserved.variables.server.php)
-    	    // Set to a non-empty value if the script was queried through the HTTPS protocol
+            // $_SERVER['HTTPS'] (http://php.net/manual/en/reserved.variables.server.php)
+            // Set to a non-empty value if the script was queried through the HTTPS protocol
             return (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']));
     }
 
@@ -1461,7 +1461,7 @@ abstract class REST_Controller extends CI_Controller
         }
     }
 
-	/**
+    /**
      * Prepares for basic authentication
      */
     protected function _prepare_basic_auth()
@@ -1548,7 +1548,7 @@ abstract class REST_Controller extends CI_Controller
         }
     }
 
-	/**
+    /**
      * Checks if the client's ip is in the 'rest_ip_blacklist' config and generates a 401 response
      *
      * @access protected
