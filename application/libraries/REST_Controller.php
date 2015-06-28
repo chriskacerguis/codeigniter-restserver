@@ -1730,23 +1730,33 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * @todo Document this.
-     * @access protected
+     * Force logging in by setting the WWW-Authenticate header
      *
-     * @param  string $nonce
+     * @param string $nonce A server-specified data string which should be uniquely generated
+     * each time
      */
     protected function _force_login($nonce = '')
     {
-        if (strtolower($this->config->item('rest_auth')) == 'basic')
+        $restAuth = $this->config->item('rest_auth');
+        $restRealm = $this->config->item('rest_realm');
+        if (strtolower($restAuth) === 'basic')
         {
-            header('WWW-Authenticate: Basic realm="' . $this->config->item('rest_realm') . '"');
+            // See http://tools.ietf.org/html/rfc2617#page-5
+            header('WWW-Authenticate: Basic realm="' . $restRealm . '"');
         }
-        elseif (strtolower($this->config->item('rest_auth')) == 'digest')
+        elseif (strtolower($restAuth) === 'digest')
         {
-            header('WWW-Authenticate: Digest realm="' . $this->config->item('rest_realm') . '", qop="auth", nonce="' . $nonce . '", opaque="' . md5($this->config->item('rest_realm')) . '"');
+            // See http://tools.ietf.org/html/rfc2617#page-18
+            header('WWW-Authenticate: Digest realm="' . $restRealm
+                   . '", qop="auth", nonce="' . $nonce
+                   . '", opaque="' . md5($restRealm) . '"');
         }
 
-        $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Not authorized'], 401);
+        // Display an error response
+        $this->response([
+                config_item('rest_status_field_name') => FALSE,
+                config_item('rest_message_field_name') => 'Not authorized'
+            ], 401);
     }
 
     /**
