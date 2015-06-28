@@ -7,7 +7,7 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 /**
  * Keys Controller
- * This is a basic Key Management REST controller to make and delete keys.
+ * This is a basic Key Management REST controller to make and delete keys
  *
  * @package         CodeIgniter
  * @subpackage      Rest Server
