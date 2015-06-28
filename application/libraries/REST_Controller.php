@@ -480,13 +480,13 @@ abstract class REST_Controller extends CI_Controller {
         {
             // If the method doesn't exist, then the error will be caught and an error response shown
             $this->response(
-            	[
-                config_item('rest_status_field_name') => FALSE,
-                config_item('rest_message_field_name') => [
-                    'classname' => get_class($ex),
-                    'message' => $ex->getMessage()
-                ]
-            ], 500);
+                [
+                    config_item('rest_status_field_name') => FALSE,
+                    config_item('rest_message_field_name') => [
+                        'classname' => get_class($ex),
+                        'message' => $ex->getMessage()
+                    ]
+                ], 500);
         }
     }
 
@@ -538,8 +538,9 @@ abstract class REST_Controller extends CI_Controller {
             if (method_exists($this->format, 'to_' . $this->response->format))
             {
                 // Set the format header
-                header('Content-Type: ' . $this->_supported_formats[$this->response->format]
-                       . '; charset=' . strtolower($this->config->item('charset')));
+                header(
+                    'Content-Type: ' . $this->_supported_formats[$this->response->format]
+                    . '; charset=' . strtolower($this->config->item('charset')));
 
                 $output = $this->format->factory($data)->{'to_' . $this->response->format}();
             }
@@ -614,7 +615,6 @@ abstract class REST_Controller extends CI_Controller {
      * Detect which format should be used to output the data
      *
      * @access protected
-     *
      * @return string The output format.
      */
     protected function _detect_output_format()
@@ -697,7 +697,6 @@ abstract class REST_Controller extends CI_Controller {
      * Detect which HTTP method is being used
      *
      * @access protected
-     *
      * @return string
      */
     protected function _detect_method()
@@ -728,7 +727,6 @@ abstract class REST_Controller extends CI_Controller {
      * See if the user has provided an API key
      *
      * @access protected
-     *
      * @return bool
      */
     protected function _detect_api_key()
@@ -803,7 +801,6 @@ abstract class REST_Controller extends CI_Controller {
      * What language do they want it in?
      *
      * @access protected
-     *
      * @return NULL|string The language code.
      */
     protected function _detect_lang()
@@ -940,7 +937,6 @@ abstract class REST_Controller extends CI_Controller {
      * being called.
      *
      * @access protected
-     *
      * @return bool
      */
     protected function _auth_override_check()
@@ -1316,7 +1312,6 @@ abstract class REST_Controller extends CI_Controller {
      * Retrieve the validation errors
      *
      * @access public
-     *
      * @return array
      */
     public function validation_errors()
@@ -1488,7 +1483,7 @@ abstract class REST_Controller extends CI_Controller {
      * @access protected
      *
      * @param  string $username The user's name
-     * @param  string $password The user's password
+     * @param  bool|string $password The user's password
      *
      * @return bool
      */
@@ -1648,7 +1643,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             // Display an error response
             $this->response(
-            	[
+                [
                     config_item('rest_status_field_name') => 0,
                     config_item('rest_message_field_name') => 'Invalid credentials'
                 ], 401);
@@ -1720,13 +1715,15 @@ abstract class REST_Controller extends CI_Controller {
         elseif (strtolower($restAuth) === 'digest')
         {
             // See http://tools.ietf.org/html/rfc2617#page-18
-            header('WWW-Authenticate: Digest realm="' . $restRealm
-                   . '", qop="auth", nonce="' . $nonce
-                   . '", opaque="' . md5($restRealm) . '"');
+            header(
+                'WWW-Authenticate: Digest realm="' . $restRealm
+                . '", qop="auth", nonce="' . $nonce
+                . '", opaque="' . md5($restRealm) . '"');
         }
 
         // Display an error response
-        $this->response([
+        $this->response(
+            [
                 config_item('rest_status_field_name') => FALSE,
                 config_item('rest_message_field_name') => 'Not authorized'
             ], 401);
@@ -1737,7 +1734,6 @@ abstract class REST_Controller extends CI_Controller {
      *
      * @access protected
      * @author Chris Kacerguis
-     *
      * @return bool
      */
 
@@ -1753,10 +1749,8 @@ abstract class REST_Controller extends CI_Controller {
      *
      * @access protected
      * @author Justin Chen
-     *
      * @return bool
      */
-
     protected function _log_response_code($http_code)
     {
         $payload['response_code'] = $http_code;
@@ -1768,12 +1762,11 @@ abstract class REST_Controller extends CI_Controller {
      * Check to see if the API key has access to the controller and methods
      *
      * @access protected
-     *
      * @return bool
      */
     protected function _check_access()
     {
-        // if we don't want to check acccess, just return TRUE
+        // if we don't want to check access, just return TRUE
         if (config_item('rest_enable_access') === FALSE)
         {
             return TRUE;
