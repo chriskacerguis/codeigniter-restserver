@@ -311,7 +311,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Use whatever database is in use (isset returns FALSE)
-        elseif (property_exists($this, "db"))
+        elseif (property_exists($this, 'db'))
         {
             $this->rest->db = $this->db;
         }
@@ -778,7 +778,7 @@ abstract class REST_Controller extends CI_Controller {
                 if (isset($row->ip_addresses))
                 {
                     // multiple ip addresses must be separated using a comma, explode and loop
-                    $list_ip_addresses = explode(",", $row->ip_addresses);
+                    $list_ip_addresses = explode(',', $row->ip_addresses);
                     $found_address = FALSE;
 
                     foreach ($list_ip_addresses as $ip_address)
