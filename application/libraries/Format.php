@@ -232,27 +232,27 @@ class Format {
      */
     public function to_json()
     {
-        $callback = isset($_GET['callback']) ? $_GET['callback'] : '';
-        if ($callback === '')
+        $callback = $this->input->get('callback');
+        if (empty($callback) === TRUE)
         {
             return json_encode($this->_data, JSON_PRETTY_PRINT);
         }
 
-        // we only honour jsonp callback which are valid javascript identifiers
+        // We only honour jsonp callback which are valid javascript identifiers
         elseif (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback))
         {
-            // this is a jsonp request, the content-type must be updated to be text/javascript
+            // Set the content type
             header("Content-Type: application/javascript");
 
+            // Return the data as encoded json with a callback
             return $callback . '(' . json_encode($this->_data) . ');';
         }
-        else
-        {
-            // we have an invalid jsonp callback identifier, we'll return plain json with a warning field
-            $this->_data['warning'] = "invalid jsonp callback provided: " . $callback;
 
-            return json_encode($this->_data);
-        }
+        // An invalid jsonp callback function provided.
+        // Though I don't believe this should be hardcoded here
+        $this->_data['warning'] = 'INVALID JSONP CALLBACK: ' . $callback;
+
+        return json_encode($this->_data);
     }
 
     /**
