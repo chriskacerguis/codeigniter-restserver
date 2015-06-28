@@ -1426,7 +1426,7 @@ abstract class REST_Controller extends CI_Controller
         }
 
         if ($auth_source == 'ldap') {
-            log_message('debug', 'performing LDAP authentication for $username');
+            log_message('debug', "performing LDAP authentication for $username");
 
             return $this->_perform_ldap_auth($username, $password);
         }
