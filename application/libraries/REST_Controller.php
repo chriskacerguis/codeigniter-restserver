@@ -211,7 +211,7 @@ abstract class REST_Controller extends CI_Controller {
     {
         parent::__construct();
 
-        // disable XML Entity (security vulnerability)
+        // Disable XML Entity (security vulnerability)
         libxml_disable_entity_loader(TRUE);
 
         // Check to see if PHP is equal to or greater than 5.4.x
@@ -233,46 +233,44 @@ abstract class REST_Controller extends CI_Controller {
         // Start the timer for how long the request takes
         $this->_start_rtime = microtime(TRUE);
 
-        // Lets grab the config and get ready to party
+        // Load the rest.php configuration file
         $this->load->config($config);
 
-        // This library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter itself
+        // At present the library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter (no citation)
         $this->load->library('format');
 
-        // init objects
+        // Initialise the response, request and rest objects
+        $this->request = new stdClass();
         $this->response = new stdClass();
         $this->rest = new stdClass();
 
         $this->_zlib_oc = @ini_get('zlib.output_compression');
 
-        // let's learn about the request
-        $this->request = new stdClass();
-
-        // Check to see if this IP is Blacklisted
-        if ($this->config->item('rest_ip_blacklist_enabled'))
+        // Check to see if the current IP address is blacklisted
+        if ($this->config->item('rest_ip_blacklist_enabled') === TRUE)
         {
             $this->_check_blacklist_auth();
         }
 
-        // Is it over SSL?
+        // Store whether the the connection is HTTPS
         $this->request->ssl = is_https();
 
-        // How is this request being made? POST, DELETE, GET, PUT?
+        // How is this request being made? GET, POST, PATCH, DELETE, INSERT, PUT, HEAD or OPTIONS
         $this->request->method = $this->_detect_method();
 
-        // Create argument container, if nonexistent
+        // Create an argument container if it doesn't exist e.g. _get_args
         if (!isset($this->{'_' . $this->request->method . '_args'}))
         {
             $this->{'_' . $this->request->method . '_args'} = [];
         }
 
-        // Set up our GET variables
+        // Set up the GET variables
         $this->_get_args = array_merge($this->_get_args, $this->uri->ruri_to_assoc());
 
         // Try to find a format for the request (means we have a request body)
         $this->request->format = $this->_detect_input_format();
 
-        // Some Methods cant have a body
+        // Some method can't have a body
         $this->request->body = NULL;
 
         $this->{'_parse_' . $this->request->method}();
@@ -329,15 +327,19 @@ abstract class REST_Controller extends CI_Controller {
             $this->_allow = $this->_detect_api_key();
         }
 
-        // only allow ajax requests
-        if (!$this->input->is_ajax_request() && config_item('rest_ajax_only'))
+        // Only allow ajax requests
+        if ($this->input->is_ajax_request() === FALSE && config_item('rest_ajax_only'))
         {
-            $response = [config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Only AJAX requests are accepted.'];
-            $this->response($response, 406); // Set status to 406 NOT ACCEPTABLE
+            // Display an error response
+            $this->response(
+                [
+                    config_item('rest_status_field_name') => FALSE,
+                    config_item('rest_message_field_name') => 'Only AJAX requests are acceptable'
+                ], 406); // Set status to 406 NOT ACCEPTABLE
         }
 
         // When there is no specific override for the current class/method, use the default auth value set in the config
-        if ($this->auth_override !== TRUE && !(config_item('rest_enable_keys') && $this->_allow === TRUE))
+        if ($this->auth_override === FALSE && !(config_item('rest_enable_keys') && $this->_allow === TRUE))
         {
             $rest_auth = strtolower($this->config->item('rest_auth'));
             switch ($rest_auth)
@@ -352,7 +354,7 @@ abstract class REST_Controller extends CI_Controller {
                     $this->_check_php_session();
                     break;
             }
-            if ($this->config->item('rest_ip_whitelist_enabled'))
+            if ($this->config->item('rest_ip_whitelist_enabled') === TRUE)
             {
                 $this->_check_whitelist_auth();
             }
