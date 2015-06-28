@@ -696,14 +696,15 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Detect which HTTP method is being used
+     * Get the HTTP request string
      *
      * @access protected
-     * @return string
+     * @return string Request method as a lowercase string
      */
     protected function _detect_method()
     {
-        $method = strtolower($this->input->server('REQUEST_METHOD'));
+        // Get the request method as a lowercase string
+        $method = $this->input->method();
 
         if ($this->config->item('enable_emulate_request'))
         {
@@ -717,12 +718,7 @@ abstract class REST_Controller extends CI_Controller {
             }
         }
 
-        if (in_array($method, $this->allowed_http_methods) && method_exists($this, '_parse_' . $method))
-        {
-            return $method;
-        }
-
-        return 'get';
+        return in_array($method, $this->allowed_http_methods) && method_exists($this, '_parse_' . $method) ? $method : 'get';
     }
 
     /**
