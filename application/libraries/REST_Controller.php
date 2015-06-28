@@ -1155,14 +1155,14 @@ abstract class REST_Controller extends CI_Controller {
     // INPUT FUNCTION --------------------------------------------------------------
 
     /**
-     * Retrieve a value from the GET request arguments.
+     * Retrieve a value from a GET request
      *
      * @access public
      *
-     * @param  string $key The key for the GET request argument to retrieve
-     * @param  boolean $xss_clean Whether to apply XSS filtering
+     * @param NULL $key Key to retrieve from the GET request
+     * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string  The GET argument value.
+     * @return string|NULL Value from the GET request; otherwise, FALSE
      */
     public function get($key = NULL, $xss_clean = NULL)
     {
@@ -1175,14 +1175,14 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * This function retrieves a values from the OPTIONS request arguments
+     * Retrieve a value from a OPTIONS request
      *
      * @access public
      *
-     * @param  string $key The OPTIONS/GET argument key
-     * @param  boolean $xss_clean Whether to apply XSS filtering
+     * @param NULL $key Key to retrieve from the OPTIONS request
+     * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string  The OPTIONS/GET argument value
+     * @return string|NULL Value from the OPTIONS request; otherwise, FALSE
      */
     public function options($key = NULL, $xss_clean = NULL)
     {
@@ -1195,14 +1195,14 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * This function retrieves a values from the HEAD request arguments
+     * Retrieve a value from a HEAD request
      *
      * @access public
      *
-     * @param  string $key The HEAD/GET argument key
-     * @param  boolean $xss_clean Whether to apply XSS filtering
+     * @param NULL $key Key to retrieve from the HEAD request
+     * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string  The HEAD/GET argument value
+     * @return string|NULL Value from the HEAD request; otherwise, FALSE
      */
     public function head($key = NULL, $xss_clean = NULL)
     {
@@ -1215,14 +1215,14 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Retrieve a value from the POST request arguments.
+     * Retrieve a value from a POST request
      *
      * @access public
      *
-     * @param  string $key The key for the POST request argument to retrieve
-     * @param  boolean $xss_clean Whether to apply XSS filtering
+     * @param NULL $key Key to retrieve from the POST request
+     * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string  The POST argument value.
+     * @return string|NULL Value from the POST request; otherwise, FALSE
      */
     public function post($key = NULL, $xss_clean = NULL)
     {
@@ -1235,14 +1235,14 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Retrieve a value from the PUT request arguments.
+     * Retrieve a value from a PUT request
      *
      * @access public
      *
-     * @param  string $key The key for the PUT request argument to retrieve
-     * @param  boolean $xss_clean Whether to apply XSS filtering
+     * @param NULL $key Key to retrieve from the PUT request
+     * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string  The PUT argument value.
+     * @return string|NULL Value from the PUT request; otherwise, FALSE
      */
     public function put($key = NULL, $xss_clean = NULL)
     {
@@ -1255,14 +1255,14 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Retrieve a value from the DELETE request arguments.
+     * Retrieve a value from a DELETE request
      *
      * @access public
      *
-     * @param  string $key The key for the DELETE request argument to retrieve
-     * @param  boolean $xss_clean Whether to apply XSS filtering
+     * @param NULL $key Key to retrieve from the DELETE request
+     * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string  The DELETE argument value.
+     * @return string|NULL Value from the DELETE request; otherwise, FALSE
      */
     public function delete($key = NULL, $xss_clean = NULL)
     {
@@ -1275,14 +1275,14 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Retrieve a value from the PATCH request arguments.
+     * Retrieve a value from a PATCH request
      *
      * @access public
      *
-     * @param  string $key The key for the PATCH request argument to retrieve
-     * @param  boolean $xss_clean Whether to apply XSS filtering
+     * @param NULL $key Key to retrieve from the PATCH request
+     * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string  The PATCH argument value.
+     * @return string|NULL Value from the PATCH request; otherwise, FALSE
      */
     public function patch($key = NULL, $xss_clean = NULL)
     {
