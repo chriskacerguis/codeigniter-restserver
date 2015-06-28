@@ -1680,7 +1680,6 @@ abstract class REST_Controller extends CI_Controller {
         if ($digest['response'] != $valid_response)
         {
             $this->response([config_item('rest_status_field_name') => 0, config_item('rest_message_field_name') => 'Invalid credentials'], 401);
-            exit;
         }
     }
 
