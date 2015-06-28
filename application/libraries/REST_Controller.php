@@ -471,31 +471,22 @@ abstract class REST_Controller extends CI_Controller {
             $this->_log_request($authorized = TRUE);
         }
 
-        // and...... GO!
+        // Call the controller method and passed arguments
         try
         {
-            $this->_fire_method([$this, $controller_method], $arguments);
+            call_user_func_array([$this, $controller_method], $arguments);
         }
         catch (Exception $ex)
         {
-            $this->_server_error_response($ex);
+            // If the method doesn't exist, then the error will be caught and an error response shown
+            $this->response([
+                config_item('rest_status_field_name') => FALSE,
+                config_item('rest_message_field_name') => [
+                    'classname' => get_class($ex),
+                    'message' => $ex->getMessage()
+                ]
+            ], 500);
         }
-
-        // should not get here.
-    }
-
-    /**
-     * Fire Method
-     * Fires the designated controller method with the given arguments.
-     *
-     * @access protected
-     *
-     * @param  array $method The controller method to fire
-     * @param  array $args The arguments to pass to the controller method
-     */
-    protected function _fire_method($method, $args)
-    {
-        call_user_func_array($method, $args);
     }
 
     /**
@@ -597,25 +588,6 @@ abstract class REST_Controller extends CI_Controller {
         {
             exit($output);
         }
-    }
-
-    /**
-     * Return server response
-     * Method to send a response to the client in the event of a server error.
-     *
-     * @access public
-     *
-     * @param  object $ex
-     */
-    protected function _server_error_response($ex)
-    {
-        $response = [
-            config_item('rest_status_field_name') => FALSE,
-            config_item('rest_message_field_name') => [
-                'classname' => get_class($ex), 'message' => $ex->getMessage()
-            ]
-        ];
-        $this->response($response, 500);
     }
 
     /**
