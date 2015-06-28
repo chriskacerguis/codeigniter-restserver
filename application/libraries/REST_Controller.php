@@ -1640,9 +1640,9 @@ abstract class REST_Controller extends CI_Controller {
             $this->_check_whitelist_auth();
         }
 
-        $uniqid = uniqid(""); // Empty argument for backward compatibility
-        // We need to test which server authentication variable to use
+        // We need to test which server authentication variable to use,
         // because the PHP ISAPI module in IIS acts different from CGI
+        $digest_string = '';
         if ($this->input->server('PHP_AUTH_DIGEST'))
         {
             $digest_string = $this->input->server('PHP_AUTH_DIGEST');
@@ -1651,36 +1651,40 @@ abstract class REST_Controller extends CI_Controller {
         {
             $digest_string = $this->input->server('HTTP_AUTHORIZATION');
         }
-        else
-        {
-            $digest_string = "";
-        }
+
+        $uniqueId = uniqid();
 
         // The $_SESSION['error_prompted'] variable is used to ask the password
-        // again if none given or if the user enters wrong auth information.
+        // again if none given or if the user enters wrong auth information
         if (empty($digest_string))
         {
-            $this->_force_login($uniqid);
+            $this->_force_login($uniqueId);
         }
 
-        // We need to retrieve authentication informations from the $auth_data variable
+        // We need to retrieve authentication data from the $digest_string variable
         $matches = [];
         preg_match_all('@(username|nonce|uri|nc|cnonce|qop|response)=[\'"]?([^\'",]+)@', $digest_string, $matches);
         $digest = (empty($matches[1]) || empty($matches[2])) ? [] : array_combine($matches[1], $matches[2]);
 
         // For digest authentication the library function should return already stored md5(username:restrealm:password) for that username @see rest.php::auth_library_function config
         $A1 = $this->_check_login($digest['username'], TRUE);
-        if (!array_key_exists('username', $digest) || !$A1)
+        if (array_key_exists('username', $digest) === FALSE || $A1 === FALSE)
         {
-            $this->_force_login($uniqid);
+            $this->_force_login($uniqueId);
         }
 
         $A2 = md5(strtoupper($this->request->method) . ':' . $digest['uri']);
         $valid_response = md5($A1 . ':' . $digest['nonce'] . ':' . $digest['nc'] . ':' . $digest['cnonce'] . ':' . $digest['qop'] . ':' . $A2);
 
-        if ($digest['response'] != $valid_response)
+        // Check if the string don't compare (case-insensitive)
+        if (strcasecmp($digest['response'], $valid_response) !== 0)
         {
-            $this->response([config_item('rest_status_field_name') => 0, config_item('rest_message_field_name') => 'Invalid credentials'], 401);
+            // Display an error response
+            $this->response(
+            	[
+                    config_item('rest_status_field_name') => 0,
+                    config_item('rest_message_field_name') => 'Invalid credentials'
+                ], 401);
         }
     }
 
