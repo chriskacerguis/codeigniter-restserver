@@ -1461,35 +1461,40 @@ abstract class REST_Controller extends CI_Controller
         }
     }
 
-    /**
-     * @todo document this.
-     *
-     * @access protected
+	/**
+     * Prepares for basic authentication
      */
     protected function _prepare_basic_auth()
     {
         // If whitelist is enabled it has the first chance to kick them out
-        if (config_item('rest_ip_whitelist_enabled')) {
+        if (config_item('rest_ip_whitelist_enabled'))
+        {
             $this->_check_whitelist_auth();
         }
 
-        $username = NULL;
-        $password = NULL;
+        // Returns NULL if the SERVER variables PHP_AUTH_USER and HTTP_AUTHENTICATION don't exist
+        $username = $this->input->server('PHP_AUTH_USER');
+        $http_auth = $this->input->server('HTTP_AUTHENTICATION');
 
-        // mod_php
-        if ($this->input->server('PHP_AUTH_USER')) {
-            $username = $this->input->server('PHP_AUTH_USER');
+        $password = NULL;
+        if ($username !== NULL)
+        {
             $password = $this->input->server('PHP_AUTH_PW');
         }
-
-        // most other servers
-        elseif ($this->input->server('HTTP_AUTHENTICATION')) {
-            if (strpos(strtolower($this->input->server('HTTP_AUTHENTICATION')), 'basic') === 0) {
+        elseif ($http_auth !== NULL)
+        {
+            // If the authentication header is set as basic, then extract the username and password from
+            // HTTP_AUTHORIZATION e.g. my_username:my_password. This is passed in the .htaccess file
+            if (strpos(strtolower($http_auth), 'basic') === 0)
+            {
+                // Search online for HTTP_AUTHORIZATION workaround to explain what this is doing
                 list($username, $password) = explode(':', base64_decode(substr($this->input->server('HTTP_AUTHORIZATION'), 6)));
             }
         }
 
-        if ( ! $this->_check_login($username, $password)) {
+        // Check if the user is logged into the system
+        if ($this->_check_login($username, $password) === FALSE)
+        {
             $this->_force_login();
         }
     }
