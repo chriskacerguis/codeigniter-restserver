@@ -51,9 +51,9 @@ The HTTP spec for DELETE requests precludes the use of parameters.  For delete r
 ```php
 public function index_delete($id)
 {
-  $this->response(array(
-    'returned from delete:' => $id,
-  ));			
+	$this->response([
+		'returned from delete:' => $id,
+	]);
 }
 ```
 
@@ -101,7 +101,7 @@ public function index_post()
 If you don't specify a response code, and the data you respond with `== FALSE` (an empty array or string, for instance), the response code will automatically be set to `404 Not Found`:
 
 ```php
-$this->response(array()); // HTTP 404 Not Found
+$this->response([]); // HTTP 404 Not Found
 ```
 
 ## Multilingual Support
@@ -131,7 +131,7 @@ This class also provides rudimentary support for HTTP basic authentication and/o
 You can enable basic authentication by setting the `$config['rest_auth']` to `'basic'`. The `$config['rest_valid_logins']` directive can then be used to set the usernames and passwords able to log in to your system. The class will automatically send all the correct headers to trigger the authentication dialogue:
 
 ```php
-$config['rest_valid_logins'] = array( 'username' => 'password', 'other_person' => 'secure123' );
+$config['rest_valid_logins'] = ['username' => 'password', 'other_person' => 'secure123'];
 ```
 
 Enabling digest auth is similarly easy. Configure your desired logins in the config file like above, and set `$config['rest_auth']` to `'digest'`. The class will automatically send out the headers to enable digest auth.
@@ -160,12 +160,12 @@ You'll need to create a new database table to store and access the keys. `REST_C
 
 ```sql
 CREATE TABLE `keys` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `key` varchar(40) NOT NULL,
-  `level` int(2) NOT NULL,
-  `ignore_limits` tinyint(1) NOT NULL DEFAULT '0',
-  `date_created` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`key` VARCHAR(40) NOT NULL,
+	`level` INT(2) NOT NULL,
+	`ignore_limits` TINYINT(1) NOT NULL DEFAULT '0',
+	`date_created` INT(11) NOT NULL,
+	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
 
@@ -183,8 +183,8 @@ $ curl -X POST -H "X-API-KEY: some_key_here" http://example.com/books
 
 ## Contributions
 
-This project was originally written by Phil Sturgeon, however his involvment has shifted 
+This project was originally written by Phil Sturgeon, however his involvment has shifted
 as he is no longer using it.  As of 11/20/2013 further developement and support will be done by Chris Kacerguis.
 
-Pull Requests are the best way to fix bugs or add features. I know loads of you use this, so please 
+Pull Requests are the best way to fix bugs or add features. I know loads of you use this, so please
 contribute if you have improvements to be made and I'll keep releasing versions over time.
