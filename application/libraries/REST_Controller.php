@@ -1628,7 +1628,8 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * @todo Document this.
+     * Prepares for digest authentication
+     *
      * @access protected
      */
     protected function _prepare_digest_auth()
