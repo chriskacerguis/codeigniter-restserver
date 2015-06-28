@@ -1765,35 +1765,32 @@ abstract class REST_Controller extends CI_Controller {
      * Check to see if the API key has access to the controller and methods
      *
      * @access protected
-     * @return bool
+     * @return bool TRUE the API key has access; otherwise, FALSE
      */
     protected function _check_access()
     {
-        // if we don't want to check access, just return TRUE
+        // If we don't want to check access, just return TRUE
         if (config_item('rest_enable_access') === FALSE)
         {
             return TRUE;
         }
 
         // Fetch controller based on path and controller name
-        $controller = implode('/', [$this->router->directory, $this->router->class]);
+        $controller = implode(
+            '/', [
+            $this->router->directory,
+            $this->router->class
+        ]);
 
         // Remove any double slashes for safety
         $controller = str_replace('//', '/', $controller);
 
-        // Build access table query
-        $this->rest->db->select();
-        $this->rest->db->where('key', $this->rest->key);
-        $this->rest->db->where('controller', $controller);
-
-        $query = $this->rest->db->get(config_item('rest_access_table'));
-
-        if ($query->num_rows() > 0)
-        {
-            return TRUE;
-        }
-
-        return FALSE;
+        // Query the access table and get the number of results
+        return $this->rest->db
+                   ->where('key', $this->rest->key)
+                   ->where('controller', $controller)
+                   ->get(config_item('rest_access_table'))
+                   ->num_rows() > 0;
     }
 
 }
