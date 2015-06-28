@@ -540,15 +540,20 @@ abstract class REST_Controller extends CI_Controller {
             if (method_exists($this->format, 'to_' . $this->response->format))
             {
                 // Set the format header
-                header(
-                    'Content-Type: ' . $this->_supported_formats[$this->response->format]
-                    . '; charset=' . strtolower($this->config->item('charset')));
+                header('Content-Type: ' . $this->_supported_formats[$this->response->format]
+                       . '; charset=' . strtolower($this->config->item('charset')));
 
                 $output = $this->format->factory($data)->{'to_' . $this->response->format}();
             }
             else
             {
-                // Format is not supported, so output the raw data
+                // If an array or object, then parse as a json, so as to be a 'string'
+                if (is_array($data) || is_object($data))
+                {
+                    $data = $this->format->factory($data)->{'to_json'}();
+                }
+
+                // Format is not supported, so output the raw data as a string
                 $output = $data;
             }
         }
