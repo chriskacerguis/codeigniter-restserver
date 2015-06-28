@@ -1491,7 +1491,7 @@ abstract class REST_Controller extends CI_Controller {
      *
      * @return bool
      */
-    protected function _check_login($username = '', $password = FALSE)
+    protected function _check_login($username = NULL, $password = FALSE)
     {
         if (empty($username))
         {
@@ -1502,8 +1502,9 @@ abstract class REST_Controller extends CI_Controller {
         $rest_auth = strtolower($this->config->item('rest_auth'));
         $valid_logins = $this->config->item('rest_valid_logins');
 
-        if (!$this->config->item('auth_source') && $rest_auth == 'digest')
-        { // for digest we do not have a password passed as argument
+        if (!$this->config->item('auth_source') && $rest_auth === 'digest')
+        {
+            // For digest we do not have a password passed as argument
             return md5($username . ':' . $this->config->item('rest_realm') . ':' . (isset($valid_logins[$username]) ? $valid_logins[$username] : ''));
         }
 
@@ -1512,21 +1513,21 @@ abstract class REST_Controller extends CI_Controller {
             return FALSE;
         }
 
-        if ($auth_source == 'ldap')
+        if ($auth_source === 'ldap')
         {
-            log_message('debug', "performing LDAP authentication for $username");
+            log_message('debug', "Performing LDAP authentication for $username");
 
             return $this->_perform_ldap_auth($username, $password);
         }
 
-        if ($auth_source == 'library')
+        if ($auth_source === 'library')
         {
-            log_message('debug', 'performing Library authentication for ' . $username);
+            log_message('debug', "Performing Library authentication for $username");
 
             return $this->_perform_library_auth($username, $password);
         }
 
-        if (!array_key_exists($username, $valid_logins))
+        if (array_key_exists($username, $valid_logins) === FALSE)
         {
             return FALSE;
         }
@@ -1540,16 +1541,24 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Check to see if the user is logged into the web app with a php session key.
+     * Check to see if the user is logged in with a PHP session key
      *
      * @access protected
      */
     protected function _check_php_session()
     {
+        // Get the auth_source config item
         $key = $this->config->item('auth_source');
+
+        // If falsy, then the user isn't logged in
         if (!$this->session->userdata($key))
         {
-            $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Not Authorized'], 401);
+            // Display an error response
+            $this->response(
+                [
+                    config_item('rest_status_field_name') => FALSE,
+                    config_item('rest_message_field_name') => 'Not Authorized'
+                ], 401);
         }
     }
 
