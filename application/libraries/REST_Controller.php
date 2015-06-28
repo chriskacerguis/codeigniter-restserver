@@ -253,7 +253,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Is it over SSL?
-        $this->request->ssl = $this->_detect_ssl();
+        $this->request->ssl = is_https();
 
         // How is this request being made? POST, DELETE, GET, PUT?
         $this->request->method = $this->_detect_method();
@@ -390,7 +390,7 @@ abstract class REST_Controller extends CI_Controller {
     public function _remap($object_called, $arguments)
     {
         // Should we answer if not over SSL?
-        if (config_item('force_https') && !$this->_detect_ssl())
+        if (config_item('force_https') && $this->request->ssl === FALSE)
         {
             $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Unsupported protocol'], 403);
         }
@@ -597,19 +597,6 @@ abstract class REST_Controller extends CI_Controller {
         {
             exit($output);
         }
-    }
-
-    /**
-     * Detect SSL use
-     * Detect whether SSL is being used or not.
-     *
-     * @access protected
-     */
-    protected function _detect_ssl()
-    {
-        // $_SERVER['HTTPS'] (http://php.net/manual/en/reserved.variables.server.php)
-        // Set to a non-empty value if the script was queried through the HTTPS protocol
-        return (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']));
     }
 
     /**
