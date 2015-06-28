@@ -834,31 +834,33 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Log request
-     * Record the entry for awesomeness purposes
+     * Add the request to the log table
      *
      * @access protected
      *
-     * @param  bool $authorized
+     * @param bool $authorized TRUE the user is authorized; otherwise, FALSE
      *
-     * @return object
+     * @return bool TRUE the data was inserted; otherwise, FALSE
      */
     protected function _log_request($authorized = FALSE)
     {
-        $status = $this->rest->db->insert(
-            config_item('rest_logs_table'), [
-            'uri' => $this->uri->uri_string(),
-            'method' => $this->request->method,
-            'params' => $this->_args ? (config_item('rest_logs_json_params') === TRUE ? json_encode($this->_args) : serialize($this->_args)) : NULL,
-            'api_key' => isset($this->rest->key) ? $this->rest->key : '',
-            'ip_address' => $this->input->ip_address(),
-            'time' => function_exists('now') ? now() : time(),
-            'authorized' => $authorized
-        ]);
+        // Insert the request into the log table
+        $isInserted = $this->rest->db
+            ->insert(
+                config_item('rest_logs_table'), [
+                'uri' => $this->uri->uri_string(),
+                'method' => $this->request->method,
+                'params' => $this->_args ? (config_item('rest_logs_json_params') === TRUE ? json_encode($this->_args) : serialize($this->_args)) : NULL,
+                'api_key' => isset($this->rest->key) ? $this->rest->key : '',
+                'ip_address' => $this->input->ip_address(),
+                'time' => now(), // Used to be: function_exists('now') ? now() : time()
+                'authorized' => $authorized
+            ]);
 
+        // Get the last insert id to update at a later stage of the request
         $this->_insert_id = $this->rest->db->insert_id();
 
-        return $status;
+        return $isInserted;
     }
 
     /**
@@ -1733,32 +1735,42 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * updates the log with the access time
+     * Updates the log table with the total access time
      *
      * @access protected
      * @author Chris Kacerguis
-     * @return bool
+     *
+     * @return bool TRUE log table updated; otherwise, FALSE
      */
-
     protected function _log_access_time()
     {
         $payload['rtime'] = $this->_end_rtime - $this->_start_rtime;
 
-        return $this->rest->db->update(config_item('rest_logs_table'), $payload, ['id' => $this->_insert_id]);
+        return $this->rest->db
+            ->update(
+                config_item('rest_logs_table'), $payload, [
+                'id' => $this->_insert_id
+            ]);
     }
 
     /**
-     * updates the log with response code result
+     * Updates the log table with HTTP response code
      *
      * @access protected
      * @author Justin Chen
-     * @return bool
+     *
+     * @param $http_code int HTTP status code
+     *
+     * @return bool TRUE log table updated; otherwise, FALSE
      */
     protected function _log_response_code($http_code)
     {
         $payload['response_code'] = $http_code;
 
-        return $this->rest->db->update(config_item('rest_logs_table'), $payload, ['id' => $this->_insert_id]);
+        return $this->rest->db->update(
+            config_item('rest_logs_table'), $payload, [
+            'id' => $this->_insert_id
+        ]);
     }
 
     /**
