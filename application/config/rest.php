@@ -25,7 +25,7 @@ $config['force_https'] = FALSE;
 |               called 'callback' is passed, then jsonp will be returned
 | 'html'        HTML using the table library in CodeIgniter
 | 'php':        Uses var_export()
-| 'serialized:  Uses serialize()
+| 'serialized':  Uses serialize()
 | 'xml':        Uses simplexml_load_string()
 |
 */
@@ -135,10 +135,10 @@ $config['auth_library_function'] = '';
 |
 | e.g:
 |
-|			$config['auth_override_class_method']['deals']['view'] = 'none';
-|			$config['auth_override_class_method']['deals']['insert'] = 'digest';
-|			$config['auth_override_class_method']['accounts']['user'] = 'basic';
-|			$config['auth_override_class_method']['dashboard']['*'] = 'none|digest|basic';
+|           $config['auth_override_class_method']['deals']['view'] = 'none';
+|           $config['auth_override_class_method']['deals']['insert'] = 'digest';
+|           $config['auth_override_class_method']['accounts']['user'] = 'basic';
+|           $config['auth_override_class_method']['dashboard']['*'] = 'none|digest|basic';
 |
 | Here 'deals', 'accounts' and 'dashboard' are controller names, 'view', 'insert' and 'user' are methods within. An asterisk may also be used to specify an authentication method for an entire classes methods. Ex: $config['auth_override_class_method']['dashboard']['*'] = 'basic'; (NOTE: leave off the '_get' or '_post' from the end of the method name)
 | Acceptable values are; 'none', 'digest' and 'basic'.
@@ -172,10 +172,10 @@ $config['rest_valid_logins'] = ['admin' => '1234'];
 |
 | Usage:
 | 1. Set to TRUE and select an auth option for extreme security (client's IP
-|	 address must be in whitelist and they must also log in)
+|    address must be in whitelist and they must also log in)
 | 2. Set to TRUE with auth set to FALSE to allow whitelisted IPs access with no login
 | 3. Set to FALSE but set 'auth_override_class_method' to 'whitelist' to
-|	 restrict certain methods to IPs in your whitelist
+|    restrict certain methods to IPs in your whitelist
 |
 */
 $config['rest_ip_whitelist_enabled'] = FALSE;
@@ -253,14 +253,14 @@ $config['rest_keys_table'] = 'keys';
 | Default table schema:
 |   CREATE TABLE `keys` (
 |       `id` INT(11) NOT NULL AUTO_INCREMENT,
-|	    `key` VARCHAR(40) NOT NULL,
-|	    `level` INT(2) NOT NULL,
-|	    `ignore_limits` TINY(1) NOT NULL DEFAULT '0',
-|	    `is_private_key` TINYINT(1)  NOT NULL DEFAULT '0',
-|	    `ip_addresses` TEXT NULL DEFAULT NULL,
-|	    `date_created` INT(11) NOT NULL,
-|	    PRIMARY KEY (`id`)
-|	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+|       `key` VARCHAR(40) NOT NULL,
+|       `level` INT(2) NOT NULL,
+|       `ignore_limits` TINY(1) NOT NULL DEFAULT '0',
+|       `is_private_key` TINYINT(1)  NOT NULL DEFAULT '0',
+|       `ip_addresses` TEXT NULL DEFAULT NULL,
+|       `date_created` INT(11) NOT NULL,
+|       PRIMARY KEY (`id`)
+|   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
 $config['rest_enable_keys'] = FALSE;
@@ -314,17 +314,17 @@ $config['rest_key_name'] = 'X-API-KEY';
 | Default table schema:
 |   CREATE TABLE `logs` (
 |       `id` INT(11) NOT NULL AUTO_INCREMENT,
-|	    `uri` VARCHAR(255) NOT NULL,
-|	    `method` VARCHAR(6) NOT NULL,
-|	    `params` TEXT DEFAULT NULL,
-|	    `api_key` VARCHAR(40) NOT NULL,
-|	    `ip_address` VARCHAR(45) NOT NULL,
-|	    `time` INT(11) NOT NULL,
-|	    `rtime` FLOAT DEFAULT NULL,
-|	    `authorized` VARCHAR(1) NOT NULL,
-|	    `response_code` SMALLINT(3) NOT NULL,
-|	    PRIMARY KEY (`id`)
-|	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+|       `uri` VARCHAR(255) NOT NULL,
+|       `method` VARCHAR(6) NOT NULL,
+|       `params` TEXT DEFAULT NULL,
+|       `api_key` VARCHAR(40) NOT NULL,
+|       `ip_address` VARCHAR(45) NOT NULL,
+|       `time` INT(11) NOT NULL,
+|       `rtime` FLOAT DEFAULT NULL,
+|       `authorized` VARCHAR(1) NOT NULL,
+|       `response_code` SMALLINT(3) NOT NULL,
+|       PRIMARY KEY (`id`)
+|   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
 $config['rest_enable_logging'] = FALSE;
@@ -394,13 +394,13 @@ $config['rest_logs_json_params'] = FALSE;
 |
 | Default table schema:
 |   CREATE TABLE `limits` (
-|	    `id` INT(11) NOT NULL AUTO_INCREMENT,
-|	    `uri` VARCHAR(255) NOT NULL,
-|	    `count` INT(10) NOT NULL,
-|	    `hour_started` INT(11) NOT NULL,
-|	    `api_key` VARCHAR(40) NOT NULL,
-|	    PRIMARY KEY (`id`)
-|	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+|       `id` INT(11) NOT NULL AUTO_INCREMENT,
+|       `uri` VARCHAR(255) NOT NULL,
+|       `count` INT(10) NOT NULL,
+|       `hour_started` INT(11) NOT NULL,
+|       `api_key` VARCHAR(40) NOT NULL,
+|       PRIMARY KEY (`id`)
+|   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 | To specify the limits within the controller's __construct() method, add per-method
 | limits with:
