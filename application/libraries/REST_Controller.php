@@ -479,7 +479,8 @@ abstract class REST_Controller extends CI_Controller {
         catch (Exception $ex)
         {
             // If the method doesn't exist, then the error will be caught and an error response shown
-            $this->response([
+            $this->response(
+            	[
                 config_item('rest_status_field_name') => FALSE,
                 config_item('rest_message_field_name') => [
                     'classname' => get_class($ex),
