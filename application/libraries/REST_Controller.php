@@ -362,21 +362,21 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Destructor function
+     * Deconstructor
      *
      * @author Chris Kacerguis
      * @access public
      */
     public function __destruct()
     {
-        // Record the "stop" time of the request
+        // Get the current timestamp
         $this->_end_rtime = microtime(TRUE);
-        // CK: if, we are logging, log the access time here, as we are done!
-        if (config_item('rest_enable_logging'))
+
+        // Log the loading time to the log table
+        if (config_item('rest_enable_logging') === TRUE)
         {
             $this->_log_access_time();
         }
-
     }
 
     /**
