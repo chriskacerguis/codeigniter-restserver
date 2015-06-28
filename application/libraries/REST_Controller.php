@@ -296,7 +296,6 @@ abstract class REST_Controller extends CI_Controller {
         );
 
         // Which format should the data be returned in?
-        $this->response = new stdClass();
         $this->response->format = $this->_detect_output_format();
 
         // Which format should the data be returned in?
