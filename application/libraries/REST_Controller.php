@@ -945,7 +945,6 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _auth_override_check()
     {
-
         // Assign the class/method auth type override array from the config
         $this->overrides_array = $this->config->item('auth_override_class_method');
 
