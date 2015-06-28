@@ -1160,9 +1160,10 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      *
      * @param NULL $key Key to retrieve from the GET request
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the GET request; otherwise, FALSE
+     * @return array|string|FALSE Value from the GET request; otherwise, FALSE
      */
     public function get($key = NULL, $xss_clean = NULL)
     {
@@ -1179,10 +1180,11 @@ abstract class REST_Controller extends CI_Controller {
      *
      * @access public
      *
-     * @param NULL $key Key to retrieve from the OPTIONS request
+     * @param NULL $key Key to retrieve from the OPTIONS request.
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the OPTIONS request; otherwise, FALSE
+     * @return array|string|FALSE Value from the OPTIONS request; otherwise, FALSE
      */
     public function options($key = NULL, $xss_clean = NULL)
     {
@@ -1200,9 +1202,10 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      *
      * @param NULL $key Key to retrieve from the HEAD request
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the HEAD request; otherwise, FALSE
+     * @return array|string|FALSE Value from the HEAD request; otherwise, FALSE
      */
     public function head($key = NULL, $xss_clean = NULL)
     {
@@ -1220,9 +1223,10 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      *
      * @param NULL $key Key to retrieve from the POST request
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the POST request; otherwise, FALSE
+     * @return array|string|FALSE Value from the POST request; otherwise, FALSE
      */
     public function post($key = NULL, $xss_clean = NULL)
     {
@@ -1240,9 +1244,10 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      *
      * @param NULL $key Key to retrieve from the PUT request
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the PUT request; otherwise, FALSE
+     * @return array|string|FALSE Value from the PUT request; otherwise, FALSE
      */
     public function put($key = NULL, $xss_clean = NULL)
     {
@@ -1260,9 +1265,10 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      *
      * @param NULL $key Key to retrieve from the DELETE request
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the DELETE request; otherwise, FALSE
+     * @return array|string|FALSE Value from the DELETE request; otherwise, FALSE
      */
     public function delete($key = NULL, $xss_clean = NULL)
     {
@@ -1280,9 +1286,10 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      *
      * @param NULL $key Key to retrieve from the PATCH request
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the PATCH request; otherwise, FALSE
+     * @return array|string|FALSE Value from the PATCH request; otherwise, FALSE
      */
     public function patch($key = NULL, $xss_clean = NULL)
     {
