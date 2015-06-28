@@ -490,70 +490,74 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Response
-     * Takes pure data and optionally a status code, then creates the response.
-     * Set $continue to TRUE to flush the response to the client and continue running the script.
+     * Takes mixed data and optionally a status code, then creates the response
      *
      * @access public
      *
-     * @param  array $data
-     * @param  NULL|int $http_code
-     * @param  bool $continue
+     * @param array|NULL $data Data to output to the user
+     * @param int|NULL $http_code HTTP status code
+     * @param bool $continue TRUE to flush the response to the client and continue
+     * running the script; otherwise, exit
      */
     public function response($data = NULL, $http_code = NULL, $continue = FALSE)
     {
-        // If data is NULL and not code provide, error and bail
+        // If the HTTP status is not NULL, then cast as an integer
+        if ($http_code !== NULL)
+        {
+            // So as to be safe later on in the process
+            $http_code = (int) $http_code;
+        }
+
+        // Set the output as NULL by default
+        $output = NULL;
+
+        // If data is NULL and no HTTP status code provided, then display, error and exit
         if ($data === NULL && $http_code === NULL)
         {
             $http_code = 404;
-
-            // create the output variable here in the case of $this->response(array());
-            $output = NULL;
         }
 
-        // If data is NULL but http code provided, keep the output empty
-        elseif ($data === NULL && is_numeric($http_code))
+        // If data is not NULL and a HTTP status code provided, then continue
+        elseif ($data !== NULL)
         {
-            $output = NULL;
-        }
-
-        // Otherwise (if no data but 200 provided) or some data, carry on camping!
-        else
-        {
-            // Is compression requested?
+            // Is compression enabled and available?
             if ($this->config->item('compress_output') === TRUE && $this->_zlib_oc == FALSE)
             {
                 if (extension_loaded('zlib'))
                 {
-                    if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE)
+                    $http_encoding = $this->input->server('HTTP_ACCEPT_ENCODING');
+                    if ($http_encoding !== NULL && strpos($http_encoding, 'gzip') !== FALSE)
                     {
                         ob_start('ob_gzhandler');
                     }
                 }
             }
 
-            is_numeric($http_code) || $http_code = 200;
-
             // If the format method exists, call and return the output in that format
             if (method_exists($this->format, 'to_' . $this->response->format))
             {
-                // Set the correct format header
-                header('Content-Type: ' . $this->_supported_formats[$this->response->format] . '; charset=' . strtolower($this->config->item('charset')));
+                // Set the format header
+                header('Content-Type: ' . $this->_supported_formats[$this->response->format]
+                       . '; charset=' . strtolower($this->config->item('charset')));
 
                 $output = $this->format->factory($data)->{'to_' . $this->response->format}();
             }
-
-            // Format not supported, output directly
             else
             {
+                // Format is not supported, so output the raw data
                 $output = $data;
             }
         }
 
+        // If not greater than zero, then set the HTTP status code as 200 by default
+        // Though perhaps 500 should be set instead, for the developer not passing a
+        // correct HTTP status code
+        $http_code > 0 || $http_code = 200;
+
         set_status_header($http_code);
 
         // JC: Log response code only if rest logging enabled
-        if (config_item('rest_enable_logging'))
+        if (config_item('rest_enable_logging') === TRUE)
         {
             $this->_log_response_code($http_code);
         }
@@ -561,23 +565,21 @@ abstract class REST_Controller extends CI_Controller {
         // If zlib.output_compression is enabled it will compress the output,
         // but it will not modify the content-length header to compensate for
         // the reduction, causing the browser to hang waiting for more data.
-        // We'll just skip content-length in those cases.
+        // We'll just skip content-length in those cases
         if (!$this->_zlib_oc && !$this->config->item('compress_output'))
         {
             header('Content-Length: ' . strlen($output));
         }
 
-        if ($continue)
-        {
-            echo($output);
-            ob_end_flush();
-            ob_flush();
-            flush();
-        }
-        else
+        if ($continue === FALSE)
         {
             exit($output);
         }
+
+        echo($output);
+        ob_end_flush();
+        ob_flush();
+        flush();
     }
 
     /**
