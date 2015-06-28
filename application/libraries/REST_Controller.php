@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author        	Phil Sturgeon, Chris Kacerguis
  * @license         MIT
  * @link			https://github.com/chriskacerguis/codeigniter-restserver
- * @version         3.0.0-pre
+ * @version         3.0.0
  */
 abstract class REST_Controller extends CI_Controller
 {
@@ -194,7 +194,9 @@ abstract class REST_Controller extends CI_Controller
     protected $_enable_xss = FALSE;
 
     /**
-     * Developers can extend this class and add a check in here.
+     * Extend this function to apply additional checking early on in the process
+     *
+     * @access protected
      */
     protected function early_checks()
     {
@@ -202,9 +204,10 @@ abstract class REST_Controller extends CI_Controller
     }
 
     /**
-     * Constructor function
-     * @todo   Document more please.
-     * @access public
+     * Constructor for the REST API
+     *
+     * @param string $config Configuration filename minus the file extension
+     * e.g: my_rest.php is passed as 'my_rest'
      */
     public function __construct($config = 'rest')
     {
@@ -299,10 +302,8 @@ abstract class REST_Controller extends CI_Controller
         // Which format should the data be returned in?
         $this->response->lang   = $this->_detect_lang();
 
-        // Developers can extend this class and add a check in here
+        // Extend this function to apply additional checking early on in the process
         $this->early_checks();
-
-        $this->rest             = new StdClass();
 
         // Load DB if its enabled
         if (config_item('rest_database_group') && (config_item('rest_enable_keys') || config_item('rest_enable_logging'))) {
@@ -1542,26 +1543,30 @@ abstract class REST_Controller extends CI_Controller
         }
     }
 
-    /**
-     * Check if the client's ip is in the 'rest_ip_blacklist' config
+	/**
+     * Checks if the client's ip is in the 'rest_ip_blacklist' config and generates a 401 response
      *
      * @access protected
      */
     protected function _check_blacklist_auth()
     {
-        $blacklist = explode(',', config_item('rest_ip_blacklist'));
+        // Match an ip address in a blacklist e.g. 127.0.0.0, 0.0.0.0
+        $pattern = sprintf('/(?:,\s*|^)\Q%s\E(?=,\s*|$)/m', $this->input->ip_address());
 
-        foreach ($blacklist AS &$ip) {
-            $ip = trim($ip);
-        }
-
-        if (in_array($this->input->ip_address(), $blacklist)) {
-            $this->response(['status' => FALSE, 'error' => 'IP Denied'], 401);
+        // Returns 1, 0 or FALSE (on error only). Therefore implicitly convert 1 to TRUE
+        if (preg_match($pattern, config_item('rest_ip_blacklist')))
+        {
+            // Display an error response
+            $this->response([
+                    'status' => FALSE,
+                    'error' => 'IP Denied'
+                ],
+                401);
         }
     }
 
     /**
-     * Check if the client's ip is in the 'rest_ip_whitelist' config
+     * Check if the client's ip is in the 'rest_ip_whitelist' config and generates a 401 response
      *
      * @access protected
      */
