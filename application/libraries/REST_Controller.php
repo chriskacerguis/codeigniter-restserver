@@ -1128,7 +1128,7 @@ abstract class REST_Controller extends CI_Controller {
         // If no file type is provided, this is probably just arguments
         else
         {
-            if ($this->input->method() == 'put')
+            if ($this->input->method() === 'put')
             {
                 $this->_put_args = $this->input->input_stream();
             }
@@ -1180,7 +1180,7 @@ abstract class REST_Controller extends CI_Controller {
         // If no file type is provided, this is probably just arguments
         else
         {
-            if ($this->input->method() == 'patch')
+            if ($this->input->method() === 'patch')
             {
                 $this->_patch_args = $this->input->input_stream();
             }
@@ -1195,7 +1195,7 @@ abstract class REST_Controller extends CI_Controller {
     protected function _parse_delete()
     {
         // Set up out DELETE variables (which shouldn't really exist, but sssh!)
-        if ($this->input->method() == 'delete')
+        if ($this->input->method() === 'delete')
         {
             $this->_delete_args = $this->input->input_stream();
         }
