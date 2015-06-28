@@ -864,40 +864,38 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Limiting requests
-     * Check if the requests are coming in a tad too fast.
+     * Check if the requests to a controller method exceed a limit
      *
      * @access protected
      *
-     * @param  string $controller_method The method being called.
+     * @param  string $controller_method The method being called
      *
-     * @return bool
+     * @return bool TRUE the call limit is below the threshold; otherwise, FALSE
      */
     protected function _check_limit($controller_method)
     {
         // They are special, or it might not even have a limit
         if (!empty($this->rest->ignore_limits) || !isset($this->methods[$controller_method]['limit']))
         {
-            // On your way sonny-jim.
+            // Everything is fine
             return TRUE;
         }
 
-        // How many times can you get to this method an hour?
+        // How many times can you get to this method in an hour?
         $limit = $this->methods[$controller_method]['limit'];
 
-        // Get data on a keys usage
+        // Get data about a keys' usage and limit to one row
         $result = $this->rest->db
             ->where('uri', $this->uri->uri_string())
             ->where('api_key', $this->rest->key)
-            ->get(config_item('rest_limits_table'))
-            ->row();
+            ->limit(1)
+            ->get(config_item('rest_limits_table'));
 
-        // No calls yet for this key
+        // No calls have been made for this key
         if (!$result)
         {
-            // Right, set one up from scratch
-            $this->rest->db->insert(
-                config_item('rest_limits_table'), [
+            // Create a new row for the following key
+            $this->rest->db->insert(config_item('rest_limits_table'), [
                 'uri' => $this->uri->uri_string(),
                 'api_key' => isset($this->rest->key) ? $this->rest->key : '',
                 'count' => 1,
@@ -906,9 +904,9 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Been an hour since they called
-        elseif ($result->hour_started < time() - (60 * 60))
+        elseif ($result->hour_started < (time() - 3600))
         {
-            // Reset the started period
+            // Reset the started period and count
             $this->rest->db
                 ->where('uri', $this->uri->uri_string())
                 ->where('api_key', isset($this->rest->key) ? $this->rest->key : '')
@@ -920,12 +918,13 @@ abstract class REST_Controller extends CI_Controller {
         // They have called within the hour, so lets update
         else
         {
-            // Your luck is out, you've called too many times!
+            // The limit has been exceeded
             if ($result->count >= $limit)
             {
                 return FALSE;
             }
 
+            // Increase the count by one
             $this->rest->db
                 ->where('uri', $this->uri->uri_string())
                 ->where('api_key', $this->rest->key)
