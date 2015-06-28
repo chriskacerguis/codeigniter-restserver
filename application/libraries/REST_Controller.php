@@ -1736,26 +1736,6 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Force it into an array
-     *
-     * @access  protected
-     *
-     * @param   object|array $data
-     *
-     * @return  array
-     */
-    protected function _force_loopable($data)
-    {
-        // Force it to be something useful
-        if (!is_array($data) && !is_object($data))
-        {
-            $data = (array) $data;
-        }
-
-        return $data;
-    }
-
-    /**
      * updates the log with the access time
      *
      * @access protected
