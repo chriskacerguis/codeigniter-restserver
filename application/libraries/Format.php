@@ -232,13 +232,17 @@ class Format {
      */
     public function to_json()
     {
-        $callback = $this->input->get('callback');
+        // Get the CodeIgniter reference
+        $ci = &get_instance();
+
+        // Get the callback parameter (if set)
+        $callback = $ci->input->get('callback');
         if (empty($callback) === TRUE)
         {
             return json_encode($this->_data, JSON_PRETTY_PRINT);
         }
 
-        // We only honour jsonp callback which are valid javascript identifiers
+        // We only honour a jsonp callback which are valid javascript identifiers
         elseif (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback))
         {
             // Set the content type
