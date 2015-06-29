@@ -62,6 +62,7 @@ class Format {
             }
         }
 
+        // Set the member variable to the data passed
         $this->_data = $data;
     }
 
@@ -188,8 +189,8 @@ class Format {
      */
     public function to_html()
     {
-        // Cast as an array if no already
-        is_array($this->_data) || $data = (array) $this->_data;
+        // Cast as an array if not already
+        $data = is_array($this->_data) ? $this->_data : (array) $this->_data;
 
         // Multi-dimensional array
         if (isset($data[0]) && is_array($data[0]))
@@ -225,7 +226,7 @@ class Format {
      */
     public function to_csv()
     {
-        // Cast as an array if no already
+        // Cast as an array if not already
         $data = is_array($this->_data) ? $this->_data : (array) $this->_data;
 
         // Multi-dimensional array
