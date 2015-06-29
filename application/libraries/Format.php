@@ -83,17 +83,15 @@ class Format {
     // FORMATING OUTPUT ---------------------------------------------------------
 
     /**
-     * to_array
-     *
-     * @param null $data
-     *
-     * @return array
+     * Encode as JSON
+     * 
+     * @return string JSON representation of a value 
      */
-    public function to_array($data = NULL)
+    public function to_array()
     {
         // As the return value should be a string, it makes no sense
         // to return an array datatype as that will result in an error or sorts
-        return $this->to_json($data);
+        return $this->to_json();
     }
 
     /**
@@ -251,7 +249,7 @@ class Format {
     /**
      * Encode as JSON
      *
-     * @return mixed
+     * @return string JSON representation of a value 
      */
     public function to_json()
     {
