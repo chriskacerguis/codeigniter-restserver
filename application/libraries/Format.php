@@ -42,10 +42,10 @@ class Format {
     public function __construct($data = NULL, $from_type = NULL)
     {
         // Get the CodeIgniter reference
-        $ci = &get_instance();
+        $_ci = &get_instance();
 
         // Load the inflector helper
-        $ci->load->helper('inflector');
+        $_ci->load->helper('inflector');
 
         // If the provided data is already formatted we should probably convert it to an array
         if ($from_type !== NULL)
@@ -203,16 +203,16 @@ class Format {
         }
 
         // Load the table library
-        $ci->load->library('table');
+        $_ci->load->library('table');
 
-        $ci->table->set_heading($headings);
+        $_ci->table->set_heading($headings);
 
         foreach ($data as &$row)
         {
-            $ci->table->add_row($row);
+            $_ci->table->add_row($row);
         }
 
-        return $ci->table->generate();
+        return $_ci->table->generate();
     }
 
     /**
@@ -256,7 +256,7 @@ class Format {
     public function to_json()
     {
         // Get the callback parameter (if set)
-        $callback = $ci->input->get('callback');
+        $callback = $_ci->input->get('callback');
         
         if (empty($callback) === TRUE)
         {
