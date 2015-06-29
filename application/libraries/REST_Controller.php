@@ -864,40 +864,38 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Limiting requests
-     * Check if the requests are coming in a tad too fast.
+     * Check if the requests to a controller method exceed a limit
      *
      * @access protected
      *
-     * @param  string $controller_method The method being called.
+     * @param  string $controller_method The method being called
      *
-     * @return bool
+     * @return bool TRUE the call limit is below the threshold; otherwise, FALSE
      */
     protected function _check_limit($controller_method)
     {
         // They are special, or it might not even have a limit
         if (!empty($this->rest->ignore_limits) || !isset($this->methods[$controller_method]['limit']))
         {
-            // On your way sonny-jim.
+            // Everything is fine
             return TRUE;
         }
 
-        // How many times can you get to this method an hour?
+        // How many times can you get to this method in an hour?
         $limit = $this->methods[$controller_method]['limit'];
 
-        // Get data on a keys usage
+        // Get data about a keys' usage and limit to one row
         $result = $this->rest->db
             ->where('uri', $this->uri->uri_string())
             ->where('api_key', $this->rest->key)
             ->get(config_item('rest_limits_table'))
             ->row();
 
-        // No calls yet for this key
+        // No calls have been made for this key
         if (!$result)
         {
-            // Right, set one up from scratch
-            $this->rest->db->insert(
-                config_item('rest_limits_table'), [
+            // Create a new row for the following key
+            $this->rest->db->insert(config_item('rest_limits_table'), [
                 'uri' => $this->uri->uri_string(),
                 'api_key' => isset($this->rest->key) ? $this->rest->key : '',
                 'count' => 1,
@@ -906,9 +904,9 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Been an hour since they called
-        elseif ($result->hour_started < time() - (60 * 60))
+        elseif ($result->hour_started < (time() - 3600))
         {
-            // Reset the started period
+            // Reset the started period and count
             $this->rest->db
                 ->where('uri', $this->uri->uri_string())
                 ->where('api_key', isset($this->rest->key) ? $this->rest->key : '')
@@ -920,12 +918,13 @@ abstract class REST_Controller extends CI_Controller {
         // They have called within the hour, so lets update
         else
         {
-            // Your luck is out, you've called too many times!
+            // The limit has been exceeded
             if ($result->count >= $limit)
             {
                 return FALSE;
             }
 
+            // Increase the count by one
             $this->rest->db
                 ->where('uri', $this->uri->uri_string())
                 ->where('api_key', $this->rest->key)
@@ -1161,9 +1160,10 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      *
      * @param NULL $key Key to retrieve from the GET request
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the GET request; otherwise, FALSE
+     * @return array|string|FALSE Value from the GET request; otherwise, FALSE
      */
     public function get($key = NULL, $xss_clean = NULL)
     {
@@ -1180,10 +1180,11 @@ abstract class REST_Controller extends CI_Controller {
      *
      * @access public
      *
-     * @param NULL $key Key to retrieve from the OPTIONS request
+     * @param NULL $key Key to retrieve from the OPTIONS request.
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the OPTIONS request; otherwise, FALSE
+     * @return array|string|FALSE Value from the OPTIONS request; otherwise, FALSE
      */
     public function options($key = NULL, $xss_clean = NULL)
     {
@@ -1201,9 +1202,10 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      *
      * @param NULL $key Key to retrieve from the HEAD request
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the HEAD request; otherwise, FALSE
+     * @return array|string|FALSE Value from the HEAD request; otherwise, FALSE
      */
     public function head($key = NULL, $xss_clean = NULL)
     {
@@ -1221,9 +1223,10 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      *
      * @param NULL $key Key to retrieve from the POST request
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the POST request; otherwise, FALSE
+     * @return array|string|FALSE Value from the POST request; otherwise, FALSE
      */
     public function post($key = NULL, $xss_clean = NULL)
     {
@@ -1241,9 +1244,10 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      *
      * @param NULL $key Key to retrieve from the PUT request
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the PUT request; otherwise, FALSE
+     * @return array|string|FALSE Value from the PUT request; otherwise, FALSE
      */
     public function put($key = NULL, $xss_clean = NULL)
     {
@@ -1261,9 +1265,10 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      *
      * @param NULL $key Key to retrieve from the DELETE request
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the DELETE request; otherwise, FALSE
+     * @return array|string|FALSE Value from the DELETE request; otherwise, FALSE
      */
     public function delete($key = NULL, $xss_clean = NULL)
     {
@@ -1281,9 +1286,10 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      *
      * @param NULL $key Key to retrieve from the PATCH request
+     * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
      *
-     * @return string|NULL Value from the PATCH request; otherwise, FALSE
+     * @return array|string|FALSE Value from the PATCH request; otherwise, FALSE
      */
     public function patch($key = NULL, $xss_clean = NULL)
     {
@@ -1362,6 +1368,7 @@ abstract class REST_Controller extends CI_Controller {
 
         log_message('debug', 'LDAP Auth: Connect to ' . (isset($ldaphost) ? $ldaphost : '[ldap not configured]'));
 
+		// Appears to be unused
         $ldapconfig['authrealm'] = $this->config->item('domain', 'ldap');
 
         // connect to ldap server
@@ -1492,7 +1499,7 @@ abstract class REST_Controller extends CI_Controller {
      *
      * @return bool
      */
-    protected function _check_login($username = '', $password = FALSE)
+    protected function _check_login($username = NULL, $password = FALSE)
     {
         if (empty($username))
         {
@@ -1503,8 +1510,9 @@ abstract class REST_Controller extends CI_Controller {
         $rest_auth = strtolower($this->config->item('rest_auth'));
         $valid_logins = $this->config->item('rest_valid_logins');
 
-        if (!$this->config->item('auth_source') && $rest_auth == 'digest')
-        { // for digest we do not have a password passed as argument
+        if (!$this->config->item('auth_source') && $rest_auth === 'digest')
+        {
+            // For digest we do not have a password passed as argument
             return md5($username . ':' . $this->config->item('rest_realm') . ':' . (isset($valid_logins[$username]) ? $valid_logins[$username] : ''));
         }
 
@@ -1513,21 +1521,21 @@ abstract class REST_Controller extends CI_Controller {
             return FALSE;
         }
 
-        if ($auth_source == 'ldap')
+        if ($auth_source === 'ldap')
         {
-            log_message('debug', "performing LDAP authentication for $username");
+            log_message('debug', "Performing LDAP authentication for $username");
 
             return $this->_perform_ldap_auth($username, $password);
         }
 
-        if ($auth_source == 'library')
+        if ($auth_source === 'library')
         {
-            log_message('debug', 'performing Library authentication for ' . $username);
+            log_message('debug', "Performing Library authentication for $username");
 
             return $this->_perform_library_auth($username, $password);
         }
 
-        if (!array_key_exists($username, $valid_logins))
+        if (array_key_exists($username, $valid_logins) === FALSE)
         {
             return FALSE;
         }
@@ -1541,16 +1549,24 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Check to see if the user is logged into the web app with a php session key.
+     * Check to see if the user is logged in with a PHP session key
      *
      * @access protected
      */
     protected function _check_php_session()
     {
+        // Get the auth_source config item
         $key = $this->config->item('auth_source');
+
+        // If falsy, then the user isn't logged in
         if (!$this->session->userdata($key))
         {
-            $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Not Authorized'], 401);
+            // Display an error response
+            $this->response(
+                [
+                    config_item('rest_status_field_name') => FALSE,
+                    config_item('rest_message_field_name') => 'Not Authorized'
+                ], 401);
         }
     }
 
