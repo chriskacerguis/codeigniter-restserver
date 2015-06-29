@@ -186,7 +186,8 @@ class Format {
      */
     public function to_html()
     {
-        $data = (array) $this->_data;
+        // Cast as an array if no already
+        is_array($this->_data) || $data = (array) $this->_data;
 
         // Multi-dimensional array
         if (isset($data[0]) && is_array($data[0]))
@@ -221,7 +222,8 @@ class Format {
      */
     public function to_csv()
     {
-        $data = (array) $this->_data;
+        // Cast as an array if no already
+        is_array($this->_data) || $data = (array) $this->_data;
 
         // Multi-dimensional array
         if (isset($data[0]) && is_array($data[0]))
@@ -255,6 +257,7 @@ class Format {
     {
         // Get the callback parameter (if set)
         $callback = $ci->input->get('callback');
+        
         if (empty($callback) === TRUE)
         {
             return json_encode($this->_data, JSON_PRETTY_PRINT);
