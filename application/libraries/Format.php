@@ -16,8 +16,19 @@ class Format {
      */
     private $_ci;
     
-    protected $_data = []; // Array to convert
-    protected $_from_type = NULL; // View filename
+    /**
+     * Array to convert
+     * 
+     * @var array 
+     */
+    protected $_data = [];
+    
+    /**
+     * Type to convert from
+     * 
+     * @var string 
+     */
+    protected $_from_type = NULL;
 
     /**
      * DO NOT CALL THIS DIRECTLY, USE factory()
