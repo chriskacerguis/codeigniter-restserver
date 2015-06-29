@@ -1,5 +1,7 @@
 <?php
 
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 /**
  * Format class
  * Help convert between various formats such as XML, JSON, CSV, etc.
@@ -10,23 +12,23 @@
 class Format {
 
     /**
-     * CodeIgniter instance 
-     * 
+     * CodeIgniter instance
+     *
      * @var object
      */
     private $_ci;
-    
+
     /**
      * Array to convert
-     * 
-     * @var array 
+     *
+     * @var array
      */
     protected $_data = [];
-    
+
     /**
      * Type to convert from
-     * 
-     * @var string 
+     *
+     * @var string
      */
     protected $_from_type = NULL;
 
@@ -42,10 +44,10 @@ class Format {
     public function __construct($data = NULL, $from_type = NULL)
     {
         // Get the CodeIgniter reference
-        $_ci = &get_instance();
+        $this->_ci = &get_instance();
 
         // Load the inflector helper
-        $_ci->load->helper('inflector');
+        $this->_ci->load->helper('inflector');
 
         // If the provided data is already formatted we should probably convert it to an array
         if ($from_type !== NULL)
@@ -84,8 +86,8 @@ class Format {
 
     /**
      * Encode as JSON
-     * 
-     * @return string JSON representation of a value 
+     *
+     * @return string JSON representation of a value
      */
     public function to_array()
     {
@@ -203,17 +205,17 @@ class Format {
         }
 
         // Load the table library
-        $_ci->load->library('table');
+        $this->_ci->load->library('table');
 
-        $_ci->table->set_heading($headings);
-        
+        $this->_ci->table->set_heading($headings);
+
         // Should row used as a reference?
         foreach ($data as &$row)
         {
-            $_ci->table->add_row($row);
+            $this->_ci->table->add_row($row);
         }
 
-        return $_ci->table->generate();
+        return $this->_ci->table->generate();
     }
 
     /**
@@ -252,13 +254,13 @@ class Format {
     /**
      * Encode as JSON
      *
-     * @return string JSON representation of a value 
+     * @return string JSON representation of a value
      */
     public function to_json()
     {
         // Get the callback parameter (if set)
-        $callback = $_ci->input->get('callback');
-        
+        $callback = $this->_ci->input->get('callback');
+
         if (empty($callback) === TRUE)
         {
             return json_encode($this->_data, JSON_PRETTY_PRINT);
