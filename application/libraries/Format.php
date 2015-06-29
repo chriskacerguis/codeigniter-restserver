@@ -170,7 +170,7 @@ class Format {
             else
             {
                 // add single node.
-                $value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, "UTF-8");
+                $value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8');
 
                 $structure->addChild($key, $value);
             }
@@ -206,7 +206,8 @@ class Format {
         $_ci->load->library('table');
 
         $_ci->table->set_heading($headings);
-
+        
+        // Should row used as a reference?
         foreach ($data as &$row)
         {
             $_ci->table->add_row($row);
@@ -267,7 +268,7 @@ class Format {
         elseif (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback))
         {
             // Set the content type
-            header("Content-Type: application/javascript");
+            header('Content-Type: application/javascript');
 
             // Return the data as encoded json with a callback
             return $callback . '(' . json_encode($this->_data) . ');';
