@@ -9,6 +9,13 @@
  */
 class Format {
 
+    /**
+     * CodeIgniter instance 
+     * 
+     * @var object
+     */
+    private $_ci;
+    
     protected $_data = []; // Array to convert
     protected $_from_type = NULL; // View filename
 
@@ -20,9 +27,14 @@ class Format {
      *
      * @throws Exception
      */
+
     public function __construct($data = NULL, $from_type = NULL)
     {
-        get_instance()->load->helper('inflector');
+        // Get the CodeIgniter reference
+        $ci = &get_instance();
+
+        // Load the inflector helper
+        $ci->load->helper('inflector');
 
         // If the provided data is already formatted we should probably convert it to an array
         if ($from_type !== NULL)
@@ -180,7 +192,7 @@ class Format {
             $data = [$data];
         }
 
-        $ci = get_instance();
+        // Load the table library
         $ci->load->library('table');
 
         $ci->table->set_heading($headings);
@@ -232,9 +244,6 @@ class Format {
      */
     public function to_json()
     {
-        // Get the CodeIgniter reference
-        $ci = &get_instance();
-
         // Get the callback parameter (if set)
         $callback = $ci->input->get('callback');
         if (empty($callback) === TRUE)
@@ -330,7 +339,6 @@ class Format {
     {
         return unserialize(trim($string));
     }
-
 
     /**
      * @param $string
