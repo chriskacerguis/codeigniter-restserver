@@ -226,7 +226,7 @@ class Format {
     public function to_csv()
     {
         // Cast as an array if no already
-        is_array($this->_data) || $data = (array) $this->_data;
+        $data = is_array($this->_data) ? $this->_data : (array) $this->_data;
 
         // Multi-dimensional array
         if (isset($data[0]) && is_array($data[0]))
