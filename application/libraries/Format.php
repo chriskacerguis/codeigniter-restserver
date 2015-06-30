@@ -19,9 +19,9 @@ class Format {
     private $_ci;
 
     /**
-     * Array to convert
+     * Data to parse
      *
-     * @var array
+     * @var mixed
      */
     protected $_data = [];
 
@@ -77,10 +77,10 @@ class Format {
      */
     public function factory($data, $from_type = NULL)
     {
-        // Stupid stuff to emulate the "new static()" stuff in this libraries PHP 5.3 equivalent
-        $class = __CLASS__;
+        // $class = __CLASS__;
+        // return new $class();
 
-        return new $class($data, $from_type);
+        return new static($data, $from_type);
     }
 
     // FORMATING OUTPUT ---------------------------------------------------------
