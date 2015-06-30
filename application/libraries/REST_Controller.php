@@ -704,26 +704,31 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Get the HTTP request string
+     * Get the HTTP request string e.g. get or post
      *
-     * @access protected
-     * @return string Request method as a lowercase string
+     * @return string|NULL Supported request method as a lowercase string; otherwise, NULL if not supported
      */
     protected function _detect_method()
     {
-        // Get the request method as a lowercase string
-        $method = $this->input->method();
+        // Declare a variable to store the method
+        $method = NULL;
 
-        if ($this->config->item('enable_emulate_request'))
+        // Determine whether the 'enable_emulate_request' setting is enabled
+        if ($this->config->item('enable_emulate_request') === TRUE)
         {
-            if ($this->input->post('_method'))
+            $method = $this->input->post('_method');
+            if ($method === NULL)
             {
-                $method = strtolower($this->input->post('_method'));
+                $method = $this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE');
             }
-            elseif ($this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE'))
-            {
-                $method = strtolower($this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE'));
-            }
+
+            $method = strtolower($method);
+        }
+
+        if (empty($method))
+        {
+            // Get the request method as a lowercase string.
+            $method = $this->input->method();
         }
 
         return in_array($method, $this->allowed_http_methods) && method_exists($this, '_parse_' . $method) ? $method : 'get';
