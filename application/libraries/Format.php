@@ -86,7 +86,7 @@ class Format {
     // FORMATTING OUTPUT ---------------------------------------------------------
 
     /**
-     * Parse as an array
+     * Format data as an array
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
@@ -125,7 +125,7 @@ class Format {
     }
 
     /**
-     * Format XML for output
+     * Format data as XML
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
@@ -211,7 +211,7 @@ class Format {
     }
 
     /**
-     * Format HTML for output
+     * Format data as HTML
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
@@ -261,7 +261,7 @@ class Format {
     }
 
     /**
-     * Format CSV for output
+     * Format data as CSV
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
@@ -307,7 +307,7 @@ class Format {
     }
 
     /**
-     * Encode as json
+     * Encode data as json
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
@@ -346,7 +346,7 @@ class Format {
     }
 
     /**
-     * Encode as a serialized array
+     * Encode data as a serialized array
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
@@ -366,7 +366,7 @@ class Format {
     }
 
     /**
-     * Output as a string representing the PHP structure
+     * Format data using a PHP structure
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
