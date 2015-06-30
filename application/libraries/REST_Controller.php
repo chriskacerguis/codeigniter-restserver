@@ -162,15 +162,15 @@ abstract class REST_Controller extends CI_Controller {
      *
      * @var array
      */
-    protected $_supported_formats
-        = [
+    protected $_supported_formats = [
             'json' => 'application/json',
-            'xml' => 'application/xml',
-            'jsonp' => 'application/javascript',
-            'serialized' => 'application/vnd.php.serialized',
-            'php' => 'text/plain',
+            'array' => 'application/json',
+            'csv' => 'application/csv',
             'html' => 'text/html',
-            'csv' => 'application/csv'
+            'jsonp' => 'application/javascript',
+            'php' => 'text/plain',
+            'serialized' => 'application/vnd.php.serialized',
+            'xml' => 'application/xml'
         ];
 
     /**
@@ -252,7 +252,7 @@ abstract class REST_Controller extends CI_Controller {
             $this->_check_blacklist_auth();
         }
 
-        // Store whether the the connection is HTTPS
+        // Determine whether the connection is HTTPS
         $this->request->ssl = is_https();
 
         // How is this request being made? GET, POST, PATCH, DELETE, INSERT, PUT, HEAD or OPTIONS
@@ -270,7 +270,7 @@ abstract class REST_Controller extends CI_Controller {
         // Try to find a format for the request (means we have a request body)
         $this->request->format = $this->_detect_input_format();
 
-        // Some method can't have a body
+        // Not all methods have a body attached with them
         $this->request->body = NULL;
 
         $this->{'_parse_' . $this->request->method}();
@@ -397,12 +397,8 @@ abstract class REST_Controller extends CI_Controller {
             $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Unsupported protocol'], 403);
         }
 
-        $pattern = '/^(.*)\.(' . implode('|', array_keys($this->_supported_formats)) . ')$/';
-        $matches = [];
-        if (preg_match($pattern, $object_called, $matches))
-        {
-            $object_called = $matches[1];
-        }
+        // Remove the supported format from the function name e.g. index.json => index
+        $object_called = preg_replace('/^(.*)\.(?:' . implode('|', array_keys($this->_supported_formats)) . ')$/', '$1', $object_called);
 
         $controller_method = $object_called . '_' . $this->request->method;
 
@@ -544,6 +540,13 @@ abstract class REST_Controller extends CI_Controller {
                        . '; charset=' . strtolower($this->config->item('charset')));
 
                 $output = $this->format->factory($data)->{'to_' . $this->response->format}();
+
+                // An array must be parsed as a string, so as not to cause an array to string error.
+                // Json is the most appropriate form for such a datatype
+                if ($this->response->format === 'array')
+                {
+                    $output = $this->format->factory($output)->{'to_json'}();
+                }
             }
             else
             {
@@ -701,26 +704,31 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Get the HTTP request string
+     * Get the HTTP request string e.g. get or post
      *
-     * @access protected
-     * @return string Request method as a lowercase string
+     * @return string|NULL Supported request method as a lowercase string; otherwise, NULL if not supported
      */
     protected function _detect_method()
     {
-        // Get the request method as a lowercase string
-        $method = $this->input->method();
+        // Declare a variable to store the method
+        $method = NULL;
 
-        if ($this->config->item('enable_emulate_request'))
+        // Determine whether the 'enable_emulate_request' setting is enabled
+        if ($this->config->item('enable_emulate_request') === TRUE)
         {
-            if ($this->input->post('_method'))
+            $method = $this->input->post('_method');
+            if ($method === NULL)
             {
-                $method = strtolower($this->input->post('_method'));
+                $method = $this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE');
             }
-            elseif ($this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE'))
-            {
-                $method = strtolower($this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE'));
-            }
+
+            $method = strtolower($method);
+        }
+
+        if (empty($method))
+        {
+            // Get the request method as a lowercase string.
+            $method = $this->input->method();
         }
 
         return in_array($method, $this->allowed_http_methods) && method_exists($this, '_parse_' . $method) ? $method : 'get';
