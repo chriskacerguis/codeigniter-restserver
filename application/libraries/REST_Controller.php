@@ -162,15 +162,15 @@ abstract class REST_Controller extends CI_Controller {
      *
      * @var array
      */
-    protected $_supported_formats
-        = [
+    protected $_supported_formats = [
             'json' => 'application/json',
-            'xml' => 'application/xml',
-            'jsonp' => 'application/javascript',
-            'serialized' => 'application/vnd.php.serialized',
-            'php' => 'text/plain',
+            'array' => 'application/json',
+            'csv' => 'application/csv',
             'html' => 'text/html',
-            'csv' => 'application/csv'
+            'jsonp' => 'application/javascript',
+            'php' => 'text/plain',
+            'serialized' => 'application/vnd.php.serialized',
+            'xml' => 'application/xml'
         ];
 
     /**
@@ -544,6 +544,13 @@ abstract class REST_Controller extends CI_Controller {
                        . '; charset=' . strtolower($this->config->item('charset')));
 
                 $output = $this->format->factory($data)->{'to_' . $this->response->format}();
+
+                // An array must be parsed as a string, so as not to cause an array to string error.
+                // Json is the most appropriate form for such a datatype
+                if ($this->response->format === 'array')
+                {
+                    $output = $this->format->factory($output)->{'to_json'}();
+                }
             }
             else
             {
