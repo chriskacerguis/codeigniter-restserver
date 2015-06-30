@@ -397,12 +397,8 @@ abstract class REST_Controller extends CI_Controller {
             $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Unsupported protocol'], 403);
         }
 
-        $pattern = '/^(.*)\.(' . implode('|', array_keys($this->_supported_formats)) . ')$/';
-        $matches = [];
-        if (preg_match($pattern, $object_called, $matches))
-        {
-            $object_called = $matches[1];
-        }
+        // Remove the supported format from the function name e.g. index.json => index
+        $object_called = preg_replace('/^(.*)\.(?:' . implode('|', array_keys($this->_supported_formats)) . ')$/', '$1', $object_called);
 
         $controller_method = $object_called . '_' . $this->request->method;
 
