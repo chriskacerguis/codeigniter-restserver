@@ -270,7 +270,7 @@ abstract class REST_Controller extends CI_Controller {
         // Try to find a format for the request (means we have a request body)
         $this->request->format = $this->_detect_input_format();
 
-        // Some method can't have a body
+        // Not all methods have a body attached with them
         $this->request->body = NULL;
 
         $this->{'_parse_' . $this->request->method}();
