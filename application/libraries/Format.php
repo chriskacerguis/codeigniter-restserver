@@ -86,21 +86,48 @@ class Format {
     // FORMATTING OUTPUT ---------------------------------------------------------
 
     /**
-     * Encode as json
+     * Parse as an array
      *
-     * @return string Json representation of a value
+     * @param mixed|null $data Optional data to pass, so as to override the data passed
+     * to the constructor
+     *
+     * @return array Data parsed as an array; otherwise, an empty array
      */
-    public function to_array()
+    public function to_array($data = NULL)
     {
-        // As the return value should be a string, it makes no sense
-        // to return an array datatype as that will result in an error or sorts
-        return $this->to_json();
+        // If no data is passed as a parameter, then use the data passed
+        // via the constructor
+        if ($data === NULL && func_num_args() === 0)
+        {
+            $data = $this->_data;
+        }
+
+        // Cast as an array if not already
+        if (is_array($data) === FALSE)
+        {
+            $data = (array) $data;
+        }
+
+        $array = [];
+        foreach ((array) $data as $key => $value)
+        {
+            if (is_object($value) || is_array($value))
+            {
+                $array[$key] = $this->_to_array($value);
+            }
+            else
+            {
+                $array[$key] = $value;
+            }
+        }
+
+        return $array;
     }
 
     /**
      * Format XML for output
      *
-     * @param array|null $data Optional data to pass, so as to override the data passed
+     * @param mixed|null $data Optional data to pass, so as to override the data passed
      * to the constructor
      * @param null $structure
      * @param string $basenode
