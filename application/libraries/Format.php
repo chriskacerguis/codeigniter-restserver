@@ -307,9 +307,6 @@ class Format {
         // We only honour a jsonp callback which are valid javascript identifiers
         elseif (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback))
         {
-            // Set the content type
-            header('Content-Type: application/javascript');
-
             // Return the data as encoded json with a callback
             return $callback . '(' . json_encode($data) . ');';
         }
