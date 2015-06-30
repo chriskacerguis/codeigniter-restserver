@@ -6,8 +6,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Format class
  * Help convert between various formats such as XML, JSON, CSV, etc.
  *
- * @author    Phil Sturgeon
- * @license   http://philsturgeon.co.uk/code/dbad-license
+ * @author    Phil Sturgeon, Chris Kacerguis
+ * @license   http://www.dbad-license.org/
  */
 class Format {
 
