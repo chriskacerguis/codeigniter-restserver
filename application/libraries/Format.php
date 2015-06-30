@@ -328,7 +328,7 @@ class Format {
 
         if (empty($callback) === TRUE)
         {
-            return json_encode($data, JSON_PRETTY_PRINT);
+            return json_encode($data);
         }
 
         // We only honour a jsonp callback which are valid javascript identifiers
