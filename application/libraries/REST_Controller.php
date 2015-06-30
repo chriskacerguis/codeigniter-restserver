@@ -252,7 +252,7 @@ abstract class REST_Controller extends CI_Controller {
             $this->_check_blacklist_auth();
         }
 
-        // Store whether the the connection is HTTPS
+        // Determine whether the connection is HTTPS
         $this->request->ssl = is_https();
 
         // How is this request being made? GET, POST, PATCH, DELETE, INSERT, PUT, HEAD or OPTIONS
