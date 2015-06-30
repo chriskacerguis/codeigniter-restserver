@@ -35,8 +35,8 @@ class Format {
     /**
      * DO NOT CALL THIS DIRECTLY, USE factory()
      *
-     * @param null $data
-     * @param null $from_type
+     * @param NULL $data
+     * @param NULL $from_type
      *
      * @throws Exception
      */
@@ -88,7 +88,7 @@ class Format {
     /**
      * Parse as an array
      *
-     * @param mixed|null $data Optional data to pass, so as to override the data passed
+     * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
      *
      * @return array Data parsed as an array; otherwise, an empty array
@@ -127,9 +127,9 @@ class Format {
     /**
      * Format XML for output
      *
-     * @param mixed|null $data Optional data to pass, so as to override the data passed
+     * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
-     * @param null $structure
+     * @param NULL $structure
      * @param string $basenode
      *
      * @return mixed
@@ -213,7 +213,7 @@ class Format {
     /**
      * Format HTML for output
      *
-     * @param mixed|null $data Optional data to pass, so as to override the data passed
+     * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
      *
      * @return mixed
@@ -263,7 +263,7 @@ class Format {
     /**
      * Format CSV for output
      *
-     * @param mixed|null $data Optional data to pass, so as to override the data passed
+     * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
      *
      * @return mixed
@@ -309,7 +309,7 @@ class Format {
     /**
      * Encode as json
      *
-     * @param mixed|null $data Optional data to pass, so as to override the data passed
+     * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
      *
      * @return string Json representation of a value
@@ -348,7 +348,7 @@ class Format {
     /**
      * Encode as a serialized array
      *
-     * @param mixed|null $data Optional data to pass, so as to override the data passed
+     * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
      *
      * @return string Serialized data
@@ -368,7 +368,7 @@ class Format {
     /**
      * Output as a string representing the PHP structure
      *
-     * @param mixed|null $data Optional data to pass, so as to override the data passed
+     * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
      *
      * @return mixed String representation of a variable
