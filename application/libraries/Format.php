@@ -113,7 +113,7 @@ class Format {
         {
             if (is_object($value) || is_array($value))
             {
-                $array[$key] = $this->_to_array($value);
+                $array[$key] = $this->to_array($value);
             }
             else
             {
