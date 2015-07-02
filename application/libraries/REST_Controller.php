@@ -1089,15 +1089,19 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Parse POST
+     * Parse the POST request arguments
      *
      * @access protected
+     * @return void
      */
     protected function _parse_post()
     {
         $this->_post_args = $_POST;
 
-        $this->request->format && $this->request->body = file_get_contents('php://input');
+        if ($this->request->format)
+        {
+            $this->request->body = $this->input->raw_input_stream;
+        }
     }
 
     /**
