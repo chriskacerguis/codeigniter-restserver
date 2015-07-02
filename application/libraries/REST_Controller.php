@@ -1411,7 +1411,7 @@ abstract class REST_Controller extends CI_Controller {
         log_message('debug', 'LDAP Auth: Connect to ' . (isset($ldaphost) ? $ldaphost : '[ldap not configured]'));
 
         // Appears to be unused
-        $ldapconfig['authrealm'] = $this->config->item('domain', 'ldap');
+        // $ldapconfig['authrealm'] = $this->config->item('domain', 'ldap');
 
         // connect to ldap server
         $ldapconn = ldap_connect($ldap['host'], $ldap['port']);
