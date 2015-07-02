@@ -600,25 +600,32 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Detect which format the HTTP Body is provided in
+     * Get the input format e.g. json or xml
      *
-     * @access protected
+     * @access private
+     * @return string|NULL Supported input format; otherwise, NULL
      */
-    protected function _detect_input_format()
+    private function _detect_input_format()
     {
-        if ($this->input->server('CONTENT_TYPE'))
+        // Get the CONTENT-TYPE value from the SERVER variable
+        $contentType = $this->input->server('CONTENT_TYPE');
+
+        if (empty($contentType) === FALSE)
         {
             // Check all formats against the HTTP_ACCEPT header
-            foreach ($this->_supported_formats as $format => $mime)
+            foreach ($this->_supported_formats as $key => $value)
             {
-                if (strpos($match = $this->input->server('CONTENT_TYPE'), ';'))
-                {
-                    $match = current(explode(';', $match));
-                }
+                // $key = format e.g. csv
+                // $value = mime type e.g. application/csv
 
-                if ($match == $mime)
+                // If a semi-colon exists in the string, then explode by ; and get the value of where
+                // the current array pointer resides. This will generally be the first element of the array
+                $contentType = (strpos($contentType, ';') !== FALSE ? current(explode(';', $contentType)) : $contentType);
+
+                // If both the mime types match, then return the format
+                if ($contentType === $value)
                 {
-                    return $format;
+                    return $key;
                 }
             }
         }
