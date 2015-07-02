@@ -1135,7 +1135,7 @@ abstract class REST_Controller extends CI_Controller {
     protected function _parse_head()
     {
         // Parse the HEAD variables
-        parse_str(parse_url$this->input->server('REQUEST_URI'), PHP_URL_QUERY), $head);
+        parse_str(parse_url($this->input->server('REQUEST_URI'), PHP_URL_QUERY), $head);
 
         // Merge both the URI segments and HEAD params
         $this->_head_args = array_merge($this->_head_args, $head);
