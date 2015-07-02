@@ -1050,22 +1050,39 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Parse GET
+     * Parse the GET request arguments
      *
      * @access protected
+     * @return void
      */
     protected function _parse_get()
     {
+        // Declare a variable that will hold the REQUEST_URI
+        $request_uri = NULL;
+
         // Fix for Issue #247
         if (is_cli())
         {
-            $args = $_SERVER['argv'];
+            $args = $this->input->server('argv');
             unset($args[0]);
-            $_SERVER['QUERY_STRING'] = $_SERVER['PATH_INFO'] = $_SERVER['REQUEST_URI'] = '/' . implode('/', $args) . '/';
+            // Combine the arguments using '/' as the delimiter
+            $request_uri = '/' . implode('/', $args) . '/';
+
+            // Set the following server variables
+            $_SERVER['REQUEST_URI'] = $request_uri;
+            $_SERVER['PATH_INFO'] = $request_uri;
+            $_SERVER['QUERY_STRING'] = $request_uri;
+        }
+        else
+        {
+            $request_uri = $this->input->server('REQUEST_URI');
         }
 
-        // Grab proper GET variables
-        parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $get);
+        // Declare a variable that will hold the parameters
+        $get = NULL;
+
+        // Grab the GET variables from the query string
+        parse_str(parse_url($request_uri, PHP_URL_QUERY), $get);
 
         // Merge both the URI segments and GET params
         $this->_get_args = array_merge($this->_get_args, $get);
