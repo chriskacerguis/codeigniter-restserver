@@ -1155,21 +1155,21 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Parse PATCH
+     * Parse the PATCH request arguments
      *
      * @access protected
+     * @return void
      */
     protected function _parse_patch()
     {
         // It might be a HTTP body
         if ($this->request->format)
         {
-            $this->request->body = file_get_contents('php://input');
+            $this->request->body = $this->input->raw_input_stream;
         }
-
-        // If no file type is provided, this is probably just arguments
         else
         {
+            // If no filetype is provided, then there are probably just arguments
             if ($this->input->method() === 'patch')
             {
                 $this->_patch_args = $this->input->input_stream();
