@@ -1418,7 +1418,6 @@ abstract class REST_Controller extends CI_Controller {
 
         if ($ldapconn)
         {
-
             log_message('debug', 'Setting timeout to ' . $ldap['timeout'] . ' seconds');
 
             ldap_set_option($ldapconn, LDAP_OPT_NETWORK_TIMEOUT, $ldap['timeout']);
@@ -1439,7 +1438,6 @@ abstract class REST_Controller extends CI_Controller {
 
                 return FALSE;
             }
-
         }
 
         // search for user
