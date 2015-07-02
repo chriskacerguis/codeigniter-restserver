@@ -1178,13 +1178,14 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Parse DELETE
+     * Parse the DELETE request arguments
      *
      * @access protected
+     * @return void
      */
     protected function _parse_delete()
     {
-        // Set up out DELETE variables (which shouldn't really exist, but sssh!)
+        // These should exist if a DELETE request
         if ($this->input->method() === 'delete')
         {
             $this->_delete_args = $this->input->input_stream();
