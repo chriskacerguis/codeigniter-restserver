@@ -38,22 +38,27 @@ abstract class REST_Controller extends CI_Controller {
     protected $allowed_http_methods = ['get', 'delete', 'post', 'put', 'options', 'patch', 'head'];
 
     /**
-     * General request data and information.
-     * Stores accept, language, body, headers, etc.
+     * Contains details about the request
+     * Fields: body, format, method, ssl
+     * Note: This is a dynamic object (stdClass)
      *
      * @var object
      */
     protected $request = NULL;
 
-    /**
-     * What is gonna happen in output?
+        /**
+     * Contains details about the response
+     * Fields: format, lang
+     * Note: This is a dynamic object (stdClass)
      *
      * @var object
      */
     protected $response = NULL;
 
     /**
-     * Stores DB, keys, key level, etc
+     * Contains details about the REST API
+     * Fields: db, ignore_limits, key, level, user_id
+     * Note: This is a dynamic object (stdClass)
      *
      * @var object
      */
