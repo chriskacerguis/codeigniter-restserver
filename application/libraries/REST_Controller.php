@@ -1141,14 +1141,15 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Parse OPTIONS
+     * Parse the OPTIONS request arguments
      *
      * @access protected
+     * @return void
      */
     protected function _parse_options()
     {
-        // Grab proper OPTIONS variables
-        parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY), $options);
+        // Parse the OPTIONS variables
+        parse_str(parse_url($this->input->server('REQUEST_URI'), PHP_URL_QUERY), $options);
 
         // Merge both the URI segments and OPTIONS params
         $this->_options_args = array_merge($this->_options_args, $options);
