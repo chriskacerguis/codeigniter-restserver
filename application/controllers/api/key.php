@@ -253,7 +253,6 @@ class Key extends REST_Controller {
 
     private function _insert_key($key, $data)
     {
-
         $data[config_item('rest_key_column')] = $key;
         $data['date_created'] = function_exists('now') ? now() : time();
 
