@@ -224,7 +224,13 @@ class Key extends REST_Controller {
         do
         {
             // Generate a random salt
-            $salt = mcrypt_create_iv(16, MCRYPT_DEV_URANDOM);
+            $salt = $this->security->get_random_bytes(64);
+            
+            // If an error occurred, then fall back to the previous method
+            if ($salt === FALSE)
+            {
+				$salt = hash('sha256', time() . mt_rand());
+            }
             $new_key = substr($salt, 0, config_item('rest_key_length'));
         }
         while (self::_key_exists($new_key));
