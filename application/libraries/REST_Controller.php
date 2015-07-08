@@ -259,7 +259,7 @@ abstract class REST_Controller extends CI_Controller {
         $this->request->method = $this->_detect_method();
 
         // Create an argument container if it doesn't exist e.g. _get_args
-        if (!isset($this->{'_' . $this->request->method . '_args'}))
+        if ( ! isset($this->{'_' . $this->request->method . '_args'}))
         {
             $this->{'_' . $this->request->method . '_args'} = [];
         }
@@ -431,7 +431,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Sure it exists, but can they do anything with it?
-        if (!method_exists($this, $controller_method))
+        if ( ! method_exists($this, $controller_method))
         {
             $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'Unknown method.'], 404);
         }
@@ -578,7 +578,7 @@ abstract class REST_Controller extends CI_Controller {
         // but it will not modify the content-length header to compensate for
         // the reduction, causing the browser to hang waiting for more data.
         // We'll just skip content-length in those cases
-        if (!$this->_zlib_oc && !$this->config->item('compress_output'))
+        if ( ! $this->_zlib_oc && !$this->config->item('compress_output'))
         {
             header('Content-Length: ' . strlen($output));
         }
@@ -633,7 +633,7 @@ abstract class REST_Controller extends CI_Controller {
 
         // Check if a file extension is used when no get arguments provided
         $matches = [];
-        if (!$this->_get_args && preg_match($pattern, $this->uri->uri_string(), $matches))
+        if ( ! $this->_get_args && preg_match($pattern, $this->uri->uri_string(), $matches))
         {
             return $matches[1];
         }
@@ -694,7 +694,7 @@ abstract class REST_Controller extends CI_Controller {
         } // End HTTP_ACCEPT checking
 
         // Well, none of that has worked! Let's see if the controller has a default
-        if (!empty($this->rest_format))
+        if ( ! empty($this->rest_format))
         {
             return $this->rest_format;
         }
@@ -756,7 +756,7 @@ abstract class REST_Controller extends CI_Controller {
         // Find the key from server or arguments
         if (($key = isset($this->_args[$api_key_variable]) ? $this->_args[$api_key_variable] : $this->input->server($key_name)))
         {
-            if (!($row = $this->rest->db->where(config_item('rest_key_column'), $key)->get(config_item('rest_keys_table'))->row()))
+            if ( ! ($row = $this->rest->db->where(config_item('rest_key_column'), $key)->get(config_item('rest_keys_table'))->row()))
             {
                 return FALSE;
             }
@@ -773,7 +773,7 @@ abstract class REST_Controller extends CI_Controller {
              * If "is private key" is enabled, compare the ip address with the list
              * of valid ip addresses stored in the database.
              */
-            if (!empty($row->is_private_key))
+            if ( ! empty($row->is_private_key))
             {
                 // Check for a list of valid ip addresses
                 if (isset($row->ip_addresses))
@@ -816,7 +816,7 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _detect_lang()
     {
-        if (!$lang = $this->input->server('HTTP_ACCEPT_LANGUAGE'))
+        if ( ! $lang = $this->input->server('HTTP_ACCEPT_LANGUAGE'))
         {
             return NULL;
         }
@@ -883,7 +883,7 @@ abstract class REST_Controller extends CI_Controller {
     protected function _check_limit($controller_method)
     {
         // They are special, or it might not even have a limit
-        if (!empty($this->rest->ignore_limits) || !isset($this->methods[$controller_method]['limit']))
+        if ( ! empty($this->rest->ignore_limits) || ! isset($this->methods[$controller_method]['limit']))
         {
             // Everything is fine
             return TRUE;
@@ -893,9 +893,9 @@ abstract class REST_Controller extends CI_Controller {
         $limit = $this->methods[$controller_method]['limit'];
 
         $uri_noext = $this->uri->uri_string();
-        if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format))===0) 
+        if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format)) === 0) 
         { 
-            $uri_noext=substr($this->uri->uri_string(),0, -strlen($this->response->format)-1);
+            $uri_noext = substr($this->uri->uri_string(),0, -strlen($this->response->format)-1);
         }
 
         // Get data about a keys' usage and limit to one row
@@ -905,10 +905,10 @@ abstract class REST_Controller extends CI_Controller {
             ->get(config_item('rest_limits_table'))
             ->row();
 
-        $timelimit = (isset($this->methods[$controller_method]['time'])? $this->methods[$controller_method]['time']:60 * 60);
+        $timelimit = (isset($this->methods[$controller_method]['time']) ? $this->methods[$controller_method]['time'] : 60 * 60);
 
         // No calls have been made for this key
-        if (!$result)
+        if ( ! $result)
         {
             // Create a new row for the following key
             $this->rest->db->insert(config_item('rest_limits_table'), [
@@ -971,7 +971,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // check for wildcard flag for rules for classes
-        if (!empty($this->overrides_array[$this->router->class]['*'])) // Check for class overrides
+        if ( ! empty($this->overrides_array[$this->router->class]['*'])) // Check for class overrides
         {
             // None auth override found, prepare nothing but send back a TRUE override flag
             if ($this->overrides_array[$this->router->class]['*'] == 'none')
@@ -1497,7 +1497,7 @@ abstract class REST_Controller extends CI_Controller {
             return FALSE;
         }
 
-        if (!is_callable([$auth_library_class, $auth_library_function]))
+        if ( ! is_callable([$auth_library_class, $auth_library_function]))
         {
             $this->load->library($auth_library_class);
         }
@@ -1526,7 +1526,7 @@ abstract class REST_Controller extends CI_Controller {
         $rest_auth = strtolower($this->config->item('rest_auth'));
         $valid_logins = $this->config->item('rest_valid_logins');
 
-        if (!$this->config->item('auth_source') && $rest_auth === 'digest')
+        if ( ! $this->config->item('auth_source') && $rest_auth === 'digest')
         {
             // For digest we do not have a password passed as argument
             return md5($username . ':' . $this->config->item('rest_realm') . ':' . (isset($valid_logins[$username]) ? $valid_logins[$username] : ''));
@@ -1575,7 +1575,7 @@ abstract class REST_Controller extends CI_Controller {
         $key = $this->config->item('auth_source');
 
         // If falsy, then the user isn't logged in
-        if (!$this->session->userdata($key))
+        if ( ! $this->session->userdata($key))
         {
             // Display an error response
             $this->response(
@@ -1726,7 +1726,7 @@ abstract class REST_Controller extends CI_Controller {
             $ip = trim($ip);
         }
 
-        if (!in_array($this->input->ip_address(), $whitelist))
+        if ( ! in_array($this->input->ip_address(), $whitelist))
         {
             $this->response([config_item('rest_status_field_name') => FALSE, config_item('rest_message_field_name') => 'IP not authorized'], 401);
         }
