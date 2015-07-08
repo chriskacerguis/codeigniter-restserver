@@ -892,7 +892,7 @@ abstract class REST_Controller extends CI_Controller {
         // How many times can you get to this method in a defined timelimit (default: 1hr)?
         $limit = $this->methods[$controller_method]['limit'];
 
-        $uri_noext=$this->uri->uri_string();
+        $uri_noext = $this->uri->uri_string();
         if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format))===0) 
         { 
             $uri_noext=substr($this->uri->uri_string(),0, -strlen($this->response->format)-1);
@@ -942,7 +942,7 @@ abstract class REST_Controller extends CI_Controller {
 
             // Increase the count by one
             $this->rest->db
-                ->where('uri', $$uri_noext)
+                ->where('uri', $uri_noext)
                 ->where('api_key', $this->rest->key)
                 ->set('count', 'count + 1', FALSE)
                 ->update(config_item('rest_limits_table'));
