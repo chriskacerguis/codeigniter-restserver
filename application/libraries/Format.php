@@ -408,7 +408,7 @@ class Format {
         $array = [];
 
         // Splits
-        $rows = explode("\n", trim($data));
+        $rows = explode(PHP_EOL, trim($data));
         $headings = explode(',', array_shift($rows));
         foreach ($rows as $row)
         {

@@ -1379,7 +1379,7 @@ abstract class REST_Controller extends CI_Controller {
     {
         $string = strip_tags($this->form_validation->error_string());
 
-        return explode("\n", trim($string, "\n"));
+        return explode(PHP_EOL, trim($string, PHP_EOL));
     }
 
     // SECURITY FUNCTIONS ---------------------------------------------------------
