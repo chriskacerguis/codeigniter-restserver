@@ -49,7 +49,7 @@ class Format {
     /**
      * Default format of this class
      */
-    const DEFAULT_FORMAT = self::JSON; // Couldn't be DEFAULT, as this is a keyword
+    const DEFAULT_FORMAT = self::JSON_FORMAT; // Couldn't be DEFAULT, as this is a keyword
 
     /**
      * CodeIgniter instance
