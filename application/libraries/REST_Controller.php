@@ -121,6 +121,13 @@ abstract class REST_Controller extends CI_Controller {
     protected $_options_args = [];
 
     /**
+     * The arguments for the query parameters
+     *
+     * @var array
+     */
+    protected $_query_args = [];
+
+    /**
      * The arguments from GET, POST, PUT, DELETE, PATCH, HEAD and OPTIONS request methods combined
      *
      * @var array
@@ -268,6 +275,9 @@ abstract class REST_Controller extends CI_Controller {
         {
             $this->{'_' . $this->request->method . '_args'} = [];
         }
+
+        // Set up the query parameters
+        $this->_parse_query();
 
         // Set up the GET variables
         $this->_get_args = array_merge($this->_get_args, $this->uri->ruri_to_assoc());
@@ -1065,35 +1075,8 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _parse_get()
     {
-        // Declare a variable that will hold the REQUEST_URI
-        $request_uri = NULL;
-
-        // Fix for Issue #247
-        if (is_cli())
-        {
-            $args = $this->input->server('argv');
-            unset($args[0]);
-            // Combine the arguments using '/' as the delimiter
-            $request_uri = '/' . implode('/', $args) . '/';
-
-            // Set the following server variables
-            $_SERVER['REQUEST_URI'] = $request_uri;
-            $_SERVER['PATH_INFO'] = $request_uri;
-            $_SERVER['QUERY_STRING'] = $request_uri;
-        }
-        else
-        {
-            $request_uri = $this->input->server('REQUEST_URI');
-        }
-
-        // Declare a variable that will hold the parameters
-        $get = NULL;
-
-        // Grab the GET variables from the query string
-        parse_str(parse_url($request_uri, PHP_URL_QUERY), $get);
-
-        // Merge both the URI segments and GET params
-        $this->_get_args = array_merge($this->_get_args, $get);
+        // Merge both the URI segments and query parameters
+        $this->_get_args = array_merge($this->_get_args, $this->_query_args);
     }
 
     /**
@@ -1200,6 +1183,41 @@ abstract class REST_Controller extends CI_Controller {
         {
             $this->_delete_args = $this->input->input_stream();
         }
+    }
+
+    /**
+     * Parse the query parameters
+     *
+     * @access protected
+     *
+     * @return void
+     */
+    public function _parse_query()
+    {
+        // Declare a variable that will hold the REQUEST_URI
+        $request_uri = NULL;
+
+        // If using the commandline version
+        if (is_cli())
+        {
+            $args = $this->input->server('argv');
+            unset($args[0]);
+
+            // Combine the arguments using '/' as the delimiter
+            $request_uri = '/' . implode('/', $args) . '/';
+
+            // Set the following server variables (perhaps not required anymore?)
+            $_SERVER['REQUEST_URI'] = $request_uri;
+            $_SERVER['PATH_INFO'] = $request_uri;
+            $_SERVER['QUERY_STRING'] = $request_uri;
+        }
+        else
+        {
+            $request_uri = $this->input->server('REQUEST_URI');
+        }
+
+        // Parse the query parameters from the query string
+        parse_str(parse_url($request_uri, PHP_URL_QUERY), $this->_query_args);
     }
 
     // INPUT FUNCTION --------------------------------------------------------------
@@ -1349,6 +1367,27 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         return array_key_exists($key, $this->_patch_args) ? $this->_xss_clean($this->_patch_args[$key], $xss_clean) : FALSE;
+    }
+
+    /**
+     * Retrieve a value from the query parameters
+     *
+     * @access public
+     *
+     * @param NULL $key Key to retrieve from the query parameters
+     * If NULL an array of arguments is returned
+     * @param NULL $xss_clean Whether to apply XSS filtering
+     *
+     * @return array|string|FALSE Value from the query parameters; otherwise, FALSE
+     */
+    public function query($key = NULL, $xss_clean = NULL)
+    {
+        if ($key === NULL)
+        {
+            return $this->_query_args;
+        }
+
+        return array_key_exists($key, $this->_query_args) ? $this->_xss_clean($this->_query_args[$key], $xss_clean) : FALSE;
     }
 
     /**
