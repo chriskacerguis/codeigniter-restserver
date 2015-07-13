@@ -57,7 +57,7 @@ public function index_delete($id)
 }
 ```
 
-If query parameters are passed via the URL, regardless of whether it's a GET request, can be obtainable by the query method:
+If query parameters are passed via the URL, regardless of whether it's a GET request, can be obtained by the query method:
 
 ```php
 $this->query('blah'); // Query param
