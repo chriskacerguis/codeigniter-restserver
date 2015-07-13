@@ -560,7 +560,7 @@ abstract class REST_Controller extends CI_Controller {
             if ($this->config->item('rest_enable_limits') && $this->_check_limit($controller_method) === FALSE)
             {
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key has reached the time limit for this method.'];
-                $this->response($response, self:UNAUTHORIZED);
+                $this->response($response, self::UNAUTHORIZED);
             }
 
             // If no level is set use 0, they probably aren't using permissions
@@ -577,7 +577,7 @@ abstract class REST_Controller extends CI_Controller {
 
             // They don't have good enough perms
             $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key does not have enough permissions.'];
-            $authorized || $this->response($response, self:UNAUTHORIZED);
+            $authorized || $this->response($response, self::UNAUTHORIZED);
         }
 
         // No key stuff, but record that stuff is happening
@@ -600,7 +600,7 @@ abstract class REST_Controller extends CI_Controller {
                         'classname' => get_class($ex),
                         'message' => $ex->getMessage()
                     ]
-                ], self:INTERNAL_SERVER_ERROR);
+                ], self::INTERNAL_SERVER_ERROR);
         }
     }
 
