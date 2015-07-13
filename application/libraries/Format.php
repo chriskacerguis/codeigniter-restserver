@@ -375,51 +375,6 @@ class Format {
     }
 
     /**
-     * Format data as CSV
-     *
-     * @param mixed|NULL $data Optional data to pass, so as to override the data passed
-     * to the constructor
-     * @return mixed
-     */
-    public function to_csv($data = NULL)
-    {
-        // If no data is passed as a parameter, then use the data passed
-        // via the constructor
-        if ($data === NULL && func_num_args() === 0)
-        {
-            $data = $this->_data;
-        }
-
-        // Cast as an array if not already
-        if (is_array($data) === FALSE)
-        {
-            $data = (array) $data;
-        }
-
-        // Multi-dimensional array
-        if (isset($data[0]) && is_array($data[0]))
-        {
-            $headings = array_keys($data[0]);
-        }
-
-        // Single array
-        else
-        {
-            $headings = array_keys($data);
-            $data = [$data];
-        }
-
-        $output = '"' . implode('","', $headings) . '"' . PHP_EOL;
-        foreach ($data as &$row)
-        {
-            $row = str_replace('"', '""', $row); // Escape dbl quotes per RFC 4180
-            $output .= '"' . implode('","', $row) . '"' . PHP_EOL;
-        }
-
-        return $output;
-    }
-
-    /**
      * Encode data as json
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
