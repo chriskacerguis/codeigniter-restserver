@@ -245,14 +245,19 @@ class Key extends REST_Controller {
 
     private function _get_key($key)
     {
-        return $this->db->where(config_item('rest_key_column'), $key)->get(config_item('rest_keys_table'))->row();
+        return $this->db
+			->where(config_item('rest_key_column'), $key)
+			->get(config_item('rest_keys_table'))
+			->row();
     }
 
     // --------------------------------------------------------------------
 
     private function _key_exists($key)
     {
-        return $this->db->where(config_item('rest_key_column'), $key)->count_all_results(config_item('rest_keys_table')) > 0;
+        return $this->db
+			->where(config_item('rest_key_column'), $key)
+			->count_all_results(config_item('rest_keys_table')) > 0;
     }
 
     // --------------------------------------------------------------------
