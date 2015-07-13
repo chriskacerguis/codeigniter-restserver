@@ -905,8 +905,8 @@ abstract class REST_Controller extends CI_Controller {
         $limit = $this->methods[$controller_method]['limit'];
 
         $uri_noext = $this->uri->uri_string();
-        if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format)) === 0) 
-        { 
+        if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format)) === 0)
+        {
             $uri_noext = substr($this->uri->uri_string(),0, -strlen($this->response->format)-1);
         }
 
