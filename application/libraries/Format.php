@@ -37,7 +37,6 @@ class Format {
      *
      * @param NULL $data
      * @param NULL $from_type
-     *
      * @throws Exception
      */
 
@@ -90,7 +89,6 @@ class Format {
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
-     *
      * @return array Data parsed as an array; otherwise, an empty array
      */
     public function to_array($data = NULL)
@@ -131,7 +129,6 @@ class Format {
      * to the constructor
      * @param NULL $structure
      * @param string $basenode
-     *
      * @return mixed
      */
     public function to_xml($data = NULL, $structure = NULL, $basenode = 'xml')
@@ -215,7 +212,6 @@ class Format {
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
-     *
      * @return mixed
      */
     public function to_html($data = NULL)
@@ -265,7 +261,6 @@ class Format {
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
-     *
      * @return mixed
      */
     public function to_csv($data = NULL)
@@ -311,7 +306,6 @@ class Format {
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
-     *
      * @return string Json representation of a value
      */
     public function to_json($data = NULL)
@@ -350,7 +344,6 @@ class Format {
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
-     *
      * @return string Serialized data
      */
     public function to_serialized($data = NULL)
@@ -370,7 +363,6 @@ class Format {
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
-     *
      * @return mixed String representation of a variable
      */
     public function to_php($data = NULL)
@@ -389,7 +381,6 @@ class Format {
 
     /**
      * @param $data XML string
-     *
      * @return SimpleXMLElement XML element object; otherwise, empty array
      */
     protected function _from_xml($data)
@@ -399,7 +390,6 @@ class Format {
 
     /**
      * @param string $data CSV string
-     *
      * @return array A multi-dimensional array with the outer array being the number of rows
      * and the inner arrays the individual fields
      */
@@ -426,7 +416,6 @@ class Format {
 
     /**
      * @param $data Encoded json string
-     *
      * @return mixed Decoded json string with leading and trailing whitespace removed
      */
     protected function _from_json($data)
@@ -436,7 +425,6 @@ class Format {
 
     /**
      * @param string Data to unserialized
-     *
      * @return mixed Unserialized data
      */
     protected function _from_serialize($data)
@@ -446,7 +434,6 @@ class Format {
 
     /**
      * @param $data Data to trim leading and trailing whitespace
-     *
      * @return string Data with leading and trailing whitespace removed
      */
     protected function _from_php($data)
