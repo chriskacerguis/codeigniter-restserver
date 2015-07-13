@@ -297,6 +297,84 @@ class Format {
     }
 
     /**
+     * @link http://www.metashock.de/2014/02/create-csv-file-in-memory-php/
+     * @param mixed|NULL $data Optional data to pass, so as to override the data passed
+     * to the constructor
+     * @param string $delimiter The optional delimiter parameter sets the field
+     * delimiter (one character only). NULL will use the default value (,)
+     * @param string $enclosure The optional enclosure parameter sets the field
+     * enclosure (one character only). NULL will use the default value (")
+     * @return string A csv string
+     */
+    public function to_csv($data = NULL, $delimiter = ',', $enclosure = '"')
+    {
+        // Use a threshold of 1 MB (1024 * 1024)
+        $handle = fopen('php://temp/maxmemory:1048576', 'w');
+        if ($handle === FALSE)
+        {
+            return NULL;
+        }
+
+        // If no data is passed as a parameter, then use the data passed
+        // via the constructor
+        if ($data === NULL && func_num_args() === 0)
+        {
+            $data = $this->_data;
+        }
+
+        // If NULL, then set as the default delimiter
+        if ($delimiter === NULL)
+        {
+            $delimiter = ',';
+        }
+
+        // If NULL, then set as the default enclosure
+        if ($enclosure === NULL)
+        {
+            $enclosure = '"';
+        }
+
+        // Cast as an array if not already
+        if (is_array($data) === FALSE)
+        {
+            $data = (array) $data;
+        }
+
+        // Check if it's a multi-dimensional array
+        if (isset($data[0]) && count($data) !== count($data, COUNT_RECURSIVE))
+        {
+            // Multi-dimensional array
+            $headings = array_keys($data[0]);
+        }
+        else
+        {
+            // Single array
+            $headings = array_keys($data);
+            $data = [$data];
+        }
+
+        // Apply the headings
+        fputcsv($handle, $headers, $delimiter, $enclosure);
+
+        foreach ($data as $record)
+        {
+            // Returns the length of the string written or FALSE
+            fputcsv($handle, $record, $delimiter, $enclosure);
+        }
+
+        // Reset the file pointer
+        rewind($handle);
+
+        // Retrieve the csv contents
+        $csv = stream_get_contents($handle);
+
+        // Close the handle
+        fclose($handle);
+
+        return $csv;
+    }
+
+    /**
      * Format data as CSV
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
@@ -430,28 +508,28 @@ class Format {
 
     /**
      * @param string $data CSV string
+     * @param string $delimiter The optional delimiter parameter sets the field
+     * delimiter (one character only). NULL will use the default value (,)
+     * @param string $enclosure The optional enclosure parameter sets the field
+     * enclosure (one character only). NULL will use the default value (")
      * @return array A multi-dimensional array with the outer array being the number of rows
      * and the inner arrays the individual fields
      */
-    protected function _from_csv($data)
+    protected function _from_csv($data, $delimiter = ',', $enclosure = '"')
     {
-        $array = [];
-
-        // Splits
-        $rows = explode(PHP_EOL, trim($data));
-        $headings = explode(',', array_shift($rows));
-        foreach ($rows as $row)
+        // If NULL, then set as the default delimiter
+        if ($delimiter === NULL)
         {
-            // The substr removes " from start and end
-            $data_fields = explode('","', trim(substr($row, 1, -1)));
-
-            if (count($data_fields) === count($headings))
-            {
-                $array[] = array_combine($headings, $data_fields);
-            }
+            $delimiter = ',';
         }
 
-        return $array;
+        // If NULL, then set as the default enclosure
+        if ($enclosure === NULL)
+        {
+            $enclosure = '"';
+        }
+
+        return str_getcsv($data, $delimiter, $enclosure);
     }
 
     /**
