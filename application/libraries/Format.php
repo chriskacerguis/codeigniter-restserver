@@ -12,6 +12,46 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Format {
 
     /**
+     * Array output format
+     */
+    const ARRAY_FORMAT = 'array';
+
+    /**
+     * Comma Separated Value (CSV) output format
+     */
+    const CSV_FORMAT = 'csv';
+
+    /**
+     * Json output format
+     */
+    const JSON_FORMAT = 'json';
+
+    /**
+     * HTML output format
+     */
+    const HTML_FORMAT = 'html';
+
+    /**
+     * PHP output format
+     */
+    const PHP_FORMAT = 'php';
+
+    /**
+     * Serialized output format
+     */
+    const SERIALIZED_FORMAT = 'serialized';
+
+    /**
+     * XML output format
+     */
+    const XML_FORMAT = 'xml';
+
+    /**
+     * Default format of this class
+     */
+    const DEFAULT_FORMAT = self::JSON; // Couldn't be DEFAULT, as this is a keyword
+
+    /**
      * CodeIgniter instance
      *
      * @var object
