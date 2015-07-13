@@ -202,6 +202,102 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected $_enable_xss = FALSE;
 
+    // Success
+
+    /**
+     * The request has succeeded
+     */
+    const OK = 200;
+
+    /**
+     * The server successfully created a new resource
+     */
+    const CREATED = 201;
+
+    /**
+     * The server successfully processed the request, though no content is returned
+     */
+    const NO_CONTENT = 204;
+
+    // Redirection
+
+    /**
+     * The resource has not been modified since the last request
+     */
+    const NOT_MODIFIED = 304;
+
+    // Client Error
+
+    /**
+     * The request cannot be fulfilled due to multiple errors
+     */
+    const BAD_REQUEST = 400;
+
+    /**
+     * The user is unauthorized to access the requested resource
+     */
+    const UNAUTHORIZED = 401;
+
+    /**
+     * The requested resource is unavailable at this present time
+     */
+    const FORBIDDEN = 403;
+
+    /**
+     * The requested resource could not be found
+     *
+     * Note: This is sometimes used to mask if there was an UNAUTHORIZED (401) or
+     * FORBIDDEN (403) error, for security reasons
+     */
+    const NOT_FOUND = 404;
+
+    /**
+     * The request method is not supported by the following resource
+     */
+    const METHOD_NOT_ALLOWED = 405;
+
+    /**
+     * The request could not be completed due to a conflict with the current state
+     * of the resource
+     */
+    const CONFLICT = 409;
+
+    // Server Error
+
+    /**
+     * The server encountered an unexpected error
+     *
+     * Note: This is a generic error message when no specific message
+     * is suitable
+     */
+    const INTERNAL_SERVER_ERROR = 500;
+
+    /**
+     * The server does not recognised the request method
+     */
+    const NOT_IMPLEMENTED = 501;
+
+    /**
+     * HTTP status codes and their respective description
+     *
+     * @var array
+     * @link http://www.restapitutorial.com/httpstatuscodes.html
+     */
+    protected $http_status_codes = [
+        self::OK => 'OK',
+        self::CREATED => 'CREATED',
+        self::NO_CONTENT => 'NO CONTENT',
+        self::NOT_MODIFIED => 'NOT MODIFIED',
+        self::BAD_REQUEST => 'BAD REQUEST',
+        self::UNAUTHORIZED => 'UNAUTHORIZED',
+        self::FORBIDDEN => 'FORBIDDEN',
+        self::NOT_FOUND => 'NOT FOUND',
+        self::METHOD_NOT_ALLOWED => 'METHOD NOT ALLOWED',
+        self::CONFLICT => 'CONFLICT',
+        self::INTERNAL_SERVER_ERROR => 'INTERNAL SERVER ERROR',
+        self::NOT_IMPLEMENTED => 'NOT IMPLEMENTED'
+    ];
+
     /**
      * Extend this function to apply additional checking early on in the process
      *
