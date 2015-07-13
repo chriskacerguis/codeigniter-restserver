@@ -257,6 +257,11 @@ abstract class REST_Controller extends CI_Controller {
     const METHOD_NOT_ALLOWED = 405;
 
     /**
+     * The request was not acceptable
+     */
+    const NOT_ACCEPTABLE = 406;
+
+    /**
      * The request could not be completed due to a conflict with the current state
      * of the resource
      */
@@ -293,6 +298,7 @@ abstract class REST_Controller extends CI_Controller {
         self::FORBIDDEN => 'FORBIDDEN',
         self::NOT_FOUND => 'NOT FOUND',
         self::METHOD_NOT_ALLOWED => 'METHOD NOT ALLOWED',
+        self::NOT_ACCEPTABLE => 'NOT ACCEPTABLE',
         self::CONFLICT => 'CONFLICT',
         self::INTERNAL_SERVER_ERROR => 'INTERNAL SERVER ERROR',
         self::NOT_IMPLEMENTED => 'NOT IMPLEMENTED'
@@ -443,11 +449,10 @@ abstract class REST_Controller extends CI_Controller {
         if ($this->input->is_ajax_request() === FALSE && $this->config->item('rest_ajax_only'))
         {
             // Display an error response
-            $this->response(
-                [
+            $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => 'Only AJAX requests are acceptable'
-                ], 406); // Set status to 406 NOT ACCEPTABLE
+                ], self::NOT_ACCEPTABLE);
         }
 
         // When there is no specific override for the current class/method, use the default auth value set in the config
@@ -506,7 +511,7 @@ abstract class REST_Controller extends CI_Controller {
         // Should we answer if not over SSL?
         if ($this->config->item('force_https') && $this->request->ssl === FALSE)
         {
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Unsupported protocol'], 403);
+            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Unsupported protocol'], self::FORBIDDEN);
         }
 
         // Remove the supported format from the function name e.g. index.json => index
@@ -528,7 +533,7 @@ abstract class REST_Controller extends CI_Controller {
                 $this->_log_request();
             }
 
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Invalid API Key ' . $this->rest->key], 403);
+            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Invalid API Key ' . $this->rest->key], self::FORBIDDEN);
         }
 
         // Check to see if this key has access to the requested controller.
@@ -539,13 +544,13 @@ abstract class REST_Controller extends CI_Controller {
                 $this->_log_request();
             }
 
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key does not have access to the requested controller.'], 401);
+            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key does not have access to the requested controller.'], self::UNAUTHORIZED);
         }
 
         // Sure it exists, but can they do anything with it?
         if (method_exists($this, $controller_method) === FALSE)
         {
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Unknown method.'], 404);
+            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Unknown method.'], self::NOT_FOUND);
         }
 
         // Doing key related stuff? Can only do it if they have a key right?
@@ -555,7 +560,7 @@ abstract class REST_Controller extends CI_Controller {
             if ($this->config->item('rest_enable_limits') && $this->_check_limit($controller_method) === FALSE)
             {
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key has reached the time limit for this method.'];
-                $this->response($response, 401);
+                $this->response($response, self:UNAUTHORIZED);
             }
 
             // If no level is set use 0, they probably aren't using permissions
@@ -572,7 +577,7 @@ abstract class REST_Controller extends CI_Controller {
 
             // They don't have good enough perms
             $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key does not have enough permissions.'];
-            $authorized || $this->response($response, 401);
+            $authorized || $this->response($response, self:UNAUTHORIZED);
         }
 
         // No key stuff, but record that stuff is happening
@@ -589,14 +594,13 @@ abstract class REST_Controller extends CI_Controller {
         catch (Exception $ex)
         {
             // If the method doesn't exist, then the error will be caught and an error response shown
-            $this->response(
-                [
+            $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => [
                         'classname' => get_class($ex),
                         'message' => $ex->getMessage()
                     ]
-                ], 500);
+                ], self:INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -624,7 +628,7 @@ abstract class REST_Controller extends CI_Controller {
         // If data is NULL and no HTTP status code provided, then display, error and exit
         if ($data === NULL && $http_code === NULL)
         {
-            $http_code = 404;
+            $http_code = self::NOT_FOUND;
         }
 
         // If data is not NULL and a HTTP status code provided, then continue
@@ -1716,11 +1720,10 @@ abstract class REST_Controller extends CI_Controller {
         if (!$this->session->userdata($key))
         {
             // Display an error response
-            $this->response(
-                [
+            $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => 'Not Authorized'
-                ], 401);
+                ], self::UNAUTHORIZED);
         }
     }
 
@@ -1819,11 +1822,10 @@ abstract class REST_Controller extends CI_Controller {
         if (strcasecmp($digest['response'], $valid_response) !== 0)
         {
             // Display an error response
-            $this->response(
-                [
+            $this->response([
                     $this->config->item('rest_status_field_name') => 0,
                     $this->config->item('rest_message_field_name') => 'Invalid credentials'
-                ], 401);
+                ], self::UNAUTHORIZED);
         }
     }
 
@@ -1842,12 +1844,11 @@ abstract class REST_Controller extends CI_Controller {
         if (preg_match($pattern, $this->config->item('rest_ip_blacklist')))
         {
             // Display an error response
-            $this->response(
-                [
+            $this->response([
                     'status' => FALSE,
                     'error' => 'IP Denied'
                 ],
-                401);
+                self::UNAUTHORIZED);
         }
     }
 
@@ -1870,7 +1871,7 @@ abstract class REST_Controller extends CI_Controller {
 
         if (in_array($this->input->ip_address(), $whitelist) === FALSE)
         {
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'IP not authorized'], 401);
+            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'IP not authorized'], self::UNAUTHORIZED);
         }
     }
 
@@ -1901,11 +1902,10 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Display an error response
-        $this->response(
-            [
+        $this->response([
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => 'Not authorized'
-            ], 401);
+            ], self::UNAUTHORIZED);
     }
 
     /**
