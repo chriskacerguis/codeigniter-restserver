@@ -774,9 +774,12 @@ abstract class REST_Controller extends CI_Controller {
 
             return $matches[1];
         }
+        
+        // Get the format and convert to lowercase
+        $format = strtolower($this->_get_args['format']);
 
         // A format has been passed as an argument in the URL and it is supported
-        if (isset($this->_get_args['format']) && array_key_exists($this->_get_args['format'], $this->_supported_formats))
+        if ($format !== FALSE && isset($this->_supported_formats[$format]))
         {
             return $this->_get_args['format'];
         }
