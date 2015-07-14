@@ -1286,7 +1286,7 @@ abstract class REST_Controller extends CI_Controller {
      * @access protected
      * @return void
      */
-    public function _parse_query()
+    protected function _parse_query()
     {
         // Declare a variable that will hold the REQUEST_URI
         $request_uri = NULL;
