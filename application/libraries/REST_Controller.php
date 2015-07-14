@@ -712,10 +712,10 @@ abstract class REST_Controller extends CI_Controller {
     /**
      * Get the input format e.g. json or xml
      *
-     * @access private
+     * @access protected
      * @return string|NULL Supported input format; otherwise, NULL
      */
-    private function _detect_input_format()
+    protected function _detect_input_format()
     {
         // Get the CONTENT-TYPE value from the SERVER variable
         $contentType = $this->input->server('CONTENT_TYPE');
