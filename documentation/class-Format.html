@@ -113,7 +113,7 @@ Help convert between various formats such as XML, JSON, CSV, etc.</p>
 				<a href="http://www.dbad-license.org/">http://www.dbad-license.org/</a><br>
 				<b>Author:</b>
 				Phil Sturgeon, Chris Kacerguis<br>
-			<b>Located at</b> <a href="source-class-Format.html#5-457" title="Go to source code">application/libraries/Format.php</a>
+			<b>Located at</b> <a href="source-class-Format.html#5-517" title="Go to source code">libraries/Format.php</a>
 		<br>
 	</div>
 
@@ -133,7 +133,7 @@ Help convert between various formats such as XML, JSON, CSV, etc.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#___construct">#</a>
-		<code><a href="source-class-Format.html#36-67" title="Go to source code">__construct</a>( <span>null <var>$data</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$from_type</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-Format.html#76-106" title="Go to source code">__construct</a>( <span>null <var>$data</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$from_type</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>DO NOT CALL THIS DIRECTLY, USE factory()</p>
@@ -174,7 +174,7 @@ Help convert between various formats such as XML, JSON, CSV, etc.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_factory">#</a>
-		<code><a href="source-class-Format.html#69-84" title="Go to source code">factory</a>( <span>mixed <var>$data</var></span>, <span>string <var>$from_type</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-Format.html#108-123" title="Go to source code">factory</a>( <span>mixed <var>$data</var></span>, <span>string <var>$from_type</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Create an instance of the format class
@@ -217,7 +217,7 @@ e.g: echo $this->format->factory(['foo' => 'bar'])->to_csv();</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_to_array">#</a>
-		<code><a href="source-class-Format.html#88-125" title="Go to source code">to_array</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-Format.html#127-163" title="Go to source code">to_array</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Format data as an array</p>
@@ -257,7 +257,7 @@ to the constructor</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_to_xml">#</a>
-		<code><a href="source-class-Format.html#127-211" title="Go to source code">to_xml</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$structure</var> = <span class="php-keyword1">NULL</span></span>, <span>string <var>$basenode</var> = <span class="php-quote">'xml'</span></span> )</code>
+		<code><a href="source-class-Format.html#165-248" title="Go to source code">to_xml</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$structure</var> = <span class="php-keyword1">NULL</span></span>, <span>string <var>$basenode</var> = <span class="php-quote">'xml'</span></span> )</code>
 
 		<div class="description short">
 			<p>Format data as XML</p>
@@ -301,7 +301,7 @@ to the constructor</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_to_html">#</a>
-		<code><a href="source-class-Format.html#213-261" title="Go to source code">to_html</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-Format.html#250-297" title="Go to source code">to_html</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Format data as HTML</p>
@@ -334,21 +334,21 @@ to the constructor</p></dd>
 		<td class="attributes"><code>
 			 public 
 
-			mixed
+			string
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_to_csv">#</a>
-		<code><a href="source-class-Format.html#263-307" title="Go to source code">to_csv</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-Format.html#299-375" title="Go to source code">to_csv</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span>, <span>string <var>$delimiter</var> = <span class="php-quote">','</span></span>, <span>string <var>$enclosure</var> = <span class="php-quote">'&quot;'</span></span> )</code>
 
 		<div class="description short">
-			<p>Format data as CSV</p>
+			
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Format data as CSV</p>
+			
 
 
 				<h4>Parameters</h4>
@@ -356,14 +356,24 @@ to the constructor</p></dd>
 					<dt><var>$data</var></dt>
 					<dd><p>Optional data to pass, so as to override the data passed
 to the constructor</p></dd>
+					<dt><var>$delimiter</var></dt>
+					<dd><p>The optional delimiter parameter sets the field
+delimiter (one character only). NULL will use the default value (,)</p></dd>
+					<dt><var>$enclosure</var></dt>
+					<dd><p>The optional enclosure parameter sets the field
+enclosure (one character only). NULL will use the default value (")</p></dd>
 				</dl></div>
 
 				<h4>Returns</h4>
 				<div class="list">
-					mixed
+					string<br>A csv string
 				</div>
 
 
+				<h4>Link</h4>
+				<div class="list">
+						<a href="http://www.metashock.de/2014/02/create-csv-file-in-memory-php/">http://www.metashock.de/2014/02/create-csv-file-in-memory-php/</a><br>
+				</div>
 
 
 		</div>
@@ -381,7 +391,7 @@ to the constructor</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_to_json">#</a>
-		<code><a href="source-class-Format.html#309-346" title="Go to source code">to_json</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-Format.html#377-413" title="Go to source code">to_json</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Encode data as json</p>
@@ -421,7 +431,7 @@ to the constructor</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_to_serialized">#</a>
-		<code><a href="source-class-Format.html#348-366" title="Go to source code">to_serialized</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-Format.html#415-432" title="Go to source code">to_serialized</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Encode data as a serialized array</p>
@@ -461,7 +471,7 @@ to the constructor</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_to_php">#</a>
-		<code><a href="source-class-Format.html#368-386" title="Go to source code">to_php</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-Format.html#434-451" title="Go to source code">to_php</a>( <span>mixed|null <var>$data</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Format data using a PHP structure</p>
@@ -501,7 +511,7 @@ to the constructor</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__from_xml">#</a>
-		<code><a href="source-class-Format.html#390-398" title="Go to source code">_from_xml</a>( <span> <var>$data</var></span> )</code>
+		<code><a href="source-class-Format.html#455-462" title="Go to source code">_from_xml</a>( <span> <var>$data</var></span> )</code>
 
 		<div class="description short">
 			
@@ -540,7 +550,7 @@ to the constructor</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__from_csv">#</a>
-		<code><a href="source-class-Format.html#400-425" title="Go to source code">_from_csv</a>( <span>string <var>$data</var></span> )</code>
+		<code><a href="source-class-Format.html#464-488" title="Go to source code">_from_csv</a>( <span>string <var>$data</var></span>, <span>string <var>$delimiter</var> = <span class="php-quote">','</span></span>, <span>string <var>$enclosure</var> = <span class="php-quote">'&quot;'</span></span> )</code>
 
 		<div class="description short">
 			
@@ -554,6 +564,12 @@ to the constructor</p></dd>
 				<div class="list"><dl>
 					<dt><var>$data</var></dt>
 					<dd>CSV string</dd>
+					<dt><var>$delimiter</var></dt>
+					<dd><p>The optional delimiter parameter sets the field
+delimiter (one character only). NULL will use the default value (,)</p></dd>
+					<dt><var>$enclosure</var></dt>
+					<dd><p>The optional enclosure parameter sets the field
+enclosure (one character only). NULL will use the default value (")</p></dd>
 				</dl></div>
 
 				<h4>Returns</h4>
@@ -580,7 +596,7 @@ and the inner arrays the individual fields</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__from_json">#</a>
-		<code><a href="source-class-Format.html#427-435" title="Go to source code">_from_json</a>( <span> <var>$data</var></span> )</code>
+		<code><a href="source-class-Format.html#490-497" title="Go to source code">_from_json</a>( <span> <var>$data</var></span> )</code>
 
 		<div class="description short">
 			
@@ -619,7 +635,7 @@ and the inner arrays the individual fields</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__from_serialize">#</a>
-		<code><a href="source-class-Format.html#437-445" title="Go to source code">_from_serialize</a>( <span>string <var>$data</var></span> )</code>
+		<code><a href="source-class-Format.html#499-506" title="Go to source code">_from_serialize</a>( <span>string <var>$data</var></span> )</code>
 
 		<div class="description short">
 			
@@ -658,7 +674,7 @@ and the inner arrays the individual fields</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__from_php">#</a>
-		<code><a href="source-class-Format.html#447-455" title="Go to source code">_from_php</a>( <span> <var>$data</var></span> )</code>
+		<code><a href="source-class-Format.html#508-515" title="Go to source code">_from_php</a>( <span> <var>$data</var></span> )</code>
 
 		<div class="description short">
 			
@@ -694,6 +710,201 @@ and the inner arrays the individual fields</p>
 
 
 
+	<table class="summary constants" id="constants">
+	<caption>Constants summary</caption>
+	<tr data-order="ARRAY_FORMAT" id="ARRAY_FORMAT">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Format.html#14-17" title="Go to source code"><b>ARRAY_FORMAT</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Array output format</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Array output format</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#ARRAY_FORMAT" class="anchor">#</a>
+				<code><span class="php-quote">'array'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="CSV_FORMAT" id="CSV_FORMAT">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Format.html#19-22" title="Go to source code"><b>CSV_FORMAT</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Comma Separated Value (CSV) output format</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Comma Separated Value (CSV) output format</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#CSV_FORMAT" class="anchor">#</a>
+				<code><span class="php-quote">'csv'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="JSON_FORMAT" id="JSON_FORMAT">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Format.html#24-27" title="Go to source code"><b>JSON_FORMAT</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Json output format</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Json output format</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#JSON_FORMAT" class="anchor">#</a>
+				<code><span class="php-quote">'json'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTML_FORMAT" id="HTML_FORMAT">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Format.html#29-32" title="Go to source code"><b>HTML_FORMAT</b></a>
+			</code>
+
+			<div class="description short">
+				<p>HTML output format</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>HTML output format</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTML_FORMAT" class="anchor">#</a>
+				<code><span class="php-quote">'html'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="PHP_FORMAT" id="PHP_FORMAT">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Format.html#34-37" title="Go to source code"><b>PHP_FORMAT</b></a>
+			</code>
+
+			<div class="description short">
+				<p>PHP output format</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>PHP output format</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#PHP_FORMAT" class="anchor">#</a>
+				<code><span class="php-quote">'php'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="SERIALIZED_FORMAT" id="SERIALIZED_FORMAT">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Format.html#39-42" title="Go to source code"><b>SERIALIZED_FORMAT</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Serialized output format</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Serialized output format</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#SERIALIZED_FORMAT" class="anchor">#</a>
+				<code><span class="php-quote">'serialized'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="XML_FORMAT" id="XML_FORMAT">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Format.html#44-47" title="Go to source code"><b>XML_FORMAT</b></a>
+			</code>
+
+			<div class="description short">
+				<p>XML output format</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>XML output format</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#XML_FORMAT" class="anchor">#</a>
+				<code><span class="php-quote">'xml'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="DEFAULT_FORMAT" id="DEFAULT_FORMAT">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Format.html#49-52" title="Go to source code"><b>DEFAULT_FORMAT</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Default format of this class</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Default format of this class</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#DEFAULT_FORMAT" class="anchor">#</a>
+				<code><code><a href="class-Format.html#JSON_FORMAT">Format::<b>JSON_FORMAT</b></a></code></code>
+			</div>
+		</td>
+	</tr>
+	</table>
 
 
 
@@ -707,7 +918,7 @@ and the inner arrays the individual fields</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-Format.html#21-26" title="Go to source code"><var>$_data</var></a>
+				<a href="source-class-Format.html#61-66" title="Go to source code"><var>$_data</var></a>
 
 			<div class="description short">
 				<p>Data to parse</p>
@@ -732,7 +943,7 @@ and the inner arrays the individual fields</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-Format.html#28-33" title="Go to source code"><var>$_from_type</var></a>
+				<a href="source-class-Format.html#68-73" title="Go to source code"><var>$_from_type</var></a>
 
 			<div class="description short">
 				<p>Type to convert from</p>

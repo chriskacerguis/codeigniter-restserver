@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="robots" content="noindex">
 
-	<title>File application/controllers/api/Example.php</title>
+	<title>File controllers/api/Example.php</title>
 
 	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
 
@@ -36,7 +36,7 @@
 
 						</li>
 							</ul></li>
-				<li class="active">
+				<li>
 					<a href="package-None.html">
 						None					</a>
 
@@ -50,7 +50,10 @@
 		<div id="elements">
 			<h3>Classes</h3>
 			<ul>
+				<li><a href="class-Example.html">Example</a></li>
 				<li><a href="class-Format.html">Format</a></li>
+				<li><a href="class-Key.html">Key</a></li>
+				<li><a href="class-REST_Controller.html">REST_Controller</a></li>
 			</ul>
 
 
@@ -77,11 +80,9 @@
 				<a href="index.html" title="Overview"><span>Overview</span></a>
 			</li>
 			<li>
-				<a href="package-None.html" title="Summary of None"><span>Package</span></a>
-			</li>
+<span>Package</span>			</li>
 			<li>
-				<a href="class-REST_Controller.html" title="Summary of REST_Controller"><span>Class</span></a>
-			</li>
+<span>Class</span>			</li>
 		</ul>
 		<ul>
 		</ul>
@@ -126,7 +127,7 @@
 </span><span id="35" class="l"><a href="#35"> 35: </a>    {
 </span><span id="36" class="l"><a href="#36"> 36: </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;get(<span class="php-quote">'id'</span>))
 </span><span id="37" class="l"><a href="#37"> 37: </a>        {
-</span><span id="38" class="l"><a href="#38"> 38: </a>            <span class="php-var">$this</span>-&gt;response(<span class="php-keyword1">NULL</span>, <span class="php-num">400</span>);
+</span><span id="38" class="l"><a href="#38"> 38: </a>            <span class="php-var">$this</span>-&gt;response(<span class="php-keyword1">NULL</span>, REST_Controller::BAD_REQUEST);
 </span><span id="39" class="l"><a href="#39"> 39: </a>        }
 </span><span id="40" class="l"><a href="#40"> 40: </a>
 </span><span id="41" class="l"><a href="#41"> 41: </a>        <span class="php-comment">// $user = $this-&gt;some_model-&gt;getSomething( $this-&gt;get('id') );</span>
@@ -140,12 +141,12 @@
 </span><span id="49" class="l"><a href="#49"> 49: </a>
 </span><span id="50" class="l"><a href="#50"> 50: </a>        <span class="php-keyword1">if</span> (<span class="php-var">$user</span>)
 </span><span id="51" class="l"><a href="#51"> 51: </a>        {
-</span><span id="52" class="l"><a href="#52"> 52: </a>            <span class="php-var">$this</span>-&gt;response(<span class="php-var">$user</span>, <span class="php-num">200</span>); <span class="php-comment">// 200 being the HTTP response code</span>
+</span><span id="52" class="l"><a href="#52"> 52: </a>            <span class="php-var">$this</span>-&gt;response(<span class="php-var">$user</span>, REST_Controller::OK); <span class="php-comment">// OK (200) being the HTTP response code</span>
 </span><span id="53" class="l"><a href="#53"> 53: </a>        }
 </span><span id="54" class="l"><a href="#54"> 54: </a>
 </span><span id="55" class="l"><a href="#55"> 55: </a>        <span class="php-keyword1">else</span>
 </span><span id="56" class="l"><a href="#56"> 56: </a>        {
-</span><span id="57" class="l"><a href="#57"> 57: </a>            <span class="php-var">$this</span>-&gt;response([<span class="php-quote">'error'</span> =&gt; <span class="php-quote">'User could not be found'</span>], <span class="php-num">404</span>);
+</span><span id="57" class="l"><a href="#57"> 57: </a>            <span class="php-var">$this</span>-&gt;response([<span class="php-quote">'error'</span> =&gt; <span class="php-quote">'User could not be found'</span>], REST_Controller::NOT_FOUND);
 </span><span id="58" class="l"><a href="#58"> 58: </a>        }
 </span><span id="59" class="l"><a href="#59"> 59: </a>    }
 </span><span id="60" class="l"><a href="#60"> 60: </a>
@@ -159,7 +160,7 @@
 </span><span id="68" class="l"><a href="#68"> 68: </a>            <span class="php-quote">'message'</span> =&gt; <span class="php-quote">'Added a resource'</span>
 </span><span id="69" class="l"><a href="#69"> 69: </a>        ];
 </span><span id="70" class="l"><a href="#70"> 70: </a>
-</span><span id="71" class="l"><a href="#71"> 71: </a>        <span class="php-var">$this</span>-&gt;response(<span class="php-var">$message</span>, <span class="php-num">201</span>); <span class="php-comment">// 201 being the HTTP response code</span>
+</span><span id="71" class="l"><a href="#71"> 71: </a>        <span class="php-var">$this</span>-&gt;response(<span class="php-var">$message</span>, REST_Controller::CREATED); <span class="php-comment">// CREATED (201) being the HTTP response code</span>
 </span><span id="72" class="l"><a href="#72"> 72: </a>    }
 </span><span id="73" class="l"><a href="#73"> 73: </a>
 </span><span id="74" class="l"><a href="#74"> 74: </a>    <span class="php-keyword1">function</span> user_delete()
@@ -170,7 +171,7 @@
 </span><span id="79" class="l"><a href="#79"> 79: </a>            <span class="php-quote">'message'</span> =&gt; <span class="php-quote">'Deleted the resource'</span>
 </span><span id="80" class="l"><a href="#80"> 80: </a>        ];
 </span><span id="81" class="l"><a href="#81"> 81: </a>
-</span><span id="82" class="l"><a href="#82"> 82: </a>        <span class="php-var">$this</span>-&gt;response(<span class="php-var">$message</span>, <span class="php-num">204</span>); <span class="php-comment">// 204 being the HTTP response code</span>
+</span><span id="82" class="l"><a href="#82"> 82: </a>        <span class="php-var">$this</span>-&gt;response(<span class="php-var">$message</span>, REST_Controller::NO_CONTENT); <span class="php-comment">// NO_CONTENT (204) being the HTTP response code</span>
 </span><span id="83" class="l"><a href="#83"> 83: </a>    }
 </span><span id="84" class="l"><a href="#84"> 84: </a>
 </span><span id="85" class="l"><a href="#85"> 85: </a>    <span class="php-keyword1">function</span> users_get()
@@ -184,12 +185,12 @@
 </span><span id="93" class="l"><a href="#93"> 93: </a>
 </span><span id="94" class="l"><a href="#94"> 94: </a>        <span class="php-keyword1">if</span> (<span class="php-var">$users</span>)
 </span><span id="95" class="l"><a href="#95"> 95: </a>        {
-</span><span id="96" class="l"><a href="#96"> 96: </a>            <span class="php-var">$this</span>-&gt;response(<span class="php-var">$users</span>, <span class="php-num">200</span>); <span class="php-comment">// 200 being the HTTP response code</span>
+</span><span id="96" class="l"><a href="#96"> 96: </a>            <span class="php-var">$this</span>-&gt;response(<span class="php-var">$users</span>, REST_Controller::OK); <span class="php-comment">// OK (200) being the HTTP response code</span>
 </span><span id="97" class="l"><a href="#97"> 97: </a>        }
 </span><span id="98" class="l"><a href="#98"> 98: </a>
 </span><span id="99" class="l"><a href="#99"> 99: </a>        <span class="php-keyword1">else</span>
 </span><span id="100" class="l"><a href="#100">100: </a>        {
-</span><span id="101" class="l"><a href="#101">101: </a>            <span class="php-var">$this</span>-&gt;response([<span class="php-quote">'error'</span> =&gt; <span class="php-quote">'Couldn\'t find any users!'</span>], <span class="php-num">404</span>);
+</span><span id="101" class="l"><a href="#101">101: </a>            <span class="php-var">$this</span>-&gt;response([<span class="php-quote">'error'</span> =&gt; <span class="php-quote">'Couldn\'t find any users!'</span>], REST_Controller::NOT_FOUND);
 </span><span id="102" class="l"><a href="#102">102: </a>        }
 </span><span id="103" class="l"><a href="#103">103: </a>    }
 </span><span id="104" class="l"><a href="#104">104: </a>
@@ -210,7 +211,7 @@
 	</div>
 </div>
 </div>
-<script src="resources/combined.js?44e93de8fc3b749f55d0fae2da59a38c45b15f0b"></script>
+<script src="resources/combined.js?4b3d0a060be02c8230cd1d093bc5ca01cd73dd7f"></script>
 <script src="elementlist.js?a5b1ba95e501c58a0d40c25588af403de4e38989"></script>
 </body>
 </html>
