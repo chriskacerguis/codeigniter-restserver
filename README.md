@@ -57,6 +57,12 @@ public function index_delete($id)
 }
 ```
 
+If query parameters are passed via the URL, regardless of whether it's a GET request, can be obtained by the query method:
+
+```php
+$this->query('blah'); // Query param
+```
+
 ## Content Types
 
 `REST_Controller` supports a bunch of different request/response formats, including XML, JSON and serialised PHP. By default, the class will check the URL and look for a format either as an extension or as a separate segment.
@@ -183,8 +189,8 @@ $ curl -X POST -H "X-API-KEY: some_key_here" http://example.com/books
 
 ## Contributions
 
-This project was originally written by Phil Sturgeon, however his involvment has shifted
-as he is no longer using it.  As of 11/20/2013 further developement and support will be done by Chris Kacerguis.
+This project was originally written by Phil Sturgeon, however his involvement has shifted
+as he is no longer using it.  As of 2013/11/20 further developement and support will be done by Chris Kacerguis.
 
 Pull Requests are the best way to fix bugs or add features. I know loads of you use this, so please
 contribute if you have improvements to be made and I'll keep releasing versions over time.

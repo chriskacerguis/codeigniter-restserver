@@ -35,7 +35,7 @@ class Example extends REST_Controller {
     {
         if (!$this->get('id'))
         {
-            $this->response(NULL, 400);
+            $this->response(NULL, REST_Controller::BAD_REQUEST);
         }
 
         // $user = $this->some_model->getSomething( $this->get('id') );
@@ -49,12 +49,12 @@ class Example extends REST_Controller {
 
         if ($user)
         {
-            $this->response($user, 200); // 200 being the HTTP response code
+            $this->response($user, REST_Controller::OK); // OK (200) being the HTTP response code
         }
 
         else
         {
-            $this->response(['error' => 'User could not be found'], 404);
+            $this->response(['error' => 'User could not be found'], REST_Controller::NOT_FOUND);
         }
     }
 
@@ -68,7 +68,7 @@ class Example extends REST_Controller {
             'message' => 'Added a resource'
         ];
 
-        $this->response($message, 201); // 201 being the HTTP response code
+        $this->response($message, REST_Controller::CREATED); // CREATED (201) being the HTTP response code
     }
 
     function user_delete()
@@ -79,7 +79,7 @@ class Example extends REST_Controller {
             'message' => 'Deleted the resource'
         ];
 
-        $this->response($message, 204); // 204 being the HTTP response code
+        $this->response($message, REST_Controller::NO_CONTENT); // NO_CONTENT (204) being the HTTP response code
     }
 
     function users_get()
@@ -93,12 +93,12 @@ class Example extends REST_Controller {
 
         if ($users)
         {
-            $this->response($users, 200); // 200 being the HTTP response code
+            $this->response($users, REST_Controller::OK); // OK (200) being the HTTP response code
         }
 
         else
         {
-            $this->response(['error' => 'Couldn\'t find any users!'], 404);
+            $this->response(['error' => 'Couldn\'t find any users!'], REST_Controller::NOT_FOUND);
         }
     }
 
