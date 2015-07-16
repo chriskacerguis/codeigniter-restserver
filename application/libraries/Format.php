@@ -12,6 +12,46 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Format {
 
     /**
+     * Array output format
+     */
+    const ARRAY_FORMAT = 'array';
+
+    /**
+     * Comma Separated Value (CSV) output format
+     */
+    const CSV_FORMAT = 'csv';
+
+    /**
+     * Json output format
+     */
+    const JSON_FORMAT = 'json';
+
+    /**
+     * HTML output format
+     */
+    const HTML_FORMAT = 'html';
+
+    /**
+     * PHP output format
+     */
+    const PHP_FORMAT = 'php';
+
+    /**
+     * Serialized output format
+     */
+    const SERIALIZED_FORMAT = 'serialized';
+
+    /**
+     * XML output format
+     */
+    const XML_FORMAT = 'xml';
+
+    /**
+     * Default format of this class
+     */
+    const DEFAULT_FORMAT = self::JSON_FORMAT; // Couldn't be DEFAULT, as this is a keyword
+
+    /**
      * CodeIgniter instance
      *
      * @var object
@@ -37,7 +77,6 @@ class Format {
      *
      * @param NULL $data
      * @param NULL $from_type
-     *
      * @throws Exception
      */
 
@@ -90,7 +129,6 @@ class Format {
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
-     *
      * @return array Data parsed as an array; otherwise, an empty array
      */
     public function to_array($data = NULL)
@@ -131,7 +169,6 @@ class Format {
      * to the constructor
      * @param NULL $structure
      * @param string $basenode
-     *
      * @return mixed
      */
     public function to_xml($data = NULL, $structure = NULL, $basenode = 'xml')
@@ -215,7 +252,6 @@ class Format {
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
-     *
      * @return mixed
      */
     public function to_html($data = NULL)
@@ -261,20 +297,41 @@ class Format {
     }
 
     /**
-     * Format data as CSV
-     *
+     * @link http://www.metashock.de/2014/02/create-csv-file-in-memory-php/
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
-     *
-     * @return mixed
+     * @param string $delimiter The optional delimiter parameter sets the field
+     * delimiter (one character only). NULL will use the default value (,)
+     * @param string $enclosure The optional enclosure parameter sets the field
+     * enclosure (one character only). NULL will use the default value (")
+     * @return string A csv string
      */
-    public function to_csv($data = NULL)
+    public function to_csv($data = NULL, $delimiter = ',', $enclosure = '"')
     {
+        // Use a threshold of 1 MB (1024 * 1024)
+        $handle = fopen('php://temp/maxmemory:1048576', 'w');
+        if ($handle === FALSE)
+        {
+            return NULL;
+        }
+
         // If no data is passed as a parameter, then use the data passed
         // via the constructor
         if ($data === NULL && func_num_args() === 0)
         {
             $data = $this->_data;
+        }
+
+        // If NULL, then set as the default delimiter
+        if ($delimiter === NULL)
+        {
+            $delimiter = ',';
+        }
+
+        // If NULL, then set as the default enclosure
+        if ($enclosure === NULL)
+        {
+            $enclosure = '"';
         }
 
         // Cast as an array if not already
@@ -283,27 +340,38 @@ class Format {
             $data = (array) $data;
         }
 
-        // Multi-dimensional array
-        if (isset($data[0]) && is_array($data[0]))
+        // Check if it's a multi-dimensional array
+        if (isset($data[0]) && count($data) !== count($data, COUNT_RECURSIVE))
         {
+            // Multi-dimensional array
             $headings = array_keys($data[0]);
         }
-
-        // Single array
         else
         {
+            // Single array
             $headings = array_keys($data);
             $data = [$data];
         }
 
-        $output = '"' . implode('","', $headings) . '"' . PHP_EOL;
-        foreach ($data as &$row)
+        // Apply the headings
+        fputcsv($handle, $headers, $delimiter, $enclosure);
+
+        foreach ($data as $record)
         {
-            $row = str_replace('"', '""', $row); // Escape dbl quotes per RFC 4180
-            $output .= '"' . implode('","', $row) . '"' . PHP_EOL;
+            // Returns the length of the string written or FALSE
+            fputcsv($handle, $record, $delimiter, $enclosure);
         }
 
-        return $output;
+        // Reset the file pointer
+        rewind($handle);
+
+        // Retrieve the csv contents
+        $csv = stream_get_contents($handle);
+
+        // Close the handle
+        fclose($handle);
+
+        return $csv;
     }
 
     /**
@@ -311,7 +379,6 @@ class Format {
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
-     *
      * @return string Json representation of a value
      */
     public function to_json($data = NULL)
@@ -350,7 +417,6 @@ class Format {
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
-     *
      * @return string Serialized data
      */
     public function to_serialized($data = NULL)
@@ -370,7 +436,6 @@ class Format {
      *
      * @param mixed|NULL $data Optional data to pass, so as to override the data passed
      * to the constructor
-     *
      * @return mixed String representation of a variable
      */
     public function to_php($data = NULL)
@@ -389,7 +454,6 @@ class Format {
 
     /**
      * @param $data XML string
-     *
      * @return SimpleXMLElement XML element object; otherwise, empty array
      */
     protected function _from_xml($data)
@@ -399,34 +463,32 @@ class Format {
 
     /**
      * @param string $data CSV string
-     *
+     * @param string $delimiter The optional delimiter parameter sets the field
+     * delimiter (one character only). NULL will use the default value (,)
+     * @param string $enclosure The optional enclosure parameter sets the field
+     * enclosure (one character only). NULL will use the default value (")
      * @return array A multi-dimensional array with the outer array being the number of rows
      * and the inner arrays the individual fields
      */
-    protected function _from_csv($data)
+    protected function _from_csv($data, $delimiter = ',', $enclosure = '"')
     {
-        $array = [];
-
-        // Splits
-        $rows = explode("\n", trim($data));
-        $headings = explode(',', array_shift($rows));
-        foreach ($rows as $row)
+        // If NULL, then set as the default delimiter
+        if ($delimiter === NULL)
         {
-            // The substr removes " from start and end
-            $data_fields = explode('","', trim(substr($row, 1, -1)));
-
-            if (count($data_fields) === count($headings))
-            {
-                $array[] = array_combine($headings, $data_fields);
-            }
+            $delimiter = ',';
         }
 
-        return $array;
+        // If NULL, then set as the default enclosure
+        if ($enclosure === NULL)
+        {
+            $enclosure = '"';
+        }
+
+        return str_getcsv($data, $delimiter, $enclosure);
     }
 
     /**
      * @param $data Encoded json string
-     *
      * @return mixed Decoded json string with leading and trailing whitespace removed
      */
     protected function _from_json($data)
@@ -436,7 +498,6 @@ class Format {
 
     /**
      * @param string Data to unserialized
-     *
      * @return mixed Unserialized data
      */
     protected function _from_serialize($data)
@@ -446,7 +507,6 @@ class Format {
 
     /**
      * @param $data Data to trim leading and trailing whitespace
-     *
      * @return string Data with leading and trailing whitespace removed
      */
     protected function _from_php($data)

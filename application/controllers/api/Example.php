@@ -49,7 +49,7 @@ class Example extends REST_Controller {
 
         if ($user)
         {
-            $this->response($user, self::HTTP_OK); // 200 being the HTTP response code
+            $this->response($user, 200); // 200 being the HTTP response code
         }
 
         else
