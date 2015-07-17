@@ -484,7 +484,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Use whatever database is in use (isset returns FALSE)
-        elseif (property_exists($this, 'db'))
+        else if (property_exists($this, 'db'))
         {
             $this->rest->db = $this->db;
         }
@@ -636,7 +636,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // No key stuff, but record that stuff is happening
-        elseif ($this->config->item('rest_enable_logging') && $log_method)
+        else if ($this->config->item('rest_enable_logging') && $log_method)
         {
             $this->_log_request($authorized = TRUE);
         }
@@ -687,7 +687,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // If data is not NULL and a HTTP status code provided, then continue
-        elseif ($data !== NULL)
+        else if ($data !== NULL)
         {
             // Is compression enabled and available?
             if ($this->config->item('compress_output') === TRUE && $this->_zlib_oc == FALSE)
@@ -816,9 +816,9 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Check if a file extension is used
-        elseif ($this->_get_args && is_array(end($this->_get_args)) === FALSE && preg_match($pattern, end($this->_get_args), $matches))
+        else if ($this->_get_args && is_array(end($this->_get_args)) === FALSE && preg_match($pattern, end($this->_get_args), $matches))
         {
-            //elseif ($this->_get_args and is_array(end($this->_get_args)) === FALSE and preg_match($pattern, end(array_keys($this->_get_args)), $matches)) {
+            //else if ($this->_get_args and is_array(end($this->_get_args)) === FALSE and preg_match($pattern, end(array_keys($this->_get_args)), $matches)) {
             // The key of the last argument
             $arg_keys = array_keys($this->_get_args);
             $last_key = end($arg_keys);
@@ -864,7 +864,7 @@ abstract class REST_Controller extends CI_Controller {
                         }
 
                         // If it is truly XML, it wont want any HTML
-                        elseif ($format === 'xml' && strpos($this->input->server('HTTP_ACCEPT'), 'html') === FALSE)
+                        else if ($format === 'xml' && strpos($this->input->server('HTTP_ACCEPT'), 'html') === FALSE)
                         {
                             return $format;
                         }
@@ -1097,7 +1097,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Been a time limit (or by default an hour) since they called
-        elseif ($result->hour_started < (time() - $timelimit))
+        else if ($result->hour_started < (time() - $timelimit))
         {
             // Reset the started period and count
             $this->rest->db
@@ -1808,7 +1808,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             $password = $this->input->server('PHP_AUTH_PW');
         }
-        elseif ($http_auth !== NULL)
+        else if ($http_auth !== NULL)
         {
             // If the authentication header is set as basic, then extract the username and password from
             // HTTP_AUTHORIZATION e.g. my_username:my_password. This is passed in the .htaccess file
@@ -1847,7 +1847,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             $digest_string = $this->input->server('PHP_AUTH_DIGEST');
         }
-        elseif ($this->input->server('HTTP_AUTHORIZATION'))
+        else if ($this->input->server('HTTP_AUTHORIZATION'))
         {
             $digest_string = $this->input->server('HTTP_AUTHORIZATION');
         }
@@ -1950,7 +1950,7 @@ abstract class REST_Controller extends CI_Controller {
             // See http://tools.ietf.org/html/rfc2617#page-5
             header('WWW-Authenticate: Basic realm="' . $restRealm . '"');
         }
-        elseif (strtolower($restAuth) === 'digest')
+        else if (strtolower($restAuth) === 'digest')
         {
             // See http://tools.ietf.org/html/rfc2617#page-18
             header(
