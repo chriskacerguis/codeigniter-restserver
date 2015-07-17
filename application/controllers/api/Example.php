@@ -37,7 +37,7 @@ class Example extends REST_Controller {
             $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
         }
 
-        // $user = $this->some_model->getSomething( $this->get('id') );
+        // $user = $this->some_model->getSomething($this->get('id'));
         $users = [
             1 => ['id' => 1, 'name' => 'John', 'email' => 'john@example.com', 'fact' => 'Loves coding'],
             2 => ['id' => 2, 'name' => 'Jim', 'email' => 'jim@example.com', 'fact' => 'Developed on CodeIgniter'],
@@ -97,7 +97,6 @@ class Example extends REST_Controller {
         {
             $this->response($users, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
         }
-
         else
         {
             $this->response([
