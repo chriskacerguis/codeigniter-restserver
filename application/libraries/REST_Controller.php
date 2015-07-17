@@ -136,7 +136,7 @@ abstract class REST_Controller extends CI_Controller {
     const HTTP_INTERNAL_SERVER_ERROR = 500;
 
     /**
-     * The server does not recognised the request method
+     * The server does not recognise the request method
      */
     const HTTP_NOT_IMPLEMENTED = 501;
     const HTTP_BAD_GATEWAY = 502;
