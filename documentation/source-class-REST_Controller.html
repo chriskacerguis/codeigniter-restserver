@@ -576,7 +576,7 @@
 </span><span id="484" class="l"><a href="#484"> 484: </a>        }
 </span><span id="485" class="l"><a href="#485"> 485: </a>
 </span><span id="486" class="l"><a href="#486"> 486: </a>        <span class="php-comment">// Use whatever database is in use (isset returns FALSE)</span>
-</span><span id="487" class="l"><a href="#487"> 487: </a>        <span class="php-keyword1">elseif</span> (<span class="php-keyword2">property_exists</span>(<span class="php-var">$this</span>, <span class="php-quote">'db'</span>))
+</span><span id="487" class="l"><a href="#487"> 487: </a>        <span class="php-keyword1">else</span> <span class="php-keyword1">if</span> (<span class="php-keyword2">property_exists</span>(<span class="php-var">$this</span>, <span class="php-quote">'db'</span>))
 </span><span id="488" class="l"><a href="#488"> 488: </a>        {
 </span><span id="489" class="l"><a href="#489"> 489: </a>            <span class="php-var">$this</span>-&gt;rest-&gt;db = <span class="php-var">$this</span>-&gt;db;
 </span><span id="490" class="l"><a href="#490"> 490: </a>        }
@@ -728,7 +728,7 @@
 </span><span id="636" class="l"><a href="#636"> 636: </a>        }
 </span><span id="637" class="l"><a href="#637"> 637: </a>
 </span><span id="638" class="l"><a href="#638"> 638: </a>        <span class="php-comment">// No key stuff, but record that stuff is happening</span>
-</span><span id="639" class="l"><a href="#639"> 639: </a>        <span class="php-keyword1">elseif</span> (<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'rest_enable_logging'</span>) &amp;&amp; <span class="php-var">$log_method</span>)
+</span><span id="639" class="l"><a href="#639"> 639: </a>        <span class="php-keyword1">else</span> <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'rest_enable_logging'</span>) &amp;&amp; <span class="php-var">$log_method</span>)
 </span><span id="640" class="l"><a href="#640"> 640: </a>        {
 </span><span id="641" class="l"><a href="#641"> 641: </a>            <span class="php-var">$this</span>-&gt;_log_request(<span class="php-var">$authorized</span> = <span class="php-keyword1">TRUE</span>);
 </span><span id="642" class="l"><a href="#642"> 642: </a>        }
@@ -779,7 +779,7 @@
 </span><span id="687" class="l"><a href="#687"> 687: </a>        }
 </span><span id="688" class="l"><a href="#688"> 688: </a>
 </span><span id="689" class="l"><a href="#689"> 689: </a>        <span class="php-comment">// If data is not NULL and a HTTP status code provided, then continue</span>
-</span><span id="690" class="l"><a href="#690"> 690: </a>        <span class="php-keyword1">elseif</span> (<span class="php-var">$data</span> !== <span class="php-keyword1">NULL</span>)
+</span><span id="690" class="l"><a href="#690"> 690: </a>        <span class="php-keyword1">else</span> <span class="php-keyword1">if</span> (<span class="php-var">$data</span> !== <span class="php-keyword1">NULL</span>)
 </span><span id="691" class="l"><a href="#691"> 691: </a>        {
 </span><span id="692" class="l"><a href="#692"> 692: </a>            <span class="php-comment">// Is compression enabled and available?</span>
 </span><span id="693" class="l"><a href="#693"> 693: </a>            <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'compress_output'</span>) === <span class="php-keyword1">TRUE</span> &amp;&amp; <span class="php-var">$this</span>-&gt;_zlib_oc == <span class="php-keyword1">FALSE</span>)
@@ -908,9 +908,9 @@
 </span><span id="816" class="l"><a href="#816"> 816: </a>        }
 </span><span id="817" class="l"><a href="#817"> 817: </a>
 </span><span id="818" class="l"><a href="#818"> 818: </a>        <span class="php-comment">// Check if a file extension is used</span>
-</span><span id="819" class="l"><a href="#819"> 819: </a>        <span class="php-keyword1">elseif</span> (<span class="php-var">$this</span>-&gt;_get_args &amp;&amp; <span class="php-keyword2">is_array</span>(<span class="php-keyword2">end</span>(<span class="php-var">$this</span>-&gt;_get_args)) === <span class="php-keyword1">FALSE</span> &amp;&amp; <span class="php-keyword2">preg_match</span>(<span class="php-var">$pattern</span>, <span class="php-keyword2">end</span>(<span class="php-var">$this</span>-&gt;_get_args), <span class="php-var">$matches</span>))
+</span><span id="819" class="l"><a href="#819"> 819: </a>        <span class="php-keyword1">else</span> <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;_get_args &amp;&amp; <span class="php-keyword2">is_array</span>(<span class="php-keyword2">end</span>(<span class="php-var">$this</span>-&gt;_get_args)) === <span class="php-keyword1">FALSE</span> &amp;&amp; <span class="php-keyword2">preg_match</span>(<span class="php-var">$pattern</span>, <span class="php-keyword2">end</span>(<span class="php-var">$this</span>-&gt;_get_args), <span class="php-var">$matches</span>))
 </span><span id="820" class="l"><a href="#820"> 820: </a>        {
-</span><span id="821" class="l"><a href="#821"> 821: </a>            <span class="php-comment">//elseif ($this-&gt;_get_args and is_array(end($this-&gt;_get_args)) === FALSE and preg_match($pattern, end(array_keys($this-&gt;_get_args)), $matches)) {</span>
+</span><span id="821" class="l"><a href="#821"> 821: </a>            <span class="php-comment">//else if ($this-&gt;_get_args and is_array(end($this-&gt;_get_args)) === FALSE and preg_match($pattern, end(array_keys($this-&gt;_get_args)), $matches)) {</span>
 </span><span id="822" class="l"><a href="#822"> 822: </a>            <span class="php-comment">// The key of the last argument</span>
 </span><span id="823" class="l"><a href="#823"> 823: </a>            <span class="php-var">$arg_keys</span> = <span class="php-keyword2">array_keys</span>(<span class="php-var">$this</span>-&gt;_get_args);
 </span><span id="824" class="l"><a href="#824"> 824: </a>            <span class="php-var">$last_key</span> = <span class="php-keyword2">end</span>(<span class="php-var">$arg_keys</span>);
@@ -956,7 +956,7 @@
 </span><span id="864" class="l"><a href="#864"> 864: </a>                        }
 </span><span id="865" class="l"><a href="#865"> 865: </a>
 </span><span id="866" class="l"><a href="#866"> 866: </a>                        <span class="php-comment">// If it is truly XML, it wont want any HTML</span>
-</span><span id="867" class="l"><a href="#867"> 867: </a>                        <span class="php-keyword1">elseif</span> (<span class="php-var">$format</span> === <span class="php-quote">'xml'</span> &amp;&amp; <span class="php-keyword2">strpos</span>(<span class="php-var">$this</span>-&gt;input-&gt;server(<span class="php-quote">'HTTP_ACCEPT'</span>), <span class="php-quote">'html'</span>) === <span class="php-keyword1">FALSE</span>)
+</span><span id="867" class="l"><a href="#867"> 867: </a>                        <span class="php-keyword1">else</span> <span class="php-keyword1">if</span> (<span class="php-var">$format</span> === <span class="php-quote">'xml'</span> &amp;&amp; <span class="php-keyword2">strpos</span>(<span class="php-var">$this</span>-&gt;input-&gt;server(<span class="php-quote">'HTTP_ACCEPT'</span>), <span class="php-quote">'html'</span>) === <span class="php-keyword1">FALSE</span>)
 </span><span id="868" class="l"><a href="#868"> 868: </a>                        {
 </span><span id="869" class="l"><a href="#869"> 869: </a>                            <span class="php-keyword1">return</span> <span class="php-var">$format</span>;
 </span><span id="870" class="l"><a href="#870"> 870: </a>                        }
@@ -1189,7 +1189,7 @@
 </span><span id="1097" class="l"><a href="#1097">1097: </a>        }
 </span><span id="1098" class="l"><a href="#1098">1098: </a>
 </span><span id="1099" class="l"><a href="#1099">1099: </a>        <span class="php-comment">// Been a time limit (or by default an hour) since they called</span>
-</span><span id="1100" class="l"><a href="#1100">1100: </a>        <span class="php-keyword1">elseif</span> (<span class="php-var">$result</span>-&gt;hour_started &lt; (<span class="php-keyword2">time</span>() - <span class="php-var">$timelimit</span>))
+</span><span id="1100" class="l"><a href="#1100">1100: </a>        <span class="php-keyword1">else</span> <span class="php-keyword1">if</span> (<span class="php-var">$result</span>-&gt;hour_started &lt; (<span class="php-keyword2">time</span>() - <span class="php-var">$timelimit</span>))
 </span><span id="1101" class="l"><a href="#1101">1101: </a>        {
 </span><span id="1102" class="l"><a href="#1102">1102: </a>            <span class="php-comment">// Reset the started period and count</span>
 </span><span id="1103" class="l"><a href="#1103">1103: </a>            <span class="php-var">$this</span>-&gt;rest-&gt;db
@@ -1900,7 +1900,7 @@
 </span><span id="1808" class="l"><a href="#1808">1808: </a>        {
 </span><span id="1809" class="l"><a href="#1809">1809: </a>            <span class="php-var">$password</span> = <span class="php-var">$this</span>-&gt;input-&gt;server(<span class="php-quote">'PHP_AUTH_PW'</span>);
 </span><span id="1810" class="l"><a href="#1810">1810: </a>        }
-</span><span id="1811" class="l"><a href="#1811">1811: </a>        <span class="php-keyword1">elseif</span> (<span class="php-var">$http_auth</span> !== <span class="php-keyword1">NULL</span>)
+</span><span id="1811" class="l"><a href="#1811">1811: </a>        <span class="php-keyword1">else</span> <span class="php-keyword1">if</span> (<span class="php-var">$http_auth</span> !== <span class="php-keyword1">NULL</span>)
 </span><span id="1812" class="l"><a href="#1812">1812: </a>        {
 </span><span id="1813" class="l"><a href="#1813">1813: </a>            <span class="php-comment">// If the authentication header is set as basic, then extract the username and password from</span>
 </span><span id="1814" class="l"><a href="#1814">1814: </a>            <span class="php-comment">// HTTP_AUTHORIZATION e.g. my_username:my_password. This is passed in the .htaccess file</span>
@@ -1939,7 +1939,7 @@
 </span><span id="1847" class="l"><a href="#1847">1847: </a>        {
 </span><span id="1848" class="l"><a href="#1848">1848: </a>            <span class="php-var">$digest_string</span> = <span class="php-var">$this</span>-&gt;input-&gt;server(<span class="php-quote">'PHP_AUTH_DIGEST'</span>);
 </span><span id="1849" class="l"><a href="#1849">1849: </a>        }
-</span><span id="1850" class="l"><a href="#1850">1850: </a>        <span class="php-keyword1">elseif</span> (<span class="php-var">$this</span>-&gt;input-&gt;server(<span class="php-quote">'HTTP_AUTHORIZATION'</span>))
+</span><span id="1850" class="l"><a href="#1850">1850: </a>        <span class="php-keyword1">else</span> <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;input-&gt;server(<span class="php-quote">'HTTP_AUTHORIZATION'</span>))
 </span><span id="1851" class="l"><a href="#1851">1851: </a>        {
 </span><span id="1852" class="l"><a href="#1852">1852: </a>            <span class="php-var">$digest_string</span> = <span class="php-var">$this</span>-&gt;input-&gt;server(<span class="php-quote">'HTTP_AUTHORIZATION'</span>);
 </span><span id="1853" class="l"><a href="#1853">1853: </a>        }
@@ -2042,7 +2042,7 @@
 </span><span id="1950" class="l"><a href="#1950">1950: </a>            <span class="php-comment">// See http://tools.ietf.org/html/rfc2617#page-5</span>
 </span><span id="1951" class="l"><a href="#1951">1951: </a>            <span class="php-keyword2">header</span>(<span class="php-quote">'WWW-Authenticate: Basic realm=&quot;'</span> . <span class="php-var">$restRealm</span> . <span class="php-quote">'&quot;'</span>);
 </span><span id="1952" class="l"><a href="#1952">1952: </a>        }
-</span><span id="1953" class="l"><a href="#1953">1953: </a>        <span class="php-keyword1">elseif</span> (<span class="php-keyword2">strtolower</span>(<span class="php-var">$restAuth</span>) === <span class="php-quote">'digest'</span>)
+</span><span id="1953" class="l"><a href="#1953">1953: </a>        <span class="php-keyword1">else</span> <span class="php-keyword1">if</span> (<span class="php-keyword2">strtolower</span>(<span class="php-var">$restAuth</span>) === <span class="php-quote">'digest'</span>)
 </span><span id="1954" class="l"><a href="#1954">1954: </a>        {
 </span><span id="1955" class="l"><a href="#1955">1955: </a>            <span class="php-comment">// See http://tools.ietf.org/html/rfc2617#page-18</span>
 </span><span id="1956" class="l"><a href="#1956">1956: </a>            <span class="php-keyword2">header</span>(
@@ -2134,7 +2134,7 @@
 	</div>
 </div>
 </div>
-<script src="resources/combined.js?4b3d0a060be02c8230cd1d093bc5ca01cd73dd7f"></script>
+<script src="resources/combined.js?c307d3f582643e506053410b19f11f1e77f36f99"></script>
 <script src="elementlist.js?a5b1ba95e501c58a0d40c25588af403de4e38989"></script>
 </body>
 </html>

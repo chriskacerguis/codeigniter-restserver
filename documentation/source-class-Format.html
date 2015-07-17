@@ -320,7 +320,7 @@
 </span><span id="228" class="l"><a href="#228">228: </a>                }
 </span><span id="229" class="l"><a href="#229">229: </a>            }
 </span><span id="230" class="l"><a href="#230">230: </a>            <span class="php-comment">// if there is another array found recursively call this function</span>
-</span><span id="231" class="l"><a href="#231">231: </a>            <span class="php-keyword1">elseif</span> (<span class="php-keyword2">is_array</span>(<span class="php-var">$value</span>) || <span class="php-keyword2">is_object</span>(<span class="php-var">$value</span>))
+</span><span id="231" class="l"><a href="#231">231: </a>            <span class="php-keyword1">else</span> <span class="php-keyword1">if</span> (<span class="php-keyword2">is_array</span>(<span class="php-var">$value</span>) || <span class="php-keyword2">is_object</span>(<span class="php-var">$value</span>))
 </span><span id="232" class="l"><a href="#232">232: </a>            {
 </span><span id="233" class="l"><a href="#233">233: </a>                <span class="php-var">$node</span> = <span class="php-var">$structure</span>-&gt;addChild(<span class="php-var">$key</span>);
 </span><span id="234" class="l"><a href="#234">234: </a>
@@ -491,7 +491,7 @@
 </span><span id="399" class="l"><a href="#399">399: </a>        }
 </span><span id="400" class="l"><a href="#400">400: </a>
 </span><span id="401" class="l"><a href="#401">401: </a>        <span class="php-comment">// We only honour a jsonp callback which are valid javascript identifiers</span>
-</span><span id="402" class="l"><a href="#402">402: </a>        <span class="php-keyword1">elseif</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i'</span>, <span class="php-var">$callback</span>))
+</span><span id="402" class="l"><a href="#402">402: </a>        <span class="php-keyword1">else</span> <span class="php-keyword1">if</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i'</span>, <span class="php-var">$callback</span>))
 </span><span id="403" class="l"><a href="#403">403: </a>        {
 </span><span id="404" class="l"><a href="#404">404: </a>            <span class="php-comment">// Return the data as encoded json with a callback</span>
 </span><span id="405" class="l"><a href="#405">405: </a>            <span class="php-keyword1">return</span> <span class="php-var">$callback</span> . <span class="php-quote">'('</span> . <span class="php-keyword2">json_encode</span>(<span class="php-var">$data</span>) . <span class="php-quote">');'</span>;
@@ -614,7 +614,7 @@
 	</div>
 </div>
 </div>
-<script src="resources/combined.js?4b3d0a060be02c8230cd1d093bc5ca01cd73dd7f"></script>
+<script src="resources/combined.js?c307d3f582643e506053410b19f11f1e77f36f99"></script>
 <script src="elementlist.js?a5b1ba95e501c58a0d40c25588af403de4e38989"></script>
 </body>
 </html>
