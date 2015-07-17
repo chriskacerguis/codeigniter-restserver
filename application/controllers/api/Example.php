@@ -101,7 +101,7 @@ class Example extends REST_Controller {
         {
             $this->response([
                 'status' => FALSE,
-                'error' => 'Couldn\'t find any users'
+                'error' => 'No users were found'
                 ], REST_Controller::NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
     }
