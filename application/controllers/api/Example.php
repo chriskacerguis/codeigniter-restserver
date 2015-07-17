@@ -108,11 +108,11 @@ class Example extends REST_Controller {
 
     public function send_post()
     {
-        var_dump($this->request->body);
+        $this->response($this->request->body, REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
     }
 
     public function send_put()
     {
-        var_dump($this->put('foo'));
+        $this->response($this->put('foo'), REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
     }
 }
