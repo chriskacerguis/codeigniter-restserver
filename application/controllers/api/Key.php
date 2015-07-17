@@ -77,7 +77,7 @@ class Key extends REST_Controller {
             // It doesn't appear the key exists
             $this->response([
                 'status' => FALSE,
-                'error' => 'Invalid API Key'
+                'error' => 'Invalid API key'
             ], REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
         }
 
@@ -87,7 +87,7 @@ class Key extends REST_Controller {
         // Respond that the key was destroyed
         $this->response([
             'status' => TRUE,
-            'success' => 'API Key was deleted'
+            'success' => 'API key was deleted'
             ], REST_Controller::HTTP_NO_CONTENT); // NO_CONTENT (204) being the HTTP response code
     }
 
@@ -111,7 +111,7 @@ class Key extends REST_Controller {
             // It doesn't appear the key exists
             $this->response([
                 'status' => FALSE,
-                'error' => 'Invalid API Key'
+                'error' => 'Invalid API key'
             ], REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
         }
 
@@ -120,7 +120,7 @@ class Key extends REST_Controller {
         {
             $this->response([
                 'status' => TRUE,
-                'success' => 'API Key was updated'
+                'success' => 'API key was updated'
             ], REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
         }
         else
@@ -151,7 +151,7 @@ class Key extends REST_Controller {
             // It doesn't appear the key exists
             $this->response([
                 'status' => FALSE,
-                'error' => 'Invalid API Key'
+                'error' => 'Invalid API key'
             ], REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
         }
 
@@ -192,7 +192,7 @@ class Key extends REST_Controller {
             // It doesn't appear the key exists
             $this->response([
                 'status' => FALSE,
-                'error' => 'Invalid API Key'
+                'error' => 'Invalid API key'
             ], REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
         }
 
