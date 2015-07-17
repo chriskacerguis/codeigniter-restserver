@@ -44,13 +44,13 @@ class Example extends REST_Controller {
             3 => ['id' => 3, 'name' => 'Jane', 'email' => 'jane@example.com', 'fact' => 'Lives in the USA', ['hobbies' => ['guitar', 'cycling']]],
         ];
 
-        $user = @$users[$this->get('id')];
+        // Get the user from the array, by retrieving the id from the GET request
+        $user = isset($users[$this->get('id')]) ? $users[$this->get('id')] : NULL;
 
         if ($user)
         {
             $this->response($user, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
         }
-
         else
         {
             $this->response(['error' => 'User could not be found'], REST_Controller::NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
