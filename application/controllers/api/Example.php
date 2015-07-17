@@ -30,7 +30,7 @@ class Example extends REST_Controller {
         $this->methods['user_delete']['limit'] = 50; // 50 requests per hour per user/key
     }
 
-    function user_get()
+    public function user_get()
     {
         if (!$this->get('id'))
         {
@@ -57,7 +57,7 @@ class Example extends REST_Controller {
         }
     }
 
-    function user_post()
+    public function user_post()
     {
         // $this->some_model->update_user($this->get('id'));
         $message = [
@@ -70,7 +70,7 @@ class Example extends REST_Controller {
         $this->response($message, REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
     }
 
-    function user_delete()
+    public function user_delete()
     {
         // $this->some_model->delete_something($this->get();
         $message = [
@@ -81,7 +81,7 @@ class Example extends REST_Controller {
         $this->response($message, REST_Controller::HTTP_NO_CONTENT); // NO_CONTENT (204) being the HTTP response code
     }
 
-    function users_get()
+    public function users_get()
     {
         // $users = $this->some_model->get_something($this->get('limit'));
         $users = [
