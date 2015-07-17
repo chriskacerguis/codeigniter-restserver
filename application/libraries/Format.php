@@ -354,7 +354,7 @@ class Format {
         }
 
         // Apply the headings
-        fputcsv($handle, $headers, $delimiter, $enclosure);
+        fputcsv($handle, $headings, $delimiter, $enclosure);
 
         foreach ($data as $record)
         {
