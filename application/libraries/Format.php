@@ -228,7 +228,7 @@ class Format {
                 }
             }
             // if there is another array found recursively call this function
-            elseif (is_array($value) || is_object($value))
+            else if (is_array($value) || is_object($value))
             {
                 $node = $structure->addChild($key);
 
@@ -399,7 +399,7 @@ class Format {
         }
 
         // We only honour a jsonp callback which are valid javascript identifiers
-        elseif (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback))
+        else if (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback))
         {
             // Return the data as encoded json with a callback
             return $callback . '(' . json_encode($data) . ');';
