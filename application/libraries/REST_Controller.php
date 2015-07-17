@@ -1381,7 +1381,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param NULL $key Key to retrieve from the GET request
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
-     * @return array|string|FALSE Value from the GET request; otherwise, FALSE
+     * @return array|string|NULL Value from the GET request; otherwise, NULL
      */
     public function get($key = NULL, $xss_clean = NULL)
     {
@@ -1390,7 +1390,7 @@ abstract class REST_Controller extends CI_Controller {
             return $this->_get_args;
         }
 
-        return array_key_exists($key, $this->_get_args) ? $this->_xss_clean($this->_get_args[$key], $xss_clean) : FALSE;
+        return isset($this->_get_args[$key]) ? $this->_xss_clean($this->_get_args[$key], $xss_clean) : NULL;
     }
 
     /**
@@ -1400,7 +1400,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param NULL $key Key to retrieve from the OPTIONS request.
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
-     * @return array|string|FALSE Value from the OPTIONS request; otherwise, FALSE
+     * @return array|string|NULL Value from the OPTIONS request; otherwise, NULL
      */
     public function options($key = NULL, $xss_clean = NULL)
     {
@@ -1409,7 +1409,7 @@ abstract class REST_Controller extends CI_Controller {
             return $this->_options_args;
         }
 
-        return array_key_exists($key, $this->_options_args) ? $this->_xss_clean($this->_options_args[$key], $xss_clean) : FALSE;
+        return isset($this->_options_args[$key]) ? $this->_xss_clean($this->_options_args[$key], $xss_clean) : NULL;
     }
 
     /**
@@ -1419,7 +1419,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param NULL $key Key to retrieve from the HEAD request
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
-     * @return array|string|FALSE Value from the HEAD request; otherwise, FALSE
+     * @return array|string|NULL Value from the HEAD request; otherwise, NULL
      */
     public function head($key = NULL, $xss_clean = NULL)
     {
@@ -1428,7 +1428,7 @@ abstract class REST_Controller extends CI_Controller {
             return $this->head_args;
         }
 
-        return array_key_exists($key, $this->head_args) ? $this->_xss_clean($this->head_args[$key], $xss_clean) : FALSE;
+        return isset($this->head_args[$key]) ? $this->_xss_clean($this->head_args[$key], $xss_clean) : NULL;
     }
 
     /**
@@ -1438,7 +1438,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param NULL $key Key to retrieve from the POST request
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
-     * @return array|string|FALSE Value from the POST request; otherwise, FALSE
+     * @return array|string|NULL Value from the POST request; otherwise, NULL
      */
     public function post($key = NULL, $xss_clean = NULL)
     {
@@ -1447,7 +1447,7 @@ abstract class REST_Controller extends CI_Controller {
             return $this->_post_args;
         }
 
-        return array_key_exists($key, $this->_post_args) ? $this->_xss_clean($this->_post_args[$key], $xss_clean) : FALSE;
+        return isset($this->_post_args[$key]) ? $this->_xss_clean($this->_post_args[$key], $xss_clean) : NULL;
     }
 
     /**
@@ -1457,7 +1457,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param NULL $key Key to retrieve from the PUT request
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
-     * @return array|string|FALSE Value from the PUT request; otherwise, FALSE
+     * @return array|string|NULL Value from the PUT request; otherwise, NULL
      */
     public function put($key = NULL, $xss_clean = NULL)
     {
@@ -1466,7 +1466,7 @@ abstract class REST_Controller extends CI_Controller {
             return $this->_put_args;
         }
 
-        return array_key_exists($key, $this->_put_args) ? $this->_xss_clean($this->_put_args[$key], $xss_clean) : FALSE;
+        return isset($this->_put_args[$key]) ? $this->_xss_clean($this->_put_args[$key], $xss_clean) : NULL;
     }
 
     /**
@@ -1476,7 +1476,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param NULL $key Key to retrieve from the DELETE request
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
-     * @return array|string|FALSE Value from the DELETE request; otherwise, FALSE
+     * @return array|string|NULL Value from the DELETE request; otherwise, NULL
      */
     public function delete($key = NULL, $xss_clean = NULL)
     {
@@ -1485,7 +1485,7 @@ abstract class REST_Controller extends CI_Controller {
             return $this->_delete_args;
         }
 
-        return array_key_exists($key, $this->_delete_args) ? $this->_xss_clean($this->_delete_args[$key], $xss_clean) : FALSE;
+        return isset($this->_delete_args[$key]) ? $this->_xss_clean($this->_delete_args[$key], $xss_clean) : NULL;
     }
 
     /**
@@ -1495,7 +1495,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param NULL $key Key to retrieve from the PATCH request
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
-     * @return array|string|FALSE Value from the PATCH request; otherwise, FALSE
+     * @return array|string|NULL Value from the PATCH request; otherwise, NULL
      */
     public function patch($key = NULL, $xss_clean = NULL)
     {
@@ -1504,7 +1504,7 @@ abstract class REST_Controller extends CI_Controller {
             return $this->_patch_args;
         }
 
-        return array_key_exists($key, $this->_patch_args) ? $this->_xss_clean($this->_patch_args[$key], $xss_clean) : FALSE;
+        return isset($this->_patch_args[$key]) ? $this->_xss_clean($this->_patch_args[$key], $xss_clean) : NULL;
     }
 
     /**
@@ -1514,7 +1514,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param NULL $key Key to retrieve from the query parameters
      * If NULL an array of arguments is returned
      * @param NULL $xss_clean Whether to apply XSS filtering
-     * @return array|string|FALSE Value from the query parameters; otherwise, FALSE
+     * @return array|string|NULL Value from the query parameters; otherwise, NULL
      */
     public function query($key = NULL, $xss_clean = NULL)
     {
@@ -1523,7 +1523,7 @@ abstract class REST_Controller extends CI_Controller {
             return $this->_query_args;
         }
 
-        return array_key_exists($key, $this->_query_args) ? $this->_xss_clean($this->_query_args[$key], $xss_clean) : FALSE;
+        return isset($this->_query_args[$key]) ? $this->_xss_clean($this->_query_args[$key], $xss_clean) : NULL;
     }
 
     /**
