@@ -75,7 +75,7 @@ class Example extends REST_Controller {
 
     public function user_delete()
     {
-        // $this->some_model->delete_something($this->get();
+        // $this->some_model->delete_something($this->get());
         $message = [
             'id' => $this->get('id'),
             'message' => 'Deleted the resource'
