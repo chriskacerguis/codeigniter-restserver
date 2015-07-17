@@ -350,19 +350,19 @@ abstract class REST_Controller extends CI_Controller {
      * @link http://www.restapitutorial.com/httpstatuscodes.html
      */
     protected $http_status_codes = [
-        self::OK => 'OK',
-        self::CREATED => 'CREATED',
-        self::NO_CONTENT => 'NO CONTENT',
-        self::NOT_MODIFIED => 'NOT MODIFIED',
-        self::BAD_REQUEST => 'BAD REQUEST',
-        self::UNAUTHORIZED => 'UNAUTHORIZED',
-        self::FORBIDDEN => 'FORBIDDEN',
-        self::NOT_FOUND => 'NOT FOUND',
-        self::METHOD_NOT_ALLOWED => 'METHOD NOT ALLOWED',
-        self::NOT_ACCEPTABLE => 'NOT ACCEPTABLE',
-        self::CONFLICT => 'CONFLICT',
-        self::INTERNAL_SERVER_ERROR => 'INTERNAL SERVER ERROR',
-        self::NOT_IMPLEMENTED => 'NOT IMPLEMENTED'
+        self::HTTP_OK => 'OK',
+        self::HTTP_CREATED => 'CREATED',
+        self::HTTP_NO_CONTENT => 'NO CONTENT',
+        self::HTTP_NOT_MODIFIED => 'NOT MODIFIED',
+        self::HTTP_BAD_REQUEST => 'BAD REQUEST',
+        self::HTTP_UNAUTHORIZED => 'UNAUTHORIZED',
+        self::HTTP_FORBIDDEN => 'FORBIDDEN',
+        self::HTTP_NOT_FOUND => 'NOT FOUND',
+        self::HTTP_METHOD_NOT_ALLOWED => 'METHOD NOT ALLOWED',
+        self::HTTP_NOT_ACCEPTABLE => 'NOT ACCEPTABLE',
+        self::HTTP_CONFLICT => 'CONFLICT',
+        self::HTTP_INTERNAL_SERVER_ERROR => 'INTERNAL SERVER ERROR',
+        self::HTTP_NOT_IMPLEMENTED => 'NOT IMPLEMENTED'
     ];
 
     /**
@@ -513,7 +513,7 @@ abstract class REST_Controller extends CI_Controller {
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => 'Only AJAX requests are acceptable'
-                ], self::NOT_ACCEPTABLE);
+                ], self::HTTP_NOT_ACCEPTABLE);
         }
 
         // When there is no specific override for the current class/method, use the default auth value set in the config
@@ -572,7 +572,7 @@ abstract class REST_Controller extends CI_Controller {
         // Should we answer if not over SSL?
         if ($this->config->item('force_https') && $this->request->ssl === FALSE)
         {
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Unsupported protocol'], self::FORBIDDEN);
+            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Unsupported protocol'], self::HTTP_FORBIDDEN);
         }
 
         // Remove the supported format from the function name e.g. index.json => index
@@ -594,7 +594,7 @@ abstract class REST_Controller extends CI_Controller {
                 $this->_log_request();
             }
 
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Invalid API Key ' . $this->rest->key], self::FORBIDDEN);
+            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Invalid API Key ' . $this->rest->key], self::HTTP_FORBIDDEN);
         }
 
         // Check to see if this key has access to the requested controller.
@@ -605,13 +605,13 @@ abstract class REST_Controller extends CI_Controller {
                 $this->_log_request();
             }
 
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key does not have access to the requested controller.'], self::UNAUTHORIZED);
+            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key does not have access to the requested controller.'], self::HTTP_UNAUTHORIZED);
         }
 
         // Sure it exists, but can they do anything with it?
         if (method_exists($this, $controller_method) === FALSE)
         {
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Unknown method.'], self::NOT_FOUND);
+            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Unknown method.'], self::HTTP_NOT_FOUND);
         }
 
         // Doing key related stuff? Can only do it if they have a key right?
@@ -621,7 +621,7 @@ abstract class REST_Controller extends CI_Controller {
             if ($this->config->item('rest_enable_limits') && $this->_check_limit($controller_method) === FALSE)
             {
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key has reached the time limit for this method.'];
-                $this->response($response, self::UNAUTHORIZED);
+                $this->response($response, self::HTTP_UNAUTHORIZED);
             }
 
             // If no level is set use 0, they probably aren't using permissions
@@ -638,7 +638,7 @@ abstract class REST_Controller extends CI_Controller {
 
             // They don't have good enough perms
             $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key does not have enough permissions.'];
-            $authorized || $this->response($response, self::UNAUTHORIZED);
+            $authorized || $this->response($response, self::HTTP_UNAUTHORIZED);
         }
 
         // No key stuff, but record that stuff is happening
@@ -661,7 +661,7 @@ abstract class REST_Controller extends CI_Controller {
                         'classname' => get_class($ex),
                         'message' => $ex->getMessage()
                     ]
-                ], self::INTERNAL_SERVER_ERROR);
+                ], self::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -689,7 +689,7 @@ abstract class REST_Controller extends CI_Controller {
         // If data is NULL and no HTTP status code provided, then display, error and exit
         if ($data === NULL && $http_code === NULL)
         {
-            $http_code = self::NOT_FOUND;
+            $http_code = self::HTTP_NOT_FOUND;
         }
 
         // If data is not NULL and a HTTP status code provided, then continue
@@ -1787,7 +1787,7 @@ abstract class REST_Controller extends CI_Controller {
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => 'Not Authorized'
-                ], self::UNAUTHORIZED);
+                ], self::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -1889,7 +1889,7 @@ abstract class REST_Controller extends CI_Controller {
             $this->response([
                     $this->config->item('rest_status_field_name') => 0,
                     $this->config->item('rest_message_field_name') => 'Invalid credentials'
-                ], self::UNAUTHORIZED);
+                ], self::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -1912,7 +1912,7 @@ abstract class REST_Controller extends CI_Controller {
                     'status' => FALSE,
                     'error' => 'IP Denied'
                 ],
-                self::UNAUTHORIZED);
+                self::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -1935,7 +1935,7 @@ abstract class REST_Controller extends CI_Controller {
 
         if (in_array($this->input->ip_address(), $whitelist) === FALSE)
         {
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'IP not authorized'], self::UNAUTHORIZED);
+            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'IP not authorized'], self::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -1969,7 +1969,7 @@ abstract class REST_Controller extends CI_Controller {
         $this->response([
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => 'Not authorized'
-            ], self::UNAUTHORIZED);
+            ], self::HTTP_UNAUTHORIZED);
     }
 
     /**
