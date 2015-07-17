@@ -34,7 +34,7 @@ class Example extends REST_Controller {
     {
         if (!$this->get('id'))
         {
-            $this->response(NULL, 400);
+            $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
         }
 
         // $user = $this->some_model->getSomething( $this->get('id') );
