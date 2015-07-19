@@ -570,10 +570,10 @@ abstract class REST_Controller extends CI_Controller {
         $controller_method = $object_called . '_' . $this->request->method;
 
         // Do we want to log this method (if allowed by config)?
-        $log_method = !(isset($this->methods[$controller_method]['log']) && $this->methods[$controller_method]['log'] == FALSE);
+        $log_method = !(isset($this->methods[$controller_method]['log']) && $this->methods[$controller_method]['log'] === FALSE);
 
         // Use keys for this method?
-        $use_key = !(isset($this->methods[$controller_method]['key']) && $this->methods[$controller_method]['key'] == FALSE);
+        $use_key = !(isset($this->methods[$controller_method]['key']) && $this->methods[$controller_method]['key'] === FALSE);
 
         // They provided a key, but it wasn't valid, so get them out of here.
         if ($this->config->item('rest_enable_keys') && $use_key && $this->_allow === FALSE)
@@ -953,7 +953,7 @@ abstract class REST_Controller extends CI_Controller {
 
                     foreach ($list_ip_addresses as $ip_address)
                     {
-                        if ($this->input->ip_address() == trim($ip_address))
+                        if ($this->input->ip_address() === trim($ip_address))
                         {
                             // there is a match, set the the value to TRUE and break out of the loop
                             $found_address = TRUE;
