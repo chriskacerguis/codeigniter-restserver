@@ -689,6 +689,7 @@ abstract class REST_Controller extends CI_Controller {
             {
                 // Set the format header
                 $this->output->set_content_type($this->_supported_formats[$this->response->format], strtolower($this->config->item('charset')));
+                $output = $this->format->factory($data)->{'to_' . $this->response->format}();
 
                 // An array must be parsed as a string, so as not to cause an array to string error.
                 // Json is the most appropriate form for such a datatype
