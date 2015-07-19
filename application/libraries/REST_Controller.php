@@ -1054,7 +1054,7 @@ abstract class REST_Controller extends CI_Controller {
             return TRUE;
         }
 
-        // How many times can you get to this method in a defined timelimit (default: 1hr)?
+        // How many times can you get to this method in a defined time_limit (default: 1 hour)?
         $limit = $this->methods[$controller_method]['limit'];
 
         $uri_noext = $this->uri->uri_string();
@@ -1070,7 +1070,7 @@ abstract class REST_Controller extends CI_Controller {
             ->get($this->config->item('rest_limits_table'))
             ->row();
 
-        $timelimit = (isset($this->methods[$controller_method]['time']) ? $this->methods[$controller_method]['time'] : 60 * 60);
+        $time_limit = (isset($this->methods[$controller_method]['time']) ? $this->methods[$controller_method]['time'] : 3600);
 
         // No calls have been made for this key
         if ($result === NULL)
@@ -1085,7 +1085,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Been a time limit (or by default an hour) since they called
-        elseif ($result->hour_started < (time() - $timelimit))
+        elseif ($result->hour_started < (time() - $time_limit))
         {
             // Reset the started period and count
             $this->rest->db
@@ -1558,11 +1558,10 @@ abstract class REST_Controller extends CI_Controller {
         if (empty($username))
         {
             log_message('debug', 'LDAP Auth: failure, empty username');
-
             return FALSE;
         }
 
-        log_message('debug', 'LDAP Auth: Loading Config');
+        log_message('debug', 'LDAP Auth: Loading configuration');
 
         $this->config->load('ldap.php', TRUE);
 
@@ -1577,12 +1576,8 @@ abstract class REST_Controller extends CI_Controller {
 
         log_message('debug', 'LDAP Auth: Connect to ' . (isset($ldaphost) ? $ldaphost : '[ldap not configured]'));
 
-        // Appears to be unused
-        // $ldapconfig['authrealm'] = $this->config->item('domain', 'ldap');
-
-        // connect to ldap server
+        // Connect to the ldap server
         $ldapconn = ldap_connect($ldap['host'], $ldap['port']);
-
         if ($ldapconn)
         {
             log_message('debug', 'Setting timeout to ' . $ldap['timeout'] . ' seconds');
@@ -1591,62 +1586,55 @@ abstract class REST_Controller extends CI_Controller {
 
             log_message('debug', 'LDAP Auth: Binding to ' . $ldap['host'] . ' with dn ' . $ldap['rdn']);
 
-            // binding to ldap server
+            // Binding to the ldap server
             $ldapbind = ldap_bind($ldapconn, $ldap['rdn'], $ldap['pass']);
 
-            // verify binding
-            if ($ldapbind)
+            // Verify the binding
+            if ($ldapbind === FALSE)
             {
-                log_message('debug', 'LDAP Auth: bind successful');
-            }
-            else
-            {
-                log_message('error', 'LDAP Auth: bind unsuccessful');
-
+                log_message('error', 'LDAP Auth: bind was unsuccessful');
                 return FALSE;
             }
+
+            log_message('debug', 'LDAP Auth: bind successful');
         }
 
-        // search for user
-        if (($res_id = ldap_search($ldapconn, $ldap['basedn'], "uid=$username")) == FALSE)
+        // Search for user
+        if (($res_id = ldap_search($ldapconn, $ldap['basedn'], "uid=$username")) === FALSE)
         {
             log_message('error', 'LDAP Auth: User ' . $username . ' not found in search');
-
             return FALSE;
         }
 
         if (ldap_count_entries($ldapconn, $res_id) !== 1)
         {
-            log_message('error', 'LDAP Auth: failure, username ' . $username . 'found more than once');
-
+            log_message('error', 'LDAP Auth: Failure, username ' . $username . 'found more than once');
             return FALSE;
         }
 
-        if (($entry_id = ldap_first_entry($ldapconn, $res_id)) == FALSE)
+        if (($entry_id = ldap_first_entry($ldapconn, $res_id)) === FALSE)
         {
-            log_message('error', 'LDAP Auth: failure, entry of searchresult could not be fetched');
-
+            log_message('error', 'LDAP Auth: Failure, entry of search result could not be fetched');
             return FALSE;
         }
 
-        if (($user_dn = ldap_get_dn($ldapconn, $entry_id)) == FALSE)
+        if (($user_dn = ldap_get_dn($ldapconn, $entry_id)) === FALSE)
         {
-            log_message('error', 'LDAP Auth: failure, user-dn could not be fetched');
-
+            log_message('error', 'LDAP Auth: Failure, user-dn could not be fetched');
             return FALSE;
         }
 
         // User found, could not authenticate as user
-        if (($link_id = ldap_bind($ldapconn, $user_dn, $password)) == FALSE)
+        if (($link_id = ldap_bind($ldapconn, $user_dn, $password)) === FALSE)
         {
-            log_message('error', 'LDAP Auth: failure, username/password did not match: ' . $user_dn);
-
+            log_message('error', 'LDAP Auth: Failure, username/password did not match: ' . $user_dn);
             return FALSE;
         }
 
         log_message('debug', 'LDAP Auth: Success ' . $user_dn . ' authenticated successfully');
 
         $this->_user_ldap_dn = $user_dn;
+
         ldap_close($ldapconn);
 
         return TRUE;
@@ -1664,8 +1652,7 @@ abstract class REST_Controller extends CI_Controller {
     {
         if (empty($username))
         {
-            log_message('error', 'Library Auth: failure, empty username');
-
+            log_message('error', 'Library Auth: Failure, empty username');
             return FALSE;
         }
 
@@ -1674,15 +1661,13 @@ abstract class REST_Controller extends CI_Controller {
 
         if (empty($auth_library_class))
         {
-            log_message('debug', 'Library Auth: failure, empty auth_library_class');
-
+            log_message('debug', 'Library Auth: Failure, empty auth_library_class');
             return FALSE;
         }
 
         if (empty($auth_library_function))
         {
-            log_message('debug', 'Library Auth: failure, empty auth_library_function');
-
+            log_message('debug', 'Library Auth: Failure, empty auth_library_function');
             return FALSE;
         }
 
