@@ -269,15 +269,15 @@ class Format {
             $data = (array) $data;
         }
 
-        // Multi-dimensional array
-        if (isset($data[0]) && is_array($data[0]))
+        // Check if it's a multi-dimensional array
+        if (isset($data[0]) && count($data) !== count($data, COUNT_RECURSIVE))
         {
+            // Multi-dimensional array
             $headings = array_keys($data[0]);
         }
-
-        // Single array
         else
         {
+            // Single array
             $headings = array_keys($data);
             $data = [$data];
         }
@@ -287,8 +287,7 @@ class Format {
 
         $this->_ci->table->set_heading($headings);
 
-        // Should row used as a reference?
-        foreach ($data as &$row)
+        foreach ($data as $row)
         {
             $this->_ci->table->add_row($row);
         }
