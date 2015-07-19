@@ -16,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 abstract class REST_Controller extends CI_Controller {
 
-    // Note: Only the widley used HTTP status codes are documented
+    // Note: Only the widely used HTTP status codes are documented
 
     // Informational
 
@@ -338,7 +338,7 @@ abstract class REST_Controller extends CI_Controller {
 
     /**
      * HTTP status codes and their respective description
-     * Note: Only the widley used HTTP status codes are used
+     * Note: Only the widely used HTTP status codes are used
      *
      * @var array
      * @link http://www.restapitutorial.com/httpstatuscodes.html
