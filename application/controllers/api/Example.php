@@ -105,14 +105,4 @@ class Example extends REST_Controller {
                 ], REST_Controller::NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
     }
-
-    public function send_post()
-    {
-        $this->response($this->request->body, REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
-    }
-
-    public function send_put()
-    {
-        $this->response($this->put('foo'), REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
-    }
 }
