@@ -1060,7 +1060,7 @@ abstract class REST_Controller extends CI_Controller {
         $uri_noext = $this->uri->uri_string();
         if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format)) === 0)
         {
-            $uri_noext = substr($this->uri->uri_string(),0, -strlen($this->response->format)-1);
+            $uri_noext = substr($this->uri->uri_string(),0, -strlen($this->response->format) - 1);
         }
 
         // Get data about a keys' usage and limit to one row
