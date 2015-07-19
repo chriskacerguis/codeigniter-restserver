@@ -276,13 +276,6 @@ abstract class REST_Controller extends CI_Controller {
     protected $_allow = TRUE;
 
     /**
-     * Determines if output compression is enabled
-     *
-     * @var bool
-     */
-    protected $_zlib_oc = FALSE;
-
-    /**
      * The LDAP Distinguished Name of the User post authentication
      *
      * @var string
@@ -400,6 +393,10 @@ abstract class REST_Controller extends CI_Controller {
         // Set the default value of global xss filtering. Same approach as CodeIgniter 3
         $this->_enable_xss = ($this->config->item('global_xss_filtering') === TRUE);
 
+        // Don't try to parse template variables like {elapsed_time} and {memory_usage}
+        // when output is displayed for not damaging data accidentally
+        $this->output->parse_exec_vars = FALSE;
+
         // Start the timer for how long the request takes
         $this->_start_rtime = microtime(TRUE);
 
@@ -413,8 +410,6 @@ abstract class REST_Controller extends CI_Controller {
         $this->request = new stdClass();
         $this->response = new stdClass();
         $this->rest = new stdClass();
-
-        $this->_zlib_oc = @ini_get('zlib.output_compression');
 
         // Check to see if the current IP address is blacklisted
         if ($this->config->item('rest_ip_blacklist_enabled') === TRUE)
@@ -689,27 +684,11 @@ abstract class REST_Controller extends CI_Controller {
         // If data is not NULL and a HTTP status code provided, then continue
         elseif ($data !== NULL)
         {
-            // Is compression enabled and available?
-            if ($this->config->item('compress_output') === TRUE && $this->_zlib_oc == FALSE)
-            {
-                if (extension_loaded('zlib'))
-                {
-                    $http_encoding = $this->input->server('HTTP_ACCEPT_ENCODING');
-                    if ($http_encoding !== NULL && strpos($http_encoding, 'gzip') !== FALSE)
-                    {
-                        ob_start('ob_gzhandler');
-                    }
-                }
-            }
-
             // If the format method exists, call and return the output in that format
             if (method_exists($this->format, 'to_' . $this->response->format))
             {
                 // Set the format header
-                header('Content-Type: ' . $this->_supported_formats[$this->response->format]
-                       . '; charset=' . strtolower($this->config->item('charset')));
-
-                $output = $this->format->factory($data)->{'to_' . $this->response->format}();
+                $this->output->set_content_type($this->_supported_formats[$this->response->format], strtolower($this->config->item('charset')));
 
                 // An array must be parsed as a string, so as not to cause an array to string error.
                 // Json is the most appropriate form for such a datatype
@@ -736,7 +715,7 @@ abstract class REST_Controller extends CI_Controller {
         // correct HTTP status code
         $http_code > 0 || $http_code = self::HTTP_OK;
 
-        set_status_header($http_code);
+        $this->output->set_status_header($http_code);
 
         // JC: Log response code only if rest logging enabled
         if ($this->config->item('rest_enable_logging') === TRUE)
@@ -744,24 +723,32 @@ abstract class REST_Controller extends CI_Controller {
             $this->_log_response_code($http_code);
         }
 
-        // If zlib.output_compression is enabled it will compress the output,
-        // but it will not modify the content-length header to compensate for
-        // the reduction, causing the browser to hang waiting for more data.
-        // We'll just skip content-length in those cases
-        if (!$this->_zlib_oc && !$this->config->item('compress_output'))
-        {
-            header('Content-Length: ' . strlen($output));
-        }
+        // Output the data
+        $this->output->set_output($output);
 
         if ($continue === FALSE)
         {
-            exit($output);
+            // Display the data and exit execution
+            $this->output->_display();
+            exit;
         }
 
-        echo($output);
-        ob_end_flush();
-        ob_flush();
-        flush();
+        // Otherwise dump the output automatically
+    }
+
+    /**
+     * Takes mixed data and optionally a status code, then creates the response
+     * within the buffers of the Output class. The response is sent to the client
+     * lately by the framework, after the current controller's method termination.
+     * All the hooks after the controller's method termination are executable.
+     *
+     * @access public
+     * @param array|NULL $data Data to output to the user
+     * @param int|NULL $http_code HTTP status code
+     */
+    public function set_response($data = NULL, $http_code = NULL)
+    {
+        $this->response($data, $http_code, TRUE);
     }
 
     /**
