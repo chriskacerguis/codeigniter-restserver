@@ -798,22 +798,9 @@ abstract class REST_Controller extends CI_Controller {
 
         // Check if a file extension is used when no get arguments provided
         $matches = [];
-        if (!$this->_get_args && preg_match($pattern, $this->uri->uri_string(), $matches))
+        // Check if a file extension is used e.g. http://example.com/api/index.json?param1=param2
+        if (preg_match($pattern, $this->uri->uri_string(), $matches))
         {
-            return $matches[1];
-        }
-
-        // Check if a file extension is used
-        elseif ($this->_get_args && is_array(end($this->_get_args)) === FALSE && preg_match($pattern, end($this->_get_args), $matches))
-        {
-            // The key of the last argument
-            $arg_keys = array_keys($this->_get_args);
-            $last_key = end($arg_keys);
-
-            // Remove the extension from arguments too
-            $this->_get_args[$last_key] = preg_replace($pattern, '', $this->_get_args[$last_key]);
-            $this->_args[$last_key] = preg_replace($pattern, '', $this->_args[$last_key]);
-
             return $matches[1];
         }
 
