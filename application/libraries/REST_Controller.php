@@ -794,17 +794,17 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _detect_output_format()
     {
+        // Concatenate formats to a regex pattern e.g. \.(csv|json|xml)
         $pattern = '/\.(' . implode('|', array_keys($this->_supported_formats)) . ')$/';
 
-        // Check if a file extension is used when no get arguments provided
-        $matches = [];
         // Check if a file extension is used e.g. http://example.com/api/index.json?param1=param2
+        $matches = [];
         if (preg_match($pattern, $this->uri->uri_string(), $matches))
         {
             return $matches[1];
         }
 
-        // Get the format
+        // Get the format via the GET parameter labelled 'format'
         $format = isset($this->_get_args['format']) ? strtolower($this->_get_args['format']) : NULL;
 
         // A format has been passed as an argument in the URL and it is supported
@@ -816,7 +816,7 @@ abstract class REST_Controller extends CI_Controller {
         // Get the HTTP_ACCEPT server variable
         $http_accept = $this->input->server('HTTP_ACCEPT');
 
-        // Otherwise, check the HTTP_ACCEPT (if it exists and we are allowed)
+        // Otherwise, check the HTTP_ACCEPT server variable
         if ($this->config->item('rest_ignore_http_accept') === FALSE && $http_accept !== NULL)
         {
             // Check all formats against the HTTP_ACCEPT header
@@ -845,13 +845,13 @@ abstract class REST_Controller extends CI_Controller {
             }
         }
 
-        // Well, none of that has worked! Let's see if the controller has a default
+        // Check if the controller has a default format
         if (empty($this->rest_format) === FALSE)
         {
             return $this->rest_format;
         }
 
-        // Just use the default format
+        // Obtain the default format from the configuration
         return $this->config->item('rest_default_format');
     }
 
