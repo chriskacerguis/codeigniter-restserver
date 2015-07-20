@@ -962,19 +962,20 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * What language do they want it in?
+     * Preferred return language
      *
      * @access protected
-     * @return NULL|string The language code.
+     * @return string|NULL The language code
      */
     protected function _detect_lang()
     {
-        if (!$lang = $this->input->server('HTTP_ACCEPT_LANGUAGE'))
+        $lang = $this->input->server('HTTP_ACCEPT_LANGUAGE')
+        if ($lang === NULL)
         {
             return NULL;
         }
 
-        // They might have sent a few, make it an array
+        // It appears more than one language has been sent using a comma delimiter
         if (strpos($lang, ',') !== FALSE)
         {
             $langs = explode(',', $lang);
@@ -982,7 +983,7 @@ abstract class REST_Controller extends CI_Controller {
             $return_langs = [];
             foreach ($langs as $lang)
             {
-                // Remove weight and strip space
+                // Remove weight and trim leading and trailing whitespace
                 list($lang) = explode(';', $lang);
                 $return_langs[] = trim($lang);
             }
@@ -990,7 +991,7 @@ abstract class REST_Controller extends CI_Controller {
             return $return_langs;
         }
 
-        // Nope, just return the string
+        // Otherwise simply return as a string
         return $lang;
     }
 
