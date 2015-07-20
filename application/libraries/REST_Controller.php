@@ -826,39 +826,37 @@ abstract class REST_Controller extends CI_Controller {
             return $format;
         }
 
+        // Get the HTTP_ACCEPT server variable
+        $http_accept = $this->input->server('HTTP_ACCEPT');
+
         // Otherwise, check the HTTP_ACCEPT (if it exists and we are allowed)
-        if ($this->config->item('rest_ignore_http_accept') === FALSE && $this->input->server('HTTP_ACCEPT'))
+        if ($this->config->item('rest_ignore_http_accept') === FALSE && $http_accept !== NULL)
         {
             // Check all formats against the HTTP_ACCEPT header
             foreach (array_keys($this->_supported_formats) as $format)
             {
                 // Has this format been requested?
-                if (strpos($this->input->server('HTTP_ACCEPT'), $format) !== FALSE)
+                if (strpos($http_accept, $format) !== FALSE)
                 {
-                    // If not HTML or XML assume its right and send it on its way
                     if ($format !== 'html' && $format !== 'xml')
                     {
+                        // If not HTML or XML assume it's correct
                         return $format;
                     }
-
-                    // HTML or XML have shown up as a match
-                    else
+                    elseif ($format === 'html' && strpos($http_accept, 'xml') === FALSE)
                     {
+                        // HTML or XML have shown up as a match
                         // If it is truly HTML, it wont want any XML
-                        if ($format === 'html' && strpos($this->input->server('HTTP_ACCEPT'), 'xml') === FALSE)
-                        {
-                            return $format;
-                        }
-
+                        return $format;
+                    }
+                    else if ($format === 'xml' && strpos($http_accept, 'html') === FALSE)
+                    {
                         // If it is truly XML, it wont want any HTML
-                        elseif ($format === 'xml' && strpos($this->input->server('HTTP_ACCEPT'), 'html') === FALSE)
-                        {
-                            return $format;
-                        }
+                        return $format;
                     }
                 }
             }
-        } // End HTTP_ACCEPT checking
+        }
 
         // Well, none of that has worked! Let's see if the controller has a default
         if (empty($this->rest_format) === FALSE)
