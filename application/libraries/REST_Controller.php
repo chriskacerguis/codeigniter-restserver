@@ -806,7 +806,6 @@ abstract class REST_Controller extends CI_Controller {
         // Check if a file extension is used
         elseif ($this->_get_args && is_array(end($this->_get_args)) === FALSE && preg_match($pattern, end($this->_get_args), $matches))
         {
-            //elseif ($this->_get_args and is_array(end($this->_get_args)) === FALSE and preg_match($pattern, end(array_keys($this->_get_args)), $matches)) {
             // The key of the last argument
             $arg_keys = array_keys($this->_get_args);
             $last_key = end($arg_keys);
