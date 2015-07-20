@@ -1069,15 +1069,9 @@ abstract class REST_Controller extends CI_Controller {
         // How many times can you get to this method in a defined timelimit (default: 1hr)?
         $limit = $this->methods[$controller_method]['limit'];
 
-        $uri_noext = $this->uri->uri_string();
-        if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format)) === 0)
-        {
-            $uri_noext = substr($this->uri->uri_string(),0, -strlen($this->response->format)-1);
-        }
-
         // Get data about a keys' usage and limit to one row
         $result = $this->rest->db
-            ->where('uri', $uri_noext)
+            ->where('uri', $controller_method)
             ->where('api_key', $this->rest->key)
             ->get($this->config->item('rest_limits_table'))
             ->row();
@@ -1101,7 +1095,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             // Reset the started period and count
             $this->rest->db
-                ->where('uri', $uri_noext)
+                ->where('uri', $controller_method)
                 ->where('api_key', isset($this->rest->key) ? $this->rest->key : '')
                 ->set('hour_started', time())
                 ->set('count', 1)
@@ -1119,7 +1113,7 @@ abstract class REST_Controller extends CI_Controller {
 
             // Increase the count by one
             $this->rest->db
-                ->where('uri', $uri_noext)
+                ->where('uri', $controller_method)
                 ->where('api_key', $this->rest->key)
                 ->set('count', 'count + 1', FALSE)
                 ->update($this->config->item('rest_limits_table'));
