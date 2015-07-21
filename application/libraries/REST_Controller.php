@@ -1033,36 +1033,60 @@ abstract class REST_Controller extends CI_Controller {
     protected function _check_limit($controller_method)
     {
         // They are special, or it might not even have a limit
-        if (empty($this->rest->ignore_limits) === FALSE || isset($this->methods[$controller_method]['limit']) === FALSE)
+        if (empty($this->rest->ignore_limits) === FALSE)
+        {
+            // Everything is fine
+            return TRUE;
+        }
+
+        switch ($this->config->item('rest_limits_method'))
+        {
+          case 'API_KEY':
+            $limited_uri = 'api-key:' . (isset($this->rest->key) ? $this->rest->key : '');
+            $limited_method_name = isset($this->rest->key) ? $this->rest->key : '';
+            break;
+
+          case 'METHOD_NAME':
+            $limited_uri = 'method-name:' . $controller_method;
+            $limited_method_name =  $controller_method;
+            break;
+
+          case 'ROUTED_URL':
+          default:
+            $limited_uri = $this->uri->ruri_string();
+            if (strpos(strrev($limited_uri), strrev($this->response->format)) === 0)
+            {
+                $limited_uri = substr($limited_uri,0, -strlen($this->response->format) - 1);
+            }
+            $limited_uri = 'uri:' . $limited_uri . ':' . $this->request->method; // It's good to differentiate GET from PUT
+            $limited_method_name = $controller_method;
+            break;
+        }
+
+        if (isset($this->methods[$limited_method_name]['limit']) === FALSE )
         {
             // Everything is fine
             return TRUE;
         }
 
         // How many times can you get to this method in a defined time_limit (default: 1 hour)?
-        $limit = $this->methods[$controller_method]['limit'];
+        $limit = $this->methods[$limited_method_name]['limit'];
 
-        $uri_noext = $this->uri->uri_string();
-        if (strpos(strrev($this->uri->uri_string()), strrev($this->response->format)) === 0)
-        {
-            $uri_noext = substr($this->uri->uri_string(),0, -strlen($this->response->format) - 1);
-        }
+        $timelimit = (isset($this->methods[$limited_method_name]['time']) ? $this->methods[$limited_method_name]['time'] : 3600); // 3600 = 60 * 60
 
         // Get data about a keys' usage and limit to one row
         $result = $this->rest->db
-            ->where('uri', $uri_noext)
+            ->where('uri', $limited_uri)
             ->where('api_key', $this->rest->key)
             ->get($this->config->item('rest_limits_table'))
             ->row();
-
-        $time_limit = (isset($this->methods[$controller_method]['time']) ? $this->methods[$controller_method]['time'] : 3600);
 
         // No calls have been made for this key
         if ($result === NULL)
         {
             // Create a new row for the following key
             $this->rest->db->insert($this->config->item('rest_limits_table'), [
-                'uri' => $this->uri->uri_string(),
+                'uri' => $limited_uri,
                 'api_key' => isset($this->rest->key) ? $this->rest->key : '',
                 'count' => 1,
                 'hour_started' => time()
@@ -1074,7 +1098,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             // Reset the started period and count
             $this->rest->db
-                ->where('uri', $uri_noext)
+                ->where('uri', $limited_uri)
                 ->where('api_key', isset($this->rest->key) ? $this->rest->key : '')
                 ->set('hour_started', time())
                 ->set('count', 1)
@@ -1092,7 +1116,7 @@ abstract class REST_Controller extends CI_Controller {
 
             // Increase the count by one
             $this->rest->db
-                ->where('uri', $uri_noext)
+                ->where('uri', $limited_uri)
                 ->where('api_key', $this->rest->key)
                 ->set('count', 'count + 1', FALSE)
                 ->update($this->config->item('rest_limits_table'));

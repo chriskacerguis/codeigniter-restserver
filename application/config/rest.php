@@ -270,7 +270,7 @@ $config['rest_keys_table'] = 'keys';
 |       `id` INT(11) NOT NULL AUTO_INCREMENT,
 |       `key` VARCHAR(40) NOT NULL,
 |       `level` INT(2) NOT NULL,
-|       `ignore_limits` TINY(1) NOT NULL DEFAULT '0',
+|       `ignore_limits` TINYINT(1) NOT NULL DEFAULT '0',
 |       `is_private_key` TINYINT(1)  NOT NULL DEFAULT '0',
 |       `ip_addresses` TEXT NULL DEFAULT NULL,
 |       `date_created` INT(11) NOT NULL,
@@ -290,6 +290,21 @@ $config['rest_enable_keys'] = FALSE;
 |
 */
 $config['rest_key_column'] = 'key';
+
+/*
+|--------------------------------------------------------------------------
+| REST API Limits method
+|--------------------------------------------------------------------------
+|
+| Specify the method used to limit the API calls
+|
+| Available methods are :
+| $config['rest_limits_method'] = 'API_KEY'; // Put a limit per api key
+| $config['rest_limits_method'] = 'METHOD_NAME'; // Put a limit on method calls
+| $config['rest_limits_method'] = 'ROUTED_URL';  // Put a limit on the routed URL
+|
+*/
+$config['rest_limits_method'] = 'ROUTED_URL';
 
 /*
 |--------------------------------------------------------------------------
