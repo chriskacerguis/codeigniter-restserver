@@ -561,7 +561,10 @@ abstract class REST_Controller extends CI_Controller {
         // Should we answer if not over SSL?
         if ($this->config->item('force_https') && $this->request->ssl === FALSE)
         {
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Unsupported protocol'], self::HTTP_FORBIDDEN);
+            $this->response([
+                    $this->config->item('rest_status_field_name') => FALSE,
+                    $this->config->item('rest_message_field_name') => 'Unsupported protocol'
+                ], self::HTTP_FORBIDDEN);
         }
 
         // Remove the supported format from the function name e.g. index.json => index
@@ -583,7 +586,10 @@ abstract class REST_Controller extends CI_Controller {
                 $this->_log_request();
             }
 
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Invalid API Key ' . $this->rest->key], self::HTTP_FORBIDDEN);
+            $this->response([
+                    $this->config->item('rest_status_field_name') => FALSE,
+                    $this->config->item('rest_message_field_name') => 'Invalid API Key ' . $this->rest->key
+                ], self::HTTP_FORBIDDEN);
         }
 
         // Check to see if this key has access to the requested controller.
@@ -594,13 +600,19 @@ abstract class REST_Controller extends CI_Controller {
                 $this->_log_request();
             }
 
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key does not have access to the requested controller.'], self::HTTP_UNAUTHORIZED);
+            $this->response([
+                    $this->config->item('rest_status_field_name') => FALSE,
+                    $this->config->item('rest_message_field_name') => 'This API key does not have access to the requested controller.'
+                ], self::HTTP_UNAUTHORIZED);
         }
 
         // Sure it exists, but can they do anything with it?
         if (method_exists($this, $controller_method) === FALSE)
         {
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'Unknown method.'], self::HTTP_NOT_FOUND);
+            $this->response([
+                    $this->config->item('rest_status_field_name') => FALSE,
+                    $this->config->item('rest_message_field_name') => 'Unknown method.'
+                ], self::HTTP_NOT_FOUND);
         }
 
         // Doing key related stuff? Can only do it if they have a key right?
@@ -645,10 +657,10 @@ abstract class REST_Controller extends CI_Controller {
         {
             // If the method doesn't exist, then the error will be caught and an error response shown
             $this->response([
-                    $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => [
-                        'classname' => get_class($ex),
-                        'message' => $ex->getMessage()
+                        $this->config->item('rest_status_field_name') => FALSE,
+                        $this->config->item('rest_message_field_name') => [
+                            'classname' => get_class($ex),
+                            'message' => $ex->getMessage()
                     ]
                 ], self::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -1955,8 +1967,7 @@ abstract class REST_Controller extends CI_Controller {
             $this->response([
                     'status' => FALSE,
                     'error' => 'IP Denied'
-                ],
-                self::HTTP_UNAUTHORIZED);
+                ], self::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -1979,7 +1990,10 @@ abstract class REST_Controller extends CI_Controller {
 
         if (in_array($this->input->ip_address(), $whitelist) === FALSE)
         {
-            $this->response([$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'IP not authorized'], self::HTTP_UNAUTHORIZED);
+            $this->response([
+                    $this->config->item('rest_status_field_name') => FALSE,
+                    $this->config->item('rest_message_field_name') => 'IP not authorized'
+                ], self::HTTP_UNAUTHORIZED);
         }
     }
 
