@@ -30,34 +30,38 @@ class Example extends REST_Controller {
         $this->methods['user_delete']['limit'] = 50; // 50 requests per hour per user/key
     }
 
-    function user_get()
+    public function user_get()
     {
         if (!$this->get('id'))
         {
-            $this->response(NULL, 400);
+            // Set the response and exit
+            $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
         }
 
-        // $user = $this->some_model->getSomething( $this->get('id') );
+        // $user = $this->some_model->getSomething($this->get('id'));
         $users = [
             1 => ['id' => 1, 'name' => 'John', 'email' => 'john@example.com', 'fact' => 'Loves coding'],
             2 => ['id' => 2, 'name' => 'Jim', 'email' => 'jim@example.com', 'fact' => 'Developed on CodeIgniter'],
             3 => ['id' => 3, 'name' => 'Jane', 'email' => 'jane@example.com', 'fact' => 'Lives in the USA', ['hobbies' => ['guitar', 'cycling']]],
         ];
 
-        $user = @$users[$this->get('id')];
+        // Get the user from the array, by retrieving the id from the GET request
+        $user = isset($users[$this->get('id')]) ? $users[$this->get('id')] : NULL;
 
         if ($user)
         {
-            $this->response($user, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+            $this->set_response($user, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
         }
-
         else
         {
-            $this->response(['error' => 'User could not be found'], REST_Controller::NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+            $this->set_response([
+                'status' => FALSE,
+                'error' => 'User could not be found'
+            ], REST_Controller::NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
     }
 
-    function user_post()
+    public function user_post()
     {
         // $this->some_model->update_user($this->get('id'));
         $message = [
@@ -67,21 +71,21 @@ class Example extends REST_Controller {
             'message' => 'Added a resource'
         ];
 
-        $this->response($message, REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
+        $this->set_response($message, REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
     }
 
-    function user_delete()
+    public function user_delete()
     {
-        // $this->some_model->delete_something($this->get();
+        // $this->some_model->delete_something($this->get());
         $message = [
             'id' => $this->get('id'),
             'message' => 'Deleted the resource'
         ];
 
-        $this->response($message, REST_Controller::HTTP_NO_CONTENT); // NO_CONTENT (204) being the HTTP response code
+        $this->set_response($message, REST_Controller::HTTP_NO_CONTENT); // NO_CONTENT (204) being the HTTP response code
     }
 
-    function users_get()
+    public function users_get()
     {
         // $users = $this->some_model->get_something($this->get('limit'));
         $users = [
@@ -92,22 +96,14 @@ class Example extends REST_Controller {
 
         if ($users)
         {
-            $this->response($users, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+            $this->set_response($users, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
         }
-
         else
         {
-            $this->response(['error' => 'Couldn\'t find any users!'], REST_Controller::NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+            $this->set_response([
+                'status' => FALSE,
+                'error' => 'No users were found'
+                ], REST_Controller::NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
-    }
-
-    public function send_post()
-    {
-        var_dump($this->request->body);
-    }
-
-    public function send_put()
-    {
-        var_dump($this->put('foo'));
     }
 }

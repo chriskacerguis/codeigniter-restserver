@@ -1,6 +1,6 @@
 The MIT License
 
-Copyright (c) 2012 - 2014 Phil Sturgeon, Chris Kacerguis
+Copyright (c) 2012 - 2015 Phil Sturgeon, Chris Kacerguis
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
