@@ -807,13 +807,27 @@ abstract class REST_Controller extends CI_Controller {
     protected function _detect_output_format()
     {
         // Concatenate formats to a regex pattern e.g. \.(csv|json|xml)
-        $pattern = '/\.(' . implode('|', array_keys($this->_supported_formats)) . ')$/';
+        $pattern = '/([^\/]+)\.(' . implode('|', array_keys($this->_supported_formats)) . ')$/';
 
-        // Check if a file extension is used e.g. http://example.com/api/index.json?param1=param2
+        // Check if a file extension is used e.g. http://example.com/api/resource/1.json?param1=param2 => http://example.com/api/resource/id/1.json?param1=param2
+        // Match[0] = Full match i.e. value.format
+        // match[1] = value
+        // Match[2] = Format (with no dot)
         $matches = [];
         if (preg_match($pattern, $this->uri->uri_string(), $matches))
         {
-            return $matches[1];
+            // If GET params exist
+            if ($this->_get_args)
+            {
+                // array_slice() or saving _get_args_only when calling _parse_get
+                $only_get_args = array_diff($this->_get_args,$this->_query_args);
+                $arg_keys = array_keys($only_get_args);
+                $last_key = end($arg_keys);
+                $this->_get_args[$last_key] = $matches[1];
+                $this->_args[$last_key] = $matches[1];
+            }
+
+            return $matches[2];
         }
 
         // Get the format via the GET parameter labelled 'format'
