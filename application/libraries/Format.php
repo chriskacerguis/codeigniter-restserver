@@ -149,7 +149,7 @@ class Format {
         $array = [];
         foreach ((array) $data as $key => $value)
         {
-            if (is_object($value) === TRUE || is_array($value) === TRUE)
+            if (is_object($value) === TRUE OR is_array($value) === TRUE)
             {
                 $array[$key] = $this->to_array($value);
             }
@@ -214,7 +214,7 @@ class Format {
             // replace anything not alpha numeric
             $key = preg_replace('/[^a-z_\-0-9]/i', '', $key);
 
-            if ($key === '_attributes' && (is_array($value) || is_object($value)))
+            if ($key === '_attributes' && (is_array($value) OR is_object($value)))
             {
                 $attributes = $value;
                 if (is_object($attributes))
@@ -228,7 +228,7 @@ class Format {
                 }
             }
             // if there is another array found recursively call this function
-            elseif (is_array($value) || is_object($value))
+            elseif (is_array($value) OR is_object($value))
             {
                 $node = $structure->addChild($key);
 

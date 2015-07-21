@@ -473,7 +473,7 @@ abstract class REST_Controller extends CI_Controller {
         $this->early_checks();
 
         // Load DB if its enabled
-        if ($this->config->item('rest_database_group') && ($this->config->item('rest_enable_keys') || $this->config->item('rest_enable_logging')))
+        if ($this->config->item('rest_database_group') && ($this->config->item('rest_enable_keys') OR $this->config->item('rest_enable_logging')))
         {
             $this->rest->db = $this->load->database($this->config->item('rest_database_group'), TRUE);
         }
@@ -627,7 +627,7 @@ abstract class REST_Controller extends CI_Controller {
 
             // They don't have good enough perms
             $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key does not have enough permissions.'];
-            $authorized || $this->response($response, self::HTTP_UNAUTHORIZED);
+            $authorized OR $this->response($response, self::HTTP_UNAUTHORIZED);
         }
 
         // No key stuff, but record that stuff is happening
@@ -701,7 +701,7 @@ abstract class REST_Controller extends CI_Controller {
             else
             {
                 // If an array or object, then parse as a json, so as to be a 'string'
-                if (is_array($data) || is_object($data))
+                if (is_array($data) OR is_object($data))
                 {
                     $data = $this->format->factory($data)->{'to_json'}();
                 }
@@ -714,7 +714,7 @@ abstract class REST_Controller extends CI_Controller {
         // If not greater than zero, then set the HTTP status code as 200 by default
         // Though perhaps 500 should be set instead, for the developer not passing a
         // correct HTTP status code
-        $http_code > 0 || $http_code = self::HTTP_OK;
+        $http_code > 0 OR $http_code = self::HTTP_OK;
 
         $this->output->set_status_header($http_code);
 
@@ -1914,11 +1914,11 @@ abstract class REST_Controller extends CI_Controller {
         // We need to retrieve authentication data from the $digest_string variable
         $matches = [];
         preg_match_all('@(username|nonce|uri|nc|cnonce|qop|response)=[\'"]?([^\'",]+)@', $digest_string, $matches);
-        $digest = (empty($matches[1]) || empty($matches[2])) ? [] : array_combine($matches[1], $matches[2]);
+        $digest = (empty($matches[1]) OR empty($matches[2])) ? [] : array_combine($matches[1], $matches[2]);
 
         // For digest authentication the library function should return already stored md5(username:restrealm:password) for that username @see rest.php::auth_library_function config
         $A1 = $this->_check_login($digest['username'], TRUE);
-        if (array_key_exists('username', $digest) === FALSE || $A1 === FALSE)
+        if (array_key_exists('username', $digest) === FALSE OR $A1 === FALSE)
         {
             $this->_force_login($uniqueId);
         }
