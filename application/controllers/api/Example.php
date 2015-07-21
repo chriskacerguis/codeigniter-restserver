@@ -57,7 +57,7 @@ class Example extends REST_Controller {
             $this->set_response([
                 'status' => FALSE,
                 'error' => 'User could not be found'
-            ], REST_Controller::NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
     }
 
@@ -103,7 +103,7 @@ class Example extends REST_Controller {
             $this->set_response([
                 'status' => FALSE,
                 'error' => 'No users were found'
-                ], REST_Controller::NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+                ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
     }
 }
