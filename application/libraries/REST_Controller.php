@@ -761,9 +761,9 @@ abstract class REST_Controller extends CI_Controller {
     protected function _detect_input_format()
     {
         // Get the CONTENT-TYPE value from the SERVER variable
-        $contentType = $this->input->server('CONTENT_TYPE');
+        $content_type = $this->input->server('CONTENT_TYPE');
 
-        if (empty($contentType) === FALSE)
+        if (empty($content_type) === FALSE)
         {
             // Check all formats against the HTTP_ACCEPT header
             foreach ($this->_supported_formats as $key => $value)
@@ -773,10 +773,10 @@ abstract class REST_Controller extends CI_Controller {
 
                 // If a semi-colon exists in the string, then explode by ; and get the value of where
                 // the current array pointer resides. This will generally be the first element of the array
-                $contentType = (strpos($contentType, ';') !== FALSE ? current(explode(';', $contentType)) : $contentType);
+                $content_type = (strpos($content_type, ';') !== FALSE ? current(explode(';', $content_type)) : $content_type);
 
                 // If both the mime types match, then return the format
-                if ($contentType === $value)
+                if ($content_type === $value)
                 {
                     return $key;
                 }
@@ -1005,7 +1005,7 @@ abstract class REST_Controller extends CI_Controller {
     protected function _log_request($authorized = FALSE)
     {
         // Insert the request into the log table
-        $isInserted = $this->rest->db
+        $is_inserted = $this->rest->db
             ->insert(
                 $this->config->item('rest_logs_table'), [
                 'uri' => $this->uri->uri_string(),
@@ -1020,7 +1020,7 @@ abstract class REST_Controller extends CI_Controller {
         // Get the last insert id to update at a later stage of the request
         $this->_insert_id = $this->rest->db->insert_id();
 
-        return $isInserted;
+        return $is_inserted;
     }
 
     /**
@@ -1902,13 +1902,13 @@ abstract class REST_Controller extends CI_Controller {
             $digest_string = $this->input->server('HTTP_AUTHORIZATION');
         }
 
-        $uniqueId = uniqid();
+        $unique_id = uniqid();
 
         // The $_SESSION['error_prompted'] variable is used to ask the password
         // again if none given or if the user enters wrong auth information
         if (empty($digest_string))
         {
-            $this->_force_login($uniqueId);
+            $this->_force_login($unique_id);
         }
 
         // We need to retrieve authentication data from the $digest_string variable
@@ -1917,14 +1917,14 @@ abstract class REST_Controller extends CI_Controller {
         $digest = (empty($matches[1]) OR empty($matches[2])) ? [] : array_combine($matches[1], $matches[2]);
 
         // For digest authentication the library function should return already stored md5(username:restrealm:password) for that username @see rest.php::auth_library_function config
-        $A1 = $this->_check_login($digest['username'], TRUE);
-        if (array_key_exists('username', $digest) === FALSE OR $A1 === FALSE)
+        $username = $this->_check_login($digest['username'], TRUE);
+        if (array_key_exists('username', $digest) === FALSE OR $username === FALSE)
         {
-            $this->_force_login($uniqueId);
+            $this->_force_login($unique_id);
         }
 
-        $A2 = md5(strtoupper($this->request->method) . ':' . $digest['uri']);
-        $valid_response = md5($A1 . ':' . $digest['nonce'] . ':' . $digest['nc'] . ':' . $digest['cnonce'] . ':' . $digest['qop'] . ':' . $A2);
+        $md5 = md5(strtoupper($this->request->method) . ':' . $digest['uri']);
+        $valid_response = md5($username . ':' . $digest['nonce'] . ':' . $digest['nc'] . ':' . $digest['cnonce'] . ':' . $digest['qop'] . ':' . $md5);
 
         // Check if the string don't compare (case-insensitive)
         if (strcasecmp($digest['response'], $valid_response) !== 0)
@@ -1972,7 +1972,7 @@ abstract class REST_Controller extends CI_Controller {
 
         array_push($whitelist, '127.0.0.1', '0.0.0.0');
 
-        foreach ($whitelist AS &$ip)
+        foreach ($whitelist as &$ip)
         {
             $ip = trim($ip);
         }
@@ -1993,20 +1993,20 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _force_login($nonce = '')
     {
-        $restAuth = $this->config->item('rest_auth');
-        $restRealm = $this->config->item('rest_realm');
-        if (strtolower($restAuth) === 'basic')
+        $rest_auth = $this->config->item('rest_auth');
+        $rest_realm = $this->config->item('rest_realm');
+        if (strtolower($rest_auth) === 'basic')
         {
             // See http://tools.ietf.org/html/rfc2617#page-5
-            header('WWW-Authenticate: Basic realm="' . $restRealm . '"');
+            header('WWW-Authenticate: Basic realm="' . $rest_realm . '"');
         }
-        elseif (strtolower($restAuth) === 'digest')
+        elseif (strtolower($rest_auth) === 'digest')
         {
             // See http://tools.ietf.org/html/rfc2617#page-18
             header(
-                'WWW-Authenticate: Digest realm="' . $restRealm
+                'WWW-Authenticate: Digest realm="' . $rest_realm
                 . '", qop="auth", nonce="' . $nonce
-                . '", opaque="' . md5($restRealm) . '"');
+                . '", opaque="' . md5($rest_realm) . '"');
         }
 
         // Display an error response

@@ -222,9 +222,9 @@ class Format {
                     $attributes = get_object_vars($attributes);
                 }
 
-                foreach ($attributes as $attributeName => $attributeValue)
+                foreach ($attributes as $attribute_name => $attribute_value)
                 {
-                    $structure->addAttribute($attributeName, $attributeValue);
+                    $structure->addAttribute($attribute_name, $attribute_value);
                 }
             }
             // if there is another array found recursively call this function
