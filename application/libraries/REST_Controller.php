@@ -466,7 +466,7 @@ abstract class REST_Controller extends CI_Controller {
         // Which format should the data be returned in?
         $this->response->format = $this->_detect_output_format();
 
-        // Which format should the data be returned in?
+        // Which language should the data be returned in?
         $this->response->lang = $this->_detect_lang();
 
         // Extend this function to apply additional checking early on in the process
