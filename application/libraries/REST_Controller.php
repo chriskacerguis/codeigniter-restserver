@@ -820,7 +820,7 @@ abstract class REST_Controller extends CI_Controller {
             if ($this->_get_args)
             {
                 // array_slice() or saving _get_args_only when calling _parse_get
-                $only_get_args = array_diff($this->_get_args,$this->_query_args);
+                $only_get_args = array_diff($this->_get_args, $this->_query_args);
                 $arg_keys = array_keys($only_get_args);
                 $last_key = end($arg_keys);
                 $this->_get_args[$last_key] = $matches[1];
