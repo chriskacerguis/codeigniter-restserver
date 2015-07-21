@@ -357,6 +357,13 @@ class Format {
 
         foreach ($data as $record)
         {
+            // If the record is not an array, then break. This is because the 2nd param of
+            // fputcsv() should be an array
+            if (is_array($record) === FALSE)
+            {
+                break;
+            }
+
             // Returns the length of the string written or FALSE
             fputcsv($handle, $record, $delimiter, $enclosure);
         }
