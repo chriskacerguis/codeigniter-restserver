@@ -969,7 +969,7 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _detect_lang()
     {
-        $lang = $this->input->server('HTTP_ACCEPT_LANGUAGE')
+        $lang = $this->input->server('HTTP_ACCEPT_LANGUAGE');
         if ($lang === NULL)
         {
             return NULL;
