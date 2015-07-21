@@ -1904,12 +1904,8 @@ abstract class REST_Controller extends CI_Controller {
 
         // We need to test which server authentication variable to use,
         // because the PHP ISAPI module in IIS acts different from CGI
-        $digest_string = '';
-        if ($this->input->server('PHP_AUTH_DIGEST'))
-        {
-            $digest_string = $this->input->server('PHP_AUTH_DIGEST');
-        }
-        elseif ($this->input->server('HTTP_AUTHORIZATION'))
+        $digest_string = $this->input->server('PHP_AUTH_DIGEST');
+        if ($digest_string === NULL)
         {
             $digest_string = $this->input->server('HTTP_AUTHORIZATION');
         }
