@@ -1985,6 +1985,8 @@ abstract class REST_Controller extends CI_Controller {
 
         foreach ($whitelist as &$ip)
         {
+            // As $ip is a reference, trim leading and trailing whitespace, then store the new value
+            // using the reference
             $ip = trim($ip);
         }
 
@@ -2041,8 +2043,7 @@ abstract class REST_Controller extends CI_Controller {
     {
         $payload['rtime'] = $this->_end_rtime - $this->_start_rtime;
 
-        return $this->rest->db
-            ->update(
+        return $this->rest->db->update(
                 $this->config->item('rest_logs_table'), $payload, [
                 'id' => $this->_insert_id
             ]);
