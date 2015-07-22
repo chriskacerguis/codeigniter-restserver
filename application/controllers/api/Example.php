@@ -60,10 +60,9 @@ class Example extends REST_Controller {
 
         }
 
-
         // If the id has not been passed via the URL e.g. example/users/:id, then
         // check the id query parameter id=? instead
-        if ($id === NULL)
+        if ($id === NULL || ctype_digit($id) === FALSE)
         {
             $id = $this->get('id');
         }
