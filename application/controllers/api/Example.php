@@ -30,9 +30,38 @@ class Example extends REST_Controller {
         $this->methods['user_delete']['limit'] = 50; // 50 requests per hour per user/key
     }
 
-    public function user_get($id = NULL)
+    public function users_get($id = NULL)
     {
-        // If the id has not been passed via the URL e.g. example/user/:id, then
+        // Users from a data store e.g. database
+        // $user = $this->some_model->getSomething($id);
+        $users = [
+            ['id' => 1, 'name' => 'John', 'email' => 'john@example.com', 'fact' => 'Loves coding'],
+            ['id' => 2, 'name' => 'Jim', 'email' => 'jim@example.com', 'fact' => 'Developed on CodeIgniter'],
+            ['id' => 3, 'name' => 'Jane', 'email' => 'jane@example.com', 'fact' => 'Lives in the USA', ['hobbies' => ['guitar', 'cycling']]],
+        ];
+
+        // If the id parameter and query parameter don't exist, return all users instead
+        if ($id === NULL && $this->get('id') === NULL)
+        {
+            // Check if the users data store contains users (in case the database result returns NULL)
+            if ($users)
+            {
+                // Set the response and exit
+                $this->response($users, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+            }
+            else
+            {
+                // Set the response and exit
+                $this->response([
+                    'status' => FALSE,
+                    'error' => 'No users were found'
+                ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+            }
+
+        }
+
+
+        // If the id has not been passed via the URL e.g. example/users/:id, then
         // check the id query parameter id=? instead
         if ($id === NULL)
         {
@@ -49,16 +78,10 @@ class Example extends REST_Controller {
             $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
         }
 
-        // $user = $this->some_model->getSomething($id);
-        $users = [
-            1 => ['id' => 1, 'name' => 'John', 'email' => 'john@example.com', 'fact' => 'Loves coding'],
-            2 => ['id' => 2, 'name' => 'Jim', 'email' => 'jim@example.com', 'fact' => 'Developed on CodeIgniter'],
-            3 => ['id' => 3, 'name' => 'Jane', 'email' => 'jane@example.com', 'fact' => 'Lives in the USA', ['hobbies' => ['guitar', 'cycling']]],
-        ];
-
         // Get the user from the array, by retrieving the id from the GET request
         $user = isset($users[$id]) ? $users[$id] : NULL;
 
+        // If a user exists in the data store e.g. database
         if ($user)
         {
             $this->set_response($user, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
@@ -72,7 +95,7 @@ class Example extends REST_Controller {
         }
     }
 
-    public function user_post()
+    public function users_post()
     {
         // $this->some_model->update_user( ... );
         $message = [
@@ -85,9 +108,9 @@ class Example extends REST_Controller {
         $this->set_response($message, REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
     }
 
-    public function user_delete()
+    public function users_delete()
     {
-        // If the id has not been passed via the URL e.g. example/user/:id, then
+        // If the id has not been passed via the URL e.g. example/users/:id, then
         // check the id query parameter id=? instead
         if ($id === NULL)
         {
@@ -113,25 +136,4 @@ class Example extends REST_Controller {
         $this->set_response($message, REST_Controller::HTTP_NO_CONTENT); // NO_CONTENT (204) being the HTTP response code
     }
 
-    public function users_get()
-    {
-        // $users = $this->some_model->get_something($this->get('limit'));
-        $users = [
-            ['id' => 1, 'name' => 'John', 'email' => 'john@example.com', 'fact' => 'Loves coding'],
-            ['id' => 2, 'name' => 'Jim', 'email' => 'jim@example.com', 'fact' => 'Developed on CodeIgniter'],
-            3 => ['id' => 3, 'name' => 'Jane', 'email' => 'jane@example.com', 'fact' => 'Lives in the USA', ['hobbies' => ['guitar', 'cycling']]],
-        ];
-
-        if ($users)
-        {
-            $this->set_response($users, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
-        }
-        else
-        {
-            $this->set_response([
-                    'status' => FALSE,
-                    'error' => 'No users were found'
-                ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
-        }
-    }
 }
