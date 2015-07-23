@@ -180,7 +180,7 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected $request = NULL;
 
-        /**
+    /**
      * Contains details about the response
      * Fields: format, lang
      * Note: This is a dynamic object (stdClass)
@@ -2106,10 +2106,10 @@ abstract class REST_Controller extends CI_Controller {
 
         // Query the access table and get the number of results
         return $this->rest->db
-                   ->where('key', $this->rest->key)
-                   ->where('controller', $controller)
-                   ->get($this->config->item('rest_access_table'))
-                   ->num_rows() > 0;
+            ->where('key', $this->rest->key)
+            ->where('controller', $controller)
+            ->get($this->config->item('rest_access_table'))
+            ->num_rows() > 0;
     }
 
 }
