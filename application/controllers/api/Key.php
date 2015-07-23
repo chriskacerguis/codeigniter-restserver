@@ -126,7 +126,7 @@ class Key extends REST_Controller {
     }
 
     /**
-     * Change the level
+     * Suspent a key
      *
      * @access public
      * @return void
@@ -163,7 +163,7 @@ class Key extends REST_Controller {
     }
 
     /**
-     * Remove a key from the database to stop it working
+     * Regenerate a key
      *
      * @access public
      * @return void
