@@ -131,14 +131,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                 // The 'data' parameter is an array of objects that can be looped over.
 
-                if (window.JSON && window.JSON.stringify) {
-
-                    // Let us display data in this example
-                    // in a relatively friendly manner.
-                    data = window.JSON.stringify(data);
-                }
-
-                alert(data);
+                alert(window.JSON.stringify(data));
 
             }).fail(function () {
 
