@@ -218,7 +218,7 @@ class Key extends REST_Controller {
             // If an error occurred, then fall back to the previous method
             if ($salt === FALSE)
             {
-				$salt = hash('sha256', time() . mt_rand());
+                $salt = hash('sha256', time() . mt_rand());
             }
             $new_key = substr($salt, 0, config_item('rest_key_length'));
         }
@@ -233,16 +233,16 @@ class Key extends REST_Controller {
     private function _get_key($key)
     {
         return $this->db
-			->where(config_item('rest_key_column'), $key)
-			->get(config_item('rest_keys_table'))
-			->row();
+            ->where(config_item('rest_key_column'), $key)
+            ->get(config_item('rest_keys_table'))
+            ->row();
     }
 
     private function _key_exists($key)
     {
         return $this->db
-			->where(config_item('rest_key_column'), $key)
-			->count_all_results(config_item('rest_keys_table')) > 0;
+            ->where(config_item('rest_key_column'), $key)
+            ->count_all_results(config_item('rest_keys_table')) > 0;
     }
 
     private function _insert_key($key, $data)
