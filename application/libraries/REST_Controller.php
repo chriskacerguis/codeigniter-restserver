@@ -816,29 +816,14 @@ abstract class REST_Controller extends CI_Controller {
             return $matches[1];
         }
 
-        if (empty($this->_get_args) === FALSE)
+        // Get the format parameter named as 'format'
+        if (isset($this->_get_args['format']))
         {
-            // Get the format parameter named as 'format'
-            if (isset($this->_get_args['format']) === TRUE)
+            $format = strtolower($this->_get_args['format']);
+
+            if (isset($this->_supported_formats[$format]) === TRUE)
             {
-                $format = strtolower($this->_get_args['format']);
-
-                if (isset($this->_supported_formats[$format]) === TRUE)
-                {
-                    return $format;
-                }
-            }
-
-            // A special case: users/1.json
-            elseif (count($this->_get_args) === 1 && reset($this->_get_args) === NULL)
-            {
-                $pattern = '/\.(' . implode('|', array_keys($this->_supported_formats)) . ')$/';
-                $matches = [];
-
-                if (preg_match($pattern, key($this->_get_args), $matches))
-                {
-                    return $matches[1];
-                }
+                return $format;
             }
         }
 
