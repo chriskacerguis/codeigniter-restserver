@@ -33,7 +33,6 @@ class Example extends REST_Controller {
     public function users_get()
     {
         // Users from a data store e.g. database
-        // $user = $this->some_model->getSomething($id);
         $users = [
             ['id' => 1, 'name' => 'John', 'email' => 'john@example.com', 'fact' => 'Loves coding'],
             ['id' => 2, 'name' => 'Jim', 'email' => 'jim@example.com', 'fact' => 'Developed on CodeIgniter'],
@@ -42,7 +41,8 @@ class Example extends REST_Controller {
 
         $id = $this->get('id');
 
-        // If the id parameter and query parameter don't exist, return all users instead
+        // If the id parameter doesn't exist return all the users
+
         if ($id === NULL)
         {
             // Check if the users data store contains users (in case the database result returns NULL)
@@ -60,6 +60,8 @@ class Example extends REST_Controller {
                 ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
             }
         }
+
+        // Find and return a single record for a particular user.
 
         $id = (int) $id;
 
