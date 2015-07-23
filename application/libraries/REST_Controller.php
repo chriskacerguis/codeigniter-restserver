@@ -657,10 +657,10 @@ abstract class REST_Controller extends CI_Controller {
         {
             // If the method doesn't exist, then the error will be caught and an error response shown
             $this->response([
-                        $this->config->item('rest_status_field_name') => FALSE,
-                        $this->config->item('rest_message_field_name') => [
-                            'classname' => get_class($ex),
-                            'message' => $ex->getMessage()
+                    $this->config->item('rest_status_field_name') => FALSE,
+                    $this->config->item('rest_message_field_name') => [
+                        'classname' => get_class($ex),
+                        'message' => $ex->getMessage()
                     ]
                 ], self::HTTP_INTERNAL_SERVER_ERROR);
         }
