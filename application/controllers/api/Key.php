@@ -126,7 +126,7 @@ class Key extends REST_Controller {
     }
 
     /**
-     * Suspent a key
+     * Suspend a key
      *
      * @access public
      * @return void
