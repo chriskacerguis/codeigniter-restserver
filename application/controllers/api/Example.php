@@ -35,9 +35,9 @@ class Example extends REST_Controller {
         // Users from a data store e.g. database
         // $user = $this->some_model->getSomething($id);
         $users = [
-            1 => ['id' => 1, 'name' => 'John', 'email' => 'john@example.com', 'fact' => 'Loves coding'],
-            2 => ['id' => 2, 'name' => 'Jim', 'email' => 'jim@example.com', 'fact' => 'Developed on CodeIgniter'],
-            3 => ['id' => 3, 'name' => 'Jane', 'email' => 'jane@example.com', 'fact' => 'Lives in the USA', ['hobbies' => ['guitar', 'cycling']]],
+            ['id' => 1, 'name' => 'John', 'email' => 'john@example.com', 'fact' => 'Loves coding'],
+            ['id' => 2, 'name' => 'Jim', 'email' => 'jim@example.com', 'fact' => 'Developed on CodeIgniter'],
+            ['id' => 3, 'name' => 'Jane', 'email' => 'jane@example.com', 'fact' => 'Lives in the USA', ['hobbies' => ['guitar', 'cycling']]],
         ];
 
         // Get the id parameter value
@@ -66,17 +66,15 @@ class Example extends REST_Controller {
                     'error' => 'No users were found'
                 ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
             }
-
         }
 
         // Check if the id is a valid integer
         if (ctype_digit($id))
         {
-            // Cast as an int
             $id = (int) $id;
         }
 
-        // If not a valid id
+        // Invalid id, set the response and exit
         if ($id <= 0)
         {
             // Set the response and exit
@@ -84,10 +82,21 @@ class Example extends REST_Controller {
         }
 
         // Get the user from the array, by retrieving the id from the GET request
-        $user = isset($users[$id]) ? $users[$id] : NULL;
+        $user = NULL;
+
+        // Enumerate through the data store checking if the id matches
+        // the passed id
+        foreach ($users as $user_temp)
+        {
+            if (isset($user_temp['id']) && $user_temp['id'] === $id)
+            {
+                $user = $user_temp;
+                break;
+            }
+        }
 
         // If a user exists in the data store e.g. database
-        if ($user)
+        if (!empty($user))
         {
             $this->set_response($user, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
         }
@@ -127,11 +136,10 @@ class Example extends REST_Controller {
         // Check if the id is a valid integer
         if (ctype_digit($id))
         {
-            // Cast as an int
             $id = (int) $id;
         }
 
-        // If not a valid id
+        // Invalid id, set the response and exit
         if ($id <= 0)
         {
             // Set the response and exit
