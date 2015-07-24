@@ -30,26 +30,19 @@ class Example extends REST_Controller {
         $this->methods['user_delete']['limit'] = 50; // 50 requests per hour per user/key
     }
 
-    public function users_get($id_param = NULL)
+    public function users_get()
     {
         // Users from a data store e.g. database
-        // $user = $this->some_model->getSomething($id);
         $users = [
-            1 => ['id' => 1, 'name' => 'John', 'email' => 'john@example.com', 'fact' => 'Loves coding'],
-            2 => ['id' => 2, 'name' => 'Jim', 'email' => 'jim@example.com', 'fact' => 'Developed on CodeIgniter'],
-            3 => ['id' => 3, 'name' => 'Jane', 'email' => 'jane@example.com', 'fact' => 'Lives in the USA', ['hobbies' => ['guitar', 'cycling']]],
+            ['id' => 1, 'name' => 'John', 'email' => 'john@example.com', 'fact' => 'Loves coding'],
+            ['id' => 2, 'name' => 'Jim', 'email' => 'jim@example.com', 'fact' => 'Developed on CodeIgniter'],
+            ['id' => 3, 'name' => 'Jane', 'email' => 'jane@example.com', 'fact' => 'Lives in the USA', ['hobbies' => ['guitar', 'cycling']]],
         ];
 
-        // Get the id parameter value
         $id = $this->get('id');
 
-        // If NULL, then check the id passed as users/:id
-        if ($id === NULL)
-        {
-            $id = $id_param;
-        }
+        // If the id parameter doesn't exist return all the users
 
-        // If the id parameter and query parameter don't exist, return all users instead
         if ($id === NULL)
         {
             // Check if the users data store contains users (in case the database result returns NULL)
@@ -66,28 +59,36 @@ class Example extends REST_Controller {
                     'error' => 'No users were found'
                 ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
             }
-
         }
 
-        // Check if the id is a valid integer
-        if (ctype_digit($id))
-        {
-            // Cast as an int
-            $id = (int) $id;
-        }
+        // Find and return a single record for a particular user.
 
-        // If not a valid id
+        $id = (int) $id;
+
+        // Validate the id.
         if ($id <= 0)
         {
-            // Set the response and exit
+            // Invalid id, set the response and exit.
             $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
         }
 
-        // Get the user from the array, by retrieving the id from the GET request
-        $user = isset($users[$id]) ? $users[$id] : NULL;
+        // Get the user from the array, using the id as key for retreival.
+        // Usually a model is to be used for this.
 
-        // If a user exists in the data store e.g. database
-        if ($user)
+        $user = NULL;
+
+        if (!empty($users))
+        {
+            foreach ($users as $key => $value)
+            {
+                if (isset($value['id']) && $value['id'] === $id)
+                {
+                    $user = $value;
+                }
+            }
+        }
+
+        if (!empty($user))
         {
             $this->set_response($user, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
         }
@@ -113,25 +114,11 @@ class Example extends REST_Controller {
         $this->set_response($message, REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
     }
 
-    public function users_delete($id_param = NULL)
+    public function users_delete()
     {
-        // Get the id parameter value
-        $id = $this->get('id');
+        $id = (int) $this->get('id');
 
-        // If NULL, then check the id passed as users/:id
-        if ($id === NULL)
-        {
-            $id = $id_param;
-        }
-
-        // Check if the id is a valid integer
-        if (ctype_digit($id))
-        {
-            // Cast as an int
-            $id = (int) $id;
-        }
-
-        // If not a valid id
+        // Validate the id.
         if ($id <= 0)
         {
             // Set the response and exit

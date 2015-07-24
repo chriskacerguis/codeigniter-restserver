@@ -180,7 +180,7 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected $request = NULL;
 
-        /**
+    /**
      * Contains details about the response
      * Fields: format, lang
      * Note: This is a dynamic object (stdClass)
@@ -657,10 +657,10 @@ abstract class REST_Controller extends CI_Controller {
         {
             // If the method doesn't exist, then the error will be caught and an error response shown
             $this->response([
-                        $this->config->item('rest_status_field_name') => FALSE,
-                        $this->config->item('rest_message_field_name') => [
-                            'classname' => get_class($ex),
-                            'message' => $ex->getMessage()
+                    $this->config->item('rest_status_field_name') => FALSE,
+                    $this->config->item('rest_message_field_name') => [
+                        'classname' => get_class($ex),
+                        'message' => $ex->getMessage()
                     ]
                 ], self::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -816,29 +816,14 @@ abstract class REST_Controller extends CI_Controller {
             return $matches[1];
         }
 
-        if (empty($this->_get_args) === FALSE)
+        // Get the format parameter named as 'format'
+        if (isset($this->_get_args['format']))
         {
-            // Get the format parameter named as 'format'
-            if (isset($this->_get_args['format']) === TRUE)
+            $format = strtolower($this->_get_args['format']);
+
+            if (isset($this->_supported_formats[$format]) === TRUE)
             {
-                $format = strtolower($this->_get_args['format']);
-
-                if (isset($this->_supported_formats[$format]) === TRUE)
-                {
-                    return $format;
-                }
-            }
-
-            // A special case: users/1.json
-            elseif (count($this->_get_args) === 1 && reset($this->_get_args) === NULL)
-            {
-                $pattern = '/\.(' . implode('|', array_keys($this->_supported_formats)) . ')$/';
-                $matches = [];
-
-                if (preg_match($pattern, key($this->_get_args), $matches))
-                {
-                    return $matches[1];
-                }
+                return $format;
             }
         }
 
@@ -1101,7 +1086,7 @@ abstract class REST_Controller extends CI_Controller {
         // How many times can you get to this method in a defined time_limit (default: 1 hour)?
         $limit = $this->methods[$limited_method_name]['limit'];
 
-        $timelimit = (isset($this->methods[$limited_method_name]['time']) ? $this->methods[$limited_method_name]['time'] : 3600); // 3600 = 60 * 60
+        $time_limit = (isset($this->methods[$limited_method_name]['time']) ? $this->methods[$limited_method_name]['time'] : 3600); // 3600 = 60 * 60
 
         // Get data about a keys' usage and limit to one row
         $result = $this->rest->db
@@ -2106,10 +2091,10 @@ abstract class REST_Controller extends CI_Controller {
 
         // Query the access table and get the number of results
         return $this->rest->db
-                   ->where('key', $this->rest->key)
-                   ->where('controller', $controller)
-                   ->get($this->config->item('rest_access_table'))
-                   ->num_rows() > 0;
+            ->where('key', $this->rest->key)
+            ->where('controller', $controller)
+            ->get($this->config->item('rest_access_table'))
+            ->num_rows() > 0;
     }
 
 }

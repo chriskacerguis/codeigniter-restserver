@@ -160,9 +160,9 @@ $config['auth_library_function'] = '';
 |
 | example:
 |
-|			$config['auth_override_class_method_http']['deals']['view']['get'] = 'none';
-|			$config['auth_override_class_method_http']['deals']['insert']['post'] = 'none';
-|			$config['auth_override_class_method_http']['deals']['*']['options'] = 'none';
+|            $config['auth_override_class_method_http']['deals']['view']['get'] = 'none';
+|            $config['auth_override_class_method_http']['deals']['insert']['post'] = 'none';
+|            $config['auth_override_class_method_http']['deals']['*']['options'] = 'none';
 */
 
 // ---Uncomment list line for the wildard unit test
