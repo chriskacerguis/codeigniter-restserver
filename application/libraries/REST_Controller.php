@@ -968,7 +968,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
             }
 
-            return $row;
+            return TRUE;
         }
 
         // No key has been sent
