@@ -1963,8 +1963,8 @@ abstract class REST_Controller extends CI_Controller {
         {
             // Display an error response
             $this->response([
-                    'status' => FALSE,
-                    'error' => 'IP Denied'
+                    $this->config->item('rest_status_field_name') => FALSE,
+                    $this->config->item('rest_message_field_name') => 'IP Denied'
                 ], self::HTTP_UNAUTHORIZED);
         }
     }
