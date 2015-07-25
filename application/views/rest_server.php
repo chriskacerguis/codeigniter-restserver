@@ -117,25 +117,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script>
     $(function() {
 
-        $("#ajax").on("click", function(evt) {
+        $('#ajax').on('click', function(event) {
 
-            evt.preventDefault();
+            event.preventDefault();
 
             $.ajax({
 
-                url: $(this).attr("href"), // URL from the link that was clicked on.
+                url: $(this).attr('href'), // URL from the link that was clicked on.
 
             }).done(function (data) {
 
                 // The 'data' parameter is an array of objects that can be looped over.
 
-                alert(window.JSON.stringify(data));
+                alert(JSON.stringify(data));
 
             }).fail(function () {
 
-                alert('Oh no! A problem with the AJAX request!');
+                alert('Oh no! A problem with the Ajax request!');
+
             });
         });
+
     });
 </script>
 
