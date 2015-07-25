@@ -126,7 +126,7 @@
             $.ajax({
 
                 // URL from the link that was clicked on.
-                url: $(this).attr('href'),
+                url: $(this).attr('href')
 
             }).done(function (data) {
 
