@@ -1,25 +1,27 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?><!DOCTYPE html>
+    defined('BASEPATH') OR exit('No direct script access allowed');
+?>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <title>REST Server Tests</title>
 
-    <style type="text/css">
+    <style>
 
     ::selection { background-color: #E13300; color: white; }
     ::-moz-selection { background-color: #E13300; color: white; }
 
     body {
-        background-color: #fff;
+        background-color: #FFF;
         margin: 40px;
         font: 16px/20px normal Helvetica, Arial, sans-serif;
         color: #4F5155;
     }
 
     a {
-        color: #003399;
+        color: #039;
         background-color: transparent;
         font-weight: normal;
     }
@@ -117,13 +119,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script>
     $(function() {
 
-        $('#ajax').on('click', function(event) {
+        $('#ajax').on('click', function (event) {
 
             event.preventDefault();
 
             $.ajax({
 
-                url: $(this).attr('href'), // URL from the link that was clicked on.
+                // URL from the link that was clicked on.
+                url: $(this).attr('href'),
 
             }).done(function (data) {
 
