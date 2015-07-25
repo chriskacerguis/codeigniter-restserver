@@ -477,3 +477,13 @@ $config['rest_ignore_http_accept'] = FALSE;
 |
 */
 $config['rest_ajax_only'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| REST Language File
+|--------------------------------------------------------------------------
+|
+| Language file to load from the language directory
+|
+*/
+$config['rest_language'] = 'english';

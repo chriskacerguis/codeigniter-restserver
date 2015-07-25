@@ -406,6 +406,16 @@ abstract class REST_Controller extends CI_Controller {
         // At present the library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter (no citation)
         $this->load->library('format');
 
+        // Get the language
+        $language = $this->config->item('rest_language');
+        if ($language === NULL)
+        {
+            $language = 'english';
+        }
+
+        // Load the language file
+        $this->lang->load('rest_controller', $language);
+
         // Initialise the response, request and rest objects
         $this->request = new stdClass();
         $this->response = new stdClass();
@@ -501,7 +511,7 @@ abstract class REST_Controller extends CI_Controller {
             // Display an error response
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'Only AJAX requests are acceptable'
+                    $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_ajax_only')
                 ], self::HTTP_NOT_ACCEPTABLE);
         }
 
@@ -563,7 +573,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'Unsupported protocol'
+                    $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unsupported')
                 ], self::HTTP_FORBIDDEN);
         }
 
@@ -588,7 +598,7 @@ abstract class REST_Controller extends CI_Controller {
 
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'Invalid API Key ' . $this->rest->key
+                    $this->config->item('rest_message_field_name') => sprintf($this->lang->line('text_rest_invalid_api_key'), $this->rest->key)
                 ], self::HTTP_FORBIDDEN);
         }
 
@@ -602,7 +612,7 @@ abstract class REST_Controller extends CI_Controller {
 
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'This API key does not have access to the requested controller.'
+                    $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_unauthorized')
                 ], self::HTTP_UNAUTHORIZED);
         }
 
@@ -611,7 +621,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'Unknown method.'
+                    $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unknown_method')
                 ], self::HTTP_NOT_FOUND);
         }
 
@@ -621,7 +631,7 @@ abstract class REST_Controller extends CI_Controller {
             // Check the limit
             if ($this->config->item('rest_enable_limits') && $this->_check_limit($controller_method) === FALSE)
             {
-                $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key has reached the time limit for this method.'];
+                $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_time_limit')];
                 $this->response($response, self::HTTP_UNAUTHORIZED);
             }
 
@@ -638,7 +648,7 @@ abstract class REST_Controller extends CI_Controller {
             }
 
             // They don't have good enough perms
-            $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key does not have enough permissions.'];
+            $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_permissions')];
             $authorized || $this->response($response, self::HTTP_UNAUTHORIZED);
         }
 
@@ -1157,13 +1167,13 @@ abstract class REST_Controller extends CI_Controller {
             if (!empty($auth_override_class_method[$this->router->class]['*'])) // Check for class overrides
             {
                 // None auth override found, prepare nothing but send back a TRUE override flag
-                if ($auth_override_class_method[$this->router->class]['*'] == 'none')
+                if ($auth_override_class_method[$this->router->class]['*'] === 'none')
                 {
                     return TRUE;
                 }
 
                 // Basic auth override found, prepare basic
-                if ($auth_override_class_method[$this->router->class]['*'] == 'basic')
+                if ($auth_override_class_method[$this->router->class]['*'] === 'basic')
                 {
                     $this->_prepare_basic_auth();
 
@@ -1171,7 +1181,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Digest auth override found, prepare digest
-                if ($auth_override_class_method[$this->router->class]['*'] == 'digest')
+                if ($auth_override_class_method[$this->router->class]['*'] === 'digest')
                 {
                     $this->_prepare_digest_auth();
 
@@ -1179,7 +1189,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Whitelist auth override found, check client's ip against config whitelist
-                if ($auth_override_class_method[$this->router->class]['*'] == 'whitelist')
+                if ($auth_override_class_method[$this->router->class]['*'] === 'whitelist')
                 {
                     $this->_check_whitelist_auth();
 
@@ -1191,13 +1201,13 @@ abstract class REST_Controller extends CI_Controller {
             if (!empty($auth_override_class_method[$this->router->class][$this->router->method]))
             {
                 // None auth override found, prepare nothing but send back a TRUE override flag
-                if ($auth_override_class_method[$this->router->class][$this->router->method] == 'none')
+                if ($auth_override_class_method[$this->router->class][$this->router->method] === 'none')
                 {
                     return TRUE;
                 }
 
                 // Basic auth override found, prepare basic
-                if ($auth_override_class_method[$this->router->class][$this->router->method] == 'basic')
+                if ($auth_override_class_method[$this->router->class][$this->router->method] === 'basic')
                 {
                     $this->_prepare_basic_auth();
 
@@ -1205,7 +1215,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Digest auth override found, prepare digest
-                if ($auth_override_class_method[$this->router->class][$this->router->method] == 'digest')
+                if ($auth_override_class_method[$this->router->class][$this->router->method] === 'digest')
                 {
                     $this->_prepare_digest_auth();
 
@@ -1213,7 +1223,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Whitelist auth override found, check client's ip against config whitelist
-                if ($auth_override_class_method[$this->router->class][$this->router->method] == 'whitelist')
+                if ($auth_override_class_method[$this->router->class][$this->router->method] === 'whitelist')
                 {
                     $this->_check_whitelist_auth();
 
@@ -1232,13 +1242,13 @@ abstract class REST_Controller extends CI_Controller {
             if(!empty($auth_override_class_method_http[$this->router->class]['*'][$this->request->method]))
             {
                 // None auth override found, prepare nothing but send back a TRUE override flag
-                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] == 'none')
+                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'none')
                 {
                     return TRUE;
                 }
 
                 // Basic auth override found, prepare basic
-                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] == 'basic')
+                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'basic')
                 {
                     $this->_prepare_basic_auth();
 
@@ -1246,7 +1256,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Digest auth override found, prepare digest
-                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] == 'digest')
+                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'digest')
                 {
                     $this->_prepare_digest_auth();
 
@@ -1254,7 +1264,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Whitelist auth override found, check client's ip against config whitelist
-                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] == 'whitelist')
+                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'whitelist')
                 {
                     $this->_check_whitelist_auth();
 
@@ -1266,13 +1276,13 @@ abstract class REST_Controller extends CI_Controller {
             if(!empty($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method]))
             {
                 // None auth override found, prepare nothing but send back a TRUE override flag
-                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] == 'none')
+                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'none')
                 {
                     return TRUE;
                 }
 
                 // Basic auth override found, prepare basic
-                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] == 'basic')
+                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'basic')
                 {
                     $this->_prepare_basic_auth();
 
@@ -1280,7 +1290,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Digest auth override found, prepare digest
-                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] == 'digest')
+                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'digest')
                 {
                     $this->_prepare_digest_auth();
 
@@ -1288,7 +1298,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Whitelist auth override found, check client's ip against config whitelist
-                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] == 'whitelist')
+                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'whitelist')
                 {
                     $this->_check_whitelist_auth();
 
@@ -1844,7 +1854,7 @@ abstract class REST_Controller extends CI_Controller {
             // Display an error response
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'Not Authorized'
+                    $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unauthorized')
                 ], self::HTTP_UNAUTHORIZED);
         }
     }
@@ -1941,8 +1951,8 @@ abstract class REST_Controller extends CI_Controller {
         {
             // Display an error response
             $this->response([
-                    $this->config->item('rest_status_field_name') => 0,
-                    $this->config->item('rest_message_field_name') => 'Invalid credentials'
+                    $this->config->item('rest_status_field_name') => FALSE,
+                    $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_invalid_credentials')
                 ], self::HTTP_UNAUTHORIZED);
         }
     }
@@ -1963,8 +1973,8 @@ abstract class REST_Controller extends CI_Controller {
         {
             // Display an error response
             $this->response([
-                    'status' => FALSE,
-                    'error' => 'IP Denied'
+                    $this->config->item('rest_status_field_name') => FALSE,
+                    $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_ip_denied')
                 ], self::HTTP_UNAUTHORIZED);
         }
     }
@@ -1992,7 +2002,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'IP not authorized'
+                    $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_ip_unauthorized')
                 ], self::HTTP_UNAUTHORIZED);
         }
     }
@@ -2026,7 +2036,7 @@ abstract class REST_Controller extends CI_Controller {
         // Display an error response
         $this->response([
                 $this->config->item('rest_status_field_name') => FALSE,
-                $this->config->item('rest_message_field_name') => 'Not authorized'
+                $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unauthorized')
             ], self::HTTP_UNAUTHORIZED);
     }
 

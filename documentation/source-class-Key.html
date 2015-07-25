@@ -146,7 +146,7 @@
 </span><span id="52" class="l"><a href="#52"> 52: </a>        {
 </span><span id="53" class="l"><a href="#53"> 53: </a>            <span class="php-var">$this</span>-&gt;response([
 </span><span id="54" class="l"><a href="#54"> 54: </a>                <span class="php-quote">'status'</span> =&gt; <span class="php-keyword1">FALSE</span>,
-</span><span id="55" class="l"><a href="#55"> 55: </a>                <span class="php-quote">'error'</span> =&gt; <span class="php-quote">'Could not save the key'</span>
+</span><span id="55" class="l"><a href="#55"> 55: </a>                <span class="php-quote">'message'</span> =&gt; <span class="php-quote">'Could not save the key'</span>
 </span><span id="56" class="l"><a href="#56"> 56: </a>            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); <span class="php-comment">// INTERNAL_SERVER_ERROR (500) being the HTTP response code</span>
 </span><span id="57" class="l"><a href="#57"> 57: </a>        }
 </span><span id="58" class="l"><a href="#58"> 58: </a>    }
@@ -167,7 +167,7 @@
 </span><span id="73" class="l"><a href="#73"> 73: </a>            <span class="php-comment">// It doesn't appear the key exists</span>
 </span><span id="74" class="l"><a href="#74"> 74: </a>            <span class="php-var">$this</span>-&gt;response([
 </span><span id="75" class="l"><a href="#75"> 75: </a>                <span class="php-quote">'status'</span> =&gt; <span class="php-keyword1">FALSE</span>,
-</span><span id="76" class="l"><a href="#76"> 76: </a>                <span class="php-quote">'error'</span> =&gt; <span class="php-quote">'Invalid API key'</span>
+</span><span id="76" class="l"><a href="#76"> 76: </a>                <span class="php-quote">'message'</span> =&gt; <span class="php-quote">'Invalid API key'</span>
 </span><span id="77" class="l"><a href="#77"> 77: </a>            ], REST_Controller::HTTP_BAD_REQUEST); <span class="php-comment">// BAD_REQUEST (400) being the HTTP response code</span>
 </span><span id="78" class="l"><a href="#78"> 78: </a>        }
 </span><span id="79" class="l"><a href="#79"> 79: </a>
@@ -177,7 +177,7 @@
 </span><span id="83" class="l"><a href="#83"> 83: </a>        <span class="php-comment">// Respond that the key was destroyed</span>
 </span><span id="84" class="l"><a href="#84"> 84: </a>        <span class="php-var">$this</span>-&gt;response([
 </span><span id="85" class="l"><a href="#85"> 85: </a>            <span class="php-quote">'status'</span> =&gt; <span class="php-keyword1">TRUE</span>,
-</span><span id="86" class="l"><a href="#86"> 86: </a>            <span class="php-quote">'success'</span> =&gt; <span class="php-quote">'API key was deleted'</span>
+</span><span id="86" class="l"><a href="#86"> 86: </a>            <span class="php-quote">'message'</span> =&gt; <span class="php-quote">'API key was deleted'</span>
 </span><span id="87" class="l"><a href="#87"> 87: </a>            ], REST_Controller::HTTP_NO_CONTENT); <span class="php-comment">// NO_CONTENT (204) being the HTTP response code</span>
 </span><span id="88" class="l"><a href="#88"> 88: </a>    }
 </span><span id="89" class="l"><a href="#89"> 89: </a>
@@ -198,7 +198,7 @@
 </span><span id="104" class="l"><a href="#104">104: </a>            <span class="php-comment">// It doesn't appear the key exists</span>
 </span><span id="105" class="l"><a href="#105">105: </a>            <span class="php-var">$this</span>-&gt;response([
 </span><span id="106" class="l"><a href="#106">106: </a>                <span class="php-quote">'status'</span> =&gt; <span class="php-keyword1">FALSE</span>,
-</span><span id="107" class="l"><a href="#107">107: </a>                <span class="php-quote">'error'</span> =&gt; <span class="php-quote">'Invalid API key'</span>
+</span><span id="107" class="l"><a href="#107">107: </a>                <span class="php-quote">'message'</span> =&gt; <span class="php-quote">'Invalid API key'</span>
 </span><span id="108" class="l"><a href="#108">108: </a>            ], REST_Controller::HTTP_BAD_REQUEST); <span class="php-comment">// BAD_REQUEST (400) being the HTTP response code</span>
 </span><span id="109" class="l"><a href="#109">109: </a>        }
 </span><span id="110" class="l"><a href="#110">110: </a>
@@ -207,14 +207,14 @@
 </span><span id="113" class="l"><a href="#113">113: </a>        {
 </span><span id="114" class="l"><a href="#114">114: </a>            <span class="php-var">$this</span>-&gt;response([
 </span><span id="115" class="l"><a href="#115">115: </a>                <span class="php-quote">'status'</span> =&gt; <span class="php-keyword1">TRUE</span>,
-</span><span id="116" class="l"><a href="#116">116: </a>                <span class="php-quote">'success'</span> =&gt; <span class="php-quote">'API key was updated'</span>
+</span><span id="116" class="l"><a href="#116">116: </a>                <span class="php-quote">'message'</span> =&gt; <span class="php-quote">'API key was updated'</span>
 </span><span id="117" class="l"><a href="#117">117: </a>            ], REST_Controller::HTTP_OK); <span class="php-comment">// OK (200) being the HTTP response code</span>
 </span><span id="118" class="l"><a href="#118">118: </a>        }
 </span><span id="119" class="l"><a href="#119">119: </a>        <span class="php-keyword1">else</span>
 </span><span id="120" class="l"><a href="#120">120: </a>        {
 </span><span id="121" class="l"><a href="#121">121: </a>            <span class="php-var">$this</span>-&gt;response([
 </span><span id="122" class="l"><a href="#122">122: </a>                <span class="php-quote">'status'</span> =&gt; <span class="php-keyword1">FALSE</span>,
-</span><span id="123" class="l"><a href="#123">123: </a>                <span class="php-quote">'error'</span> =&gt; <span class="php-quote">'Could not update the key level'</span>
+</span><span id="123" class="l"><a href="#123">123: </a>                <span class="php-quote">'message'</span> =&gt; <span class="php-quote">'Could not update the key level'</span>
 </span><span id="124" class="l"><a href="#124">124: </a>            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); <span class="php-comment">// INTERNAL_SERVER_ERROR (500) being the HTTP response code</span>
 </span><span id="125" class="l"><a href="#125">125: </a>        }
 </span><span id="126" class="l"><a href="#126">126: </a>    }
@@ -235,7 +235,7 @@
 </span><span id="141" class="l"><a href="#141">141: </a>            <span class="php-comment">// It doesn't appear the key exists</span>
 </span><span id="142" class="l"><a href="#142">142: </a>            <span class="php-var">$this</span>-&gt;response([
 </span><span id="143" class="l"><a href="#143">143: </a>                <span class="php-quote">'status'</span> =&gt; <span class="php-keyword1">FALSE</span>,
-</span><span id="144" class="l"><a href="#144">144: </a>                <span class="php-quote">'error'</span> =&gt; <span class="php-quote">'Invalid API key'</span>
+</span><span id="144" class="l"><a href="#144">144: </a>                <span class="php-quote">'message'</span> =&gt; <span class="php-quote">'Invalid API key'</span>
 </span><span id="145" class="l"><a href="#145">145: </a>            ], REST_Controller::HTTP_BAD_REQUEST); <span class="php-comment">// BAD_REQUEST (400) being the HTTP response code</span>
 </span><span id="146" class="l"><a href="#146">146: </a>        }
 </span><span id="147" class="l"><a href="#147">147: </a>
@@ -244,14 +244,14 @@
 </span><span id="150" class="l"><a href="#150">150: </a>        {
 </span><span id="151" class="l"><a href="#151">151: </a>            <span class="php-var">$this</span>-&gt;response([
 </span><span id="152" class="l"><a href="#152">152: </a>                <span class="php-quote">'status'</span> =&gt; <span class="php-keyword1">TRUE</span>,
-</span><span id="153" class="l"><a href="#153">153: </a>                <span class="php-quote">'success'</span> =&gt; <span class="php-quote">'Key was suspended'</span>
+</span><span id="153" class="l"><a href="#153">153: </a>                <span class="php-quote">'message'</span> =&gt; <span class="php-quote">'Key was suspended'</span>
 </span><span id="154" class="l"><a href="#154">154: </a>            ], REST_Controller::HTTP_OK); <span class="php-comment">// OK (200) being the HTTP response code</span>
 </span><span id="155" class="l"><a href="#155">155: </a>        }
 </span><span id="156" class="l"><a href="#156">156: </a>        <span class="php-keyword1">else</span>
 </span><span id="157" class="l"><a href="#157">157: </a>        {
 </span><span id="158" class="l"><a href="#158">158: </a>            <span class="php-var">$this</span>-&gt;response([
 </span><span id="159" class="l"><a href="#159">159: </a>                <span class="php-quote">'status'</span> =&gt; <span class="php-keyword1">FALSE</span>,
-</span><span id="160" class="l"><a href="#160">160: </a>                <span class="php-quote">'error'</span> =&gt; <span class="php-quote">'Could not suspend the user'</span>
+</span><span id="160" class="l"><a href="#160">160: </a>                <span class="php-quote">'message'</span> =&gt; <span class="php-quote">'Could not suspend the user'</span>
 </span><span id="161" class="l"><a href="#161">161: </a>            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); <span class="php-comment">// INTERNAL_SERVER_ERROR (500) being the HTTP response code</span>
 </span><span id="162" class="l"><a href="#162">162: </a>        }
 </span><span id="163" class="l"><a href="#163">163: </a>    }
@@ -273,7 +273,7 @@
 </span><span id="179" class="l"><a href="#179">179: </a>            <span class="php-comment">// It doesn't appear the key exists</span>
 </span><span id="180" class="l"><a href="#180">180: </a>            <span class="php-var">$this</span>-&gt;response([
 </span><span id="181" class="l"><a href="#181">181: </a>                <span class="php-quote">'status'</span> =&gt; <span class="php-keyword1">FALSE</span>,
-</span><span id="182" class="l"><a href="#182">182: </a>                <span class="php-quote">'error'</span> =&gt; <span class="php-quote">'Invalid API key'</span>
+</span><span id="182" class="l"><a href="#182">182: </a>                <span class="php-quote">'message'</span> =&gt; <span class="php-quote">'Invalid API key'</span>
 </span><span id="183" class="l"><a href="#183">183: </a>            ], REST_Controller::HTTP_BAD_REQUEST); <span class="php-comment">// BAD_REQUEST (400) being the HTTP response code</span>
 </span><span id="184" class="l"><a href="#184">184: </a>        }
 </span><span id="185" class="l"><a href="#185">185: </a>
@@ -295,7 +295,7 @@
 </span><span id="201" class="l"><a href="#201">201: </a>        {
 </span><span id="202" class="l"><a href="#202">202: </a>            <span class="php-var">$this</span>-&gt;response([
 </span><span id="203" class="l"><a href="#203">203: </a>                <span class="php-quote">'status'</span> =&gt; <span class="php-keyword1">FALSE</span>,
-</span><span id="204" class="l"><a href="#204">204: </a>                <span class="php-quote">'error'</span> =&gt; <span class="php-quote">'Could not save the key'</span>
+</span><span id="204" class="l"><a href="#204">204: </a>                <span class="php-quote">'message'</span> =&gt; <span class="php-quote">'Could not save the key'</span>
 </span><span id="205" class="l"><a href="#205">205: </a>            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); <span class="php-comment">// INTERNAL_SERVER_ERROR (500) being the HTTP response code</span>
 </span><span id="206" class="l"><a href="#206">206: </a>        }
 </span><span id="207" class="l"><a href="#207">207: </a>    }
@@ -371,7 +371,7 @@
 	</div>
 </div>
 </div>
-<script src="resources/combined.js?6be0007a8e62523b72688a7820487464033d9c6d"></script>
+<script src="resources/combined.js?9b19127dc1973cca467c5196ef1ff03e486369ac"></script>
 <script src="elementlist.js?af98f5e580ce1d5af01f3e613339e1bf53dfaa8f"></script>
 </body>
 </html>
