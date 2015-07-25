@@ -1176,13 +1176,13 @@ abstract class REST_Controller extends CI_Controller {
             if (!empty($auth_override_class_method[$this->router->class]['*'])) // Check for class overrides
             {
                 // None auth override found, prepare nothing but send back a TRUE override flag
-                if ($auth_override_class_method[$this->router->class]['*'] == 'none')
+                if ($auth_override_class_method[$this->router->class]['*'] === 'none')
                 {
                     return TRUE;
                 }
 
                 // Basic auth override found, prepare basic
-                if ($auth_override_class_method[$this->router->class]['*'] == 'basic')
+                if ($auth_override_class_method[$this->router->class]['*'] === 'basic')
                 {
                     $this->_prepare_basic_auth();
 
@@ -1190,7 +1190,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Digest auth override found, prepare digest
-                if ($auth_override_class_method[$this->router->class]['*'] == 'digest')
+                if ($auth_override_class_method[$this->router->class]['*'] === 'digest')
                 {
                     $this->_prepare_digest_auth();
 
@@ -1198,7 +1198,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Whitelist auth override found, check client's ip against config whitelist
-                if ($auth_override_class_method[$this->router->class]['*'] == 'whitelist')
+                if ($auth_override_class_method[$this->router->class]['*'] === 'whitelist')
                 {
                     $this->_check_whitelist_auth();
 
@@ -1210,13 +1210,13 @@ abstract class REST_Controller extends CI_Controller {
             if (!empty($auth_override_class_method[$this->router->class][$this->router->method]))
             {
                 // None auth override found, prepare nothing but send back a TRUE override flag
-                if ($auth_override_class_method[$this->router->class][$this->router->method] == 'none')
+                if ($auth_override_class_method[$this->router->class][$this->router->method] === 'none')
                 {
                     return TRUE;
                 }
 
                 // Basic auth override found, prepare basic
-                if ($auth_override_class_method[$this->router->class][$this->router->method] == 'basic')
+                if ($auth_override_class_method[$this->router->class][$this->router->method] === 'basic')
                 {
                     $this->_prepare_basic_auth();
 
@@ -1224,7 +1224,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Digest auth override found, prepare digest
-                if ($auth_override_class_method[$this->router->class][$this->router->method] == 'digest')
+                if ($auth_override_class_method[$this->router->class][$this->router->method] === 'digest')
                 {
                     $this->_prepare_digest_auth();
 
@@ -1232,7 +1232,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Whitelist auth override found, check client's ip against config whitelist
-                if ($auth_override_class_method[$this->router->class][$this->router->method] == 'whitelist')
+                if ($auth_override_class_method[$this->router->class][$this->router->method] === 'whitelist')
                 {
                     $this->_check_whitelist_auth();
 
@@ -1251,13 +1251,13 @@ abstract class REST_Controller extends CI_Controller {
             if(!empty($auth_override_class_method_http[$this->router->class]['*'][$this->request->method]))
             {
                 // None auth override found, prepare nothing but send back a TRUE override flag
-                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] == 'none')
+                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'none')
                 {
                     return TRUE;
                 }
 
                 // Basic auth override found, prepare basic
-                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] == 'basic')
+                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'basic')
                 {
                     $this->_prepare_basic_auth();
 
@@ -1265,7 +1265,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Digest auth override found, prepare digest
-                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] == 'digest')
+                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'digest')
                 {
                     $this->_prepare_digest_auth();
 
@@ -1273,7 +1273,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Whitelist auth override found, check client's ip against config whitelist
-                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] == 'whitelist')
+                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'whitelist')
                 {
                     $this->_check_whitelist_auth();
 
@@ -1285,13 +1285,13 @@ abstract class REST_Controller extends CI_Controller {
             if(!empty($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method]))
             {
                 // None auth override found, prepare nothing but send back a TRUE override flag
-                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] == 'none')
+                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'none')
                 {
                     return TRUE;
                 }
 
                 // Basic auth override found, prepare basic
-                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] == 'basic')
+                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'basic')
                 {
                     $this->_prepare_basic_auth();
 
@@ -1299,7 +1299,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Digest auth override found, prepare digest
-                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] == 'digest')
+                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'digest')
                 {
                     $this->_prepare_digest_auth();
 
@@ -1307,7 +1307,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Whitelist auth override found, check client's ip against config whitelist
-                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] == 'whitelist')
+                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'whitelist')
                 {
                     $this->_check_whitelist_auth();
 
