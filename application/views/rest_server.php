@@ -112,11 +112,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>' . CI_VERSION . '</strong>' : '' ?></p>
 </div>
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-<script type="text/javascript">
-//<![CDATA[
-
+<script>
     $(function() {
 
         $("#ajax").on("click", function(evt) {
@@ -139,8 +137,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             });
         });
     });
-
-//]]>
 </script>
 
 </body>
