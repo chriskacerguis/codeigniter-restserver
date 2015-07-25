@@ -353,6 +353,25 @@ abstract class REST_Controller extends CI_Controller {
     ];
 
     /**
+     * Language strings for the response message
+     *
+     * @var array
+     */
+    protected $text_lang_strings = [
+        'text_rest_invalid_api_key' => 'Invalid API key %s', // %s is the REST API key
+        'text_rest_invalid_credentials' => 'Invalid credentials',
+        'text_rest_ip_denied' => 'IP denied' =>
+        'text_rest_ip_unauthorized' => 'IP unauthorized',
+        'text_rest_unauthorized' => 'Unauthorized',
+        'text_rest_ajax_only' => 'Only Ajax requests are only allowed',
+        'text_rest_api_key_unauthorized' => 'This API key does not have access to the requested controller',
+        'text_rest_api_key_permissions' => 'This API key does not have enough permissions',
+        'text_rest_api_key_time_limit' => 'This API key has reached the time limit for this method',
+        'text_rest_unknown_method' => 'Unknown method',
+        'text_rest_unsupported' => 'Unsupported protocol'
+    ];
+
+    /**
      * Extend this function to apply additional checking early on in the process
      *
      * @access protected
@@ -501,7 +520,7 @@ abstract class REST_Controller extends CI_Controller {
             // Display an error response
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'Only AJAX requests are acceptable'
+                    $this->config->item('rest_message_field_name') => $this->text_lang_strings['text_rest_ajax_only']
                 ], self::HTTP_NOT_ACCEPTABLE);
         }
 
@@ -563,7 +582,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'Unsupported protocol'
+                    $this->config->item('rest_message_field_name') => $this->text_lang_strings['text_rest_unsupported']
                 ], self::HTTP_FORBIDDEN);
         }
 
@@ -588,7 +607,7 @@ abstract class REST_Controller extends CI_Controller {
 
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'Invalid API Key ' . $this->rest->key
+                    $this->config->item('rest_message_field_name') => sprintf($this->text_lang_strings['text_rest_invalid_api_key'], $this->rest->key);
                 ], self::HTTP_FORBIDDEN);
         }
 
@@ -602,7 +621,7 @@ abstract class REST_Controller extends CI_Controller {
 
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'This API key does not have access to the requested controller.'
+                    $this->config->item('rest_message_field_name') => $this->text_lang_strings['text_rest_api_key_unauthorized']
                 ], self::HTTP_UNAUTHORIZED);
         }
 
@@ -611,7 +630,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'Unknown method.'
+                    $this->config->item('rest_message_field_name') => $this->text_lang_strings['text_rest_unknown_method']
                 ], self::HTTP_NOT_FOUND);
         }
 
@@ -621,7 +640,7 @@ abstract class REST_Controller extends CI_Controller {
             // Check the limit
             if ($this->config->item('rest_enable_limits') && $this->_check_limit($controller_method) === FALSE)
             {
-                $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key has reached the time limit for this method.'];
+                $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->text_lang_strings['text_rest_api_key_time_limit']];
                 $this->response($response, self::HTTP_UNAUTHORIZED);
             }
 
@@ -638,7 +657,7 @@ abstract class REST_Controller extends CI_Controller {
             }
 
             // They don't have good enough perms
-            $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => 'This API key does not have enough permissions.'];
+            $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->text_lang_strings['text_rest_api_key_permissions']];
             $authorized || $this->response($response, self::HTTP_UNAUTHORIZED);
         }
 
@@ -1844,7 +1863,7 @@ abstract class REST_Controller extends CI_Controller {
             // Display an error response
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'Not Authorized'
+                    $this->config->item('rest_message_field_name') => $this->text_lang_strings['text_rest_unauthorized']
                 ], self::HTTP_UNAUTHORIZED);
         }
     }
@@ -1941,8 +1960,8 @@ abstract class REST_Controller extends CI_Controller {
         {
             // Display an error response
             $this->response([
-                    $this->config->item('rest_status_field_name') => 0,
-                    $this->config->item('rest_message_field_name') => 'Invalid credentials'
+                    $this->config->item('rest_status_field_name') => FALSE,
+                    $this->config->item('rest_message_field_name') => $this->text_lang_strings['text_rest_invalid_credentials']
                 ], self::HTTP_UNAUTHORIZED);
         }
     }
@@ -1964,7 +1983,7 @@ abstract class REST_Controller extends CI_Controller {
             // Display an error response
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'IP Denied'
+                    $this->config->item('rest_message_field_name') => $this->text_lang_strings['text_rest_ip_denied']
                 ], self::HTTP_UNAUTHORIZED);
         }
     }
@@ -1992,7 +2011,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => 'IP not authorized'
+                    $this->config->item('rest_message_field_name') => $this->text_lang_strings['text_rest_ip_unauthorized']
                 ], self::HTTP_UNAUTHORIZED);
         }
     }
@@ -2026,7 +2045,7 @@ abstract class REST_Controller extends CI_Controller {
         // Display an error response
         $this->response([
                 $this->config->item('rest_status_field_name') => FALSE,
-                $this->config->item('rest_message_field_name') => 'Not authorized'
+                $this->config->item('rest_message_field_name') => $this->text_lang_strings['text_rest_unauthorized']
             ], self::HTTP_UNAUTHORIZED);
     }
 
