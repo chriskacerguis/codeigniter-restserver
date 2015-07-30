@@ -352,7 +352,7 @@ $config['rest_key_name'] = 'X-API-KEY';
 |       `time` INT(11) NOT NULL,
 |       `rtime` FLOAT DEFAULT NULL,
 |       `authorized` VARCHAR(1) NOT NULL,
-|       `response_code` SMALLINT(3) NOT NULL,
+|       `response_code` smallint(3) DEFAULT '0',
 |       PRIMARY KEY (`id`)
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
