@@ -16,6 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         margin: 40px;
         font: 16px/20px normal Helvetica, Arial, sans-serif;
         color: #4F5155;
+        word-wrap: break-word;
     }
 
     a {
