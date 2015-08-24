@@ -12,6 +12,24 @@ _Note: for 1.7.x support download v2.2 from Downloads tab_
 
 ## Installation
 
+### Using Composer (Recommended)
+
+Within your project folder simply run `composer require chriskacerguis/codeigniter-restserver` **(recommended)** or add/update the following to your projects composer.json file (Update the version to the correct release at time)
+
+```
+	"require": {
+		"chriskacerguis/codeigniter-restserver": "2.7.*"
+	},
+```
+
+Update your `application/config/autoload.php` file to load the package correctly e.g: `$autoload['packages'] = array(APPPATH.'vendor/chriskacerguis/codeigniter-restserver/application');`
+
+If you wish to override the default configuration, copy the **rest.php** file from **vendor/chriskacerguis/codeigniter-restserver/application/config** in your application's configuration directory.
+
+**NOTE:** You do not require to do a `require_once` of the **libraries/REST_Controller.php** file like you do in the Manual install
+
+### Manual Install
+
 Drag and drop the **application/libraries/Format.php** and **application/libraries/REST_Controller.php** files into your application's directories. To use `require_once` it at the top of your controllers to load it into the scope. Additionally, copy the **rest.php** file from **application/config** in your application's configuration directory.
 
 ## Handling Requests
