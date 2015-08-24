@@ -5,4 +5,9 @@
     "require": {
         "php": ">=5.4"
     }
+    "autoload": {
+        "classmap": [
+			"application/libraries"
+		]
+    }
 }
