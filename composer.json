@@ -1,0 +1,8 @@
+{
+    "description" : "A fully RESTful server implementation for CodeIgniter using one library, one config file and one controller",
+    "name" : "chriskacerguis/codeigniter-restserver",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.4"
+    }
+}
