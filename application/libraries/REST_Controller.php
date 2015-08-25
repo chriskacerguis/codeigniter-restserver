@@ -1028,21 +1028,25 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _log_request($authorized = FALSE)
     {
+
+        $iID = $this->rest->db->count_all($this->config->item('rest_logs_table')); //Gets last ID because not all databases support IDENTITY columns (Like Oracle)
+
         // Insert the request into the log table
         $is_inserted = $this->rest->db
             ->insert(
                 $this->config->item('rest_logs_table'), [
-                'uri' => $this->uri->uri_string(),
-                'method' => $this->request->method,
-                'params' => $this->_args ? ($this->config->item('rest_logs_json_params') === TRUE ? json_encode($this->_args) : serialize($this->_args)) : NULL,
-                'api_key' => isset($this->rest->key) ? $this->rest->key : '',
-                'ip_address' => $this->input->ip_address(),
-                'time' => now(), // Used to be: function_exists('now') ? now() : time()
-                'authorized' => $authorized
+                'ID' => $iID,
+                'URI' => $this->uri->uri_string(),
+                'METHOD' => $this->request->method,
+                'PARAMS' => $this->_args ? ($this->config->item('rest_logs_json_params') === TRUE ? json_encode($this->_args) : serialize($this->_args)) : NULL,
+                'API_KEY' => isset($this->rest->key) ? $this->rest->key : '',
+                'IP_ADDRESS' => $this->input->ip_address(),
+                'TIME' => function_exists('now') ? now() : time(), // Some PHP versions still don't implement this one
+                'AUTHORIZED' => $authorized
             ]);
 
         // Get the last insert id to update at a later stage of the request
-        $this->_insert_id = $this->rest->db->insert_id();
+        $this->_insert_id = $iID;
 
         return $is_inserted;
     }
@@ -2049,11 +2053,11 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _log_access_time()
     {
-        $payload['rtime'] = $this->_end_rtime - $this->_start_rtime;
+        $payload['RTIME'] = $this->_end_rtime - $this->_start_rtime;
 
         return $this->rest->db->update(
                 $this->config->item('rest_logs_table'), $payload, [
-                'id' => $this->_insert_id
+                'ID' => $this->_insert_id
             ]);
     }
 
@@ -2067,11 +2071,12 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _log_response_code($http_code)
     {
-        $payload['response_code'] = $http_code;
+        $payload['RESPONSE_CODE'] = $http_code;
+        
 
         return $this->rest->db->update(
             $this->config->item('rest_logs_table'), $payload, [
-            'id' => $this->_insert_id
+            'ID' => $this->_insert_id
         ]);
     }
 
