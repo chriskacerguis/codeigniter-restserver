@@ -1028,7 +1028,6 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _log_request($authorized = FALSE)
     {
-        
         $insert_id = $this->rest->db
             ->select_max('ID','insert_id')
             ->get($this->config
