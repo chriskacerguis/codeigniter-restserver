@@ -2106,5 +2106,24 @@ abstract class REST_Controller extends CI_Controller {
             ->get($this->config->item('rest_access_table'))
             ->num_rows() > 0;
     }
+    
+        /**
+     * Check if the requiered paramaters are send to the rest call
+     * 
+     * $params array of parameter names that are required
+     */
+    function verify_required_params($params){
+        
+        foreach ($params as $param){
+            if(!$this->post($param)){
+            $this->response(
+                    array(
+                    "error"=>TRUE,
+                    "message"=>"$param value not set!"
+                ),400);
+        }
+        }
+        
+    }
 
 }
