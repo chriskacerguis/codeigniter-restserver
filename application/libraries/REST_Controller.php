@@ -1028,14 +1028,17 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _log_request($authorized = FALSE)
     {
-
-        $iID = $this->rest->db->count_all($this->config->item('rest_logs_table')); //Gets last ID because not all databases support IDENTITY columns (Like Oracle)
-
+        
+        $this->rest->db->select_max("ID","insert_id"); //Gets last ID because not all databases support IDENTITY columns (Like Oracle)
+        $insert_id = $this->rest->db->get($this->config->item('rest_logs_table'));
+        $insert_id = $insert_id->row(); //gets the result array
+        $insert_id = (count($insert_id)>0) ? $insert_id->insert_id+1 : 1; //if there's no rows in the table there'll be a null result then we set the first id to be 1, otherwise it'll be the greatest one plus 1
+        
         // Insert the request into the log table
         $is_inserted = $this->rest->db
             ->insert(
                 $this->config->item('rest_logs_table'), [
-                'ID' => $iID,
+                'ID' => $insert_id,
                 'URI' => $this->uri->uri_string(),
                 'METHOD' => $this->request->method,
                 'PARAMS' => $this->_args ? ($this->config->item('rest_logs_json_params') === TRUE ? json_encode($this->_args) : serialize($this->_args)) : NULL,
@@ -1046,7 +1049,7 @@ abstract class REST_Controller extends CI_Controller {
             ]);
 
         // Get the last insert id to update at a later stage of the request
-        $this->_insert_id = $iID;
+        $this->_insert_id = $insert_id;
 
         return $is_inserted;
     }
