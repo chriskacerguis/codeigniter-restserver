@@ -162,7 +162,7 @@
                 // Cache the DOM and bind event(s).
                 cacheDom();
                 bind();
-            },
+            }
         };
     })(jQuery, window);
 
