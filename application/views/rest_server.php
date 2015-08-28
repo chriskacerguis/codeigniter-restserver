@@ -118,30 +118,58 @@
 <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 
 <script>
-    $(function() {
+    // Basic app module using an IIFE as a way of namespacing.
+    var App = (function ($, window) {
+        // Fields
 
-        $('#ajax').on('click', function (event) {
+        // Cache the jQuery selector.
+        var $ajax = null;
 
-            event.preventDefault();
+        // Methods (private)
 
+        // On an Ajax request.
+        function ajaxEvent($this) {
             $.ajax({
-
-                // URL from the link that was clicked on.
-                url: $(this).attr('href')
-
+                // URL from the link that was 'clicked' on.
+                url: $this.attr('href')
             }).done(function (data) {
-
-                // The 'data' parameter is an array of objects that can be looped over.
-
-                alert(JSON.stringify(data));
-
+                // The 'data' parameter is an array of objects that can be iterated over.
+                window.alert(JSON.stringify(data));
             }).fail(function () {
-
-                alert('Oh no! A problem with the Ajax request!');
-
+                window.alert('Oh no! A problem with the Ajax request!');
             });
-        });
+        }
 
+        // Bind events.
+        function bind() {
+            // Namespace the 'click' event.
+            $ajax.on('click.app.module', function (event) {
+                event.preventDefault();
+
+                // Pass this to the Ajax event function.
+                ajaxEvent($(this));
+            });
+        }
+
+        // Cache the DOM node(s).
+        function cacheDom() {
+            $ajax = $('#ajax');
+        }
+
+        // Public API.
+        return {
+            init: function () {
+                // Cache the DOM and bind event(s).
+                cacheDom();
+                bind();
+            },
+        };
+    })(jQuery, window);
+
+    // DOM ready event.
+    $(function() {
+        // Initialise the App module.
+        App.init();
     });
 </script>
 
