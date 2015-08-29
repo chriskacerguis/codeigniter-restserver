@@ -118,58 +118,69 @@
 <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 
 <script>
-    // Basic app module using an IIFE as a way of namespacing.
-    var App = (function ($, window) {
+    // Create an 'App' namespace
+    var App = App || {};
+
+    // Basic rest module using an IIFE as a way of enclosing private variables
+    App.rest = (function ($, window) {
         // Fields
 
-        // Cache the jQuery selector.
+        // Cache the jQuery selector
         var $ajax = null;
 
         // Methods (private)
 
-        // On an Ajax request.
-        function ajaxEvent($this) {
-            $.ajax({
-                // URL from the link that was 'clicked' on.
-                url: $this.attr('href')
-            }).done(function (data) {
-                // The 'data' parameter is an array of objects that can be iterated over.
-                window.alert(JSON.stringify(data));
-            }).fail(function () {
-                window.alert('Oh no! A problem with the Ajax request!');
-            });
+        // Called on Ajax done
+        function ajaxDone(data) {
+            // The 'data' parameter is an array of objects that can be iterated over
+            window.alert(JSON.stringify(data, null, 2));
         }
 
-        // Bind events.
+        // Called on Ajax fail
+        function ajaxFail() {
+            window.alert('Oh no! A problem with the Ajax request!');
+        }
+
+        // On Ajax request
+        function ajaxEvent($this) {
+            $.ajax({
+                // URL from the link that was 'clicked' on
+                url: $this.attr('href')
+            })
+            .done(ajaxDone)
+            .fail(ajaxFail);
+        }
+
+        // Bind event(s)
         function bind() {
-            // Namespace the 'click' event.
-            $ajax.on('click.app.module', function (event) {
+            // Namespace the 'click' event
+            $ajax.on('click.app.rest.module', function (event) {
                 event.preventDefault();
 
-                // Pass this to the Ajax event function.
+                // Pass this to the Ajax event function
                 ajaxEvent($(this));
             });
         }
 
-        // Cache the DOM node(s).
+        // Cache the DOM node(s)
         function cacheDom() {
             $ajax = $('#ajax');
         }
 
-        // Public API.
+        // Public API
         return {
             init: function () {
-                // Cache the DOM and bind event(s).
+                // Cache the DOM and bind event(s)
                 cacheDom();
                 bind();
             }
         };
     })(jQuery, window);
 
-    // DOM ready event.
+    // DOM ready event
     $(function() {
-        // Initialise the App module.
-        App.init();
+        // Initialise the App module
+        App.rest.init();
     });
 </script>
 
