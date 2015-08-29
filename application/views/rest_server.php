@@ -126,7 +126,7 @@
         // Fields
 
         // Cache the jQuery selector
-        var $ajax = null;
+        var $_ajax = null;
 
         // Methods (private)
 
@@ -144,17 +144,17 @@
         // On Ajax request
         function ajaxEvent($this) {
             $.ajax({
-                // URL from the link that was 'clicked' on
-                url: $this.attr('href')
-            })
-            .done(ajaxDone)
-            .fail(ajaxFail);
+                    // URL from the link that was 'clicked' on
+                    url: $this.attr('href')
+                })
+                .done(ajaxDone)
+                .fail(ajaxFail);
         }
 
         // Bind event(s)
         function bind() {
             // Namespace the 'click' event
-            $ajax.on('click.app.rest.module', function (event) {
+            $_ajax.on('click.app.rest.module', function (event) {
                 event.preventDefault();
 
                 // Pass this to the Ajax event function
@@ -164,7 +164,7 @@
 
         // Cache the DOM node(s)
         function cacheDom() {
-            $ajax = $('#ajax');
+            $_ajax = $('#ajax');
         }
 
         // Public API
@@ -178,10 +178,11 @@
     })(jQuery, window);
 
     // DOM ready event
-    $(function() {
+    $(function () {
         // Initialise the App module
         App.rest.init();
     });
+
 </script>
 
 </body>
