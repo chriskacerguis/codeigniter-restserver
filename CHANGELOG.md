@@ -1,6 +1,17 @@
 Changelog:
 ===========
 
+### 2.7.2
+
+* Added $this->query() in which query parameters can now be obtained regardless of whether a GET request is sent or not
+* Added doc comments added to functions
+* Added HTTP status constants e.g. REST_Controller::HTTP_OK
+* Fixed numerous bug fixes
+* Updated documentation
+* Updated performance increase
+* Updated many functions by re-writing (thanks @softwarespot)
+* Updates examples (thanks @ivantcholakov and @lagaisse)
+
 ### 2.7.0
 
 * Added Blacklist IP option
