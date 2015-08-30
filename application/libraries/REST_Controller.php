@@ -753,7 +753,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             // Display the data and exit execution
             $this->output->_display();
-            return;
+            exit;
         }
 
         // Otherwise dump the output automatically
