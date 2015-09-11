@@ -1037,7 +1037,7 @@ abstract class REST_Controller extends CI_Controller {
                 'params' => $this->_args ? ($this->config->item('rest_logs_json_params') === TRUE ? json_encode($this->_args) : serialize($this->_args)) : NULL,
                 'api_key' => isset($this->rest->key) ? $this->rest->key : '',
                 'ip_address' => $this->input->ip_address(),
-                'time' => now(), // Used to be: function_exists('now') ? now() : time()
+                'time' => time(),
                 'authorized' => $authorized
             ]);
 
