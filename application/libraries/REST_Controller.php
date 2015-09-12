@@ -381,13 +381,13 @@ abstract class REST_Controller extends CI_Controller {
         if (is_php('5.4') === FALSE)
         {
             // CodeIgniter 3 is recommended for v5.4 or above
-            exit('Using PHP v' . PHP_VERSION . ', though PHP v5.4 or greater is required');
+            throw new Exception('Using PHP v' . PHP_VERSION . ', though PHP v5.4 or greater is required');
         }
 
         // Check to see if this is CI 3.x
         if (explode('.', CI_VERSION, 2)[0] < 3)
         {
-            exit('REST Server requires CodeIgniter 3.x');
+            throw new Exception('REST Server requires CodeIgniter 3.x');
         }
 
         // Set the default value of global xss filtering. Same approach as CodeIgniter 3
