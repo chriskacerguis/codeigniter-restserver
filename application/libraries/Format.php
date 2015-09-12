@@ -56,7 +56,7 @@ class Format {
      *
      * @var object
      */
-    private $_ci;
+    private $_CI;
 
     /**
      * Data to parse
@@ -83,10 +83,10 @@ class Format {
     public function __construct($data = NULL, $from_type = NULL)
     {
         // Get the CodeIgniter reference
-        $this->_ci = &get_instance();
+        $this->_CI = &get_instance();
 
         // Load the inflector helper
-        $this->_ci->load->helper('inflector');
+        $this->_CI->load->helper('inflector');
 
         // If the provided data is already formatted we should probably convert it to an array
         if ($from_type !== NULL)
@@ -283,20 +283,20 @@ class Format {
         }
 
         // Load the table library
-        $this->_ci->load->library('table');
+        $this->_CI->load->library('table');
 
-        $this->_ci->table->set_heading($headings);
+        $this->_CI->table->set_heading($headings);
 
         foreach ($data as $row)
         {
-            // Suppressing the "array to string conversion" notice.
-            // Keep the "evil" @ here.
-            $row = @ array_map('strval', $row);
+            // Suppressing the "array to string conversion" notice
+            // Keep the "evil" @ here
+            $row = @array_map('strval', $row);
 
-            $this->_ci->table->add_row($row);
+            $this->_CI->table->add_row($row);
         }
 
-        return $this->_ci->table->generate();
+        return $this->_CI->table->generate();
     }
 
     /**
@@ -405,7 +405,7 @@ class Format {
         }
 
         // Get the callback parameter (if set)
-        $callback = $this->_ci->input->get('callback');
+        $callback = $this->_CI->input->get('callback');
 
         if (empty($callback) === TRUE)
         {
