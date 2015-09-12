@@ -150,8 +150,8 @@ abstract class REST_Controller extends CI_Controller {
     const HTTP_NETWORK_AUTHENTICATION_REQUIRED = 511;
 
     /**
-     * This defines the rest format.
-     * Must be overridden it in a controller so that it is set.
+     * This defines the rest format
+     * Must be overridden it in a controller so that it is set
      *
      * @var string|NULL
      */
@@ -269,7 +269,7 @@ abstract class REST_Controller extends CI_Controller {
     protected $_args = [];
 
     /**
-     * If the request is allowed based on the API key provided.
+     * If the request is allowed based on the API key provided
      *
      * @var bool
      */
@@ -323,7 +323,7 @@ abstract class REST_Controller extends CI_Controller {
      * Enable XSS flag
      * Determines whether the XSS filter is always active when
      * GET, OPTIONS, HEAD, POST, PUT, DELETE and PATCH data is encountered.
-     * Set automatically based on config setting.
+     * Set automatically based on config setting
      *
      * @var bool
      */
@@ -560,11 +560,11 @@ abstract class REST_Controller extends CI_Controller {
     /**
      * Requests are not made to methods directly, the request will be for
      * an "object". This simply maps the object and method to the correct
-     * Controller method.
+     * Controller method
      *
      * @access public
      * @param  string $object_called
-     * @param  array $arguments The arguments passed to the controller method.
+     * @param  array $arguments The arguments passed to the controller method
      */
     public function _remap($object_called, $arguments)
     {
@@ -588,7 +588,7 @@ abstract class REST_Controller extends CI_Controller {
         // Use keys for this method?
         $use_key = !(isset($this->methods[$controller_method]['key']) && $this->methods[$controller_method]['key'] === FALSE);
 
-        // They provided a key, but it wasn't valid, so get them out of here.
+        // They provided a key, but it wasn't valid, so get them out of here
         if ($this->config->item('rest_enable_keys') && $use_key && $this->_allow === FALSE)
         {
             if ($this->config->item('rest_enable_logging') && $log_method)
@@ -602,7 +602,7 @@ abstract class REST_Controller extends CI_Controller {
                 ], self::HTTP_FORBIDDEN);
         }
 
-        // Check to see if this key has access to the requested controller.
+        // Check to see if this key has access to the requested controller
         if ($this->config->item('rest_enable_keys') && $use_key && empty($this->rest->key) === FALSE && $this->_check_access() === FALSE)
         {
             if ($this->config->item('rest_enable_logging') && $log_method)
@@ -713,7 +713,7 @@ abstract class REST_Controller extends CI_Controller {
                 $this->output->set_content_type($this->_supported_formats[$this->response->format], strtolower($this->config->item('charset')));
                 $output = $this->format->factory($data)->{'to_' . $this->response->format}();
 
-                // An array must be parsed as a string, so as not to cause an array to string error.
+                // An array must be parsed as a string, so as not to cause an array to string error
                 // Json is the most appropriate form for such a datatype
                 if ($this->response->format === 'array')
                 {
@@ -763,7 +763,7 @@ abstract class REST_Controller extends CI_Controller {
      * Takes mixed data and optionally a status code, then creates the response
      * within the buffers of the Output class. The response is sent to the client
      * lately by the framework, after the current controller's method termination.
-     * All the hooks after the controller's method termination are executable.
+     * All the hooks after the controller's method termination are executable
      *
      * @access public
      * @param array|NULL $data Data to output to the user
@@ -904,7 +904,7 @@ abstract class REST_Controller extends CI_Controller {
 
         if (empty($method))
         {
-            // Get the request method as a lowercase string.
+            // Get the request method as a lowercase string
             $method = $this->input->method();
         }
 
@@ -948,7 +948,7 @@ abstract class REST_Controller extends CI_Controller {
 
             /*
              * If "is private key" is enabled, compare the ip address with the list
-             * of valid ip addresses stored in the database.
+             * of valid ip addresses stored in the database
              */
             if (empty($row->is_private_key) === FALSE)
             {
@@ -973,7 +973,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
                 else
                 {
-                    // There should be at least one IP address for this private key.
+                    // There should be at least one IP address for this private key
                     return FALSE;
                 }
             }
@@ -1617,7 +1617,7 @@ abstract class REST_Controller extends CI_Controller {
 
     /**
      * Sanitizes data so that Cross Site Scripting Hacks can be
-     * prevented.
+     * prevented
      *
      * @access protected
      * @param  string $value Input data
