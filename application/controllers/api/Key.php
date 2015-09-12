@@ -213,7 +213,7 @@ class Key extends REST_Controller {
         do
         {
             // Generate a random salt
-            $salt = $this->security->get_random_bytes(64);
+            $salt = base_convert(bin2hex($this->security->get_random_bytes(64)), 16, 36);
 
             // If an error occurred, then fall back to the previous method
             if ($salt === FALSE)
