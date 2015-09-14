@@ -1514,10 +1514,10 @@ abstract class REST_Controller extends CI_Controller {
     {
         if ($key === NULL)
         {
-            return $this->head_args;
+            return $this->_head_args;
         }
 
-        return isset($this->head_args[$key]) ? $this->_xss_clean($this->head_args[$key], $xss_clean) : NULL;
+        return isset($this->_head_args[$key]) ? $this->_xss_clean($this->_head_args[$key], $xss_clean) : NULL;
     }
 
     /**
