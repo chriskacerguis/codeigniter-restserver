@@ -213,13 +213,6 @@ abstract class REST_Controller extends CI_Controller {
     protected $_post_args = [];
 
     /**
-     * The insert_id of the log entry (if we have one)
-     *
-     * @var string
-     */
-    protected $_insert_id = '';
-
-    /**
      * The arguments for the PUT request method
      *
      * @var array
@@ -267,6 +260,13 @@ abstract class REST_Controller extends CI_Controller {
      * @var array
      */
     protected $_args = [];
+
+    /**
+     * The insert_id of the log entry (if we have one)
+     *
+     * @var string
+     */
+    protected $_insert_id = '';
 
     /**
      * If the request is allowed based on the API key provided
