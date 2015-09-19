@@ -1280,7 +1280,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Session auth override found, check session
-                if ($auth_override_class_method[$this->router->class]['*'][$this->request->method] === 'session')
+                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'session')
                 {
                     $this->_check_php_session();
 
@@ -1322,7 +1322,7 @@ abstract class REST_Controller extends CI_Controller {
                 }
 
                 // Session auth override found, check session
-                if ($auth_override_class_method[$this->router->class][$this->router->method][$this->request->method] === 'session')
+                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'session')
                 {
                     $this->_check_php_session();
 
