@@ -1188,6 +1188,14 @@ abstract class REST_Controller extends CI_Controller {
                     return TRUE;
                 }
 
+                // Session auth override found, check session
+                if ($auth_override_class_method[$this->router->class]['*'] === 'session')
+                {
+                    $this->_check_php_session();
+
+                    return TRUE;
+                }
+
                 // Whitelist auth override found, check client's ip against config whitelist
                 if ($auth_override_class_method[$this->router->class]['*'] === 'whitelist')
                 {
@@ -1218,6 +1226,14 @@ abstract class REST_Controller extends CI_Controller {
                 if ($auth_override_class_method[$this->router->class][$this->router->method] === 'digest')
                 {
                     $this->_prepare_digest_auth();
+
+                    return TRUE;
+                }
+
+                // Session auth override found, check session
+                if ($auth_override_class_method[$this->router->class][$this->router->method] === 'session')
+                {
+                    $this->_check_php_session();
 
                     return TRUE;
                 }
@@ -1263,6 +1279,14 @@ abstract class REST_Controller extends CI_Controller {
                     return TRUE;
                 }
 
+                // Session auth override found, check session
+                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'session')
+                {
+                    $this->_check_php_session();
+
+                    return TRUE;
+                }
+
                 // Whitelist auth override found, check client's ip against config whitelist
                 if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'whitelist')
                 {
@@ -1293,6 +1317,14 @@ abstract class REST_Controller extends CI_Controller {
                 if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'digest')
                 {
                     $this->_prepare_digest_auth();
+
+                    return TRUE;
+                }
+
+                // Session auth override found, check session
+                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'session')
+                {
+                    $this->_check_php_session();
 
                     return TRUE;
                 }
