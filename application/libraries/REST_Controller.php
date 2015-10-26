@@ -1461,30 +1461,7 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _parse_query()
     {
-        // Declare a variable that will hold the REQUEST_URI
-        $request_uri = NULL;
-
-        // If using the commandline version
-        if (is_cli())
-        {
-            $args = $this->input->server('argv');
-            unset($args[0]);
-
-            // Combine the arguments using '/' as the delimiter
-            $request_uri = '/' . implode('/', $args) . '/';
-
-            // Set the following server variables (perhaps not required anymore?)
-            $_SERVER['REQUEST_URI'] = $request_uri;
-            $_SERVER['PATH_INFO'] = $request_uri;
-            $_SERVER['QUERY_STRING'] = $request_uri;
-        }
-        else
-        {
-            $request_uri = $this->input->server('REQUEST_URI');
-        }
-
-        // Parse the query parameters from the query string
-        parse_str(parse_url($request_uri, PHP_URL_QUERY), $this->_query_args);
+        $this->_query_args = $this->input->get();
     }
 
     // INPUT FUNCTION --------------------------------------------------------------
