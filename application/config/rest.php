@@ -14,7 +14,7 @@ $config['force_https'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
-| REST Format
+| REST Output Format
 |--------------------------------------------------------------------------
 |
 | The default format of the response
@@ -30,6 +30,29 @@ $config['force_https'] = FALSE;
 |
 */
 $config['rest_default_format'] = 'json';
+
+/*
+|--------------------------------------------------------------------------
+| REST Supported Output Formats
+|--------------------------------------------------------------------------
+|
+| The following setting contains a list of the supported/allowed formats.
+| You may remove those formats that you don't want to use.
+| If the default format $config['rest_default_format'] is missing within
+| $config['rest_supported_formats'], it will be added silently during
+| REST_Controller initialization.
+|
+*/
+$config['rest_supported_formats'] = [
+    'json',
+    'array',
+    'csv',
+    'html',
+    'jsonp',
+    'php',
+    'serialized',
+    'xml',
+];
 
 /*
 |--------------------------------------------------------------------------

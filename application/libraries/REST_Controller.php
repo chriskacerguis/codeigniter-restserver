@@ -406,6 +406,30 @@ abstract class REST_Controller extends CI_Controller {
         // At present the library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter (no citation)
         $this->load->library('format');
 
+        // Determine supported output formats from configiguration.
+        $supported_formats = $this->config->item('rest_supported_formats');
+
+        // Validate the configuration setting output formats
+        if (empty($supported_formats))
+        {
+            $supported_formats = [];
+        }
+
+        if (!is_array($supported_formats))
+        {
+            $supported_formats = [$supported_formats];
+        }
+
+        // Add silently the default output format if it is missing.
+        $default_format = $this->_get_default_output_format();
+        if (!in_array($default_format, $supported_formats))
+        {
+            $supported_formats[] = $default_format;
+        }
+
+        // Now update $this->_supported_formats
+        $this->_supported_formats = array_intersect_key($this->_supported_formats, array_flip($supported_formats));
+
         // Get the language
         $language = $this->config->item('rest_language');
         if ($language === NULL)
@@ -809,6 +833,20 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
+     * Gets the default format from the configuration. Fallbacks to 'json'.
+     * if the corresponding configuration option $config['rest_default_format']
+     * is missing or is empty.
+     *
+     * @access protected
+     * @return string The default supported input format
+     */
+    protected function _get_default_output_format()
+    {
+        $default_format = (string) $this->config->item('rest_default_format');
+        return $default_format === '' ? 'json' : $default_format;
+    }
+
+    /**
      * Detect which format should be used to output the data
      *
      * @access protected
@@ -876,7 +914,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Obtain the default format from the configuration
-        return $this->config->item('rest_default_format');
+        return $this->_get_default_output_format();
     }
 
     /**
