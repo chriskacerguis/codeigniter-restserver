@@ -126,56 +126,77 @@
         // Fields
 
         // Cache the jQuery selector
-        var $_ajax = null;
+        var _$ajax = null;
 
         // Methods (private)
 
-        // Called on Ajax done
-        function ajaxDone(data) {
+        /**
+         * Called on Ajax done
+         *
+         * @return {undefined}
+         */
+        function _ajaxDone(data) {
             // The 'data' parameter is an array of objects that can be iterated over
-            window.alert(JSON.stringify(data, null, 2));
+            window.alert(window.JSON.stringify(data, null, 2));
         }
 
-        // Called on Ajax fail
-        function ajaxFail() {
+        /**
+         * Called on Ajax fail
+         *
+         * @return {undefined}
+         */
+        function _ajaxFail() {
             window.alert('Oh no! A problem with the Ajax request!');
         }
 
-        // On Ajax request
-        function ajaxEvent($this) {
+        /**
+         * On Ajax request
+         *
+         * @param {HTMLElement} $this Current element selected
+         * @return {undefined}
+         */
+        function _ajaxEvent($this) {
             $.ajax({
                     // URL from the link that was 'clicked' on
                     url: $this.attr('href')
                 })
-                .done(ajaxDone)
-                .fail(ajaxFail);
+                .done(_ajaxDone)
+                .fail(_ajaxFail);
         }
 
-        // Bind event(s)
-        function bind() {
+        /**
+         * Bind events
+         *
+         * @return {undefined}
+         */
+        function _bindEvents() {
             // Namespace the 'click' event
-            $_ajax.on('click.app.rest.module', function (event) {
+            _$ajax.on('click.app.rest.module', function (event) {
                 event.preventDefault();
 
                 // Pass this to the Ajax event function
-                ajaxEvent($(this));
+                _ajaxEvent($(this));
             });
         }
 
-        // Cache the DOM node(s)
-        function cacheDom() {
-            $_ajax = $('#ajax');
+        /**
+         * Cache the DOM node(s)
+         *
+         * @return {undefined}
+         */
+        function _cacheDom() {
+            _$ajax = $('#ajax');
         }
 
         // Public API
         return {
             init: function () {
                 // Cache the DOM and bind event(s)
-                cacheDom();
-                bind();
+                _cacheDom();
+                _bindEvents();
             }
         };
-    })(window, jQuery);
+    })(window, window.jQuery);
 
     // DOM ready event
     $(function () {
