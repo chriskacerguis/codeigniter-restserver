@@ -29,6 +29,11 @@
 						Libraries					</a>
 
 						</li>
+				<li>
+					<a href="package-CodeIgniter.Rest.html">
+						Rest					</a>
+
+						</li>
 							</ul></li>
 				<li>
 					<a href="package-None.html">
@@ -44,8 +49,6 @@
 		<div id="elements">
 			<h3>Classes</h3>
 			<ul>
-				<li><a href="class-Example.html">Example</a></li>
-				<li><a href="class-Key.html">Key</a></li>
 				<li class="active"><a href="class-REST_Controller.html">REST_Controller</a></li>
 			</ul>
 
@@ -78,12 +81,6 @@
 <span>Class</span>			</li>
 		</ul>
 		<ul>
-			<li>
-				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
-			</li>
-			<li>
-				<a href="todo.html" title="Todo list"><span>Todo</span></a>
-			</li>
 		</ul>
 		<ul>
 		</ul>
@@ -94,9 +91,8 @@
 
 
 	<div class="description">
-	<p>CodeIgniter Rest Controller</p>
-
-<p>A fully RESTful server implementation for CodeIgniter using one library, one config file and one controller.</p>
+	<p>CodeIgniter Rest Controller
+A fully RESTful server implementation for CodeIgniter using one library, one config file and one controller.</p>
 	</div>
 
 	<dl class="tree">
@@ -138,10 +134,10 @@ CI_Controller
 				<b>Author:</b>
 				Phil Sturgeon, Chris Kacerguis<br>
 				<b>Version:</b>
-				3.0.0-pre<br>
+				3.0.0<br>
 				<b>Link:</b>
 				<a href="https://github.com/chriskacerguis/codeigniter-restserver">https://github.com/chriskacerguis/codeigniter-restserver</a><br>
-			<b>Located at</b> <a href="source-class-REST_Controller.html#3-1541" title="Go to source code">application/libraries/REST_Controller.php</a>
+			<b>Located at</b> <a href="source-class-REST_Controller.html#5-2110" title="Go to source code">libraries/REST_Controller.php</a>
 		<br>
 	</div>
 
@@ -161,14 +157,14 @@ CI_Controller
 
 		<td class="name"><div>
 		<a class="anchor" href="#_early_checks">#</a>
-		<code><a href="source-class-REST_Controller.html#183-189" title="Go to source code">early_checks</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#355-363" title="Go to source code">early_checks</a>( )</code>
 
 		<div class="description short">
-			<p>Developers can extend this class and add a check in here.</p>
+			<p>Extend this function to apply additional checking early on in the process</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Developers can extend this class and add a check in here.</p>
+			<p>Extend this function to apply additional checking early on in the process</p>
 
 
 
@@ -191,23 +187,25 @@ CI_Controller
 
 		<td class="name"><div>
 		<a class="anchor" href="#___construct">#</a>
-		<code><a href="source-class-REST_Controller.html#191-318" title="Go to source code">__construct</a>( <span> <var>$config</var> = <span class="php-quote">'rest'</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#365-539" title="Go to source code">__construct</a>( <span>string <var>$config</var> = <span class="php-quote">'rest'</span></span> )</code>
 
 		<div class="description short">
-			<p>Constructor function</p>
+			<p>Constructor for the REST API</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Constructor function</p>
+			<p>Constructor for the REST API</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$config</var></dt>
+					<dd><p>Configuration filename minus the file extension
+e.g: my_rest.php is passed as 'my_rest'</p></dd>
+				</dl></div>
 
 
 
-
-
-				<h4>Todo</h4>
-				<div class="list">
-						Document more please.<br>
-				</div>
 
 
 		</div>
@@ -225,14 +223,14 @@ CI_Controller
 
 		<td class="name"><div>
 		<a class="anchor" href="#___destruct">#</a>
-		<code><a href="source-class-REST_Controller.html#320-333" title="Go to source code">__destruct</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#541-558" title="Go to source code">__destruct</a>( )</code>
 
 		<div class="description short">
-			<p>Destructor function</p>
+			<p>Deconstructor</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Destructor function</p>
+			<p>Deconstructor</p>
 
 
 
@@ -259,16 +257,16 @@ CI_Controller
 
 		<td class="name"><div>
 		<a class="anchor" href="#__remap">#</a>
-		<code><a href="source-class-REST_Controller.html#335-420" title="Go to source code">_remap</a>( <span>string <var>$object_called</var></span>, <span>array <var>$arguments</var></span> )</code>
+		<code><a href="source-class-REST_Controller.html#560-677" title="Go to source code">_remap</a>( <span>string <var>$object_called</var></span>, <span>array <var>$arguments</var></span> )</code>
 
 		<div class="description short">
-			<p>Remap</p>
+			<p>Requests are not made to methods directly, the request will be for
+an "object". This simply maps the object and method to the correct
+Controller method.</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Remap</p>
-
-<p>Requests are not made to methods directly, the request will be for
+			<p>Requests are not made to methods directly, the request will be for
 an "object". This simply maps the object and method to the correct
 Controller method.</p>
 
@@ -279,45 +277,6 @@ Controller method.</p>
 					<dd></dd>
 					<dt><var>$arguments</var></dt>
 					<dd>The arguments passed to the controller method.</dd>
-				</dl></div>
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="_fire_method" id="__fire_method">
-
-		<td class="attributes"><code>
-			 protected 
-
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#__fire_method">#</a>
-		<code><a href="source-class-REST_Controller.html#422-433" title="Go to source code">_fire_method</a>( <span>array <var>$method</var></span>, <span>array <var>$args</var></span> )</code>
-
-		<div class="description short">
-			<p>Fire Method</p>
-		</div>
-
-		<div class="description detailed hidden">
-			<p>Fire Method</p>
-
-<p>Fires the designated controller method with the given arguments.</p>
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$method</var></dt>
-					<dd>The controller method to fire</dd>
-					<dt><var>$args</var></dt>
-					<dd>The arguments to pass to the controller method</dd>
 				</dl></div>
 
 
@@ -339,27 +298,25 @@ Controller method.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_response">#</a>
-		<code><a href="source-class-REST_Controller.html#435-514" title="Go to source code">response</a>( <span>array <var>$data</var> = <span class="php-keyword1">NULL</span></span>, <span>null|integer <var>$http_code</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean <var>$continue</var> = <span class="php-keyword1">FALSE</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#679-760" title="Go to source code">response</a>( <span>array|null <var>$data</var> = <span class="php-keyword1">NULL</span></span>, <span>integer|null <var>$http_code</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean <var>$continue</var> = <span class="php-keyword1">FALSE</span></span> )</code>
 
 		<div class="description short">
-			<p>Response</p>
+			<p>Takes mixed data and optionally a status code, then creates the response</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Response</p>
-
-<p>Takes pure data and optionally a status code, then creates the response.
-Set $continue to TRUE to flush the response to the client and continue running the script.</p>
+			<p>Takes mixed data and optionally a status code, then creates the response</p>
 
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
 					<dt><var>$data</var></dt>
-					<dd></dd>
+					<dd>Data to output to the user</dd>
 					<dt><var>$http_code</var></dt>
-					<dd></dd>
+					<dd>HTTP status code</dd>
 					<dt><var>$continue</var></dt>
-					<dd></dd>
+					<dd><p>TRUE to flush the response to the client and continue
+running the script; otherwise, exit</p></dd>
 				</dl></div>
 
 
@@ -369,10 +326,10 @@ Set $continue to TRUE to flush the response to the client and continue running t
 		</div>
 		</div></td>
 	</tr>
-	<tr data-order="_detect_ssl" id="__detect_ssl">
+	<tr data-order="set_response" id="_set_response">
 
 		<td class="attributes"><code>
-			 protected 
+			 public 
 
 			
 			
@@ -380,17 +337,30 @@ Set $continue to TRUE to flush the response to the client and continue running t
 		</td>
 
 		<td class="name"><div>
-		<a class="anchor" href="#__detect_ssl">#</a>
-		<code><a href="source-class-REST_Controller.html#521-526" title="Go to source code">_detect_ssl</a>( )</code>
+		<a class="anchor" href="#_set_response">#</a>
+		<code><a href="source-class-REST_Controller.html#762-775" title="Go to source code">set_response</a>( <span>array|null <var>$data</var> = <span class="php-keyword1">NULL</span></span>, <span>integer|null <var>$http_code</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
-			
+			<p>Takes mixed data and optionally a status code, then creates the response
+within the buffers of the Output class. The response is sent to the client
+lately by the framework, after the current controller's method termination.
+All the hooks after the controller's method termination are executable.</p>
 		</div>
 
 		<div class="description detailed hidden">
-			
+			<p>Takes mixed data and optionally a status code, then creates the response
+within the buffers of the Output class. The response is sent to the client
+lately by the framework, after the current controller's method termination.
+All the hooks after the controller's method termination are executable.</p>
 
 
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>Data to output to the user</dd>
+					<dt><var>$http_code</var></dt>
+					<dd>HTTP status code</dd>
+				</dl></div>
 
 
 
@@ -404,24 +374,28 @@ Set $continue to TRUE to flush the response to the client and continue running t
 		<td class="attributes"><code>
 			 protected 
 
-			
+			string|null
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__detect_input_format">#</a>
-		<code><a href="source-class-REST_Controller.html#534-550" title="Go to source code">_detect_input_format</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#777-809" title="Go to source code">_detect_input_format</a>( )</code>
 
 		<div class="description short">
-			
+			<p>Get the input format e.g. json or xml</p>
 		</div>
 
 		<div class="description detailed hidden">
-			
+			<p>Get the input format e.g. json or xml</p>
 
 
 
+				<h4>Returns</h4>
+				<div class="list">
+					string|null<br>Supported input format; otherwise, NULL
+				</div>
 
 
 
@@ -434,29 +408,27 @@ Set $continue to TRUE to flush the response to the client and continue running t
 		<td class="attributes"><code>
 			 protected 
 
-			string
+			mixed|null|string
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__detect_output_format">#</a>
-		<code><a href="source-class-REST_Controller.html#552-621" title="Go to source code">_detect_output_format</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#811-880" title="Go to source code">_detect_output_format</a>( )</code>
 
 		<div class="description short">
-			<p>Detect format</p>
+			<p>Detect which format should be used to output the data</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Detect format</p>
-
-<p>Detect which format should be used to output the data.</p>
+			<p>Detect which format should be used to output the data</p>
 
 
 
 				<h4>Returns</h4>
 				<div class="list">
-					string<br>The output format.
+					mixed|null|string<br>Output format
 				</div>
 
 
@@ -470,29 +442,27 @@ Set $continue to TRUE to flush the response to the client and continue running t
 		<td class="attributes"><code>
 			 protected 
 
-			string
+			string|null
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__detect_method">#</a>
-		<code><a href="source-class-REST_Controller.html#623-647" title="Go to source code">_detect_method</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#882-912" title="Go to source code">_detect_method</a>( )</code>
 
 		<div class="description short">
-			<p>Detect method</p>
+			<p>Get the HTTP request string e.g. get or post</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Detect method</p>
-
-<p>Detect which HTTP method is being used</p>
+			<p>Get the HTTP request string e.g. get or post</p>
 
 
 
 				<h4>Returns</h4>
 				<div class="list">
-					string
+					string|null<br>Supported request method as a lowercase string; otherwise, NULL if not supported
 				</div>
 
 
@@ -513,16 +483,14 @@ Set $continue to TRUE to flush the response to the client and continue running t
 
 		<td class="name"><div>
 		<a class="anchor" href="#__detect_api_key">#</a>
-		<code><a href="source-class-REST_Controller.html#649-714" title="Go to source code">_detect_api_key</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#914-986" title="Go to source code">_detect_api_key</a>( )</code>
 
 		<div class="description short">
-			<p>Detect API Key</p>
+			<p>See if the user has provided an API key</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Detect API Key</p>
-
-<p>See if the user has provided an API key</p>
+			<p>See if the user has provided an API key</p>
 
 
 
@@ -542,29 +510,27 @@ Set $continue to TRUE to flush the response to the client and continue running t
 		<td class="attributes"><code>
 			 protected 
 
-			null|string
+			string|null
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__detect_lang">#</a>
-		<code><a href="source-class-REST_Controller.html#716-745" title="Go to source code">_detect_lang</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#988-1020" title="Go to source code">_detect_lang</a>( )</code>
 
 		<div class="description short">
-			<p>Detect language(s)</p>
+			<p>Preferred return language</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Detect language(s)</p>
-
-<p>What language do they want it in?</p>
+			<p>Preferred return language</p>
 
 
 
 				<h4>Returns</h4>
 				<div class="list">
-					null|string<br>The language code.
+					string|null<br>The language code
 				</div>
 
 
@@ -578,34 +544,32 @@ Set $continue to TRUE to flush the response to the client and continue running t
 		<td class="attributes"><code>
 			 protected 
 
-			object
+			boolean
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__log_request">#</a>
-		<code><a href="source-class-REST_Controller.html#747-770" title="Go to source code">_log_request</a>( <span>boolean <var>$authorized</var> = <span class="php-keyword1">FALSE</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1022-1048" title="Go to source code">_log_request</a>( <span>boolean <var>$authorized</var> = <span class="php-keyword1">FALSE</span></span> )</code>
 
 		<div class="description short">
-			<p>Log request</p>
+			<p>Add the request to the log table</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Log request</p>
-
-<p>Record the entry for awesomeness purposes</p>
+			<p>Add the request to the log table</p>
 
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
 					<dt><var>$authorized</var></dt>
-					<dd></dd>
+					<dd>TRUE the user is authorized; otherwise, FALSE</dd>
 				</dl></div>
 
 				<h4>Returns</h4>
 				<div class="list">
-					object
+					boolean<br>TRUE the data was inserted; otherwise, FALSE
 				</div>
 
 
@@ -626,27 +590,25 @@ Set $continue to TRUE to flush the response to the client and continue running t
 
 		<td class="name"><div>
 		<a class="anchor" href="#__check_limit">#</a>
-		<code><a href="source-class-REST_Controller.html#772-835" title="Go to source code">_check_limit</a>( <span>string <var>$controller_method</var></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1050-1150" title="Go to source code">_check_limit</a>( <span>string <var>$controller_method</var></span> )</code>
 
 		<div class="description short">
-			<p>Limiting requests</p>
+			<p>Check if the requests to a controller method exceed a limit</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Limiting requests</p>
-
-<p>Check if the requests are coming in a tad too fast.</p>
+			<p>Check if the requests to a controller method exceed a limit</p>
 
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
 					<dt><var>$controller_method</var></dt>
-					<dd>The method being called.</dd>
+					<dd>The method being called</dd>
 				</dl></div>
 
 				<h4>Returns</h4>
 				<div class="list">
-					boolean
+					boolean<br>TRUE the call limit is below the threshold; otherwise, FALSE
 				</div>
 
 
@@ -667,17 +629,14 @@ Set $continue to TRUE to flush the response to the client and continue running t
 
 		<td class="name"><div>
 		<a class="anchor" href="#__auth_override_check">#</a>
-		<code><a href="source-class-REST_Controller.html#837-920" title="Go to source code">_auth_override_check</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1152-1310" title="Go to source code">_auth_override_check</a>( )</code>
 
 		<div class="description short">
-			<p>Auth override check</p>
+			<p>Check if there is a specific auth type set for the current class/method/HTTP-method being called</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Auth override check</p>
-
-<p>Check if there is a specific auth type set for the current class/method
-being called.</p>
+			<p>Check if there is a specific auth type set for the current class/method/HTTP-method being called</p>
 
 
 
@@ -704,14 +663,14 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_get">#</a>
-		<code><a href="source-class-REST_Controller.html#922-939" title="Go to source code">_parse_get</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1312-1322" title="Go to source code">_parse_get</a>( )</code>
 
 		<div class="description short">
-			<p>Parse GET</p>
+			<p>Parse the GET request arguments</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Parse GET</p>
+			<p>Parse the GET request arguments</p>
 
 
 
@@ -734,14 +693,14 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_post">#</a>
-		<code><a href="source-class-REST_Controller.html#941-949" title="Go to source code">_parse_post</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1324-1338" title="Go to source code">_parse_post</a>( )</code>
 
 		<div class="description short">
-			<p>Parse POST</p>
+			<p>Parse the POST request arguments</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Parse POST</p>
+			<p>Parse the POST request arguments</p>
 
 
 
@@ -764,14 +723,14 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_put">#</a>
-		<code><a href="source-class-REST_Controller.html#951-966" title="Go to source code">_parse_put</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1340-1360" title="Go to source code">_parse_put</a>( )</code>
 
 		<div class="description short">
-			<p>Parse PUT</p>
+			<p>Parse the PUT request arguments</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Parse PUT</p>
+			<p>Parse the PUT request arguments</p>
 
 
 
@@ -794,14 +753,14 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_head">#</a>
-		<code><a href="source-class-REST_Controller.html#968-978" title="Go to source code">_parse_head</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1362-1375" title="Go to source code">_parse_head</a>( )</code>
 
 		<div class="description short">
-			<p>Parse HEAD</p>
+			<p>Parse the HEAD request arguments</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Parse HEAD</p>
+			<p>Parse the HEAD request arguments</p>
 
 
 
@@ -824,14 +783,14 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_options">#</a>
-		<code><a href="source-class-REST_Controller.html#980-990" title="Go to source code">_parse_options</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1377-1390" title="Go to source code">_parse_options</a>( )</code>
 
 		<div class="description short">
-			<p>Parse OPTIONS</p>
+			<p>Parse the OPTIONS request arguments</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Parse OPTIONS</p>
+			<p>Parse the OPTIONS request arguments</p>
 
 
 
@@ -854,14 +813,14 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_patch">#</a>
-		<code><a href="source-class-REST_Controller.html#992-1006" title="Go to source code">_parse_patch</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1392-1413" title="Go to source code">_parse_patch</a>( )</code>
 
 		<div class="description short">
-			<p>Parse PATCH</p>
+			<p>Parse the PATCH request arguments</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Parse PATCH</p>
+			<p>Parse the PATCH request arguments</p>
 
 
 
@@ -884,14 +843,44 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_delete">#</a>
-		<code><a href="source-class-REST_Controller.html#1008-1015" title="Go to source code">_parse_delete</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1415-1428" title="Go to source code">_parse_delete</a>( )</code>
 
 		<div class="description short">
-			<p>Parse DELETE</p>
+			<p>Parse the DELETE request arguments</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Parse DELETE</p>
+			<p>Parse the DELETE request arguments</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="_parse_query" id="__parse_query">
+
+		<td class="attributes"><code>
+			 protected 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#__parse_query">#</a>
+		<code><a href="source-class-REST_Controller.html#1430-1462" title="Go to source code">_parse_query</a>( )</code>
+
+		<div class="description short">
+			<p>Parse the query parameters</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Parse the query parameters</p>
 
 
 
@@ -907,34 +896,35 @@ being called.</p>
 		<td class="attributes"><code>
 			 public 
 
-			string
+			array|string|null
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_get">#</a>
-		<code><a href="source-class-REST_Controller.html#1019-1033" title="Go to source code">get</a>( <span>string <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean <var>$xss_clean</var> = <span class="php-keyword1">TRUE</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1466-1483" title="Go to source code">get</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
-			<p>Retrieve a value from the GET request arguments.</p>
+			<p>Retrieve a value from a GET request</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Retrieve a value from the GET request arguments.</p>
+			<p>Retrieve a value from a GET request</p>
 
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
 					<dt><var>$key</var></dt>
-					<dd>The key for the GET request argument to retrieve</dd>
+					<dd><p>Key to retrieve from the GET request
+If NULL an array of arguments is returned</p></dd>
 					<dt><var>$xss_clean</var></dt>
-					<dd>Whether the value should be XSS cleaned or not.</dd>
+					<dd>Whether to apply XSS filtering</dd>
 				</dl></div>
 
 				<h4>Returns</h4>
 				<div class="list">
-					string<br>The GET argument value.
+					array|string|null<br>Value from the GET request; otherwise, NULL
 				</div>
 
 
@@ -948,34 +938,35 @@ being called.</p>
 		<td class="attributes"><code>
 			 public 
 
-			string
+			array|string|null
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_options">#</a>
-		<code><a href="source-class-REST_Controller.html#1035-1049" title="Go to source code">options</a>( <span>string <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean <var>$xss_clean</var> = <span class="php-keyword1">TRUE</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1485-1502" title="Go to source code">options</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
-			<p>This function retrieves a values from the OPTIONS request arguments</p>
+			<p>Retrieve a value from a OPTIONS request</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>This function retrieves a values from the OPTIONS request arguments</p>
+			<p>Retrieve a value from a OPTIONS request</p>
 
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
 					<dt><var>$key</var></dt>
-					<dd>The OPTIONS/GET argument key</dd>
+					<dd><p>Key to retrieve from the OPTIONS request.
+If NULL an array of arguments is returned</p></dd>
 					<dt><var>$xss_clean</var></dt>
-					<dd>Whether the value should be XSS cleaned or not</dd>
+					<dd>Whether to apply XSS filtering</dd>
 				</dl></div>
 
 				<h4>Returns</h4>
 				<div class="list">
-					string<br>The OPTIONS/GET argument value
+					array|string|null<br>Value from the OPTIONS request; otherwise, NULL
 				</div>
 
 
@@ -989,34 +980,35 @@ being called.</p>
 		<td class="attributes"><code>
 			 public 
 
-			string
+			array|string|null
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_head">#</a>
-		<code><a href="source-class-REST_Controller.html#1051-1065" title="Go to source code">head</a>( <span>string <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean <var>$xss_clean</var> = <span class="php-keyword1">TRUE</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1504-1521" title="Go to source code">head</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
-			<p>This function retrieves a values from the HEAD request arguments</p>
+			<p>Retrieve a value from a HEAD request</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>This function retrieves a values from the HEAD request arguments</p>
+			<p>Retrieve a value from a HEAD request</p>
 
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
 					<dt><var>$key</var></dt>
-					<dd>The HEAD/GET argument key</dd>
+					<dd><p>Key to retrieve from the HEAD request
+If NULL an array of arguments is returned</p></dd>
 					<dt><var>$xss_clean</var></dt>
-					<dd>Whether the value should be XSS cleaned or not</dd>
+					<dd>Whether to apply XSS filtering</dd>
 				</dl></div>
 
 				<h4>Returns</h4>
 				<div class="list">
-					string<br>The HEAD/GET argument value
+					array|string|null<br>Value from the HEAD request; otherwise, NULL
 				</div>
 
 
@@ -1030,34 +1022,35 @@ being called.</p>
 		<td class="attributes"><code>
 			 public 
 
-			string
+			array|string|null
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_post">#</a>
-		<code><a href="source-class-REST_Controller.html#1067-1081" title="Go to source code">post</a>( <span>string <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean <var>$xss_clean</var> = <span class="php-keyword1">TRUE</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1523-1540" title="Go to source code">post</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
-			<p>Retrieve a value from the POST request arguments.</p>
+			<p>Retrieve a value from a POST request</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Retrieve a value from the POST request arguments.</p>
+			<p>Retrieve a value from a POST request</p>
 
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
 					<dt><var>$key</var></dt>
-					<dd>The key for the POST request argument to retrieve</dd>
+					<dd><p>Key to retrieve from the POST request
+If NULL an array of arguments is returned</p></dd>
 					<dt><var>$xss_clean</var></dt>
-					<dd>Whether the value should be XSS cleaned or not.</dd>
+					<dd>Whether to apply XSS filtering</dd>
 				</dl></div>
 
 				<h4>Returns</h4>
 				<div class="list">
-					string<br>The POST argument value.
+					array|string|null<br>Value from the POST request; otherwise, NULL
 				</div>
 
 
@@ -1071,34 +1064,35 @@ being called.</p>
 		<td class="attributes"><code>
 			 public 
 
-			string
+			array|string|null
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_put">#</a>
-		<code><a href="source-class-REST_Controller.html#1083-1097" title="Go to source code">put</a>( <span>string <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean <var>$xss_clean</var> = <span class="php-keyword1">TRUE</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1542-1559" title="Go to source code">put</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
-			<p>Retrieve a value from the PUT request arguments.</p>
+			<p>Retrieve a value from a PUT request</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Retrieve a value from the PUT request arguments.</p>
+			<p>Retrieve a value from a PUT request</p>
 
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
 					<dt><var>$key</var></dt>
-					<dd>The key for the PUT request argument to retrieve</dd>
+					<dd><p>Key to retrieve from the PUT request
+If NULL an array of arguments is returned</p></dd>
 					<dt><var>$xss_clean</var></dt>
-					<dd>Whether the value should be XSS cleaned or not.</dd>
+					<dd>Whether to apply XSS filtering</dd>
 				</dl></div>
 
 				<h4>Returns</h4>
 				<div class="list">
-					string<br>The PUT argument value.
+					array|string|null<br>Value from the PUT request; otherwise, NULL
 				</div>
 
 
@@ -1112,34 +1106,35 @@ being called.</p>
 		<td class="attributes"><code>
 			 public 
 
-			string
+			array|string|null
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_delete">#</a>
-		<code><a href="source-class-REST_Controller.html#1099-1113" title="Go to source code">delete</a>( <span>string <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean <var>$xss_clean</var> = <span class="php-keyword1">TRUE</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1561-1578" title="Go to source code">delete</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
-			<p>Retrieve a value from the DELETE request arguments.</p>
+			<p>Retrieve a value from a DELETE request</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Retrieve a value from the DELETE request arguments.</p>
+			<p>Retrieve a value from a DELETE request</p>
 
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
 					<dt><var>$key</var></dt>
-					<dd>The key for the DELETE request argument to retrieve</dd>
+					<dd><p>Key to retrieve from the DELETE request
+If NULL an array of arguments is returned</p></dd>
 					<dt><var>$xss_clean</var></dt>
-					<dd>Whether the value should be XSS cleaned or not.</dd>
+					<dd>Whether to apply XSS filtering</dd>
 				</dl></div>
 
 				<h4>Returns</h4>
 				<div class="list">
-					string<br>The DELETE argument value.
+					array|string|null<br>Value from the DELETE request; otherwise, NULL
 				</div>
 
 
@@ -1153,34 +1148,77 @@ being called.</p>
 		<td class="attributes"><code>
 			 public 
 
-			string
+			array|string|null
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_patch">#</a>
-		<code><a href="source-class-REST_Controller.html#1115-1129" title="Go to source code">patch</a>( <span>string <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean <var>$xss_clean</var> = <span class="php-keyword1">TRUE</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1580-1597" title="Go to source code">patch</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
-			<p>Retrieve a value from the PATCH request arguments.</p>
+			<p>Retrieve a value from a PATCH request</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Retrieve a value from the PATCH request arguments.</p>
+			<p>Retrieve a value from a PATCH request</p>
 
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
 					<dt><var>$key</var></dt>
-					<dd>The key for the PATCH request argument to retrieve</dd>
+					<dd><p>Key to retrieve from the PATCH request
+If NULL an array of arguments is returned</p></dd>
 					<dt><var>$xss_clean</var></dt>
-					<dd>Whether the value should be XSS cleaned or not.</dd>
+					<dd>Whether to apply XSS filtering</dd>
 				</dl></div>
 
 				<h4>Returns</h4>
 				<div class="list">
-					string<br>The PATCH argument value.
+					array|string|null<br>Value from the PATCH request; otherwise, NULL
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="query" id="_query">
+
+		<td class="attributes"><code>
+			 public 
+
+			array|string|null
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_query">#</a>
+		<code><a href="source-class-REST_Controller.html#1599-1616" title="Go to source code">query</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
+
+		<div class="description short">
+			<p>Retrieve a value from the query parameters</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Retrieve a value from the query parameters</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$key</var></dt>
+					<dd><p>Key to retrieve from the query parameters
+If NULL an array of arguments is returned</p></dd>
+					<dt><var>$xss_clean</var></dt>
+					<dd>Whether to apply XSS filtering</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array|string|null<br>Value from the query parameters; otherwise, NULL
 				</div>
 
 
@@ -1201,22 +1239,24 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__xss_clean">#</a>
-		<code><a href="source-class-REST_Controller.html#1131-1145" title="Go to source code">_xss_clean</a>( <span>string <var>$val</var></span>, <span>boolean <var>$process</var></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1618-1632" title="Go to source code">_xss_clean</a>( <span>string <var>$value</var></span>, <span>boolean <var>$xss_clean</var></span> )</code>
 
 		<div class="description short">
-			<p>Process to protect from XSS attacks.</p>
+			<p>Sanitizes data so that Cross Site Scripting Hacks can be
+prevented.</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Process to protect from XSS attacks.</p>
+			<p>Sanitizes data so that Cross Site Scripting Hacks can be
+prevented.</p>
 
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
-					<dt><var>$val</var></dt>
-					<dd>The input.</dd>
-					<dt><var>$process</var></dt>
-					<dd>Do clean or note the input.</dd>
+					<dt><var>$value</var></dt>
+					<dd>Input data</dd>
+					<dt><var>$xss_clean</var></dt>
+					<dd>Whether to apply XSS filtering</dd>
 				</dl></div>
 
 				<h4>Returns</h4>
@@ -1242,14 +1282,14 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_validation_errors">#</a>
-		<code><a href="source-class-REST_Controller.html#1147-1157" title="Go to source code">validation_errors</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1634-1645" title="Go to source code">validation_errors</a>( )</code>
 
 		<div class="description short">
-			<p>Retrieve the validation errors.</p>
+			<p>Retrieve the validation errors</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Retrieve the validation errors.</p>
+			<p>Retrieve the validation errors</p>
 
 
 
@@ -1276,7 +1316,7 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__perform_ldap_auth">#</a>
-		<code><a href="source-class-REST_Controller.html#1161-1256" title="Go to source code">_perform_ldap_auth</a>( <span>string <var>$username</var> = <span class="php-quote">''</span></span>, <span>string <var>$password</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1649-1742" title="Go to source code">_perform_ldap_auth</a>( <span>string <var>$username</var> = <span class="php-quote">''</span></span>, <span>string <var>$password</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Perform LDAP Authentication</p>
@@ -1317,7 +1357,7 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__perform_library_auth">#</a>
-		<code><a href="source-class-REST_Controller.html#1258-1290" title="Go to source code">_perform_library_auth</a>( <span>string <var>$username</var> = <span class="php-quote">''</span></span>, <span>string <var>$password</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1744-1781" title="Go to source code">_perform_library_auth</a>( <span>string <var>$username</var> = <span class="php-quote">''</span></span>, <span>string <var>$password</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Perform Library Authentication - Override this function to change the way the library is called</p>
@@ -1358,14 +1398,14 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__check_login">#</a>
-		<code><a href="source-class-REST_Controller.html#1292-1338" title="Go to source code">_check_login</a>( <span>string <var>$username</var> = <span class="php-quote">''</span></span>, <span>string <var>$password</var> = <span class="php-keyword1">FALSE</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1783-1838" title="Go to source code">_check_login</a>( <span>string <var>$username</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean|string <var>$password</var> = <span class="php-keyword1">FALSE</span></span> )</code>
 
 		<div class="description short">
-			<p>Check if the user is logged in.</p>
+			<p>Check if the user is logged in</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Check if the user is logged in.</p>
+			<p>Check if the user is logged in</p>
 
 
 				<h4>Parameters</h4>
@@ -1399,14 +1439,14 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__check_php_session">#</a>
-		<code><a href="source-class-REST_Controller.html#1340-1349" title="Go to source code">_check_php_session</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1840-1860" title="Go to source code">_check_php_session</a>( )</code>
 
 		<div class="description short">
-			<p>Check to see if the user is logged into the web app with a php session key.</p>
+			<p>Check to see if the user is logged in with a PHP session key</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Check to see if the user is logged into the web app with a php session key.</p>
+			<p>Check to see if the user is logged in with a PHP session key</p>
 
 
 
@@ -1429,23 +1469,19 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__prepare_basic_auth">#</a>
-		<code><a href="source-class-REST_Controller.html#1351-1380" title="Go to source code">_prepare_basic_auth</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1862-1901" title="Go to source code">_prepare_basic_auth</a>( )</code>
 
 		<div class="description short">
-			
+			<p>Prepares for basic authentication</p>
 		</div>
 
 		<div class="description detailed hidden">
-			
+			<p>Prepares for basic authentication</p>
 
 
 
 
 
-				<h4>Todo</h4>
-				<div class="list">
-						document this.<br>
-				</div>
 
 
 		</div>
@@ -1463,23 +1499,19 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__prepare_digest_auth">#</a>
-		<code><a href="source-class-REST_Controller.html#1382-1427" title="Go to source code">_prepare_digest_auth</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1903-1958" title="Go to source code">_prepare_digest_auth</a>( )</code>
 
 		<div class="description short">
-			
+			<p>Prepares for digest authentication</p>
 		</div>
 
 		<div class="description detailed hidden">
-			
+			<p>Prepares for digest authentication</p>
 
 
 
 
 
-				<h4>Todo</h4>
-				<div class="list">
-						Document this.<br>
-				</div>
 
 
 		</div>
@@ -1497,14 +1529,14 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__check_blacklist_auth">#</a>
-		<code><a href="source-class-REST_Controller.html#1429-1443" title="Go to source code">_check_blacklist_auth</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1960-1980" title="Go to source code">_check_blacklist_auth</a>( )</code>
 
 		<div class="description short">
-			<p>Check if the client's ip is in the 'rest_ip_blacklist' config</p>
+			<p>Checks if the client's ip is in the 'rest_ip_blacklist' config and generates a 401 response</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Check if the client's ip is in the 'rest_ip_blacklist' config</p>
+			<p>Checks if the client's ip is in the 'rest_ip_blacklist' config and generates a 401 response</p>
 
 
 
@@ -1527,14 +1559,14 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__check_whitelist_auth">#</a>
-		<code><a href="source-class-REST_Controller.html#1445-1461" title="Go to source code">_check_whitelist_auth</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1982-2008" title="Go to source code">_check_whitelist_auth</a>( )</code>
 
 		<div class="description short">
-			<p>Check if the client's ip is in the 'rest_ip_whitelist' config</p>
+			<p>Check if the client's ip is in the 'rest_ip_whitelist' config and generates a 401 response</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Check if the client's ip is in the 'rest_ip_whitelist' config</p>
+			<p>Check if the client's ip is in the 'rest_ip_whitelist' config and generates a 401 response</p>
 
 
 
@@ -1557,65 +1589,23 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__force_login">#</a>
-		<code><a href="source-class-REST_Controller.html#1463-1477" title="Go to source code">_force_login</a>( <span>string <var>$nonce</var> = <span class="php-quote">''</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#2010-2041" title="Go to source code">_force_login</a>( <span>string <var>$nonce</var> = <span class="php-quote">''</span></span> )</code>
 
 		<div class="description short">
-			
+			<p>Force logging in by setting the WWW-Authenticate header</p>
 		</div>
 
 		<div class="description detailed hidden">
-			
+			<p>Force logging in by setting the WWW-Authenticate header</p>
 
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
 					<dt><var>$nonce</var></dt>
-					<dd></dd>
+					<dd><p>A server-specified data string which should be uniquely generated
+each time</p></dd>
 				</dl></div>
 
-
-
-				<h4>Todo</h4>
-				<div class="list">
-						Document this.<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="_force_loopable" id="__force_loopable">
-
-		<td class="attributes"><code>
-			 protected 
-
-			array
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#__force_loopable">#</a>
-		<code><a href="source-class-REST_Controller.html#1479-1493" title="Go to source code">_force_loopable</a>( <span>object|array <var>$data</var></span> )</code>
-
-		<div class="description short">
-			<p>Force it into an array</p>
-		</div>
-
-		<div class="description detailed hidden">
-			<p>Force it into an array</p>
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$data</var></dt>
-					<dd></dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					array
-				</div>
 
 
 
@@ -1635,26 +1625,69 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__log_access_time">#</a>
-		<code><a href="source-class-REST_Controller.html#1496-1507" title="Go to source code">_log_access_time</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#2043-2058" title="Go to source code">_log_access_time</a>( )</code>
 
 		<div class="description short">
-			<p>updates the log with the access time</p>
+			<p>Updates the log table with the total access time</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>updates the log with the access time</p>
+			<p>Updates the log table with the total access time</p>
 
 
 
 				<h4>Returns</h4>
 				<div class="list">
-					boolean
+					boolean<br>TRUE log table updated; otherwise, FALSE
 				</div>
 
 
 				<h4>Author</h4>
 				<div class="list">
 						Chris Kacerguis<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="_log_response_code" id="__log_response_code">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#__log_response_code">#</a>
+		<code><a href="source-class-REST_Controller.html#2060-2076" title="Go to source code">_log_response_code</a>( <span> <var>$http_code</var></span> )</code>
+
+		<div class="description short">
+			<p>Updates the log table with HTTP response code</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Updates the log table with HTTP response code</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$http_code</var></dt>
+					<dd>HTTP status code</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br>TRUE log table updated; otherwise, FALSE
+				</div>
+
+
+				<h4>Author</h4>
+				<div class="list">
+						Justin Chen<br>
 				</div>
 
 
@@ -1673,7 +1706,7 @@ being called.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__check_access">#</a>
-		<code><a href="source-class-REST_Controller.html#1509-1539" title="Go to source code">_check_access</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#2078-2108" title="Go to source code">_check_access</a>( )</code>
 
 		<div class="description short">
 			<p>Check to see if the API key has access to the controller and methods</p>
@@ -1686,7 +1719,7 @@ being called.</p>
 
 				<h4>Returns</h4>
 				<div class="list">
-					boolean
+					boolean<br>TRUE the API key has access; otherwise, FALSE
 				</div>
 
 
@@ -1704,6 +1737,1457 @@ being called.</p>
 
 
 
+	<table class="summary constants" id="constants">
+	<caption>Constants summary</caption>
+	<tr data-order="HTTP_CONTINUE" id="HTTP_CONTINUE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#23" title="Go to source code"><b>HTTP_CONTINUE</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_CONTINUE" class="anchor">#</a>
+				<code><span class="php-num">100</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_SWITCHING_PROTOCOLS" id="HTTP_SWITCHING_PROTOCOLS">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#24" title="Go to source code"><b>HTTP_SWITCHING_PROTOCOLS</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_SWITCHING_PROTOCOLS" class="anchor">#</a>
+				<code><span class="php-num">101</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_PROCESSING" id="HTTP_PROCESSING">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#25" title="Go to source code"><b>HTTP_PROCESSING</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_PROCESSING" class="anchor">#</a>
+				<code><span class="php-num">102</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_OK" id="HTTP_OK">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#29-32" title="Go to source code"><b>HTTP_OK</b></a>
+			</code>
+
+			<div class="description short">
+				<p>The request has succeeded</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The request has succeeded</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_OK" class="anchor">#</a>
+				<code><span class="php-num">200</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_CREATED" id="HTTP_CREATED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#34-37" title="Go to source code"><b>HTTP_CREATED</b></a>
+			</code>
+
+			<div class="description short">
+				<p>The server successfully created a new resource</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The server successfully created a new resource</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_CREATED" class="anchor">#</a>
+				<code><span class="php-num">201</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_ACCEPTED" id="HTTP_ACCEPTED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#38" title="Go to source code"><b>HTTP_ACCEPTED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_ACCEPTED" class="anchor">#</a>
+				<code><span class="php-num">202</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_NON_AUTHORITATIVE_INFORMATION" id="HTTP_NON_AUTHORITATIVE_INFORMATION">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#39" title="Go to source code"><b>HTTP_NON_AUTHORITATIVE_INFORMATION</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_NON_AUTHORITATIVE_INFORMATION" class="anchor">#</a>
+				<code><span class="php-num">203</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_NO_CONTENT" id="HTTP_NO_CONTENT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#41-44" title="Go to source code"><b>HTTP_NO_CONTENT</b></a>
+			</code>
+
+			<div class="description short">
+				<p>The server successfully processed the request, though no content is returned</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The server successfully processed the request, though no content is returned</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_NO_CONTENT" class="anchor">#</a>
+				<code><span class="php-num">204</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_RESET_CONTENT" id="HTTP_RESET_CONTENT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#45" title="Go to source code"><b>HTTP_RESET_CONTENT</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_RESET_CONTENT" class="anchor">#</a>
+				<code><span class="php-num">205</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_PARTIAL_CONTENT" id="HTTP_PARTIAL_CONTENT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#46" title="Go to source code"><b>HTTP_PARTIAL_CONTENT</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_PARTIAL_CONTENT" class="anchor">#</a>
+				<code><span class="php-num">206</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_MULTI_STATUS" id="HTTP_MULTI_STATUS">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#47" title="Go to source code"><b>HTTP_MULTI_STATUS</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_MULTI_STATUS" class="anchor">#</a>
+				<code><span class="php-num">207</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_ALREADY_REPORTED" id="HTTP_ALREADY_REPORTED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#48" title="Go to source code"><b>HTTP_ALREADY_REPORTED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_ALREADY_REPORTED" class="anchor">#</a>
+				<code><span class="php-num">208</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_IM_USED" id="HTTP_IM_USED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#49" title="Go to source code"><b>HTTP_IM_USED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_IM_USED" class="anchor">#</a>
+				<code><span class="php-num">226</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_MULTIPLE_CHOICES" id="HTTP_MULTIPLE_CHOICES">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#53" title="Go to source code"><b>HTTP_MULTIPLE_CHOICES</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_MULTIPLE_CHOICES" class="anchor">#</a>
+				<code><span class="php-num">300</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_MOVED_PERMANENTLY" id="HTTP_MOVED_PERMANENTLY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#54" title="Go to source code"><b>HTTP_MOVED_PERMANENTLY</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_MOVED_PERMANENTLY" class="anchor">#</a>
+				<code><span class="php-num">301</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_FOUND" id="HTTP_FOUND">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#55" title="Go to source code"><b>HTTP_FOUND</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_FOUND" class="anchor">#</a>
+				<code><span class="php-num">302</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_SEE_OTHER" id="HTTP_SEE_OTHER">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#56" title="Go to source code"><b>HTTP_SEE_OTHER</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_SEE_OTHER" class="anchor">#</a>
+				<code><span class="php-num">303</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_NOT_MODIFIED" id="HTTP_NOT_MODIFIED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#58-61" title="Go to source code"><b>HTTP_NOT_MODIFIED</b></a>
+			</code>
+
+			<div class="description short">
+				<p>The resource has not been modified since the last request</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The resource has not been modified since the last request</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_NOT_MODIFIED" class="anchor">#</a>
+				<code><span class="php-num">304</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_USE_PROXY" id="HTTP_USE_PROXY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#62" title="Go to source code"><b>HTTP_USE_PROXY</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_USE_PROXY" class="anchor">#</a>
+				<code><span class="php-num">305</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_RESERVED" id="HTTP_RESERVED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#63" title="Go to source code"><b>HTTP_RESERVED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_RESERVED" class="anchor">#</a>
+				<code><span class="php-num">306</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_TEMPORARY_REDIRECT" id="HTTP_TEMPORARY_REDIRECT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#64" title="Go to source code"><b>HTTP_TEMPORARY_REDIRECT</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_TEMPORARY_REDIRECT" class="anchor">#</a>
+				<code><span class="php-num">307</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_PERMANENTLY_REDIRECT" id="HTTP_PERMANENTLY_REDIRECT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#65" title="Go to source code"><b>HTTP_PERMANENTLY_REDIRECT</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_PERMANENTLY_REDIRECT" class="anchor">#</a>
+				<code><span class="php-num">308</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_BAD_REQUEST" id="HTTP_BAD_REQUEST">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#69-72" title="Go to source code"><b>HTTP_BAD_REQUEST</b></a>
+			</code>
+
+			<div class="description short">
+				<p>The request cannot be fulfilled due to multiple errors</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The request cannot be fulfilled due to multiple errors</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_BAD_REQUEST" class="anchor">#</a>
+				<code><span class="php-num">400</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_UNAUTHORIZED" id="HTTP_UNAUTHORIZED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#74-77" title="Go to source code"><b>HTTP_UNAUTHORIZED</b></a>
+			</code>
+
+			<div class="description short">
+				<p>The user is unauthorized to access the requested resource</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The user is unauthorized to access the requested resource</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_UNAUTHORIZED" class="anchor">#</a>
+				<code><span class="php-num">401</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_PAYMENT_REQUIRED" id="HTTP_PAYMENT_REQUIRED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#78" title="Go to source code"><b>HTTP_PAYMENT_REQUIRED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_PAYMENT_REQUIRED" class="anchor">#</a>
+				<code><span class="php-num">402</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_FORBIDDEN" id="HTTP_FORBIDDEN">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#80-83" title="Go to source code"><b>HTTP_FORBIDDEN</b></a>
+			</code>
+
+			<div class="description short">
+				<p>The requested resource is unavailable at this present time</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The requested resource is unavailable at this present time</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_FORBIDDEN" class="anchor">#</a>
+				<code><span class="php-num">403</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_NOT_FOUND" id="HTTP_NOT_FOUND">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#85-91" title="Go to source code"><b>HTTP_NOT_FOUND</b></a>
+			</code>
+
+			<div class="description short">
+				<p>The requested resource could not be found</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The requested resource could not be found</p>
+
+<p>Note: This is sometimes used to mask if there was an UNAUTHORIZED (401) or
+FORBIDDEN (403) error, for security reasons</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_NOT_FOUND" class="anchor">#</a>
+				<code><span class="php-num">404</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_METHOD_NOT_ALLOWED" id="HTTP_METHOD_NOT_ALLOWED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#93-96" title="Go to source code"><b>HTTP_METHOD_NOT_ALLOWED</b></a>
+			</code>
+
+			<div class="description short">
+				<p>The request method is not supported by the following resource</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The request method is not supported by the following resource</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_METHOD_NOT_ALLOWED" class="anchor">#</a>
+				<code><span class="php-num">405</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_NOT_ACCEPTABLE" id="HTTP_NOT_ACCEPTABLE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#98-101" title="Go to source code"><b>HTTP_NOT_ACCEPTABLE</b></a>
+			</code>
+
+			<div class="description short">
+				<p>The request was not acceptable</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The request was not acceptable</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_NOT_ACCEPTABLE" class="anchor">#</a>
+				<code><span class="php-num">406</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_PROXY_AUTHENTICATION_REQUIRED" id="HTTP_PROXY_AUTHENTICATION_REQUIRED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#102" title="Go to source code"><b>HTTP_PROXY_AUTHENTICATION_REQUIRED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_PROXY_AUTHENTICATION_REQUIRED" class="anchor">#</a>
+				<code><span class="php-num">407</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_REQUEST_TIMEOUT" id="HTTP_REQUEST_TIMEOUT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#103" title="Go to source code"><b>HTTP_REQUEST_TIMEOUT</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_REQUEST_TIMEOUT" class="anchor">#</a>
+				<code><span class="php-num">408</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_CONFLICT" id="HTTP_CONFLICT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#105-109" title="Go to source code"><b>HTTP_CONFLICT</b></a>
+			</code>
+
+			<div class="description short">
+				<p>The request could not be completed due to a conflict with the current state
+of the resource</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The request could not be completed due to a conflict with the current state
+of the resource</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_CONFLICT" class="anchor">#</a>
+				<code><span class="php-num">409</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_GONE" id="HTTP_GONE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#110" title="Go to source code"><b>HTTP_GONE</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_GONE" class="anchor">#</a>
+				<code><span class="php-num">410</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_LENGTH_REQUIRED" id="HTTP_LENGTH_REQUIRED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#111" title="Go to source code"><b>HTTP_LENGTH_REQUIRED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_LENGTH_REQUIRED" class="anchor">#</a>
+				<code><span class="php-num">411</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_PRECONDITION_FAILED" id="HTTP_PRECONDITION_FAILED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#112" title="Go to source code"><b>HTTP_PRECONDITION_FAILED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_PRECONDITION_FAILED" class="anchor">#</a>
+				<code><span class="php-num">412</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_REQUEST_ENTITY_TOO_LARGE" id="HTTP_REQUEST_ENTITY_TOO_LARGE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#113" title="Go to source code"><b>HTTP_REQUEST_ENTITY_TOO_LARGE</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_REQUEST_ENTITY_TOO_LARGE" class="anchor">#</a>
+				<code><span class="php-num">413</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_REQUEST_URI_TOO_LONG" id="HTTP_REQUEST_URI_TOO_LONG">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#114" title="Go to source code"><b>HTTP_REQUEST_URI_TOO_LONG</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_REQUEST_URI_TOO_LONG" class="anchor">#</a>
+				<code><span class="php-num">414</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_UNSUPPORTED_MEDIA_TYPE" id="HTTP_UNSUPPORTED_MEDIA_TYPE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#115" title="Go to source code"><b>HTTP_UNSUPPORTED_MEDIA_TYPE</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_UNSUPPORTED_MEDIA_TYPE" class="anchor">#</a>
+				<code><span class="php-num">415</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_REQUESTED_RANGE_NOT_SATISFIABLE" id="HTTP_REQUESTED_RANGE_NOT_SATISFIABLE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#116" title="Go to source code"><b>HTTP_REQUESTED_RANGE_NOT_SATISFIABLE</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_REQUESTED_RANGE_NOT_SATISFIABLE" class="anchor">#</a>
+				<code><span class="php-num">416</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_EXPECTATION_FAILED" id="HTTP_EXPECTATION_FAILED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#117" title="Go to source code"><b>HTTP_EXPECTATION_FAILED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_EXPECTATION_FAILED" class="anchor">#</a>
+				<code><span class="php-num">417</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_I_AM_A_TEAPOT" id="HTTP_I_AM_A_TEAPOT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#118" title="Go to source code"><b>HTTP_I_AM_A_TEAPOT</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_I_AM_A_TEAPOT" class="anchor">#</a>
+				<code><span class="php-num">418</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_UNPROCESSABLE_ENTITY" id="HTTP_UNPROCESSABLE_ENTITY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#119" title="Go to source code"><b>HTTP_UNPROCESSABLE_ENTITY</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_UNPROCESSABLE_ENTITY" class="anchor">#</a>
+				<code><span class="php-num">422</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_LOCKED" id="HTTP_LOCKED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#120" title="Go to source code"><b>HTTP_LOCKED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_LOCKED" class="anchor">#</a>
+				<code><span class="php-num">423</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_FAILED_DEPENDENCY" id="HTTP_FAILED_DEPENDENCY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#121" title="Go to source code"><b>HTTP_FAILED_DEPENDENCY</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_FAILED_DEPENDENCY" class="anchor">#</a>
+				<code><span class="php-num">424</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_RESERVED_FOR_WEBDAV_ADVANCED_COLLECTIONS_EXPIRED_PROPOSAL" id="HTTP_RESERVED_FOR_WEBDAV_ADVANCED_COLLECTIONS_EXPIRED_PROPOSAL">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#122" title="Go to source code"><b>HTTP_RESERVED_FOR_WEBDAV_ADVANCED_COLLECTIONS_EXPIRED_PROPOSAL</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_RESERVED_FOR_WEBDAV_ADVANCED_COLLECTIONS_EXPIRED_PROPOSAL" class="anchor">#</a>
+				<code><span class="php-num">425</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_UPGRADE_REQUIRED" id="HTTP_UPGRADE_REQUIRED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#123" title="Go to source code"><b>HTTP_UPGRADE_REQUIRED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_UPGRADE_REQUIRED" class="anchor">#</a>
+				<code><span class="php-num">426</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_PRECONDITION_REQUIRED" id="HTTP_PRECONDITION_REQUIRED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#124" title="Go to source code"><b>HTTP_PRECONDITION_REQUIRED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_PRECONDITION_REQUIRED" class="anchor">#</a>
+				<code><span class="php-num">428</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_TOO_MANY_REQUESTS" id="HTTP_TOO_MANY_REQUESTS">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#125" title="Go to source code"><b>HTTP_TOO_MANY_REQUESTS</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_TOO_MANY_REQUESTS" class="anchor">#</a>
+				<code><span class="php-num">429</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_REQUEST_HEADER_FIELDS_TOO_LARGE" id="HTTP_REQUEST_HEADER_FIELDS_TOO_LARGE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#126" title="Go to source code"><b>HTTP_REQUEST_HEADER_FIELDS_TOO_LARGE</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_REQUEST_HEADER_FIELDS_TOO_LARGE" class="anchor">#</a>
+				<code><span class="php-num">431</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_INTERNAL_SERVER_ERROR" id="HTTP_INTERNAL_SERVER_ERROR">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#130-136" title="Go to source code"><b>HTTP_INTERNAL_SERVER_ERROR</b></a>
+			</code>
+
+			<div class="description short">
+				<p>The server encountered an unexpected error</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The server encountered an unexpected error</p>
+
+<p>Note: This is a generic error message when no specific message
+is suitable</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_INTERNAL_SERVER_ERROR" class="anchor">#</a>
+				<code><span class="php-num">500</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_NOT_IMPLEMENTED" id="HTTP_NOT_IMPLEMENTED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#138-141" title="Go to source code"><b>HTTP_NOT_IMPLEMENTED</b></a>
+			</code>
+
+			<div class="description short">
+				<p>The server does not recognise the request method</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The server does not recognise the request method</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_NOT_IMPLEMENTED" class="anchor">#</a>
+				<code><span class="php-num">501</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_BAD_GATEWAY" id="HTTP_BAD_GATEWAY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#142" title="Go to source code"><b>HTTP_BAD_GATEWAY</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_BAD_GATEWAY" class="anchor">#</a>
+				<code><span class="php-num">502</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_SERVICE_UNAVAILABLE" id="HTTP_SERVICE_UNAVAILABLE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#143" title="Go to source code"><b>HTTP_SERVICE_UNAVAILABLE</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_SERVICE_UNAVAILABLE" class="anchor">#</a>
+				<code><span class="php-num">503</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_GATEWAY_TIMEOUT" id="HTTP_GATEWAY_TIMEOUT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#144" title="Go to source code"><b>HTTP_GATEWAY_TIMEOUT</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_GATEWAY_TIMEOUT" class="anchor">#</a>
+				<code><span class="php-num">504</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_VERSION_NOT_SUPPORTED" id="HTTP_VERSION_NOT_SUPPORTED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#145" title="Go to source code"><b>HTTP_VERSION_NOT_SUPPORTED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_VERSION_NOT_SUPPORTED" class="anchor">#</a>
+				<code><span class="php-num">505</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL" id="HTTP_VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#146" title="Go to source code"><b>HTTP_VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL" class="anchor">#</a>
+				<code><span class="php-num">506</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_INSUFFICIENT_STORAGE" id="HTTP_INSUFFICIENT_STORAGE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#147" title="Go to source code"><b>HTTP_INSUFFICIENT_STORAGE</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_INSUFFICIENT_STORAGE" class="anchor">#</a>
+				<code><span class="php-num">507</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_LOOP_DETECTED" id="HTTP_LOOP_DETECTED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#148" title="Go to source code"><b>HTTP_LOOP_DETECTED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_LOOP_DETECTED" class="anchor">#</a>
+				<code><span class="php-num">508</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_NOT_EXTENDED" id="HTTP_NOT_EXTENDED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#149" title="Go to source code"><b>HTTP_NOT_EXTENDED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_NOT_EXTENDED" class="anchor">#</a>
+				<code><span class="php-num">510</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="HTTP_NETWORK_AUTHENTICATION_REQUIRED" id="HTTP_NETWORK_AUTHENTICATION_REQUIRED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-REST_Controller.html#150" title="Go to source code"><b>HTTP_NETWORK_AUTHENTICATION_REQUIRED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#HTTP_NETWORK_AUTHENTICATION_REQUIRED" class="anchor">#</a>
+				<code><span class="php-num">511</span></code>
+			</div>
+		</td>
+	</tr>
+	</table>
 
 
 
@@ -1717,16 +3201,16 @@ being called.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#18-25" title="Go to source code"><var>$rest_format</var></a>
+				<a href="source-class-REST_Controller.html#152-158" title="Go to source code"><var>$rest_format</var></a>
 
 			<div class="description short">
-				<p>This defines the rest format.</p>
+				<p>This defines the rest format.
+Must be overridden it in a controller so that it is set.</p>
 			</div>
 
 			<div class="description detailed hidden">
-				<p>This defines the rest format.</p>
-
-<p>Must be overridden it in a controller so that it is set.</p>
+				<p>This defines the rest format.
+Must be overridden it in a controller so that it is set.</p>
 
 			</div>
 		</td>
@@ -1744,7 +3228,7 @@ being called.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#27-32" title="Go to source code"><var>$methods</var></a>
+				<a href="source-class-REST_Controller.html#160-165" title="Go to source code"><var>$methods</var></a>
 
 			<div class="description short">
 				<p>Defines the list of method properties such as limit, log and level</p>
@@ -1758,7 +3242,7 @@ being called.</p>
 		<td class="value">
 			<div>
 				<a href="#$methods" class="anchor">#</a>
-				<code><span class="php-keyword1">array</span>()</code>
+				<code>[]</code>
 			</div>
 		</td>
 	</tr>
@@ -1769,7 +3253,7 @@ being called.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#34-39" title="Go to source code"><var>$allowed_http_methods</var></a>
+				<a href="source-class-REST_Controller.html#167-172" title="Go to source code"><var>$allowed_http_methods</var></a>
 
 			<div class="description short">
 				<p>List of allowed HTTP methods</p>
@@ -1783,7 +3267,7 @@ being called.</p>
 		<td class="value">
 			<div>
 				<a href="#$allowed_http_methods" class="anchor">#</a>
-				<code><span class="php-keyword1">array</span>(<span class="php-quote">'get'</span>, <span class="php-quote">'delete'</span>, <span class="php-quote">'post'</span>, <span class="php-quote">'put'</span>, <span class="php-quote">'options'</span>, <span class="php-quote">'patch'</span>, <span class="php-quote">'head'</span>)</code>
+				<code>[<span class="php-quote">'get'</span>, <span class="php-quote">'delete'</span>, <span class="php-quote">'post'</span>, <span class="php-quote">'put'</span>, <span class="php-quote">'options'</span>, <span class="php-quote">'patch'</span>, <span class="php-quote">'head'</span>]</code>
 			</div>
 		</td>
 	</tr>
@@ -1794,16 +3278,18 @@ being called.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#41-47" title="Go to source code"><var>$request</var></a>
+				<a href="source-class-REST_Controller.html#174-181" title="Go to source code"><var>$request</var></a>
 
 			<div class="description short">
-				<p>General request data and information.
-Stores accept, language, body, headers, etc.</p>
+				<p>Contains details about the request
+Fields: body, format, method, ssl
+Note: This is a dynamic object (stdClass)</p>
 			</div>
 
 			<div class="description detailed hidden">
-				<p>General request data and information.
-Stores accept, language, body, headers, etc.</p>
+				<p>Contains details about the request
+Fields: body, format, method, ssl
+Note: This is a dynamic object (stdClass)</p>
 
 			</div>
 		</td>
@@ -1821,14 +3307,18 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#49-54" title="Go to source code"><var>$response</var></a>
+				<a href="source-class-REST_Controller.html#183-190" title="Go to source code"><var>$response</var></a>
 
 			<div class="description short">
-				<p>What is gonna happen in output?</p>
+				<p>Contains details about the response
+Fields: format, lang
+Note: This is a dynamic object (stdClass)</p>
 			</div>
 
 			<div class="description detailed hidden">
-				<p>What is gonna happen in output?</p>
+				<p>Contains details about the response
+Fields: format, lang
+Note: This is a dynamic object (stdClass)</p>
 
 			</div>
 		</td>
@@ -1846,14 +3336,18 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#56-61" title="Go to source code"><var>$rest</var></a>
+				<a href="source-class-REST_Controller.html#192-199" title="Go to source code"><var>$rest</var></a>
 
 			<div class="description short">
-				<p>Stores DB, keys, key level, etc</p>
+				<p>Contains details about the REST API
+Fields: db, ignore_limits, key, level, user_id
+Note: This is a dynamic object (stdClass)</p>
 			</div>
 
 			<div class="description detailed hidden">
-				<p>Stores DB, keys, key level, etc</p>
+				<p>Contains details about the REST API
+Fields: db, ignore_limits, key, level, user_id
+Note: This is a dynamic object (stdClass)</p>
 
 			</div>
 		</td>
@@ -1871,7 +3365,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#63-68" title="Go to source code"><var>$_get_args</var></a>
+				<a href="source-class-REST_Controller.html#201-206" title="Go to source code"><var>$_get_args</var></a>
 
 			<div class="description short">
 				<p>The arguments for the GET request method</p>
@@ -1885,7 +3379,7 @@ Stores accept, language, body, headers, etc.</p>
 		<td class="value">
 			<div>
 				<a href="#$_get_args" class="anchor">#</a>
-				<code><span class="php-keyword1">array</span>()</code>
+				<code>[]</code>
 			</div>
 		</td>
 	</tr>
@@ -1896,7 +3390,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#70-75" title="Go to source code"><var>$_post_args</var></a>
+				<a href="source-class-REST_Controller.html#208-213" title="Go to source code"><var>$_post_args</var></a>
 
 			<div class="description short">
 				<p>The arguments for the POST request method</p>
@@ -1910,7 +3404,7 @@ Stores accept, language, body, headers, etc.</p>
 		<td class="value">
 			<div>
 				<a href="#$_post_args" class="anchor">#</a>
-				<code><span class="php-keyword1">array</span>()</code>
+				<code>[]</code>
 			</div>
 		</td>
 	</tr>
@@ -1921,7 +3415,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#77-82" title="Go to source code"><var>$_insert_id</var></a>
+				<a href="source-class-REST_Controller.html#215-220" title="Go to source code"><var>$_insert_id</var></a>
 
 			<div class="description short">
 				<p>The insert_id of the log entry (if we have one)</p>
@@ -1946,7 +3440,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#84-89" title="Go to source code"><var>$_put_args</var></a>
+				<a href="source-class-REST_Controller.html#222-227" title="Go to source code"><var>$_put_args</var></a>
 
 			<div class="description short">
 				<p>The arguments for the PUT request method</p>
@@ -1960,7 +3454,7 @@ Stores accept, language, body, headers, etc.</p>
 		<td class="value">
 			<div>
 				<a href="#$_put_args" class="anchor">#</a>
-				<code><span class="php-keyword1">array</span>()</code>
+				<code>[]</code>
 			</div>
 		</td>
 	</tr>
@@ -1971,7 +3465,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#91-96" title="Go to source code"><var>$_delete_args</var></a>
+				<a href="source-class-REST_Controller.html#229-234" title="Go to source code"><var>$_delete_args</var></a>
 
 			<div class="description short">
 				<p>The arguments for the DELETE request method</p>
@@ -1985,7 +3479,7 @@ Stores accept, language, body, headers, etc.</p>
 		<td class="value">
 			<div>
 				<a href="#$_delete_args" class="anchor">#</a>
-				<code><span class="php-keyword1">array</span>()</code>
+				<code>[]</code>
 			</div>
 		</td>
 	</tr>
@@ -1996,7 +3490,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#98-103" title="Go to source code"><var>$_patch_args</var></a>
+				<a href="source-class-REST_Controller.html#236-241" title="Go to source code"><var>$_patch_args</var></a>
 
 			<div class="description short">
 				<p>The arguments for the PATCH request method</p>
@@ -2010,7 +3504,7 @@ Stores accept, language, body, headers, etc.</p>
 		<td class="value">
 			<div>
 				<a href="#$_patch_args" class="anchor">#</a>
-				<code><span class="php-keyword1">array</span>()</code>
+				<code>[]</code>
 			</div>
 		</td>
 	</tr>
@@ -2021,7 +3515,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#105-110" title="Go to source code"><var>$_head_args</var></a>
+				<a href="source-class-REST_Controller.html#243-248" title="Go to source code"><var>$_head_args</var></a>
 
 			<div class="description short">
 				<p>The arguments for the HEAD request method</p>
@@ -2035,7 +3529,7 @@ Stores accept, language, body, headers, etc.</p>
 		<td class="value">
 			<div>
 				<a href="#$_head_args" class="anchor">#</a>
-				<code><span class="php-keyword1">array</span>()</code>
+				<code>[]</code>
 			</div>
 		</td>
 	</tr>
@@ -2046,7 +3540,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#112-117" title="Go to source code"><var>$_options_args</var></a>
+				<a href="source-class-REST_Controller.html#250-255" title="Go to source code"><var>$_options_args</var></a>
 
 			<div class="description short">
 				<p>The arguments for the OPTIONS request method</p>
@@ -2060,7 +3554,32 @@ Stores accept, language, body, headers, etc.</p>
 		<td class="value">
 			<div>
 				<a href="#$_options_args" class="anchor">#</a>
-				<code><span class="php-keyword1">array</span>()</code>
+				<code>[]</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="_query_args" id="$_query_args">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-REST_Controller.html#257-262" title="Go to source code"><var>$_query_args</var></a>
+
+			<div class="description short">
+				<p>The arguments for the query parameters</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The arguments for the query parameters</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$_query_args" class="anchor">#</a>
+				<code>[]</code>
 			</div>
 		</td>
 	</tr>
@@ -2071,21 +3590,21 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#119-124" title="Go to source code"><var>$_args</var></a>
+				<a href="source-class-REST_Controller.html#264-269" title="Go to source code"><var>$_args</var></a>
 
 			<div class="description short">
-				<p>The arguments from GET, POST, PUT, DELETE request methods combined.</p>
+				<p>The arguments from GET, POST, PUT, DELETE, PATCH, HEAD and OPTIONS request methods combined</p>
 			</div>
 
 			<div class="description detailed hidden">
-				<p>The arguments from GET, POST, PUT, DELETE request methods combined.</p>
+				<p>The arguments from GET, POST, PUT, DELETE, PATCH, HEAD and OPTIONS request methods combined</p>
 
 			</div>
 		</td>
 		<td class="value">
 			<div>
 				<a href="#$_args" class="anchor">#</a>
-				<code><span class="php-keyword1">array</span>()</code>
+				<code>[]</code>
 			</div>
 		</td>
 	</tr>
@@ -2096,7 +3615,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#126-131" title="Go to source code"><var>$_allow</var></a>
+				<a href="source-class-REST_Controller.html#271-276" title="Go to source code"><var>$_allow</var></a>
 
 			<div class="description short">
 				<p>If the request is allowed based on the API key provided.</p>
@@ -2114,31 +3633,6 @@ Stores accept, language, body, headers, etc.</p>
 			</div>
 		</td>
 	</tr>
-	<tr data-order="_zlib_oc" id="$_zlib_oc">
-		<td class="attributes"><code>
-			protected  
-			boolean
-		</code></td>
-
-		<td class="name">
-				<a href="source-class-REST_Controller.html#133-138" title="Go to source code"><var>$_zlib_oc</var></a>
-
-			<div class="description short">
-				<p>Determines if output compression is enabled</p>
-			</div>
-
-			<div class="description detailed hidden">
-				<p>Determines if output compression is enabled</p>
-
-			</div>
-		</td>
-		<td class="value">
-			<div>
-				<a href="#$_zlib_oc" class="anchor">#</a>
-				<code><span class="php-keyword1">FALSE</span></code>
-			</div>
-		</td>
-	</tr>
 	<tr data-order="_user_ldap_dn" id="$_user_ldap_dn">
 		<td class="attributes"><code>
 			protected  
@@ -2146,7 +3640,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#140-145" title="Go to source code"><var>$_user_ldap_dn</var></a>
+				<a href="source-class-REST_Controller.html#278-283" title="Go to source code"><var>$_user_ldap_dn</var></a>
 
 			<div class="description short">
 				<p>The LDAP Distinguished Name of the User post authentication</p>
@@ -2171,7 +3665,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#147-152" title="Go to source code"><var>$_start_rtime</var></a>
+				<a href="source-class-REST_Controller.html#285-290" title="Go to source code"><var>$_start_rtime</var></a>
 
 			<div class="description short">
 				<p>The start of the response time from the server</p>
@@ -2196,7 +3690,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#154-159" title="Go to source code"><var>$_end_rtime</var></a>
+				<a href="source-class-REST_Controller.html#292-297" title="Go to source code"><var>$_end_rtime</var></a>
 
 			<div class="description short">
 				<p>The end of the response time from the server</p>
@@ -2221,7 +3715,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#161-174" title="Go to source code"><var>$_supported_formats</var></a>
+				<a href="source-class-REST_Controller.html#299-313" title="Go to source code"><var>$_supported_formats</var></a>
 
 			<div class="description short">
 				<p>List all supported methods, the first will be the default format</p>
@@ -2235,15 +3729,16 @@ Stores accept, language, body, headers, etc.</p>
 		<td class="value">
 			<div>
 				<a href="#$_supported_formats" class="anchor">#</a>
-				<code><span class="php-keyword1">array</span>(
-    <span class="php-quote">'xml'</span>           =&gt; <span class="php-quote">'application/xml'</span>,
-    <span class="php-quote">'json'</span>          =&gt; <span class="php-quote">'application/json'</span>,
-    <span class="php-quote">'jsonp'</span>         =&gt; <span class="php-quote">'application/javascript'</span>,
-    <span class="php-quote">'serialized'</span>    =&gt; <span class="php-quote">'application/vnd.php.serialized'</span>,
-    <span class="php-quote">'php'</span>           =&gt; <span class="php-quote">'text/plain'</span>,
-    <span class="php-quote">'html'</span>          =&gt; <span class="php-quote">'text/html'</span>,
-    <span class="php-quote">'csv'</span>           =&gt; <span class="php-quote">'application/csv'</span>
-)</code>
+				<code>[
+        <span class="php-quote">'json'</span> =&gt; <span class="php-quote">'application/json'</span>,
+        <span class="php-quote">'array'</span> =&gt; <span class="php-quote">'application/json'</span>,
+        <span class="php-quote">'csv'</span> =&gt; <span class="php-quote">'application/csv'</span>,
+        <span class="php-quote">'html'</span> =&gt; <span class="php-quote">'text/html'</span>,
+        <span class="php-quote">'jsonp'</span> =&gt; <span class="php-quote">'application/javascript'</span>,
+        <span class="php-quote">'php'</span> =&gt; <span class="php-quote">'text/plain'</span>,
+        <span class="php-quote">'serialized'</span> =&gt; <span class="php-quote">'application/vnd.php.serialized'</span>,
+        <span class="php-quote">'xml'</span> =&gt; <span class="php-quote">'application/xml'</span>
+    ]</code>
 			</div>
 		</td>
 	</tr>
@@ -2254,7 +3749,7 @@ Stores accept, language, body, headers, etc.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#176-181" title="Go to source code"><var>$_apiuser</var></a>
+				<a href="source-class-REST_Controller.html#315-320" title="Go to source code"><var>$_apiuser</var></a>
 
 			<div class="description short">
 				<p>Information about the current API user</p>
@@ -2269,6 +3764,82 @@ Stores accept, language, body, headers, etc.</p>
 			<div>
 				<a href="#$_apiuser" class="anchor">#</a>
 				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="_enable_xss" id="$_enable_xss">
+		<td class="attributes"><code>
+			protected  
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-REST_Controller.html#322-330" title="Go to source code"><var>$_enable_xss</var></a>
+
+			<div class="description short">
+				<p>Enable XSS flag
+Determines whether the XSS filter is always active when
+GET, OPTIONS, HEAD, POST, PUT, DELETE and PATCH data is encountered.
+Set automatically based on config setting.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Enable XSS flag
+Determines whether the XSS filter is always active when
+GET, OPTIONS, HEAD, POST, PUT, DELETE and PATCH data is encountered.
+Set automatically based on config setting.</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$_enable_xss" class="anchor">#</a>
+				<code><span class="php-keyword1">FALSE</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="http_status_codes" id="$http_status_codes">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-REST_Controller.html#332-353" title="Go to source code"><var>$http_status_codes</var></a>
+
+			<div class="description short">
+				<p>HTTP status codes and their respective description
+Note: Only the widely used HTTP status codes are used</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>HTTP status codes and their respective description
+Note: Only the widely used HTTP status codes are used</p>
+
+					<h4>Link</h4>
+					<div class="list">
+							<a href="http://www.restapitutorial.com/httpstatuscodes.html">http://www.restapitutorial.com/httpstatuscodes.html</a><br>
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$http_status_codes" class="anchor">#</a>
+				<code>[
+    self::HTTP_OK =&gt; <span class="php-quote">'OK'</span>,
+    self::HTTP_CREATED =&gt; <span class="php-quote">'CREATED'</span>,
+    self::HTTP_NO_CONTENT =&gt; <span class="php-quote">'NO CONTENT'</span>,
+    self::HTTP_NOT_MODIFIED =&gt; <span class="php-quote">'NOT MODIFIED'</span>,
+    self::HTTP_BAD_REQUEST =&gt; <span class="php-quote">'BAD REQUEST'</span>,
+    self::HTTP_UNAUTHORIZED =&gt; <span class="php-quote">'UNAUTHORIZED'</span>,
+    self::HTTP_FORBIDDEN =&gt; <span class="php-quote">'FORBIDDEN'</span>,
+    self::HTTP_NOT_FOUND =&gt; <span class="php-quote">'NOT FOUND'</span>,
+    self::HTTP_METHOD_NOT_ALLOWED =&gt; <span class="php-quote">'METHOD NOT ALLOWED'</span>,
+    self::HTTP_NOT_ACCEPTABLE =&gt; <span class="php-quote">'NOT ACCEPTABLE'</span>,
+    self::HTTP_CONFLICT =&gt; <span class="php-quote">'CONFLICT'</span>,
+    self::HTTP_INTERNAL_SERVER_ERROR =&gt; <span class="php-quote">'INTERNAL SERVER ERROR'</span>,
+    self::HTTP_NOT_IMPLEMENTED =&gt; <span class="php-quote">'NOT IMPLEMENTED'</span>
+]</code>
 			</div>
 		</td>
 	</tr>

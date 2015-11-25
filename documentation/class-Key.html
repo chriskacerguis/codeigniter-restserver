@@ -29,6 +29,11 @@
 						Libraries					</a>
 
 						</li>
+				<li>
+					<a href="package-CodeIgniter.Rest.html">
+						Rest					</a>
+
+						</li>
 							</ul></li>
 				<li>
 					<a href="package-None.html">
@@ -46,7 +51,6 @@
 			<ul>
 				<li><a href="class-Example.html">Example</a></li>
 				<li class="active"><a href="class-Key.html">Key</a></li>
-				<li><a href="class-REST_Controller.html">REST_Controller</a></li>
 			</ul>
 
 
@@ -78,12 +82,6 @@
 <span>Class</span>			</li>
 		</ul>
 		<ul>
-			<li>
-				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
-			</li>
-			<li>
-				<a href="todo.html" title="Todo list"><span>Todo</span></a>
-			</li>
 		</ul>
 		<ul>
 		</ul>
@@ -94,9 +92,8 @@
 
 
 	<div class="description">
-	<p>CodeIgniter Rest Controller</p>
-
-<p>A fully RESTful server implementation for CodeIgniter using one library, one config file and one controller.</p>
+	<p>Keys Controller
+This is a basic Key Management REST controller to make and delete keys</p>
 	</div>
 
 	<dl class="tree">
@@ -131,19 +128,17 @@ CI_Controller
 		
 		
 		
-		<b>Package:</b> <a href="package-CodeIgniter.html">CodeIgniter</a>\<a href="package-CodeIgniter.Libraries.html">Libraries</a><br>
+		<b>Package:</b> <a href="package-CodeIgniter.html">CodeIgniter</a>\<a href="package-CodeIgniter.Rest.html">Rest</a><br>
 
 				<b>Category:</b>
-				Libraries<br>
+				Controller<br>
 				<b>License:</b>
 				<a href="MIT">MIT</a><br>
 				<b>Author:</b>
 				Phil Sturgeon, Chris Kacerguis<br>
-				<b>Version:</b>
-				3.0.0-pre<br>
 				<b>Link:</b>
 				<a href="https://github.com/chriskacerguis/codeigniter-restserver">https://github.com/chriskacerguis/codeigniter-restserver</a><br>
-			<b>Located at</b> <a href="source-class-Key.html#18-251" title="Go to source code">application/controllers/api/key.php</a>
+			<b>Located at</b> <a href="source-class-Key.html#8-272" title="Go to source code">controllers/api/Key.php</a>
 		<br>
 	</div>
 
@@ -163,16 +158,14 @@ CI_Controller
 
 		<td class="name"><div>
 		<a class="anchor" href="#_index_put">#</a>
-		<code><a href="source-class-Key.html#27-54" title="Go to source code">index_put</a>( )</code>
+		<code><a href="source-class-Key.html#28-58" title="Go to source code">index_put</a>( )</code>
 
 		<div class="description short">
-			<p>Key Create</p>
+			<p>Insert a key into the database</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Key Create</p>
-
-<p>Insert a key into the database.</p>
+			<p>Insert a key into the database</p>
 
 
 
@@ -195,16 +188,14 @@ CI_Controller
 
 		<td class="name"><div>
 		<a class="anchor" href="#_index_delete">#</a>
-		<code><a href="source-class-Key.html#58-82" title="Go to source code">index_delete</a>( )</code>
+		<code><a href="source-class-Key.html#60-88" title="Go to source code">index_delete</a>( )</code>
 
 		<div class="description short">
-			<p>Key Delete</p>
+			<p>Remove a key from the database to stop it working</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Key Delete</p>
-
-<p>Remove a key from the database to stop it working.</p>
+			<p>Remove a key from the database to stop it working</p>
 
 
 
@@ -227,16 +218,14 @@ CI_Controller
 
 		<td class="name"><div>
 		<a class="anchor" href="#_level_post">#</a>
-		<code><a href="source-class-Key.html#86-116" title="Go to source code">level_post</a>( )</code>
+		<code><a href="source-class-Key.html#90-126" title="Go to source code">level_post</a>( )</code>
 
 		<div class="description short">
-			<p>Update Key</p>
+			<p>Change the level</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Update Key</p>
-
-<p>Change the level</p>
+			<p>Change the level</p>
 
 
 
@@ -259,16 +248,14 @@ CI_Controller
 
 		<td class="name"><div>
 		<a class="anchor" href="#_suspend_post">#</a>
-		<code><a href="source-class-Key.html#120-149" title="Go to source code">suspend_post</a>( )</code>
+		<code><a href="source-class-Key.html#128-163" title="Go to source code">suspend_post</a>( )</code>
 
 		<div class="description short">
-			<p>Update Key</p>
+			<p>Suspend a key</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Update Key</p>
-
-<p>Change the level</p>
+			<p>Suspend a key</p>
 
 
 
@@ -291,16 +278,14 @@ CI_Controller
 
 		<td class="name"><div>
 		<a class="anchor" href="#_regenerate_post">#</a>
-		<code><a href="source-class-Key.html#153-189" title="Go to source code">regenerate_post</a>( )</code>
+		<code><a href="source-class-Key.html#165-207" title="Go to source code">regenerate_post</a>( )</code>
 
 		<div class="description short">
-			<p>Regenerate Key</p>
+			<p>Regenerate a key</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Regenerate Key</p>
-
-<p>Remove a key from the database to stop it working.</p>
+			<p>Regenerate a key</p>
 
 
 
@@ -331,12 +316,10 @@ CI_Controller
 			<a href="class-REST_Controller.html#__detect_lang">_detect_lang()</a>, 
 			<a href="class-REST_Controller.html#__detect_method">_detect_method()</a>, 
 			<a href="class-REST_Controller.html#__detect_output_format">_detect_output_format()</a>, 
-			<a href="class-REST_Controller.html#__detect_ssl">_detect_ssl()</a>, 
-			<a href="class-REST_Controller.html#__fire_method">_fire_method()</a>, 
 			<a href="class-REST_Controller.html#__force_login">_force_login()</a>, 
-			<a href="class-REST_Controller.html#__force_loopable">_force_loopable()</a>, 
 			<a href="class-REST_Controller.html#__log_access_time">_log_access_time()</a>, 
 			<a href="class-REST_Controller.html#__log_request">_log_request()</a>, 
+			<a href="class-REST_Controller.html#__log_response_code">_log_response_code()</a>, 
 			<a href="class-REST_Controller.html#__parse_delete">_parse_delete()</a>, 
 			<a href="class-REST_Controller.html#__parse_get">_parse_get()</a>, 
 			<a href="class-REST_Controller.html#__parse_head">_parse_head()</a>, 
@@ -344,6 +327,7 @@ CI_Controller
 			<a href="class-REST_Controller.html#__parse_patch">_parse_patch()</a>, 
 			<a href="class-REST_Controller.html#__parse_post">_parse_post()</a>, 
 			<a href="class-REST_Controller.html#__parse_put">_parse_put()</a>, 
+			<a href="class-REST_Controller.html#__parse_query">_parse_query()</a>, 
 			<a href="class-REST_Controller.html#__perform_ldap_auth">_perform_ldap_auth()</a>, 
 			<a href="class-REST_Controller.html#__perform_library_auth">_perform_library_auth()</a>, 
 			<a href="class-REST_Controller.html#__prepare_basic_auth">_prepare_basic_auth()</a>, 
@@ -358,7 +342,9 @@ CI_Controller
 			<a href="class-REST_Controller.html#_patch">patch()</a>, 
 			<a href="class-REST_Controller.html#_post">post()</a>, 
 			<a href="class-REST_Controller.html#_put">put()</a>, 
+			<a href="class-REST_Controller.html#_query">query()</a>, 
 			<a href="class-REST_Controller.html#_response">response()</a>, 
+			<a href="class-REST_Controller.html#_set_response">set_response()</a>, 
 			<a href="class-REST_Controller.html#_validation_errors">validation_errors()</a>
 		</code></td>
 	</tr>
@@ -371,6 +357,73 @@ CI_Controller
 
 
 
+	<table class="summary inherited">
+	<caption>Constants inherited from <a href="class-REST_Controller.html#constants">REST_Controller</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-REST_Controller.html#HTTP_ACCEPTED"><b>HTTP_ACCEPTED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_ALREADY_REPORTED"><b>HTTP_ALREADY_REPORTED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_BAD_GATEWAY"><b>HTTP_BAD_GATEWAY</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_BAD_REQUEST"><b>HTTP_BAD_REQUEST</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_CONFLICT"><b>HTTP_CONFLICT</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_CONTINUE"><b>HTTP_CONTINUE</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_CREATED"><b>HTTP_CREATED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_EXPECTATION_FAILED"><b>HTTP_EXPECTATION_FAILED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_FAILED_DEPENDENCY"><b>HTTP_FAILED_DEPENDENCY</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_FORBIDDEN"><b>HTTP_FORBIDDEN</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_FOUND"><b>HTTP_FOUND</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_GATEWAY_TIMEOUT"><b>HTTP_GATEWAY_TIMEOUT</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_GONE"><b>HTTP_GONE</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_IM_USED"><b>HTTP_IM_USED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_INSUFFICIENT_STORAGE"><b>HTTP_INSUFFICIENT_STORAGE</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_INTERNAL_SERVER_ERROR"><b>HTTP_INTERNAL_SERVER_ERROR</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_I_AM_A_TEAPOT"><b>HTTP_I_AM_A_TEAPOT</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_LENGTH_REQUIRED"><b>HTTP_LENGTH_REQUIRED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_LOCKED"><b>HTTP_LOCKED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_LOOP_DETECTED"><b>HTTP_LOOP_DETECTED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_METHOD_NOT_ALLOWED"><b>HTTP_METHOD_NOT_ALLOWED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_MOVED_PERMANENTLY"><b>HTTP_MOVED_PERMANENTLY</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_MULTIPLE_CHOICES"><b>HTTP_MULTIPLE_CHOICES</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_MULTI_STATUS"><b>HTTP_MULTI_STATUS</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_NETWORK_AUTHENTICATION_REQUIRED"><b>HTTP_NETWORK_AUTHENTICATION_REQUIRED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_NON_AUTHORITATIVE_INFORMATION"><b>HTTP_NON_AUTHORITATIVE_INFORMATION</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_NOT_ACCEPTABLE"><b>HTTP_NOT_ACCEPTABLE</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_NOT_EXTENDED"><b>HTTP_NOT_EXTENDED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_NOT_FOUND"><b>HTTP_NOT_FOUND</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_NOT_IMPLEMENTED"><b>HTTP_NOT_IMPLEMENTED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_NOT_MODIFIED"><b>HTTP_NOT_MODIFIED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_NO_CONTENT"><b>HTTP_NO_CONTENT</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_OK"><b>HTTP_OK</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_PARTIAL_CONTENT"><b>HTTP_PARTIAL_CONTENT</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_PAYMENT_REQUIRED"><b>HTTP_PAYMENT_REQUIRED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_PERMANENTLY_REDIRECT"><b>HTTP_PERMANENTLY_REDIRECT</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_PRECONDITION_FAILED"><b>HTTP_PRECONDITION_FAILED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_PRECONDITION_REQUIRED"><b>HTTP_PRECONDITION_REQUIRED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_PROCESSING"><b>HTTP_PROCESSING</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_PROXY_AUTHENTICATION_REQUIRED"><b>HTTP_PROXY_AUTHENTICATION_REQUIRED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_REQUESTED_RANGE_NOT_SATISFIABLE"><b>HTTP_REQUESTED_RANGE_NOT_SATISFIABLE</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_REQUEST_ENTITY_TOO_LARGE"><b>HTTP_REQUEST_ENTITY_TOO_LARGE</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_REQUEST_HEADER_FIELDS_TOO_LARGE"><b>HTTP_REQUEST_HEADER_FIELDS_TOO_LARGE</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_REQUEST_TIMEOUT"><b>HTTP_REQUEST_TIMEOUT</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_REQUEST_URI_TOO_LONG"><b>HTTP_REQUEST_URI_TOO_LONG</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_RESERVED"><b>HTTP_RESERVED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_RESERVED_FOR_WEBDAV_ADVANCED_COLLECTIONS_EXPIRED_PROPOSAL"><b>HTTP_RESERVED_FOR_WEBDAV_ADVANCED_COLLECTIONS_EXPIRED_PROPOSAL</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_RESET_CONTENT"><b>HTTP_RESET_CONTENT</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_SEE_OTHER"><b>HTTP_SEE_OTHER</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_SERVICE_UNAVAILABLE"><b>HTTP_SERVICE_UNAVAILABLE</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_SWITCHING_PROTOCOLS"><b>HTTP_SWITCHING_PROTOCOLS</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_TEMPORARY_REDIRECT"><b>HTTP_TEMPORARY_REDIRECT</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_TOO_MANY_REQUESTS"><b>HTTP_TOO_MANY_REQUESTS</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_UNAUTHORIZED"><b>HTTP_UNAUTHORIZED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_UNPROCESSABLE_ENTITY"><b>HTTP_UNPROCESSABLE_ENTITY</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_UNSUPPORTED_MEDIA_TYPE"><b>HTTP_UNSUPPORTED_MEDIA_TYPE</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_UPGRADE_REQUIRED"><b>HTTP_UPGRADE_REQUIRED</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_USE_PROXY"><b>HTTP_USE_PROXY</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL"><b>HTTP_VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL</b></a>, 
+			<a href="class-REST_Controller.html#HTTP_VERSION_NOT_SUPPORTED"><b>HTTP_VERSION_NOT_SUPPORTED</b></a>
+		</code></td>
+	</tr>
+	</table>
 
 
 
@@ -383,7 +436,7 @@ CI_Controller
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-Key.html#20-25" title="Go to source code"><var>$methods</var></a>
+				<a href="source-class-Key.html#21-26" title="Go to source code"><var>$methods</var></a>
 
 			<div class="description short">
 				<p>Defines the list of method properties such as limit, log and level</p>
@@ -397,12 +450,12 @@ CI_Controller
 		<td class="value">
 			<div>
 				<a href="#$methods" class="anchor">#</a>
-				<code><span class="php-keyword1">array</span>(
-    <span class="php-quote">'index_put'</span> =&gt; <span class="php-keyword1">array</span>(<span class="php-quote">'level'</span> =&gt; <span class="php-num">10</span>, <span class="php-quote">'limit'</span> =&gt; <span class="php-num">10</span>),
-    <span class="php-quote">'index_delete'</span> =&gt; <span class="php-keyword1">array</span>(<span class="php-quote">'level'</span> =&gt; <span class="php-num">10</span>),
-    <span class="php-quote">'level_post'</span> =&gt; <span class="php-keyword1">array</span>(<span class="php-quote">'level'</span> =&gt; <span class="php-num">10</span>),
-    <span class="php-quote">'regenerate_post'</span> =&gt; <span class="php-keyword1">array</span>(<span class="php-quote">'level'</span> =&gt; <span class="php-num">10</span>),
-)</code>
+				<code>[
+        <span class="php-quote">'index_put'</span> =&gt; [<span class="php-quote">'level'</span> =&gt; <span class="php-num">10</span>, <span class="php-quote">'limit'</span> =&gt; <span class="php-num">10</span>],
+        <span class="php-quote">'index_delete'</span> =&gt; [<span class="php-quote">'level'</span> =&gt; <span class="php-num">10</span>],
+        <span class="php-quote">'level_post'</span> =&gt; [<span class="php-quote">'level'</span> =&gt; <span class="php-num">10</span>],
+        <span class="php-quote">'regenerate_post'</span> =&gt; [<span class="php-quote">'level'</span> =&gt; <span class="php-num">10</span>],
+    ]</code>
 			</div>
 		</td>
 	</tr>
@@ -416,6 +469,7 @@ CI_Controller
 			<a href="class-REST_Controller.html#$_apiuser"><var>$_apiuser</var></a>, 
 			<a href="class-REST_Controller.html#$_args"><var>$_args</var></a>, 
 			<a href="class-REST_Controller.html#$_delete_args"><var>$_delete_args</var></a>, 
+			<a href="class-REST_Controller.html#$_enable_xss"><var>$_enable_xss</var></a>, 
 			<a href="class-REST_Controller.html#$_end_rtime"><var>$_end_rtime</var></a>, 
 			<a href="class-REST_Controller.html#$_get_args"><var>$_get_args</var></a>, 
 			<a href="class-REST_Controller.html#$_head_args"><var>$_head_args</var></a>, 
@@ -424,11 +478,12 @@ CI_Controller
 			<a href="class-REST_Controller.html#$_patch_args"><var>$_patch_args</var></a>, 
 			<a href="class-REST_Controller.html#$_post_args"><var>$_post_args</var></a>, 
 			<a href="class-REST_Controller.html#$_put_args"><var>$_put_args</var></a>, 
+			<a href="class-REST_Controller.html#$_query_args"><var>$_query_args</var></a>, 
 			<a href="class-REST_Controller.html#$_start_rtime"><var>$_start_rtime</var></a>, 
 			<a href="class-REST_Controller.html#$_supported_formats"><var>$_supported_formats</var></a>, 
 			<a href="class-REST_Controller.html#$_user_ldap_dn"><var>$_user_ldap_dn</var></a>, 
-			<a href="class-REST_Controller.html#$_zlib_oc"><var>$_zlib_oc</var></a>, 
 			<a href="class-REST_Controller.html#$allowed_http_methods"><var>$allowed_http_methods</var></a>, 
+			<a href="class-REST_Controller.html#$http_status_codes"><var>$http_status_codes</var></a>, 
 			<a href="class-REST_Controller.html#$request"><var>$request</var></a>, 
 			<a href="class-REST_Controller.html#$response"><var>$response</var></a>, 
 			<a href="class-REST_Controller.html#$rest"><var>$rest</var></a>, 
