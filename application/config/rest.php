@@ -130,6 +130,17 @@ $config['auth_source'] = 'ldap';
 
 /*
 |--------------------------------------------------------------------------
+| Allow Authentication and API Keys
+|--------------------------------------------------------------------------
+|
+| Where you wish to have Basic, Digest or Session login, but also want to use API Keys (for limiting
+| requests etc), set to TRUE;
+|
+*/
+$config['allow_auth_and_keys'] = TRUE;
+
+/*
+|--------------------------------------------------------------------------
 | REST Login Class and Function
 |--------------------------------------------------------------------------
 |
