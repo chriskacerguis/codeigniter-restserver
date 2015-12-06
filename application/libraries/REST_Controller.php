@@ -2148,4 +2148,41 @@ abstract class REST_Controller extends CI_Controller {
             ->num_rows() > 0;
     }
 
+    /**
+     * Check if request body has expected keys (case insensitive)
+     *
+     * @access public
+     * @author Kazuhito Higashioka
+     * @param $expected_keys array|object Expected keys in a request body
+     * @return bool TRUE has expected keys in a request body; otherwise, FALSE
+     */
+	public function is_request_body_has_expected_keys($expected_keys = null) {
+		if (empty($this->request->body))
+		    return false;
+			
+		
+		$request_body = $this->request->body;
+		$request_body_keys = [];
+		foreach ($request_body as $key => $value)
+		    $request_body_keys[] = strtolower($key);
+		$request_body = $request_body_keys;
+		
+		
+		if (is_object($expected_keys)) {
+            $keys = [];
+            foreach ($expected_keys as $key => $value)
+                $keys[] = $key;
+            $expected_keys = $keys;
+		}
+	
+		
+		foreach ($expected_keys as $key) {
+            if (in_array(strtolower($key), $request_body))
+                continue;
+            return false;
+        }
+		
+		
+		return true;
+	}
 }
