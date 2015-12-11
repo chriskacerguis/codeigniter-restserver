@@ -590,7 +590,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param  string $object_called
      * @param  array $arguments The arguments passed to the controller method
      */
-    public function _remap($object_called, $arguments)
+    public function _remap($object_called, $arguments = [])
     {
         // Should we answer if not over SSL?
         if ($this->config->item('force_https') && $this->request->ssl === FALSE)
