@@ -525,4 +525,4 @@ $config['rest_language'] = 'english';
 |
 */
 $config['check_cors'] = false;
-$config['allowed_origins'] = [];
+$config['allowed_cors_origins'] = [];
