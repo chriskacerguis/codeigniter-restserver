@@ -523,6 +523,16 @@ $config['rest_language'] = 'english';
 */
 $config['check_cors'] = false;
 
+/*
+|--------------------------------------------------------------------------
+| CORS Allow Any Domain
+|--------------------------------------------------------------------------
+|
+| Set to true to enable Cross-Origin Resource Sharing (CORS) from any
+|  source domain 
+|
+*/
+$config['allow_any_cors_domain'] = false;
 
 /*
 |--------------------------------------------------------------------------
