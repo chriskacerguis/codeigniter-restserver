@@ -2169,19 +2169,33 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _check_cors() 
     {
-        // Store the HTTP Origin header, 
-        $origin = (isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '');
-
-        // If the origin domain is in the allowed_cors_origins list, then add the Access Control headers
-        if (in_array($origin, $this->config->item('allowed_cors_origins'))) {
-            header('Access-Control-Allow-Origin: '.$origin);
+        // If we want to allow any domain to access the API
+        if ($this->config->item('allow_any_cors_domain') === true)
+        {   
+            header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method');
             header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        } 
+        // We're going to allow only certain domains access
+        else 
+        {        
+            // Store the HTTP Origin header
+            $origin = (isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '');
+
+            // If the origin domain is in the allowed_cors_origins list, then add the Access Control headers
+            if (in_array($origin, $this->config->item('allowed_cors_origins')))
+            {
+                header('Access-Control-Allow-Origin: '.$origin);
+                header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method');
+                header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, PATCH, DELETE');
+            }
         }
 
         // If the request HTTP method is 'OPTIONS', kill the response and send it to the client
         $method = $_SERVER['REQUEST_METHOD'];
-        if($method == "OPTIONS") {
+
+        if ($method === 'OPTIONS')
+        {
             die();
         }
     }
