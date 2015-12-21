@@ -2148,4 +2148,29 @@ abstract class REST_Controller extends CI_Controller {
             ->num_rows() > 0;
     }
 
+    /**
+     * Check to see if presented user_id and API key match
+     *
+     * @access protected
+     * @return void
+     */
+    protected function _check_cors() 
+    {
+        // Store the HTTP Origin header, 
+        $origin = (isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '');
+
+        // If the origin domain is in the allowed_origins list, then add the Access Control headers
+        if (in_array($origin, $this->config->item('allowed_origins'))) {
+            header('Access-Control-Allow-Origin: '.$origin);
+            header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method');
+            header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        }
+
+        // If the request HTTP method is 'OPTIONS', kill the response and send it to the client
+        $method = $_SERVER['REQUEST_METHOD'];
+        if($method == "OPTIONS") {
+            die();
+        }
+    }
+
 }
