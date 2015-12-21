@@ -320,6 +320,13 @@ abstract class REST_Controller extends CI_Controller {
     protected $_apiuser;
 
     /**
+     * Whether or not to perform a CORS check and apply CORS headers to the request
+     *
+     * @var bool
+     */
+    protected $check_cors = NULL;
+
+    /**
      * Enable XSS flag
      * Determines whether the XSS filter is always active when
      * GET, OPTIONS, HEAD, POST, PUT, DELETE and PATCH data is encountered.
@@ -456,6 +463,12 @@ abstract class REST_Controller extends CI_Controller {
 
         // How is this request being made? GET, POST, PATCH, DELETE, INSERT, PUT, HEAD or OPTIONS
         $this->request->method = $this->_detect_method();
+
+        // Check for CORS access request
+        $check_cors = $this->config->item('check_cors');
+        if ($check_cors === true) {
+          $this->_check_cors();
+        }
 
         // Create an argument container if it doesn't exist e.g. _get_args
         if (isset($this->{'_' . $this->request->method . '_args'}) === FALSE)
