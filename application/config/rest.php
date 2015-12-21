@@ -510,3 +510,19 @@ $config['rest_ajax_only'] = FALSE;
 |
 */
 $config['rest_language'] = 'english';
+
+/*
+|--------------------------------------------------------------------------
+| CORS Check
+|--------------------------------------------------------------------------
+|
+| Set to true to enable Cross-Origin Resource Sharing (CORS). Useful if you
+|  are hosting your API on a different domain from the appolication that 
+|  will access it through a browser. If true, set all the allowable domains
+|  within the array. 
+|
+| e.g. $config['allowed_origins'] = ['www.example.com', 'mobile.example.com']
+|
+*/
+$config['check_cors'] = false;
+$config['allowed_origins'] = [];
