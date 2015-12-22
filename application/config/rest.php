@@ -525,6 +525,40 @@ $config['check_cors'] = false;
 
 /*
 |--------------------------------------------------------------------------
+| CORS Allowable Headers
+|--------------------------------------------------------------------------
+|
+| If using CORS checks, set the allowable headers here. Add any custom headers you may
+|  be using in tyou application to the array
+|
+*/
+$config['allowed_cors_headers'] = [
+  'Origin',
+  'X-Requested-With',
+  'Content-Type',
+  'Accept',
+  'Access-Control-Request-Method'
+];
+
+/*
+|--------------------------------------------------------------------------
+| CORS Allowable Methods
+|--------------------------------------------------------------------------
+|
+| If using CORS checks, you can set the methods you want to be allowed here.
+|
+*/
+$config['allowed_cors_methods'] = [
+  'GET',
+  'POST',
+  'OPTIONS',
+  'PUT',
+  'PATCH',
+  'DELETE'
+];
+
+/*
+|--------------------------------------------------------------------------
 | CORS Allow Any Domain
 |--------------------------------------------------------------------------
 |
@@ -546,3 +580,4 @@ $config['allow_any_cors_domain'] = false;
 |
 */
 $config['allowed_cors_origins'] = [];
+

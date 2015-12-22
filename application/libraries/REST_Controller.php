@@ -2169,12 +2169,16 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _check_cors()
     {
+        // Convert the config items into strings
+        $allowed_headers = implode(' ,', $this->config->item('allowed_cors_headers'));
+        $allowed_methods = implode(' ,', $this->config->item('allowed_cors_methods'));
+
         // If we want to allow any domain to access the API
         if ($this->config->item('allow_any_cors_domain') === true)
         {
             header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method');
-            header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, PATCH, DELETE');
+            header('Access-Control-Allow-Headers: ' . $allowed_headers);
+            header('Access-Control-Allow-Methods: ' . $allowed_methods);
         }
         // We're going to allow only certain domains access
         else
@@ -2185,9 +2189,9 @@ abstract class REST_Controller extends CI_Controller {
             // If the origin domain is in the allowed_cors_origins list, then add the Access Control headers
             if (in_array($origin, $this->config->item('allowed_cors_origins')))
             {
-                header('Access-Control-Allow-Origin: '.$origin);
-                header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method');
-                header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, PATCH, DELETE');
+                header('Access-Control-Allow-Origin: ' . $origin);
+                header('Access-Control-Allow-Headers: ' . $allowed_headers);
+                header('Access-Control-Allow-Methods: ' . $allowed_methods);
             }
         }
 
