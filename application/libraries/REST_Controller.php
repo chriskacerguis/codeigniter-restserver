@@ -2162,23 +2162,23 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Check to see if presented user_id and API key match
+     * Checks allowed domains, and adds appropriate headers for HTTP access control (CORS)
      *
      * @access protected
      * @return void
      */
-    protected function _check_cors() 
+    protected function _check_cors()
     {
         // If we want to allow any domain to access the API
         if ($this->config->item('allow_any_cors_domain') === true)
-        {   
+        {
             header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method');
             header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, PATCH, DELETE');
-        } 
+        }
         // We're going to allow only certain domains access
-        else 
-        {        
+        else
+        {
             // Store the HTTP Origin header
             $origin = (isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '');
 
