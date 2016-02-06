@@ -112,23 +112,26 @@
 
     </div>
 
-    <p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>' . CI_VERSION . '</strong>' : '' ?></p>
+    <p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>'.CI_VERSION.'</strong>' : '' ?></p>
 </div>
 
-<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.0.js"></script>
 
 <script>
     // Create an 'App' namespace
     var App = App || {};
 
     // Basic rest module using an IIFE as a way of enclosing private variables
-    App.rest = (function (window, $) {
+    App.rest = (function restModule(window) {
         // Fields
         var _alert = window.alert;
         var _JSON = window.JSON;
 
         // Cache the jQuery selector
         var _$ajax = null;
+
+        // Cache the jQuery object
+        var $ = null;
 
         // Methods (private)
 
@@ -154,13 +157,13 @@
         /**
          * On Ajax request
          *
-         * @param {HTMLElement} $this Current element selected
+         * @param {jQuery} $element Current element selected
          * @return {undefined}
          */
-        function _ajaxEvent($this) {
+        function _ajaxEvent($element) {
             $.ajax({
                     // URL from the link that was 'clicked' on
-                    url: $this.attr('href')
+                    url: $element.attr('href')
                 })
                 .done(_ajaxDone)
                 .fail(_ajaxFail);
@@ -192,20 +195,27 @@
 
         // Public API
         return {
-            init: function () {
+            /**
+             * Initialise the following module
+             *
+             * @param {object} jQuery Reference to jQuery
+             * @return {undefined}
+             */
+            init: function init(jQuery) {
+                $ = jQuery;
+
                 // Cache the DOM and bind event(s)
                 _cacheDom();
                 _bindEvents();
             }
         };
-    }(window, window.jQuery));
+    }(window));
 
     // DOM ready event
-    $(function () {
+    $(function domReady($) {
         // Initialise the App module
-        App.rest.init();
+        App.rest.init($);
     });
-
 </script>
 
 </body>
