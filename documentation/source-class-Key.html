@@ -307,7 +307,7 @@
 </span><span id="213" class="l"><a href="#213">213: </a>        <span class="php-keyword1">do</span>
 </span><span id="214" class="l"><a href="#214">214: </a>        {
 </span><span id="215" class="l"><a href="#215">215: </a>            <span class="php-comment">// Generate a random salt</span>
-</span><span id="216" class="l"><a href="#216">216: </a>            <span class="php-var">$salt</span> = <span class="php-var">$this</span>-&gt;security-&gt;get_random_bytes(<span class="php-num">64</span>);
+</span><span id="216" class="l"><a href="#216">216: </a>            <span class="php-var">$salt</span> = <span class="php-keyword2">base_convert</span>(<span class="php-keyword2">bin2hex</span>(<span class="php-var">$this</span>-&gt;security-&gt;get_random_bytes(<span class="php-num">64</span>)), <span class="php-num">16</span>, <span class="php-num">36</span>);
 </span><span id="217" class="l"><a href="#217">217: </a>
 </span><span id="218" class="l"><a href="#218">218: </a>            <span class="php-comment">// If an error occurred, then fall back to the previous method</span>
 </span><span id="219" class="l"><a href="#219">219: </a>            <span class="php-keyword1">if</span> (<span class="php-var">$salt</span> === <span class="php-keyword1">FALSE</span>)
