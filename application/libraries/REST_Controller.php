@@ -322,7 +322,7 @@ abstract class REST_Controller extends CI_Controller {
     /**
      * Enable XSS flag
      * Determines whether the XSS filter is always active when
-     * GET, OPTIONS, HEAD, POST, PUT, DELETE and PATCH data is encountered
+     * GET, OPTIONS, HEAD, POST, PUT, DELETE and PATCH data is encountered.
      * Set automatically based on config setting
      *
      * @var bool
@@ -406,7 +406,7 @@ abstract class REST_Controller extends CI_Controller {
         // At present the library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter (no citation)
         $this->load->library('format');
 
-        // Determine supported output formats from configuration
+        // Determine supported output formats from configiguration.
         $supported_formats = $this->config->item('rest_supported_formats');
 
         // Validate the configuration setting output formats
@@ -420,7 +420,7 @@ abstract class REST_Controller extends CI_Controller {
             $supported_formats = [$supported_formats];
         }
 
-        // Add silently the default output format if it is missing
+        // Add silently the default output format if it is missing.
         $default_format = $this->_get_default_output_format();
         if (!in_array($default_format, $supported_formats))
         {
@@ -540,7 +540,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // When there is no specific override for the current class/method, use the default auth value set in the config
-        if ($this->auth_override === FALSE && !($this->config->item('rest_enable_keys') && $this->_allow === TRUE) || ($this->config->item('allow_auth_and_keys') === TRUE && $this->_allow === TRUE))
+        if ($this->auth_override === FALSE && !($this->config->item('rest_enable_keys') && $this->_allow === TRUE))
         {
             $rest_auth = strtolower($this->config->item('rest_auth'));
             switch ($rest_auth)
@@ -590,7 +590,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param  string $object_called
      * @param  array $arguments The arguments passed to the controller method
      */
-    public function _remap($object_called, $arguments = [])
+    public function _remap($object_called, $arguments)
     {
         // Should we answer if not over SSL?
         if ($this->config->item('force_https') && $this->request->ssl === FALSE)
@@ -624,6 +624,8 @@ abstract class REST_Controller extends CI_Controller {
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => sprintf($this->lang->line('text_rest_invalid_api_key'), $this->rest->key)
                 ], self::HTTP_FORBIDDEN);
+
+            return;
         }
 
         // Check to see if this key has access to the requested controller
@@ -638,6 +640,7 @@ abstract class REST_Controller extends CI_Controller {
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_unauthorized')
                 ], self::HTTP_UNAUTHORIZED);
+            return;
         }
 
         // Sure it exists, but can they do anything with it?
@@ -657,6 +660,7 @@ abstract class REST_Controller extends CI_Controller {
             {
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_time_limit')];
                 $this->response($response, self::HTTP_UNAUTHORIZED);
+                return;
             }
 
             // If no level is set use 0, they probably aren't using permissions
@@ -674,6 +678,7 @@ abstract class REST_Controller extends CI_Controller {
             // They don't have good enough perms
             $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_permissions')];
             $authorized || $this->response($response, self::HTTP_UNAUTHORIZED);
+            return;
         }
 
         // No key stuff, but record that stuff is happening
@@ -709,7 +714,7 @@ abstract class REST_Controller extends CI_Controller {
      * @param bool $continue TRUE to flush the response to the client and continue
      * running the script; otherwise, exit
      */
-    public function response($data = NULL, $http_code = NULL, $continue = FALSE)
+    public function response($data = NULL, $http_code = NULL)
     {
         // If the HTTP status is not NULL, then cast as an integer
         if ($http_code !== NULL)
@@ -770,17 +775,7 @@ abstract class REST_Controller extends CI_Controller {
             $this->_log_response_code($http_code);
         }
 
-        // Output the data
-        $this->output->set_output($output);
-
-        if ($continue === FALSE)
-        {
-            // Display the data and exit execution
-            $this->output->_display();
-            exit;
-        }
-
-        // Otherwise dump the output automatically
+        $this->output->_display($output);
     }
 
     /**
@@ -833,9 +828,9 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Gets the default format from the configuration. Fallbacks to 'json'
+     * Gets the default format from the configuration. Fallbacks to 'json'.
      * if the corresponding configuration option $config['rest_default_format']
-     * is missing or is empty
+     * is missing or is empty.
      *
      * @access protected
      * @return string The default supported input format
@@ -1424,6 +1419,12 @@ abstract class REST_Controller extends CI_Controller {
            // If no filetype is provided, then there are probably just arguments
            $this->_put_args = $this->input->input_stream();
         }
+
+
+        if(sizeof($this->_put_args) === 0){
+          $this->_parse_post();
+          $this->_put_args = $this->_post_args;
+        }
     }
 
     /**
@@ -1488,6 +1489,11 @@ abstract class REST_Controller extends CI_Controller {
         if ($this->input->method() === 'delete')
         {
             $this->_delete_args = $this->input->input_stream();
+        }
+
+        if(sizeof($this->_delete_args) === 0){
+          $this->_parse_post();
+          $this->_delete_args = $this->_post_args;
         }
     }
 
