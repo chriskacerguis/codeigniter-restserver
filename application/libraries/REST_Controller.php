@@ -1419,12 +1419,6 @@ abstract class REST_Controller extends CI_Controller {
            // If no filetype is provided, then there are probably just arguments
            $this->_put_args = $this->input->input_stream();
         }
-
-
-        if(sizeof($this->_put_args) === 0){
-          $this->_parse_post();
-          $this->_put_args = $this->_post_args;
-        }
     }
 
     /**
@@ -1489,11 +1483,6 @@ abstract class REST_Controller extends CI_Controller {
         if ($this->input->method() === 'delete')
         {
             $this->_delete_args = $this->input->input_stream();
-        }
-
-        if(sizeof($this->_delete_args) === 0){
-          $this->_parse_post();
-          $this->_delete_args = $this->_post_args;
         }
     }
 
