@@ -673,7 +673,7 @@ abstract class REST_Controller extends CI_Controller {
             {
                 // They don't have good enough perms
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_permissions')];
-                $authorized || $this->response($response, self::HTTP_UNAUTHORIZED);
+                $this->response($response, self::HTTP_UNAUTHORIZED);
             }
         }
 
