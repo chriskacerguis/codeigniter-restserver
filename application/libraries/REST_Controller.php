@@ -664,16 +664,17 @@ abstract class REST_Controller extends CI_Controller {
 
             // If no level is set, or it is lower than/equal to the key's level
             $authorized = $level <= $this->rest->level;
-
             // IM TELLIN!
             if ($this->config->item('rest_enable_logging') && $log_method)
             {
                 $this->_log_request($authorized);
             }
-
-            // They don't have good enough perms
-            $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_permissions')];
-            $authorized || $this->response($response, self::HTTP_UNAUTHORIZED);
+            if($authorized===false)
+            {
+                // They don't have good enough perms
+                $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_permissions')];
+                $authorized || $this->response($response, self::HTTP_UNAUTHORIZED);
+            }
         }
 
         // No key stuff, but record that stuff is happening
