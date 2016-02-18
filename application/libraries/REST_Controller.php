@@ -415,7 +415,7 @@ abstract class REST_Controller extends CI_Controller {
             $supported_formats = [];
         }
 
-        if (!is_array($supported_formats))
+        if ( ! is_array($supported_formats))
         {
             $supported_formats = [$supported_formats];
         }
@@ -540,7 +540,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // When there is no specific override for the current class/method, use the default auth value set in the config
-        if ($this->auth_override === FALSE && !($this->config->item('rest_enable_keys') && $this->_allow === TRUE) || ($this->config->item('allow_auth_and_keys') === TRUE && $this->_allow === TRUE))
+        if ($this->auth_override === FALSE && ! ($this->config->item('rest_enable_keys') && $this->_allow === TRUE) || ($this->config->item('allow_auth_and_keys') === TRUE && $this->_allow === TRUE))
         {
             $rest_auth = strtolower($this->config->item('rest_auth'));
             switch ($rest_auth)
@@ -607,10 +607,10 @@ abstract class REST_Controller extends CI_Controller {
         $controller_method = $object_called.'_'.$this->request->method;
 
         // Do we want to log this method (if allowed by config)?
-        $log_method = !(isset($this->methods[$controller_method]['log']) && $this->methods[$controller_method]['log'] === FALSE);
+        $log_method = ! (isset($this->methods[$controller_method]['log']) && $this->methods[$controller_method]['log'] === FALSE);
 
         // Use keys for this method?
-        $use_key = !(isset($this->methods[$controller_method]['key']) && $this->methods[$controller_method]['key'] === FALSE);
+        $use_key = ! (isset($this->methods[$controller_method]['key']) && $this->methods[$controller_method]['key'] === FALSE);
 
         // They provided a key, but it wasn't valid, so get them out of here
         if ($this->config->item('rest_enable_keys') && $use_key && $this->_allow === FALSE)
@@ -971,7 +971,7 @@ abstract class REST_Controller extends CI_Controller {
         // Find the key from server or arguments
         if (($key = isset($this->_args[$api_key_variable]) ? $this->_args[$api_key_variable] : $this->input->server($key_name)))
         {
-            if (!($row = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get($this->config->item('rest_keys_table'))->row()))
+            if ( ! ($row = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get($this->config->item('rest_keys_table'))->row()))
             {
                 return FALSE;
             }
@@ -1199,12 +1199,12 @@ abstract class REST_Controller extends CI_Controller {
         $auth_override_class_method = $this->config->item('auth_override_class_method');
 
         // Check to see if the override array is even populated
-        if (!empty($auth_override_class_method))
+        if ( ! empty($auth_override_class_method))
         {
-            // check for wildcard flag for rules for classes
-            if (!empty($auth_override_class_method[$this->router->class]['*'])) // Check for class overrides
+            // Check for wildcard flag for rules for classes
+            if ( ! empty($auth_override_class_method[$this->router->class]['*'])) // Check for class overrides
             {
-                // None auth override found, prepare nothing but send back a TRUE override flag
+                // No auth override found, prepare nothing but send back a TRUE override flag
                 if ($auth_override_class_method[$this->router->class]['*'] === 'none')
                 {
                     return TRUE;
@@ -1244,7 +1244,7 @@ abstract class REST_Controller extends CI_Controller {
             }
 
             // Check to see if there's an override value set for the current class/method being called
-            if (!empty($auth_override_class_method[$this->router->class][$this->router->method]))
+            if ( ! empty($auth_override_class_method[$this->router->class][$this->router->method]))
             {
                 // None auth override found, prepare nothing but send back a TRUE override flag
                 if ($auth_override_class_method[$this->router->class][$this->router->method] === 'none')
@@ -1290,10 +1290,10 @@ abstract class REST_Controller extends CI_Controller {
         $auth_override_class_method_http = $this->config->item('auth_override_class_method_http');
 
         // Check to see if the override array is even populated
-        if (!empty($auth_override_class_method_http))
+        if ( ! empty($auth_override_class_method_http))
         {
             // check for wildcard flag for rules for classes
-            if(!empty($auth_override_class_method_http[$this->router->class]['*'][$this->request->method]))
+            if ( ! empty($auth_override_class_method_http[$this->router->class]['*'][$this->request->method]))
             {
                 // None auth override found, prepare nothing but send back a TRUE override flag
                 if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'none')
@@ -1335,7 +1335,7 @@ abstract class REST_Controller extends CI_Controller {
             }
 
             // Check to see if there's an override value set for the current class/method/HTTP-method being called
-            if(!empty($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method]))
+            if ( ! empty($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method]))
             {
                 // None auth override found, prepare nothing but send back a TRUE override flag
                 if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'none')
@@ -1840,7 +1840,7 @@ abstract class REST_Controller extends CI_Controller {
         $rest_auth = strtolower($this->config->item('rest_auth'));
         $valid_logins = $this->config->item('rest_valid_logins');
 
-        if (!$this->config->item('auth_source') && $rest_auth === 'digest')
+        if ( ! $this->config->item('auth_source') && $rest_auth === 'digest')
         {
             // For digest we do not have a password passed as argument
             return md5($username.':'.$this->config->item('rest_realm').':'.(isset($valid_logins[$username]) ? $valid_logins[$username] : ''));
@@ -1890,7 +1890,7 @@ abstract class REST_Controller extends CI_Controller {
         $key = $this->config->item('auth_source');
 
         // If falsy, then the user isn't logged in
-        if (!$this->session->userdata($key))
+        if ( ! $this->session->userdata($key))
         {
             // Display an error response
             $this->response([
