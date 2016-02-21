@@ -509,7 +509,7 @@
 </span><span id="415" class="l"><a href="#415"> 415: </a>            <span class="php-var">$supported_formats</span> = [];
 </span><span id="416" class="l"><a href="#416"> 416: </a>        }
 </span><span id="417" class="l"><a href="#417"> 417: </a>
-</span><span id="418" class="l"><a href="#418"> 418: </a>        <span class="php-keyword1">if</span> (!<span class="php-keyword2">is_array</span>(<span class="php-var">$supported_formats</span>))
+</span><span id="418" class="l"><a href="#418"> 418: </a>        <span class="php-keyword1">if</span> ( ! <span class="php-keyword2">is_array</span>(<span class="php-var">$supported_formats</span>))
 </span><span id="419" class="l"><a href="#419"> 419: </a>        {
 </span><span id="420" class="l"><a href="#420"> 420: </a>            <span class="php-var">$supported_formats</span> = [<span class="php-var">$supported_formats</span>];
 </span><span id="421" class="l"><a href="#421"> 421: </a>        }
@@ -634,7 +634,7 @@
 </span><span id="540" class="l"><a href="#540"> 540: </a>        }
 </span><span id="541" class="l"><a href="#541"> 541: </a>
 </span><span id="542" class="l"><a href="#542"> 542: </a>        <span class="php-comment">// When there is no specific override for the current class/method, use the default auth value set in the config</span>
-</span><span id="543" class="l"><a href="#543"> 543: </a>        <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;auth_override === <span class="php-keyword1">FALSE</span> &amp;&amp; !(<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'rest_enable_keys'</span>) &amp;&amp; <span class="php-var">$this</span>-&gt;_allow === <span class="php-keyword1">TRUE</span>) || (<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'allow_auth_and_keys'</span>) === <span class="php-keyword1">TRUE</span> &amp;&amp; <span class="php-var">$this</span>-&gt;_allow === <span class="php-keyword1">TRUE</span>))
+</span><span id="543" class="l"><a href="#543"> 543: </a>        <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;auth_override === <span class="php-keyword1">FALSE</span> &amp;&amp; ! (<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'rest_enable_keys'</span>) &amp;&amp; <span class="php-var">$this</span>-&gt;_allow === <span class="php-keyword1">TRUE</span>) || (<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'allow_auth_and_keys'</span>) === <span class="php-keyword1">TRUE</span> &amp;&amp; <span class="php-var">$this</span>-&gt;_allow === <span class="php-keyword1">TRUE</span>))
 </span><span id="544" class="l"><a href="#544"> 544: </a>        {
 </span><span id="545" class="l"><a href="#545"> 545: </a>            <span class="php-var">$rest_auth</span> = <span class="php-keyword2">strtolower</span>(<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'rest_auth'</span>));
 </span><span id="546" class="l"><a href="#546"> 546: </a>            <span class="php-keyword1">switch</span> (<span class="php-var">$rest_auth</span>)
@@ -701,10 +701,10 @@
 </span><span id="607" class="l"><a href="#607"> 607: </a>        <span class="php-var">$controller_method</span> = <span class="php-var">$object_called</span>.<span class="php-quote">'_'</span>.<span class="php-var">$this</span>-&gt;request-&gt;method;
 </span><span id="608" class="l"><a href="#608"> 608: </a>
 </span><span id="609" class="l"><a href="#609"> 609: </a>        <span class="php-comment">// Do we want to log this method (if allowed by config)?</span>
-</span><span id="610" class="l"><a href="#610"> 610: </a>        <span class="php-var">$log_method</span> = !(<span class="php-keyword1">isset</span>(<span class="php-var">$this</span>-&gt;methods[<span class="php-var">$controller_method</span>][<span class="php-quote">'log'</span>]) &amp;&amp; <span class="php-var">$this</span>-&gt;methods[<span class="php-var">$controller_method</span>][<span class="php-quote">'log'</span>] === <span class="php-keyword1">FALSE</span>);
+</span><span id="610" class="l"><a href="#610"> 610: </a>        <span class="php-var">$log_method</span> = ! (<span class="php-keyword1">isset</span>(<span class="php-var">$this</span>-&gt;methods[<span class="php-var">$controller_method</span>][<span class="php-quote">'log'</span>]) &amp;&amp; <span class="php-var">$this</span>-&gt;methods[<span class="php-var">$controller_method</span>][<span class="php-quote">'log'</span>] === <span class="php-keyword1">FALSE</span>);
 </span><span id="611" class="l"><a href="#611"> 611: </a>
 </span><span id="612" class="l"><a href="#612"> 612: </a>        <span class="php-comment">// Use keys for this method?</span>
-</span><span id="613" class="l"><a href="#613"> 613: </a>        <span class="php-var">$use_key</span> = !(<span class="php-keyword1">isset</span>(<span class="php-var">$this</span>-&gt;methods[<span class="php-var">$controller_method</span>][<span class="php-quote">'key'</span>]) &amp;&amp; <span class="php-var">$this</span>-&gt;methods[<span class="php-var">$controller_method</span>][<span class="php-quote">'key'</span>] === <span class="php-keyword1">FALSE</span>);
+</span><span id="613" class="l"><a href="#613"> 613: </a>        <span class="php-var">$use_key</span> = ! (<span class="php-keyword1">isset</span>(<span class="php-var">$this</span>-&gt;methods[<span class="php-var">$controller_method</span>][<span class="php-quote">'key'</span>]) &amp;&amp; <span class="php-var">$this</span>-&gt;methods[<span class="php-var">$controller_method</span>][<span class="php-quote">'key'</span>] === <span class="php-keyword1">FALSE</span>);
 </span><span id="614" class="l"><a href="#614"> 614: </a>
 </span><span id="615" class="l"><a href="#615"> 615: </a>        <span class="php-comment">// They provided a key, but it wasn't valid, so get them out of here</span>
 </span><span id="616" class="l"><a href="#616"> 616: </a>        <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'rest_enable_keys'</span>) &amp;&amp; <span class="php-var">$use_key</span> &amp;&amp; <span class="php-var">$this</span>-&gt;_allow === <span class="php-keyword1">FALSE</span>)
@@ -905,20 +905,20 @@
 </span><span id="811" class="l"><a href="#811"> 811: </a>
 </span><span id="812" class="l"><a href="#812"> 812: </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">empty</span>(<span class="php-var">$content_type</span>) === <span class="php-keyword1">FALSE</span>)
 </span><span id="813" class="l"><a href="#813"> 813: </a>        {
-</span><span id="814" class="l"><a href="#814"> 814: </a>            <span class="php-comment">// Check all formats against the HTTP_ACCEPT header</span>
-</span><span id="815" class="l"><a href="#815"> 815: </a>            <span class="php-keyword1">foreach</span> (<span class="php-var">$this</span>-&gt;_supported_formats <span class="php-keyword1">as</span> <span class="php-var">$key</span> =&gt; <span class="php-var">$value</span>)
-</span><span id="816" class="l"><a href="#816"> 816: </a>            {
-</span><span id="817" class="l"><a href="#817"> 817: </a>                <span class="php-comment">// $key = format e.g. csv</span>
-</span><span id="818" class="l"><a href="#818"> 818: </a>                <span class="php-comment">// $value = mime type e.g. application/csv</span>
-</span><span id="819" class="l"><a href="#819"> 819: </a>
-</span><span id="820" class="l"><a href="#820"> 820: </a>                <span class="php-comment">// If a semi-colon exists in the string, then explode by ; and get the value of where</span>
-</span><span id="821" class="l"><a href="#821"> 821: </a>                <span class="php-comment">// the current array pointer resides. This will generally be the first element of the array</span>
-</span><span id="822" class="l"><a href="#822"> 822: </a>                <span class="php-var">$content_type</span> = (<span class="php-keyword2">strpos</span>(<span class="php-var">$content_type</span>, <span class="php-quote">';'</span>) !== <span class="php-keyword1">FALSE</span> ? <span class="php-keyword2">current</span>(<span class="php-keyword2">explode</span>(<span class="php-quote">';'</span>, <span class="php-var">$content_type</span>)) : <span class="php-var">$content_type</span>);
+</span><span id="814" class="l"><a href="#814"> 814: </a>            <span class="php-comment">// If a semi-colon exists in the string, then explode by ; and get the value of where</span>
+</span><span id="815" class="l"><a href="#815"> 815: </a>            <span class="php-comment">// the current array pointer resides. This will generally be the first element of the array</span>
+</span><span id="816" class="l"><a href="#816"> 816: </a>            <span class="php-var">$content_type</span> = (<span class="php-keyword2">strpos</span>(<span class="php-var">$content_type</span>, <span class="php-quote">';'</span>) !== <span class="php-keyword1">FALSE</span> ? <span class="php-keyword2">current</span>(<span class="php-keyword2">explode</span>(<span class="php-quote">';'</span>, <span class="php-var">$content_type</span>)) : <span class="php-var">$content_type</span>);
+</span><span id="817" class="l"><a href="#817"> 817: </a>
+</span><span id="818" class="l"><a href="#818"> 818: </a>            <span class="php-comment">// Check all formats against the CONTENT-TYPE header</span>
+</span><span id="819" class="l"><a href="#819"> 819: </a>            <span class="php-keyword1">foreach</span> (<span class="php-var">$this</span>-&gt;_supported_formats <span class="php-keyword1">as</span> <span class="php-var">$type</span> =&gt; <span class="php-var">$mime</span>)
+</span><span id="820" class="l"><a href="#820"> 820: </a>            {
+</span><span id="821" class="l"><a href="#821"> 821: </a>                <span class="php-comment">// $type = format e.g. csv</span>
+</span><span id="822" class="l"><a href="#822"> 822: </a>                <span class="php-comment">// $mime = mime type e.g. application/csv</span>
 </span><span id="823" class="l"><a href="#823"> 823: </a>
 </span><span id="824" class="l"><a href="#824"> 824: </a>                <span class="php-comment">// If both the mime types match, then return the format</span>
-</span><span id="825" class="l"><a href="#825"> 825: </a>                <span class="php-keyword1">if</span> (<span class="php-var">$content_type</span> === <span class="php-var">$value</span>)
+</span><span id="825" class="l"><a href="#825"> 825: </a>                <span class="php-keyword1">if</span> (<span class="php-var">$content_type</span> === <span class="php-var">$mime</span>)
 </span><span id="826" class="l"><a href="#826"> 826: </a>                {
-</span><span id="827" class="l"><a href="#827"> 827: </a>                    <span class="php-keyword1">return</span> <span class="php-var">$key</span>;
+</span><span id="827" class="l"><a href="#827"> 827: </a>                    <span class="php-keyword1">return</span> <span class="php-var">$type</span>;
 </span><span id="828" class="l"><a href="#828"> 828: </a>                }
 </span><span id="829" class="l"><a href="#829"> 829: </a>            }
 </span><span id="830" class="l"><a href="#830"> 830: </a>        }
@@ -1065,7 +1065,7 @@
 </span><span id="971" class="l"><a href="#971"> 971: </a>        <span class="php-comment">// Find the key from server or arguments</span>
 </span><span id="972" class="l"><a href="#972"> 972: </a>        <span class="php-keyword1">if</span> ((<span class="php-var">$key</span> = <span class="php-keyword1">isset</span>(<span class="php-var">$this</span>-&gt;_args[<span class="php-var">$api_key_variable</span>]) ? <span class="php-var">$this</span>-&gt;_args[<span class="php-var">$api_key_variable</span>] : <span class="php-var">$this</span>-&gt;input-&gt;server(<span class="php-var">$key_name</span>)))
 </span><span id="973" class="l"><a href="#973"> 973: </a>        {
-</span><span id="974" class="l"><a href="#974"> 974: </a>            <span class="php-keyword1">if</span> (!(<span class="php-var">$row</span> = <span class="php-var">$this</span>-&gt;rest-&gt;db-&gt;where(<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'rest_key_column'</span>), <span class="php-var">$key</span>)-&gt;get(<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'rest_keys_table'</span>))-&gt;row()))
+</span><span id="974" class="l"><a href="#974"> 974: </a>            <span class="php-keyword1">if</span> ( ! (<span class="php-var">$row</span> = <span class="php-var">$this</span>-&gt;rest-&gt;db-&gt;where(<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'rest_key_column'</span>), <span class="php-var">$key</span>)-&gt;get(<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'rest_keys_table'</span>))-&gt;row()))
 </span><span id="975" class="l"><a href="#975"> 975: </a>            {
 </span><span id="976" class="l"><a href="#976"> 976: </a>                <span class="php-keyword1">return</span> <span class="php-keyword1">FALSE</span>;
 </span><span id="977" class="l"><a href="#977"> 977: </a>            }
@@ -1293,12 +1293,12 @@
 </span><span id="1199" class="l"><a href="#1199">1199: </a>        <span class="php-var">$auth_override_class_method</span> = <span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'auth_override_class_method'</span>);
 </span><span id="1200" class="l"><a href="#1200">1200: </a>
 </span><span id="1201" class="l"><a href="#1201">1201: </a>        <span class="php-comment">// Check to see if the override array is even populated</span>
-</span><span id="1202" class="l"><a href="#1202">1202: </a>        <span class="php-keyword1">if</span> (!<span class="php-keyword1">empty</span>(<span class="php-var">$auth_override_class_method</span>))
+</span><span id="1202" class="l"><a href="#1202">1202: </a>        <span class="php-keyword1">if</span> ( ! <span class="php-keyword1">empty</span>(<span class="php-var">$auth_override_class_method</span>))
 </span><span id="1203" class="l"><a href="#1203">1203: </a>        {
-</span><span id="1204" class="l"><a href="#1204">1204: </a>            <span class="php-comment">// check for wildcard flag for rules for classes</span>
-</span><span id="1205" class="l"><a href="#1205">1205: </a>            <span class="php-keyword1">if</span> (!<span class="php-keyword1">empty</span>(<span class="php-var">$auth_override_class_method</span>[<span class="php-var">$this</span>-&gt;router-&gt;<span class="php-keyword1">class</span>][<span class="php-quote">'*'</span>])) <span class="php-comment">// Check for class overrides</span>
+</span><span id="1204" class="l"><a href="#1204">1204: </a>            <span class="php-comment">// Check for wildcard flag for rules for classes</span>
+</span><span id="1205" class="l"><a href="#1205">1205: </a>            <span class="php-keyword1">if</span> ( ! <span class="php-keyword1">empty</span>(<span class="php-var">$auth_override_class_method</span>[<span class="php-var">$this</span>-&gt;router-&gt;<span class="php-keyword1">class</span>][<span class="php-quote">'*'</span>])) <span class="php-comment">// Check for class overrides</span>
 </span><span id="1206" class="l"><a href="#1206">1206: </a>            {
-</span><span id="1207" class="l"><a href="#1207">1207: </a>                <span class="php-comment">// None auth override found, prepare nothing but send back a TRUE override flag</span>
+</span><span id="1207" class="l"><a href="#1207">1207: </a>                <span class="php-comment">// No auth override found, prepare nothing but send back a TRUE override flag</span>
 </span><span id="1208" class="l"><a href="#1208">1208: </a>                <span class="php-keyword1">if</span> (<span class="php-var">$auth_override_class_method</span>[<span class="php-var">$this</span>-&gt;router-&gt;<span class="php-keyword1">class</span>][<span class="php-quote">'*'</span>] === <span class="php-quote">'none'</span>)
 </span><span id="1209" class="l"><a href="#1209">1209: </a>                {
 </span><span id="1210" class="l"><a href="#1210">1210: </a>                    <span class="php-keyword1">return</span> <span class="php-keyword1">TRUE</span>;
@@ -1338,7 +1338,7 @@
 </span><span id="1244" class="l"><a href="#1244">1244: </a>            }
 </span><span id="1245" class="l"><a href="#1245">1245: </a>
 </span><span id="1246" class="l"><a href="#1246">1246: </a>            <span class="php-comment">// Check to see if there's an override value set for the current class/method being called</span>
-</span><span id="1247" class="l"><a href="#1247">1247: </a>            <span class="php-keyword1">if</span> (!<span class="php-keyword1">empty</span>(<span class="php-var">$auth_override_class_method</span>[<span class="php-var">$this</span>-&gt;router-&gt;<span class="php-keyword1">class</span>][<span class="php-var">$this</span>-&gt;router-&gt;method]))
+</span><span id="1247" class="l"><a href="#1247">1247: </a>            <span class="php-keyword1">if</span> ( ! <span class="php-keyword1">empty</span>(<span class="php-var">$auth_override_class_method</span>[<span class="php-var">$this</span>-&gt;router-&gt;<span class="php-keyword1">class</span>][<span class="php-var">$this</span>-&gt;router-&gt;method]))
 </span><span id="1248" class="l"><a href="#1248">1248: </a>            {
 </span><span id="1249" class="l"><a href="#1249">1249: </a>                <span class="php-comment">// None auth override found, prepare nothing but send back a TRUE override flag</span>
 </span><span id="1250" class="l"><a href="#1250">1250: </a>                <span class="php-keyword1">if</span> (<span class="php-var">$auth_override_class_method</span>[<span class="php-var">$this</span>-&gt;router-&gt;<span class="php-keyword1">class</span>][<span class="php-var">$this</span>-&gt;router-&gt;method] === <span class="php-quote">'none'</span>)
@@ -1384,10 +1384,10 @@
 </span><span id="1290" class="l"><a href="#1290">1290: </a>        <span class="php-var">$auth_override_class_method_http</span> = <span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'auth_override_class_method_http'</span>);
 </span><span id="1291" class="l"><a href="#1291">1291: </a>
 </span><span id="1292" class="l"><a href="#1292">1292: </a>        <span class="php-comment">// Check to see if the override array is even populated</span>
-</span><span id="1293" class="l"><a href="#1293">1293: </a>        <span class="php-keyword1">if</span> (!<span class="php-keyword1">empty</span>(<span class="php-var">$auth_override_class_method_http</span>))
+</span><span id="1293" class="l"><a href="#1293">1293: </a>        <span class="php-keyword1">if</span> ( ! <span class="php-keyword1">empty</span>(<span class="php-var">$auth_override_class_method_http</span>))
 </span><span id="1294" class="l"><a href="#1294">1294: </a>        {
 </span><span id="1295" class="l"><a href="#1295">1295: </a>            <span class="php-comment">// check for wildcard flag for rules for classes</span>
-</span><span id="1296" class="l"><a href="#1296">1296: </a>            <span class="php-keyword1">if</span>(!<span class="php-keyword1">empty</span>(<span class="php-var">$auth_override_class_method_http</span>[<span class="php-var">$this</span>-&gt;router-&gt;<span class="php-keyword1">class</span>][<span class="php-quote">'*'</span>][<span class="php-var">$this</span>-&gt;request-&gt;method]))
+</span><span id="1296" class="l"><a href="#1296">1296: </a>            <span class="php-keyword1">if</span> ( ! <span class="php-keyword1">empty</span>(<span class="php-var">$auth_override_class_method_http</span>[<span class="php-var">$this</span>-&gt;router-&gt;<span class="php-keyword1">class</span>][<span class="php-quote">'*'</span>][<span class="php-var">$this</span>-&gt;request-&gt;method]))
 </span><span id="1297" class="l"><a href="#1297">1297: </a>            {
 </span><span id="1298" class="l"><a href="#1298">1298: </a>                <span class="php-comment">// None auth override found, prepare nothing but send back a TRUE override flag</span>
 </span><span id="1299" class="l"><a href="#1299">1299: </a>                <span class="php-keyword1">if</span> (<span class="php-var">$auth_override_class_method_http</span>[<span class="php-var">$this</span>-&gt;router-&gt;<span class="php-keyword1">class</span>][<span class="php-quote">'*'</span>][<span class="php-var">$this</span>-&gt;request-&gt;method] === <span class="php-quote">'none'</span>)
@@ -1429,7 +1429,7 @@
 </span><span id="1335" class="l"><a href="#1335">1335: </a>            }
 </span><span id="1336" class="l"><a href="#1336">1336: </a>
 </span><span id="1337" class="l"><a href="#1337">1337: </a>            <span class="php-comment">// Check to see if there's an override value set for the current class/method/HTTP-method being called</span>
-</span><span id="1338" class="l"><a href="#1338">1338: </a>            <span class="php-keyword1">if</span>(!<span class="php-keyword1">empty</span>(<span class="php-var">$auth_override_class_method_http</span>[<span class="php-var">$this</span>-&gt;router-&gt;<span class="php-keyword1">class</span>][<span class="php-var">$this</span>-&gt;router-&gt;method][<span class="php-var">$this</span>-&gt;request-&gt;method]))
+</span><span id="1338" class="l"><a href="#1338">1338: </a>            <span class="php-keyword1">if</span> ( ! <span class="php-keyword1">empty</span>(<span class="php-var">$auth_override_class_method_http</span>[<span class="php-var">$this</span>-&gt;router-&gt;<span class="php-keyword1">class</span>][<span class="php-var">$this</span>-&gt;router-&gt;method][<span class="php-var">$this</span>-&gt;request-&gt;method]))
 </span><span id="1339" class="l"><a href="#1339">1339: </a>            {
 </span><span id="1340" class="l"><a href="#1340">1340: </a>                <span class="php-comment">// None auth override found, prepare nothing but send back a TRUE override flag</span>
 </span><span id="1341" class="l"><a href="#1341">1341: </a>                <span class="php-keyword1">if</span> (<span class="php-var">$auth_override_class_method_http</span>[<span class="php-var">$this</span>-&gt;router-&gt;<span class="php-keyword1">class</span>][<span class="php-var">$this</span>-&gt;router-&gt;method][<span class="php-var">$this</span>-&gt;request-&gt;method] === <span class="php-quote">'none'</span>)
@@ -1934,7 +1934,7 @@
 </span><span id="1840" class="l"><a href="#1840">1840: </a>        <span class="php-var">$rest_auth</span> = <span class="php-keyword2">strtolower</span>(<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'rest_auth'</span>));
 </span><span id="1841" class="l"><a href="#1841">1841: </a>        <span class="php-var">$valid_logins</span> = <span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'rest_valid_logins'</span>);
 </span><span id="1842" class="l"><a href="#1842">1842: </a>
-</span><span id="1843" class="l"><a href="#1843">1843: </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'auth_source'</span>) &amp;&amp; <span class="php-var">$rest_auth</span> === <span class="php-quote">'digest'</span>)
+</span><span id="1843" class="l"><a href="#1843">1843: </a>        <span class="php-keyword1">if</span> ( ! <span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'auth_source'</span>) &amp;&amp; <span class="php-var">$rest_auth</span> === <span class="php-quote">'digest'</span>)
 </span><span id="1844" class="l"><a href="#1844">1844: </a>        {
 </span><span id="1845" class="l"><a href="#1845">1845: </a>            <span class="php-comment">// For digest we do not have a password passed as argument</span>
 </span><span id="1846" class="l"><a href="#1846">1846: </a>            <span class="php-keyword1">return</span> <span class="php-keyword2">md5</span>(<span class="php-var">$username</span>.<span class="php-quote">':'</span>.<span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'rest_realm'</span>).<span class="php-quote">':'</span>.(<span class="php-keyword1">isset</span>(<span class="php-var">$valid_logins</span>[<span class="php-var">$username</span>]) ? <span class="php-var">$valid_logins</span>[<span class="php-var">$username</span>] : <span class="php-quote">''</span>));
@@ -1984,7 +1984,7 @@
 </span><span id="1890" class="l"><a href="#1890">1890: </a>        <span class="php-var">$key</span> = <span class="php-var">$this</span>-&gt;config-&gt;item(<span class="php-quote">'auth_source'</span>);
 </span><span id="1891" class="l"><a href="#1891">1891: </a>
 </span><span id="1892" class="l"><a href="#1892">1892: </a>        <span class="php-comment">// If falsy, then the user isn't logged in</span>
-</span><span id="1893" class="l"><a href="#1893">1893: </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;session-&gt;userdata(<span class="php-var">$key</span>))
+</span><span id="1893" class="l"><a href="#1893">1893: </a>        <span class="php-keyword1">if</span> ( ! <span class="php-var">$this</span>-&gt;session-&gt;userdata(<span class="php-var">$key</span>))
 </span><span id="1894" class="l"><a href="#1894">1894: </a>        {
 </span><span id="1895" class="l"><a href="#1895">1895: </a>            <span class="php-comment">// Display an error response</span>
 </span><span id="1896" class="l"><a href="#1896">1896: </a>            <span class="php-var">$this</span>-&gt;response([
