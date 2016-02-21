@@ -811,20 +811,20 @@ abstract class REST_Controller extends CI_Controller {
 
         if (empty($content_type) === FALSE)
         {
-            // Check all formats against the HTTP_ACCEPT header
-            foreach ($this->_supported_formats as $key => $value)
-            {
-                // $key = format e.g. csv
-                // $value = mime type e.g. application/csv
+            // If a semi-colon exists in the string, then explode by ; and get the value of where
+            // the current array pointer resides. This will generally be the first element of the array
+            $content_type = (strpos($content_type, ';') !== FALSE ? current(explode(';', $content_type)) : $content_type);
 
-                // If a semi-colon exists in the string, then explode by ; and get the value of where
-                // the current array pointer resides. This will generally be the first element of the array
-                $content_type = (strpos($content_type, ';') !== FALSE ? current(explode(';', $content_type)) : $content_type);
+            // Check all formats against the CONTENT-TYPE header
+            foreach ($this->_supported_formats as $type => $mime)
+            {
+                // $type = format e.g. csv
+                // $mime = mime type e.g. application/csv
 
                 // If both the mime types match, then return the format
-                if ($content_type === $value)
+                if ($content_type === $mime)
                 {
-                    return $key;
+                    return $type;
                 }
             }
         }
