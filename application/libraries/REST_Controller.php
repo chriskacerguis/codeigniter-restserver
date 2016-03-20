@@ -540,7 +540,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // When there is no specific override for the current class/method, use the default auth value set in the config
-        if ($this->auth_override === FALSE && !($this->config->item('rest_enable_keys') && $this->_allow === TRUE) || ($this->config->item('allow_auth_and_keys') === TRUE && $this->_allow === TRUE))
+        if ($this->auth_override === FALSE && (!($this->config->item('rest_enable_keys') && $this->_allow === TRUE) || ($this->config->item('allow_auth_and_keys') === TRUE && $this->_allow === TRUE)))
         {
             $rest_auth = strtolower($this->config->item('rest_auth'));
             switch ($rest_auth)
@@ -664,16 +664,17 @@ abstract class REST_Controller extends CI_Controller {
 
             // If no level is set, or it is lower than/equal to the key's level
             $authorized = $level <= $this->rest->level;
-
             // IM TELLIN!
             if ($this->config->item('rest_enable_logging') && $log_method)
             {
                 $this->_log_request($authorized);
             }
-
-            // They don't have good enough perms
-            $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_permissions')];
-            $authorized || $this->response($response, self::HTTP_UNAUTHORIZED);
+            if($authorized === FALSE)
+            {
+                // They don't have good enough perms
+                $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_permissions')];
+                $this->response($response, self::HTTP_UNAUTHORIZED);
+            }
         }
 
         // No key stuff, but record that stuff is happening
