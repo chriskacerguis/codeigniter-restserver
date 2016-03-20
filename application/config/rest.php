@@ -463,8 +463,9 @@ $config['rest_logs_json_params'] = FALSE;
 |       `uri` VARCHAR(255) NOT NULL,
 |       `count` INT(10) NOT NULL,
 |       `hour_started` INT(11) NOT NULL,
-|       `api_key` VARCHAR(40) NOT NULL,
-|       PRIMARY KEY (`id`)
+|       `api_key_id` INT(11) NOT NULL,
+|       PRIMARY KEY (`id`),
+|       FOREIGN KEY (`api_key_id`) REFERENCES `keys`(`id`) ON DELETE CASCADE
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 | To specify the limits within the controller's __construct() method, add per-method
