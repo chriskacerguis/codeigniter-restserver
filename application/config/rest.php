@@ -522,3 +522,74 @@ $config['rest_ajax_only'] = FALSE;
 |
 */
 $config['rest_language'] = 'english';
+
+/*
+|--------------------------------------------------------------------------
+| CORS Check
+|--------------------------------------------------------------------------
+|
+| Set to true to enable Cross-Origin Resource Sharing (CORS). Useful if you
+|  are hosting your API on a different domain from the appolication that
+|  will access it through a browser.
+|
+*/
+$config['check_cors'] = false;
+
+/*
+|--------------------------------------------------------------------------
+| CORS Allowable Headers
+|--------------------------------------------------------------------------
+|
+| If using CORS checks, set the allowable headers here. Add any custom headers you may
+|  be using in tyou application to the array
+|
+*/
+$config['allowed_cors_headers'] = [
+  'Origin',
+  'X-Requested-With',
+  'Content-Type',
+  'Accept',
+  'Access-Control-Request-Method'
+];
+
+/*
+|--------------------------------------------------------------------------
+| CORS Allowable Methods
+|--------------------------------------------------------------------------
+|
+| If using CORS checks, you can set the methods you want to be allowed here.
+|
+*/
+$config['allowed_cors_methods'] = [
+  'GET',
+  'POST',
+  'OPTIONS',
+  'PUT',
+  'PATCH',
+  'DELETE'
+];
+
+/*
+|--------------------------------------------------------------------------
+| CORS Allow Any Domain
+|--------------------------------------------------------------------------
+|
+| Set to true to enable Cross-Origin Resource Sharing (CORS) from any
+|  source domain
+|
+*/
+$config['allow_any_cors_domain'] = false;
+
+/*
+|--------------------------------------------------------------------------
+| CORS Allowable Domains
+|--------------------------------------------------------------------------
+|
+| Used if $config['check_cors'] is set to true and $config['allow_any_cors_domain']
+|  is set to false. Set all the allowable domains within the array.
+|
+| e.g. $config['allowed_origins'] = ['http://www.example.com', 'https://spa.example.com']
+|
+*/
+$config['allowed_cors_origins'] = [];
+
