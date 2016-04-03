@@ -466,8 +466,9 @@ abstract class REST_Controller extends CI_Controller {
 
         // Check for CORS access request
         $check_cors = $this->config->item('check_cors');
-        if ($check_cors === true) {
-          $this->_check_cors();
+        if ($check_cors === TRUE)
+        {
+            $this->_check_cors();
         }
 
         // Create an argument container if it doesn't exist e.g. _get_args
@@ -2175,33 +2176,35 @@ abstract class REST_Controller extends CI_Controller {
         $allowed_methods = implode(' ,', $this->config->item('allowed_cors_methods'));
 
         // If we want to allow any domain to access the API
-        if ($this->config->item('allow_any_cors_domain') === true)
+        if ($this->config->item('allow_any_cors_domain') === TRUE)
         {
             header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Headers: ' . $allowed_headers);
-            header('Access-Control-Allow-Methods: ' . $allowed_methods);
+            header('Access-Control-Allow-Headers: '.$allowed_headers);
+            header('Access-Control-Allow-Methods: '.$allowed_methods);
         }
-        // We're going to allow only certain domains access
         else
         {
+            // We're going to allow only certain domains access
             // Store the HTTP Origin header
-            $origin = (isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '');
+            $origin = $this->input->server('HTTP_ORIGIN');
+            if ($origin === NULL)
+            {
+                $origin = '';
+            }
 
             // If the origin domain is in the allowed_cors_origins list, then add the Access Control headers
             if (in_array($origin, $this->config->item('allowed_cors_origins')))
             {
-                header('Access-Control-Allow-Origin: ' . $origin);
-                header('Access-Control-Allow-Headers: ' . $allowed_headers);
-                header('Access-Control-Allow-Methods: ' . $allowed_methods);
+                header('Access-Control-Allow-Origin: '.$origin);
+                header('Access-Control-Allow-Headers: '.$allowed_headers);
+                header('Access-Control-Allow-Methods: '.$allowed_methods);
             }
         }
 
         // If the request HTTP method is 'OPTIONS', kill the response and send it to the client
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        if ($method === 'OPTIONS')
+        if ($this->input->method() === 'options')
         {
-            die();
+            exit;
         }
     }
 
