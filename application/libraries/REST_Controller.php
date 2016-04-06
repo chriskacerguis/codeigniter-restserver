@@ -1432,6 +1432,9 @@ abstract class REST_Controller extends CI_Controller {
         if ($this->request->format)
         {
             $this->request->body = $this->input->raw_input_stream;
+            if ($this->request->format === 'json') {
+                $this->_put_args = json_decode($this->input->raw_input_stream);                
+            }
         }
         else if ($this->input->method() === 'put')
         {
