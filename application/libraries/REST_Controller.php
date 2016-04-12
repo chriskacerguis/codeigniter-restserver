@@ -498,6 +498,9 @@ abstract class REST_Controller extends CI_Controller {
             $this->{'_' . $this->request->method . '_args'} = $this->request->body;
         }
 
+        //get header vars
+        $this->_head_args = $this->input->request_headers();
+
         // Merge both for one mega-args variable
         $this->_args = array_merge(
             $this->_get_args,
