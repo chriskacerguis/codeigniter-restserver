@@ -178,12 +178,6 @@ class Format {
             $data = $this->_data;
         }
 
-        // turn off compatibility mode as simple xml throws a wobbly if you don't.
-        if (ini_get('zend.ze1_compatibility_mode') == 1)
-        {
-            ini_set('zend.ze1_compatibility_mode', 0);
-        }
-
         if ($structure === NULL)
         {
             $structure = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><$basenode />");
