@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  * @version         3.0.0
  */
-abstract class REST_Controller extends CI_Controller {
+abstract class REST_Controller extends MX_Controller {
 
     // Note: Only the widely used HTTP status codes are documented
 
@@ -262,6 +262,12 @@ abstract class REST_Controller extends CI_Controller {
     protected $_args = [];
 
     /**
+     * The arguments for the header
+     * 
+     * @var array
+     */
+    protected $_header_args = [];
+    /**
      * The insert_id of the log entry (if we have one)
      *
      * @var string
@@ -498,8 +504,11 @@ abstract class REST_Controller extends CI_Controller {
             $this->{'_' . $this->request->method . '_args'} = $this->request->body;
         }
 
+        $this->_header_args = $this->input->request_headers();
+
         // Merge both for one mega-args variable
         $this->_args = array_merge(
+            $this->_header_args,
             $this->_get_args,
             $this->_options_args,
             $this->_patch_args,
@@ -562,6 +571,9 @@ abstract class REST_Controller extends CI_Controller {
                     $this->_prepare_basic_auth();
                     break;
                 case 'digest':
+                    if ($this->config->item('rest_timestamp_validation')){
+                        $this->_check_timestamp_validation();
+                    }
                     $this->_prepare_digest_auth();
                     break;
                 case 'session':
@@ -822,7 +834,7 @@ abstract class REST_Controller extends CI_Controller {
     {
         // Get the CONTENT-TYPE value from the SERVER variable
         $content_type = $this->input->server('CONTENT_TYPE');
-
+        
         if (empty($content_type) === FALSE)
         {
             // Check all formats against the HTTP_ACCEPT header
@@ -981,7 +993,7 @@ abstract class REST_Controller extends CI_Controller {
         $this->rest->level = NULL;
         $this->rest->user_id = NULL;
         $this->rest->ignore_limits = FALSE;
-
+        
         // Find the key from server or arguments
         if (($key = isset($this->_args[$api_key_variable]) ? $this->_args[$api_key_variable] : $this->input->server($key_name)))
         {
@@ -1145,6 +1157,7 @@ abstract class REST_Controller extends CI_Controller {
             return TRUE;
         }
 
+        
         // How many times can you get to this method in a defined time_limit (default: 1 hour)?
         $limit = $this->methods[$limited_method_name]['limit'];
 
@@ -1969,6 +1982,22 @@ abstract class REST_Controller extends CI_Controller {
             $this->_check_whitelist_auth();
         }
 
+        
+        /*if(isset($_SERVER['PHP_AUTH_DIGEST']))
+        {
+            $digest_string = $_SERVER['PHP_AUTH_DIGEST'];
+        }
+        
+        elseif(isset($_SERVER['HTTP_AUTHORIZATION']))
+        {
+            $digest_string = $_SERVER['HTTP_AUTHORIZATION'];
+        }
+        
+        else
+        {
+            $digest_string = "";
+        }*/
+        
         // We need to test which server authentication variable to use,
         // because the PHP ISAPI module in IIS acts different from CGI
         $digest_string = $this->input->server('PHP_AUTH_DIGEST');
@@ -1976,7 +2005,7 @@ abstract class REST_Controller extends CI_Controller {
         {
             $digest_string = $this->input->server('HTTP_AUTHORIZATION');
         }
-
+        log_message('debug', 'digest string : ' . json_encode($digest_string));
         $unique_id = uniqid();
 
         // The $_SESSION['error_prompted'] variable is used to ask the password
@@ -1997,8 +2026,9 @@ abstract class REST_Controller extends CI_Controller {
         {
             $this->_force_login($unique_id);
         }
-
-        $md5 = md5(strtoupper($this->request->method) . ':' . $digest['uri']);
+        
+        //$md5 = md5(strtoupper($this->request->method) . ':' . $digest['uri']);
+        $md5 = md5(strtoupper($this->input->server('REQUEST_METHOD')) . ':' . $digest['uri']);
         $valid_response = md5($username . ':' . $digest['nonce'] . ':' . $digest['nc'] . ':' . $digest['cnonce'] . ':' . $digest['qop'] . ':' . $md5);
 
         // Check if the string don't compare (case-insensitive)
@@ -2203,6 +2233,73 @@ abstract class REST_Controller extends CI_Controller {
         {
             die();
         }
+    }
+    
+    /**
+    * Validates the timestamp inclued in costum http header
+    */
+    protected function _check_timestamp_validation()
+    {
+        //Timestamp header defaults
+        $timestamp_header = strtoupper( $this->config->item('rest_timestamp_header'));
+        $timestamp_header = ($timestamp_header)?$timestamp_header:'X_TIMESTAMP';
+
+        //Timestamp header hash defaults
+        $timestamp_header_hash = strtoupper( $this->config->item('rest_timestamp_header_hash'));
+        $timestamp_header_hash = ($timestamp_header_hash)?$timestamp_header_hash:'X_TIMESTAMP_AUTH';
+
+        //Time to live defaults
+        $time_to_live     = $this->config->item('rest_timestamp_time_to_live');
+        $time_to_live     =($time_to_live )?$time_to_live:60;
+
+        //check if timestamp is still valid
+        $timestamp = $_SERVER[$timestamp_header] ;
+
+        if( !isset($_SERVER[$timestamp_header] ) ){
+               $this->response(array($this->config->item('rest_status_field_name') => 0, $this->config->item('rest_message_field_name') => 'Timestamp header is missing'), 400);
+            exit;
+        }
+
+        if( $timestamp < ( time() - $time_to_live )){
+               $this->response(array($this->config->item('rest_status_field_name') => 0, $this->config->item('rest_message_field_name') => 'Timestamp header is expired'), 401);
+            exit;
+        }
+
+        //Retrieve timestamp hash from the headers
+        if( !isset($_SERVER[$timestamp_header_hash])){
+             $this->response(array($this->config->item('rest_status_field_name') => 0, $this->config->item('rest_message_field_name') => 'Timestamp hash is missing'), 401);
+            exit;
+
+        }
+
+        //Retrieve timestamp hash from the headers
+        $valid_timestamp_hash =  $_SERVER[$timestamp_header_hash];
+
+        // We need to test which server authentication variable to use
+        // because the PHP ISAPI module in IIS acts different from CGI
+        if ($this->input->server('PHP_AUTH_DIGEST')) {
+            $digest_string = $this->input->server('PHP_AUTH_DIGEST');
+        } elseif ($this->input->server('HTTP_AUTHORIZATION')) {
+            $digest_string = $this->input->server('HTTP_AUTHORIZATION');
+        } else {
+            $digest_string = "";
+        }
+
+        // We need to retrieve authentication informations from the $auth_data variable
+        // username has already been verified in the digest authentication method
+        $matches = array();
+        preg_match_all('@(username)=[\'"]?([^\'",]+)@', $digest_string, $matches);
+        $digest = (empty($matches[1]) || empty($matches[2])) ? array() : array_combine($matches[1], $matches[2]);
+
+        // For digest authentication the library function should return already stored md5(username:restrealm:password) for that username @see rest.php::auth_library_function config
+        $A1 = $this->_check_login($digest['username'], true);
+        $timestamp_hash = md5( $timestamp.":".$A1);
+
+        if ($timestamp_hash != $valid_timestamp_hash) {
+            $this->response(array($this->config->item('rest_status_field_name') => 0, $this->config->item('rest_message_field_name') => 'Invalid timestamp hash provided'), 401);
+            exit;
+        }
+
     }
 
 }
