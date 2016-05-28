@@ -1,16 +1,16 @@
 <?php
 
 /*
- * English language
+ * Serbian language
  */
 
-$lang['text_rest_invalid_api_key'] = 'Nepravilan API klju&#269; %s'; // %s is the REST API key
-$lang['text_rest_invalid_credentials'] = 'Nepravilni ulazni podaci';
+$lang['text_rest_invalid_api_key'] = 'Nepravilan API klju&#269; %s'; // %s je REST API ključ
+$lang['text_rest_invalid_credentials'] = 'Neodgovaraju&#263;i ulazni podaci';
 $lang['text_rest_ip_denied'] = 'IP odbijen';
 $lang['text_rest_ip_unauthorized'] = 'IP neautorizovan';
 $lang['text_rest_unauthorized'] = 'Neautorizovano';
 $lang['text_rest_ajax_only'] = 'Jedino AJAX zahtevi su dozvoljeni';
-$lang['text_rest_api_key_unauthorized'] = 'Ovaj API klju&#269; nema dostup zahtevanom kontroleru';
+$lang['text_rest_api_key_unauthorized'] = 'Ovaj API klju&#269; nema dozvolu zahtevanog kontrolera';
 $lang['text_rest_api_key_permissions'] = 'Ovaj API klju&#269; nema dovoljan stepen dozvole';
 $lang['text_rest_api_key_time_limit'] = 'Ovaj API klju&#269; je prekora&#269;io vremenski limit za dati metod';
 $lang['text_rest_unknown_method'] = 'Nepoznat metod';
