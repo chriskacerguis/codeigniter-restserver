@@ -2153,6 +2153,16 @@ abstract class REST_Controller extends CI_Controller {
         {
             return TRUE;
         }
+        
+        //check if the key has all_access
+        $accessRow = $this->rest->db
+            ->where('key', $this->rest->key)
+            ->get($this->config->item('rest_access_table'))->row_array();
+        
+        if (!empty($accessRow) && !empty($accessRow['all_access']))
+        {
+        	return TRUE;
+        }
 
         // Fetch controller based on path and controller name
         $controller = implode(
