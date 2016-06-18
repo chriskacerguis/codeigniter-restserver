@@ -417,6 +417,7 @@ $config['rest_logs_table'] = 'logs';
 |   CREATE TABLE `access` (
 |       `id` INT(11) unsigned NOT NULL AUTO_INCREMENT,
 |       `key` VARCHAR(40) NOT NULL DEFAULT '',
+|       `all_access` TINYINT(1) NOT NULL DEFAULT '0',
 |       `controller` VARCHAR(50) NOT NULL DEFAULT '',
 |       `date_created` DATETIME DEFAULT NULL,
 |       `date_modified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
