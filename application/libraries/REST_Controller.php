@@ -381,21 +381,7 @@ abstract class REST_Controller extends CI_Controller {
     {
         parent::__construct();
 
-        // Disable XML Entity (security vulnerability)
-        libxml_disable_entity_loader(TRUE);
-
-        // Check to see if PHP is equal to or greater than 5.4.x
-        if (is_php('5.4') === FALSE)
-        {
-            // CodeIgniter 3 is recommended for v5.4 or above
-            throw new Exception('Using PHP v'.PHP_VERSION.', though PHP v5.4 or greater is required');
-        }
-
-        // Check to see if this is CI 3.x
-        if (explode('.', CI_VERSION, 2)[0] < 3)
-        {
-            throw new Exception('REST Server requires CodeIgniter 3.x');
-        }
+        $this->preflight_checks();
 
         // Set the default value of global xss filtering. Same approach as CodeIgniter 3
         $this->_enable_xss = ($this->config->item('global_xss_filtering') === TRUE);
@@ -597,6 +583,29 @@ abstract class REST_Controller extends CI_Controller {
         if ($this->config->item('rest_enable_logging') === TRUE)
         {
             $this->_log_access_time();
+        }
+    }
+
+    /**
+     * Checks to see if we have everything we need to run this library.
+     *
+     * @author Chris Kacerguis
+     * @access protected
+     * @return Exception
+     */
+    protected function preflight_checks()
+    {
+        // Check to see if PHP is equal to or greater than 5.4.x
+        if (is_php('5.4') === FALSE)
+        {
+            // CodeIgniter 3 is recommended for v5.4 or above
+            throw new Exception('Using PHP v'.PHP_VERSION.', though PHP v5.4 or greater is required');
+        }
+
+        // Check to see if this is CI 3.x
+        if (explode('.', CI_VERSION, 2)[0] < 3)
+        {
+            throw new Exception('REST Server requires CodeIgniter 3.x');
         }
     }
 
