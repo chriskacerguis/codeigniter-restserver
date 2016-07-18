@@ -1006,7 +1006,7 @@ abstract class REST_Controller extends CI_Controller {
             
             $existsactive = $this->db->query("SELECT api_key_activated FROM api_keys WHERE api_key = '".$key."' ");
             $isactive = $existsactive->result();
-            if ( ! ($row = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get($this->config->item('rest_keys_table'))->row() ) || $isactive[0]->activated == 'no' )
+            if ( ! ($row = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get($this->config->item('rest_keys_table'))->row() ) || $isactive[0]->api_key_activated == 'no' )
             {
                 return FALSE;
             }
