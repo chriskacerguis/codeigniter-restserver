@@ -1000,7 +1000,13 @@ abstract class REST_Controller extends CI_Controller {
         // Find the key from server or arguments
         if (($key = isset($this->_args[$api_key_variable]) ? $this->_args[$api_key_variable] : $this->input->server($key_name)))
         {
-            if ( ! ($row = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get($this->config->item('rest_keys_table'))->row()))
+            //if you have a field to check if the API KEY provided by the user is activated or not 
+            //(in case you quickly want to deactivate specific users)
+            // you can also perform an extra check for this
+            
+            $existsactive = $this->db->query("SELECT api_key_activated FROM api_keys WHERE api_key = '".$key."' ");
+            $isactive = $existsactive->result();
+            if ( ! ($row = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get($this->config->item('rest_keys_table'))->row() ) || $isactive[0]->activated == 'no' )
             {
                 return FALSE;
             }
