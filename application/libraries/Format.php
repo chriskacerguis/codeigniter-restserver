@@ -521,5 +521,4 @@ class Format {
     {
         return trim($data);
     }
-
 }
