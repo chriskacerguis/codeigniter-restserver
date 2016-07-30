@@ -14,9 +14,7 @@
 		"source": "https://github.com/chriskacerguis/codeigniter-restserver"
 	},
     "autoload": {
-		"psr-0": {
-			"chriskacerguis\\Codeigniter-restserver\\": "src"
-		}
+		"classmap": ["src/"]
 	},
 	"require": {
 		"php": ">=5.2.4"
