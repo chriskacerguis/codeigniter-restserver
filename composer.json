@@ -20,7 +20,7 @@
 	},
 	"require": {
 		"php": ">=5.2.4",
-        "codeigniter/framework": ">=3.0.0"
+        "codeigniter/framework": ">=3.*"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "3.7.14"
