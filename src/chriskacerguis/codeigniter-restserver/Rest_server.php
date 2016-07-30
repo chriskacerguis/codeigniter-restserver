@@ -436,12 +436,12 @@ abstract class REST_Controller extends \CI_Controller {
         }
 
         // Load the language file
-        $this->lang->load('rest_controller', $language, FALSE, TRUE, __DIR__."/../");
+        $this->lang->load('rest_controller', $language, FALSE, TRUE, __DIR__."/../../");
 
         // Initialise the response, request and rest objects
-        $this->request = new stdClass();
-        $this->response = new stdClass();
-        $this->rest = new stdClass();
+        $this->request = new \stdClass();
+        $this->response = new \stdClass();
+        $this->rest = new \stdClass();
 
         // Check to see if the current IP address is blacklisted
         if ($this->config->item('rest_ip_blacklist_enabled') === TRUE)
