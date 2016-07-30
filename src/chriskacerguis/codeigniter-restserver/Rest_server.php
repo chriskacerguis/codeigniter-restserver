@@ -386,8 +386,6 @@ abstract class REST_Controller extends \CI_Controller {
     {
         parent::__construct();
 
-        $this->preflight_checks();
-
         // Set the default value of global xss filtering. Same approach as CodeIgniter 3
         $this->_enable_xss = ($this->config->item('global_xss_filtering') === TRUE);
 
@@ -592,28 +590,12 @@ abstract class REST_Controller extends \CI_Controller {
     }
 
     /**
-     * Checks to see if we have everything we need to run this library.
+     * get_local_config
      *
-     * @access protected
-     * @return Exception
+     * @author Hanisch-IT
+     * @access private
+     * @return void
      */
-    protected function preflight_checks()
-    {
-        // Check to see if PHP is equal to or greater than 5.4.x
-        if (is_php('5.4') === FALSE)
-        {
-            // CodeIgniter 3 is recommended for v5.4 or above
-            throw new Exception('Using PHP v'.PHP_VERSION.', though PHP v5.4 or greater is required');
-        }
-
-        // Check to see if this is CI 3.x
-        if (explode('.', CI_VERSION, 2)[0] < 3)
-        {
-            throw new Exception('REST Server requires CodeIgniter 3.x');
-        }
-    }
-
-    // written by Hanisch-IT
     private function get_local_config($config_file)
     {
         if(file_exists(__DIR__."/../config/".$config_file.".php"))
