@@ -1,0 +1,16 @@
+{
+	"description": "REST Server for the CodeIgniter framework",
+	"name": "chriskacerguis/codeigniter-restserver",
+	"type": "project",
+	"homepage": "https://github.com/chriskacerguis/codeigniter-restserver",
+    "authors": [
+		{
+			"name": "Chris Kacerguis",
+			"role": "Developer"
+		}
+	],
+	"license": "MIT",
+	"support": {
+		"source": "https://github.com/chriskacerguis/codeigniter-restserver"
+	}
+}
