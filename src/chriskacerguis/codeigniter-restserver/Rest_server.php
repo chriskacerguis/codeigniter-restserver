@@ -399,7 +399,8 @@ abstract class REST_Controller extends \CI_Controller {
         $this->_start_rtime = microtime(TRUE);
 
         // Load the rest.php configuration file
-        $this->load->config($config);
+        $this->get_local_config($config);
+        //$this->load->config($config);
 
         // At present the library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter (no citation)
         $this->load->library('format');
