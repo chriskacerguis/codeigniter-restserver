@@ -5,14 +5,33 @@ config file and one controller.
 
 ## Requirements
 
-1. PHP 5.4 or greater
-2. CodeIgniter 3.0+
-
-_Note: for 1.7.x support download v2.2 from Downloads tab_
+1. PHP 5.6 or greater (note, I'm sure that 5.4 will work fine, but I'm developing using 5.6)
+2. CodeIgniter 3.1+
 
 ## Installation
 
-Drag and drop the **application/libraries/Format.php** and **application/libraries/REST_Controller.php** files into your application's directories. To use `require_once` it at the top of your controllers to load it into the scope. Additionally, copy the **rest.php** file from **application/config** in your application's configuration directory.
+To install please use Composer.
+
+1.  Ensure that Composer support is enabled in CI 3.1 (go to application/config/config.php) and set $config['composer_autoload'] to TRUE (or your vendor path)
+2.  Add "chriskacerguis/codeigniter-restserver": "^4.0.0" to your composer.json file OR type "composer require chriskacerguis/codeigniter-restserver"
+
+To any file you want to use as an API controller, please add the following:
+
+```
+use Restserver\Libraries\REST_Controller;
+```
+
+Then have your controller extend "REST_Controller", for example:
+
+```
+class Welcome extends REST_Controller {
+  	public function index()
+	  {
+      $foo = array('fake' => 'data');
+		  $this->response($foo, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+	  }
+}
+```
 
 ## Handling Requests
 
