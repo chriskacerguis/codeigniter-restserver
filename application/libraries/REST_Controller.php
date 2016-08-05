@@ -1920,7 +1920,7 @@ abstract class REST_Controller extends CI_Controller {
     }
 
         /**
-         * Check to see if the user is logged in with a PHP session key
+         * Check to see if the user is logged in with a token group
          *
          * @author Frank Sierra
          *

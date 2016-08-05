@@ -360,12 +360,12 @@ $config['rest_tokens_table'] = 'tokens';
 |		`private` varchar(40) NOT NULL,
 |		`expiration` datetime NOT NULL,
 |		`status` char(1) NOT NULL,
-|		PRIMARY KEY (`public_token`,`user_id`),
-|		KEY `public_token` (`public_token`)
+|		PRIMARY KEY (`public`,`user_id`),
+|		KEY `public` (`public`)
 |	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
-$config['rest_enable_tokens'] = TRUE;
+$config['rest_enable_tokens'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
