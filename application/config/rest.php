@@ -449,6 +449,7 @@ $config['rest_key_name'] = 'X-API-KEY';
 |       `rtime` FLOAT DEFAULT NULL,
 |       `authorized` VARCHAR(1) NOT NULL,
 |       `response_code` smallint(3) DEFAULT '0',
+|       `response_string` TEXT DEFAULT NULL,
 |       PRIMARY KEY (`id`)
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
@@ -501,7 +502,7 @@ $config['rest_access_table'] = 'access';
 
 /*
 |--------------------------------------------------------------------------
-| REST API Param Log Format
+| REST API Param and Header Log Format
 |--------------------------------------------------------------------------
 |
 | When set to TRUE, the REST API log parameters will be stored in the database as JSON

@@ -799,6 +799,11 @@ abstract class REST_Controller extends CI_Controller {
         if ($this->config->item('rest_enable_logging') === TRUE)
         {
             $this->_log_response_code($http_code);
+                        // Don't care if code is 2xx
+                        if( $http_code >= 300 )
+                        {
+                                $this->_log_response_string($output);
+                        }
         }
 
         // Output the data
@@ -2218,6 +2223,23 @@ abstract class REST_Controller extends CI_Controller {
             'id' => $this->_insert_id
         ]);
     }
+
+        /**
+         * Updates the log table with HTTP response string
+         *
+         * @access protected
+         * @author Frank Sierra Fayad
+         * @param $http_string int HTTP status string
+         * @return bool TRUE log table updated; otherwise, FALSE
+         */
+        protected function _log_response_string($http_string){
+            $payload['response_string'] = $http_string;
+
+            return $this->rest->db->update(
+                $this->config->item('rest_logs_table'), $payload, [
+                'id' => $this->_insert_id
+            ]);
+        }
 
     /**
      * Check to see if the API key has access to the controller and methods
