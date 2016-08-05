@@ -1947,6 +1947,7 @@ abstract class REST_Controller extends CI_Controller {
                 $row = $this->rest->db
                     ->where($this->config->item('rest_public_token_column'), $public_token_value)
                     ->where('expiration >', 'NOW()', FALSE)
+                    ->where('status', 'A')
                     ->get($this->config->item('rest_tokens_table'))
                     ->row();
                 if ( ! $row )
