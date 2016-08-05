@@ -559,6 +559,9 @@ abstract class REST_Controller extends CI_Controller {
                 case 'session':
                     $this->_check_php_session();
                     break;
+                case 'token':
+                    $this->_check_token();
+                    break;
             }
             if ($this->config->item('rest_ip_whitelist_enabled') === TRUE)
             {
@@ -796,6 +799,11 @@ abstract class REST_Controller extends CI_Controller {
         if ($this->config->item('rest_enable_logging') === TRUE)
         {
             $this->_log_response_code($http_code);
+                        // Don't care if code is 2xx
+                        if( $http_code >= 300 )
+                        {
+                                $this->_log_response_string($output);
+                        }
         }
 
         // Output the data
@@ -1100,7 +1108,8 @@ abstract class REST_Controller extends CI_Controller {
                 $this->config->item('rest_logs_table'), [
                 'uri' => $this->uri->uri_string(),
                 'method' => $this->request->method,
-                'params' => $this->_args ? ($this->config->item('rest_logs_json_params') === TRUE ? json_encode($this->_args) : serialize($this->_args)) : NULL,
+                                'headers' => $this->_head_args ? ($this->config->item('rest_logs_json_headers') === TRUE ? json_encode($this->_head_args) : serialize($this->_head_args)) : NULL,
+                'params' => $this->{'_' . $this->request->method . '_args'} ? ($this->config->item('rest_logs_json_params') === TRUE ? json_encode($this->{'_' . $this->request->method . '_args'}) : serialize($this->{'_' . $this->request->method . '_args'})) : NULL,
                 'api_key' => isset($this->rest->key) ? $this->rest->key : '',
                 'ip_address' => $this->input->ip_address(),
                 'time' => time(),
@@ -1910,6 +1919,73 @@ abstract class REST_Controller extends CI_Controller {
         return TRUE;
     }
 
+        /**
+         * Check to see if the user is logged in with a PHP session key
+         *
+         * @author Frank Sierra
+         *
+         * @access protected
+         * @return void
+        */
+        protected function _check_token()
+        {
+            // Get the auth_source config items
+            $access_token_key = $this->config->item('auth_source');
+            $public_token_key = $this->config->item('auth_source_public');
+            $timestamp_key = $this->config->item('auth_source_timestamp');
+
+            $access_token_key_name = 'HTTP_' . strtoupper(str_replace('-', '_', $access_token_key));
+            $public_token_key_name = 'HTTP_' . strtoupper(str_replace('-', '_', $public_token_key));
+            $timestamp_key_name = 'HTTP_' . strtoupper(str_replace('-', '_', $timestamp_key));
+
+            $access_token_value = isset($this->_args[$access_token_key]) ? $this->_args[$access_token_key] : $this->input->server($access_token_key_name);
+            $public_token_value = isset($this->_args[$public_token_key]) ? $this->_args[$public_token_key] : $this->input->server($public_token_key_name);
+            $timestamp_value = isset($this->_args[$timestamp_key]) ? $this->_args[$timestamp_key] : $this->input->server($timestamp_key_name);
+
+            if ( $access_token_value && $public_token_value && $timestamp_value )
+            {
+                $row = $this->rest->db
+                    ->where($this->config->item('rest_public_token_column'), $public_token_value)
+                    ->where('expiration >', 'NOW()', FALSE)
+                    ->get($this->config->item('rest_tokens_table'))
+                    ->row();
+                if ( ! $row )
+                {
+                    $this->response([
+                        $this->config->item('rest_status_field_name') => FALSE,
+                        $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unauthorized')
+                    ], self::HTTP_UNAUTHORIZED);
+                }
+                else
+                {
+                    $private_token_value = $row->{$this->config->item('rest_private_token_column')};
+                    $access_token_calc = md5($private_token_value . $timestamp_value);
+                    if ( $access_token_value != $access_token_calc )
+                    {
+                        $this->response([
+                            $this->config->item('rest_status_field_name') => FALSE,
+                            $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unauthorized')
+                        ], self::HTTP_UNAUTHORIZED);
+                    }
+                    else
+                    {
+                        $this->rest->db
+                            ->where($this->config->item('rest_public_token_column'), $public_token_value)
+                            ->where($this->config->item('rest_private_token_column'), $private_token_value)
+                            ->set('expiration', 'NOW() + INTERVAL ' . $this->config->item('rest_token_lifetime') .' SECOND', FALSE)
+                            ->update($this->config->item('rest_tokens_table'));
+                    }
+                }
+            }
+            else
+            {
+                $this->response([
+                    $this->config->item('rest_status_field_name') => FALSE,
+                    $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unauthorized')
+                ], self::HTTP_UNAUTHORIZED);
+            }
+        }
+
     /**
      * Check to see if the user is logged in with a PHP session key
      *
@@ -2147,6 +2223,23 @@ abstract class REST_Controller extends CI_Controller {
             'id' => $this->_insert_id
         ]);
     }
+
+        /**
+         * Updates the log table with HTTP response string
+         *
+         * @access protected
+         * @author Frank Sierra Fayad
+         * @param $http_string int HTTP status string
+         * @return bool TRUE log table updated; otherwise, FALSE
+         */
+        protected function _log_response_string($http_string){
+            $payload['response_string'] = $http_string;
+
+            return $this->rest->db->update(
+                $this->config->item('rest_logs_table'), $payload, [
+                'id' => $this->_insert_id
+            ]);
+        }
 
     /**
      * Check to see if the API key has access to the controller and methods

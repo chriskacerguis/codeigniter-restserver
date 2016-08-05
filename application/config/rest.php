@@ -108,6 +108,7 @@ $config['rest_realm'] = 'REST API';
 | 'digest'  More secure login
 | 'session' Check for a PHP session variable. See 'auth_source' to set the
 |           authorization key
+| 'token'   Enable the use of tokens for authentication.
 |
 */
 $config['rest_auth'] = FALSE;
@@ -119,14 +120,21 @@ $config['rest_auth'] = FALSE;
 |
 | Is login required and if so, the user store to use
 |
-| ''        Use config based users or wildcard testing
-| 'ldap'    Use LDAP authentication
-| 'library' Use a authentication library
+| ''            Use config based users or wildcard testing
+| 'ldap'        Use LDAP authentication
+| 'library'     Use a authentication library
+| 'AccessToken' Use a token model for authorization
 |
 | Note: If 'rest_auth' is set to 'session' then change 'auth_source' to the name of the session variable
+| Note: If 'rest_auth' is set to 'token' then uncomment 'auth_source_public' and 'auth_source_timestamp'
+| and set 'auth_source' to 'AccessToken'
 |
 */
 $config['auth_source'] = 'ldap';
+// $config['auth_source_public'] = 'PublicToken';
+// $config['auth_source_timestamp'] = 'TimeStamp';
+/*
+| 
 
 /*
 |--------------------------------------------------------------------------
@@ -328,6 +336,58 @@ $config['rest_key_column'] = 'key';
 
 /*
 |--------------------------------------------------------------------------
+| REST Tokens Table Name
+|--------------------------------------------------------------------------
+|
+| The table name in your database that stores Tokens
+|
+*/
+$config['rest_tokens_table'] = 'tokens';
+
+/*
+|--------------------------------------------------------------------------
+| REST Enable Tokens
+|--------------------------------------------------------------------------
+|
+| When set to TRUE, the REST API will look for two columns named 'public' and 'private'.
+| If no token is provided, the request will result in an error. To override the
+| column names see 'rest_public_token_column' and 'rest_private_token_column'
+|
+| Default table schema:
+|   CREATE TABLE `tokens` (
+|   `user_id` INT(11) NOT NULL,
+|		`public` varchar(40) NOT NULL,
+|		`private` varchar(40) NOT NULL,
+|		`expiration` datetime NOT NULL,
+|		`status` char(1) NOT NULL,
+|		PRIMARY KEY (`public_token`,`user_id`),
+|		KEY `public_token` (`public_token`)
+|	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+|
+*/
+$config['rest_enable_tokens'] = TRUE;
+
+/*
+|--------------------------------------------------------------------------
+| Tokens Table Public and Private Column Names
+|--------------------------------------------------------------------------
+|
+| If not using the default table schema in 'rest_enable_tokens', specify the
+| column name to match e.g. my_key
+|
+*/
+$config['rest_public_token_column'] = 'public';
+$config['rest_private_token_column'] = 'private';
+/*
+|--------------------------------------------------------------------------
+| REST Token lifetime (seconds)
+|--------------------------------------------------------------------------
+|
+*/
+	$config['rest_token_lifetime'] = 1440;
+
+/*
+|--------------------------------------------------------------------------
 | REST API Limits method
 |--------------------------------------------------------------------------
 |
@@ -381,6 +441,7 @@ $config['rest_key_name'] = 'X-API-KEY';
 |       `id` INT(11) NOT NULL AUTO_INCREMENT,
 |       `uri` VARCHAR(255) NOT NULL,
 |       `method` VARCHAR(6) NOT NULL,
+|       `headers` TEXT DEFAULT NULL,
 |       `params` TEXT DEFAULT NULL,
 |       `api_key` VARCHAR(40) NOT NULL,
 |       `ip_address` VARCHAR(45) NOT NULL,
@@ -388,6 +449,7 @@ $config['rest_key_name'] = 'X-API-KEY';
 |       `rtime` FLOAT DEFAULT NULL,
 |       `authorized` VARCHAR(1) NOT NULL,
 |       `response_code` smallint(3) DEFAULT '0',
+|       `response_string` TEXT DEFAULT NULL,
 |       PRIMARY KEY (`id`)
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
@@ -440,7 +502,7 @@ $config['rest_access_table'] = 'access';
 
 /*
 |--------------------------------------------------------------------------
-| REST API Param Log Format
+| REST API Param and Header Log Format
 |--------------------------------------------------------------------------
 |
 | When set to TRUE, the REST API log parameters will be stored in the database as JSON
@@ -448,6 +510,7 @@ $config['rest_access_table'] = 'access';
 |
 */
 $config['rest_logs_json_params'] = FALSE;
+$config['rest_logs_json_headers'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
