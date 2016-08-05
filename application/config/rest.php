@@ -441,6 +441,7 @@ $config['rest_key_name'] = 'X-API-KEY';
 |       `id` INT(11) NOT NULL AUTO_INCREMENT,
 |       `uri` VARCHAR(255) NOT NULL,
 |       `method` VARCHAR(6) NOT NULL,
+|       `headers` TEXT DEFAULT NULL,
 |       `params` TEXT DEFAULT NULL,
 |       `api_key` VARCHAR(40) NOT NULL,
 |       `ip_address` VARCHAR(45) NOT NULL,
@@ -508,6 +509,7 @@ $config['rest_access_table'] = 'access';
 |
 */
 $config['rest_logs_json_params'] = FALSE;
+$config['rest_logs_json_headers'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------

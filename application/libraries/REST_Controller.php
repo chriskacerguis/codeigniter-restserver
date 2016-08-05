@@ -1103,7 +1103,8 @@ abstract class REST_Controller extends CI_Controller {
                 $this->config->item('rest_logs_table'), [
                 'uri' => $this->uri->uri_string(),
                 'method' => $this->request->method,
-                'params' => $this->_args ? ($this->config->item('rest_logs_json_params') === TRUE ? json_encode($this->_args) : serialize($this->_args)) : NULL,
+                                'headers' => $this->_head_args ? ($this->config->item('rest_logs_json_headers') === TRUE ? json_encode($this->_head_args) : serialize($this->_head_args)) : NULL,
+                'params' => $this->{'_' . $this->request->method . '_args'} ? ($this->config->item('rest_logs_json_params') === TRUE ? json_encode($this->{'_' . $this->request->method . '_args'}) : serialize($this->{'_' . $this->request->method . '_args'})) : NULL,
                 'api_key' => isset($this->rest->key) ? $this->rest->key : '',
                 'ip_address' => $this->input->ip_address(),
                 'time' => time(),
