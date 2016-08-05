@@ -559,6 +559,9 @@ abstract class REST_Controller extends CI_Controller {
                 case 'session':
                     $this->_check_php_session();
                     break;
+                case 'token':
+                    $this->_check_token();
+                    break;
             }
             if ($this->config->item('rest_ip_whitelist_enabled') === TRUE)
             {
@@ -1909,6 +1912,73 @@ abstract class REST_Controller extends CI_Controller {
 
         return TRUE;
     }
+
+        /**
+         * Check to see if the user is logged in with a PHP session key
+         *
+         * @author Frank Sierra
+         *
+         * @access protected
+         * @return void
+        */
+        protected function _check_token()
+        {
+            // Get the auth_source config items
+            $access_token_key = $this->config->item('auth_source');
+            $public_token_key = $this->config->item('auth_source_public');
+            $timestamp_key = $this->config->item('auth_source_timestamp');
+
+            $access_token_key_name = 'HTTP_' . strtoupper(str_replace('-', '_', $access_token_key));
+            $public_token_key_name = 'HTTP_' . strtoupper(str_replace('-', '_', $public_token_key));
+            $timestamp_key_name = 'HTTP_' . strtoupper(str_replace('-', '_', $timestamp_key));
+
+            $access_token_value = isset($this->_args[$access_token_key]) ? $this->_args[$access_token_key] : $this->input->server($access_token_key_name);
+            $public_token_value = isset($this->_args[$public_token_key]) ? $this->_args[$public_token_key] : $this->input->server($public_token_key_name);
+            $timestamp_value = isset($this->_args[$timestamp_key]) ? $this->_args[$timestamp_key] : $this->input->server($timestamp_key_name);
+
+            if ( $access_token_value && $public_token_value && $timestamp_value )
+            {
+                $row = $this->rest->db
+                    ->where($this->config->item('rest_public_token_column'), $public_token_value)
+                    ->where('expiration >', 'NOW()', FALSE)
+                    ->get($this->config->item('rest_tokens_table'))
+                    ->row();
+                if ( ! $row )
+                {
+                    $this->response([
+                        $this->config->item('rest_status_field_name') => FALSE,
+                        $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unauthorized')
+                    ], self::HTTP_UNAUTHORIZED);
+                }
+                else
+                {
+                    $private_token_value = $row->{$this->config->item('rest_private_token_column')};
+                    $access_token_calc = md5($private_token_value . $timestamp_value);
+                    if ( $access_token_value != $access_token_calc )
+                    {
+                        $this->response([
+                            $this->config->item('rest_status_field_name') => FALSE,
+                            $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unauthorized')
+                        ], self::HTTP_UNAUTHORIZED);
+                    }
+                    else
+                    {
+                        $this->rest->db
+                            ->where($this->config->item('rest_public_token_column'), $public_token_value)
+                            ->where($this->config->item('rest_private_token_column'), $private_token_value)
+                            ->set('expiration', 'NOW() + INTERVAL ' . $this->config->item('rest_token_lifetime') .' SECOND', FALSE)
+                            ->update($this->config->item('rest_tokens_table'));
+                    }
+                }
+            }
+            else
+            {
+                $this->response([
+                    $this->config->item('rest_status_field_name') => FALSE,
+                    $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unauthorized')
+                ], self::HTTP_UNAUTHORIZED);
+            }
+        }
 
     /**
      * Check to see if the user is logged in with a PHP session key
