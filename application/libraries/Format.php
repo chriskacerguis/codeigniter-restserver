@@ -91,13 +91,13 @@ class Format {
         // If the provided data is already formatted we should probably convert it to an array
         if ($from_type !== NULL)
         {
-            if (method_exists($this, '_from_' . $from_type))
+            if (method_exists($this, '_from_'.$from_type))
             {
-                $data = call_user_func([$this, '_from_' . $from_type], $data);
+                $data = call_user_func([$this, '_from_'.$from_type], $data);
             }
             else
             {
-                throw new Exception('Format class does not support conversion from "' . $from_type . '".');
+                throw new Exception('Format class does not support conversion from "'.$from_type.'".');
             }
         }
 
@@ -176,12 +176,6 @@ class Format {
         if ($data === NULL && func_num_args() === 0)
         {
             $data = $this->_data;
-        }
-
-        // turn off compatibility mode as simple xml throws a wobbly if you don't.
-        if (ini_get('zend.ze1_compatibility_mode') == 1)
-        {
-            ini_set('zend.ze1_compatibility_mode', 0);
         }
 
         if ($structure === NULL)
@@ -409,19 +403,19 @@ class Format {
 
         if (empty($callback) === TRUE)
         {
-            return json_encode($data);
+            return json_encode($data, JSON_NUMERIC_CHECK);
         }
 
         // We only honour a jsonp callback which are valid javascript identifiers
         elseif (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback))
         {
             // Return the data as encoded json with a callback
-            return $callback . '(' . json_encode($data) . ');';
+            return $callback.'('.json_encode($data, JSON_NUMERIC_CHECK).');';
         }
 
         // An invalid jsonp callback function provided.
         // Though I don't believe this should be hardcoded here
-        $data['warning'] = 'INVALID JSONP CALLBACK: ' . $callback;
+        $data['warning'] = 'INVALID JSONP CALLBACK: '.$callback;
 
         return json_encode($data);
     }
@@ -527,5 +521,4 @@ class Format {
     {
         return trim($data);
     }
-
 }

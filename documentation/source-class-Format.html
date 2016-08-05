@@ -150,7 +150,7 @@
 </span></span><span id="56" class="l"><a href="#56"> 56: </a><span class="php-comment">     *
 </span></span><span id="57" class="l"><a href="#57"> 57: </a><span class="php-comment">     * @var object
 </span></span><span id="58" class="l"><a href="#58"> 58: </a><span class="php-comment">     */</span>
-</span><span id="59" class="l"><a href="#59"> 59: </a>    <span class="php-keyword1">private</span> <span class="php-var">$_ci</span>;
+</span><span id="59" class="l"><a href="#59"> 59: </a>    <span class="php-keyword1">private</span> <span class="php-var">$_CI</span>;
 </span><span id="60" class="l"><a href="#60"> 60: </a>
 </span><span id="61" class="l"><a href="#61"> 61: </a>    <span class="php-comment">/**
 </span></span><span id="62" class="l"><a href="#62"> 62: </a><span class="php-comment">     * Data to parse
@@ -177,21 +177,21 @@
 </span><span id="83" class="l"><a href="#83"> 83: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> __construct(<span class="php-var">$data</span> = <span class="php-keyword1">NULL</span>, <span class="php-var">$from_type</span> = <span class="php-keyword1">NULL</span>)
 </span><span id="84" class="l"><a href="#84"> 84: </a>    {
 </span><span id="85" class="l"><a href="#85"> 85: </a>        <span class="php-comment">// Get the CodeIgniter reference</span>
-</span><span id="86" class="l"><a href="#86"> 86: </a>        <span class="php-var">$this</span>-&gt;_ci = &amp;get_instance();
+</span><span id="86" class="l"><a href="#86"> 86: </a>        <span class="php-var">$this</span>-&gt;_CI = &amp;get_instance();
 </span><span id="87" class="l"><a href="#87"> 87: </a>
 </span><span id="88" class="l"><a href="#88"> 88: </a>        <span class="php-comment">// Load the inflector helper</span>
-</span><span id="89" class="l"><a href="#89"> 89: </a>        <span class="php-var">$this</span>-&gt;_ci-&gt;load-&gt;helper(<span class="php-quote">'inflector'</span>);
+</span><span id="89" class="l"><a href="#89"> 89: </a>        <span class="php-var">$this</span>-&gt;_CI-&gt;load-&gt;helper(<span class="php-quote">'inflector'</span>);
 </span><span id="90" class="l"><a href="#90"> 90: </a>
 </span><span id="91" class="l"><a href="#91"> 91: </a>        <span class="php-comment">// If the provided data is already formatted we should probably convert it to an array</span>
 </span><span id="92" class="l"><a href="#92"> 92: </a>        <span class="php-keyword1">if</span> (<span class="php-var">$from_type</span> !== <span class="php-keyword1">NULL</span>)
 </span><span id="93" class="l"><a href="#93"> 93: </a>        {
-</span><span id="94" class="l"><a href="#94"> 94: </a>            <span class="php-keyword1">if</span> (<span class="php-keyword2">method_exists</span>(<span class="php-var">$this</span>, <span class="php-quote">'_from_'</span> . <span class="php-var">$from_type</span>))
+</span><span id="94" class="l"><a href="#94"> 94: </a>            <span class="php-keyword1">if</span> (<span class="php-keyword2">method_exists</span>(<span class="php-var">$this</span>, <span class="php-quote">'_from_'</span>.<span class="php-var">$from_type</span>))
 </span><span id="95" class="l"><a href="#95"> 95: </a>            {
-</span><span id="96" class="l"><a href="#96"> 96: </a>                <span class="php-var">$data</span> = <span class="php-keyword2">call_user_func</span>([<span class="php-var">$this</span>, <span class="php-quote">'_from_'</span> . <span class="php-var">$from_type</span>], <span class="php-var">$data</span>);
+</span><span id="96" class="l"><a href="#96"> 96: </a>                <span class="php-var">$data</span> = <span class="php-keyword2">call_user_func</span>([<span class="php-var">$this</span>, <span class="php-quote">'_from_'</span>.<span class="php-var">$from_type</span>], <span class="php-var">$data</span>);
 </span><span id="97" class="l"><a href="#97"> 97: </a>            }
 </span><span id="98" class="l"><a href="#98"> 98: </a>            <span class="php-keyword1">else</span>
 </span><span id="99" class="l"><a href="#99"> 99: </a>            {
-</span><span id="100" class="l"><a href="#100">100: </a>                <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> Exception(<span class="php-quote">'Format class does not support conversion from &quot;'</span> . <span class="php-var">$from_type</span> . <span class="php-quote">'&quot;.'</span>);
+</span><span id="100" class="l"><a href="#100">100: </a>                <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> Exception(<span class="php-quote">'Format class does not support conversion from &quot;'</span>.<span class="php-var">$from_type</span>.<span class="php-quote">'&quot;.'</span>);
 </span><span id="101" class="l"><a href="#101">101: </a>            }
 </span><span id="102" class="l"><a href="#102">102: </a>        }
 </span><span id="103" class="l"><a href="#103">103: </a>
@@ -377,20 +377,20 @@
 </span><span id="283" class="l"><a href="#283">283: </a>        }
 </span><span id="284" class="l"><a href="#284">284: </a>
 </span><span id="285" class="l"><a href="#285">285: </a>        <span class="php-comment">// Load the table library</span>
-</span><span id="286" class="l"><a href="#286">286: </a>        <span class="php-var">$this</span>-&gt;_ci-&gt;load-&gt;library(<span class="php-quote">'table'</span>);
+</span><span id="286" class="l"><a href="#286">286: </a>        <span class="php-var">$this</span>-&gt;_CI-&gt;load-&gt;library(<span class="php-quote">'table'</span>);
 </span><span id="287" class="l"><a href="#287">287: </a>
-</span><span id="288" class="l"><a href="#288">288: </a>        <span class="php-var">$this</span>-&gt;_ci-&gt;table-&gt;set_heading(<span class="php-var">$headings</span>);
+</span><span id="288" class="l"><a href="#288">288: </a>        <span class="php-var">$this</span>-&gt;_CI-&gt;table-&gt;set_heading(<span class="php-var">$headings</span>);
 </span><span id="289" class="l"><a href="#289">289: </a>
 </span><span id="290" class="l"><a href="#290">290: </a>        <span class="php-keyword1">foreach</span> (<span class="php-var">$data</span> <span class="php-keyword1">as</span> <span class="php-var">$row</span>)
 </span><span id="291" class="l"><a href="#291">291: </a>        {
-</span><span id="292" class="l"><a href="#292">292: </a>            <span class="php-comment">// Suppressing the &quot;array to string conversion&quot; notice.</span>
-</span><span id="293" class="l"><a href="#293">293: </a>            <span class="php-comment">// Keep the &quot;evil&quot; @ here.</span>
-</span><span id="294" class="l"><a href="#294">294: </a>            <span class="php-var">$row</span> = @ <span class="php-keyword2">array_map</span>(<span class="php-quote">'strval'</span>, <span class="php-var">$row</span>);
+</span><span id="292" class="l"><a href="#292">292: </a>            <span class="php-comment">// Suppressing the &quot;array to string conversion&quot; notice</span>
+</span><span id="293" class="l"><a href="#293">293: </a>            <span class="php-comment">// Keep the &quot;evil&quot; @ here</span>
+</span><span id="294" class="l"><a href="#294">294: </a>            <span class="php-var">$row</span> = @<span class="php-keyword2">array_map</span>(<span class="php-quote">'strval'</span>, <span class="php-var">$row</span>);
 </span><span id="295" class="l"><a href="#295">295: </a>
-</span><span id="296" class="l"><a href="#296">296: </a>            <span class="php-var">$this</span>-&gt;_ci-&gt;table-&gt;add_row(<span class="php-var">$row</span>);
+</span><span id="296" class="l"><a href="#296">296: </a>            <span class="php-var">$this</span>-&gt;_CI-&gt;table-&gt;add_row(<span class="php-var">$row</span>);
 </span><span id="297" class="l"><a href="#297">297: </a>        }
 </span><span id="298" class="l"><a href="#298">298: </a>
-</span><span id="299" class="l"><a href="#299">299: </a>        <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;_ci-&gt;table-&gt;generate();
+</span><span id="299" class="l"><a href="#299">299: </a>        <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;_CI-&gt;table-&gt;generate();
 </span><span id="300" class="l"><a href="#300">300: </a>    }
 </span><span id="301" class="l"><a href="#301">301: </a>
 </span><span id="302" class="l"><a href="#302">302: </a>    <span class="php-comment">/**
@@ -499,7 +499,7 @@
 </span><span id="405" class="l"><a href="#405">405: </a>        }
 </span><span id="406" class="l"><a href="#406">406: </a>
 </span><span id="407" class="l"><a href="#407">407: </a>        <span class="php-comment">// Get the callback parameter (if set)</span>
-</span><span id="408" class="l"><a href="#408">408: </a>        <span class="php-var">$callback</span> = <span class="php-var">$this</span>-&gt;_ci-&gt;input-&gt;get(<span class="php-quote">'callback'</span>);
+</span><span id="408" class="l"><a href="#408">408: </a>        <span class="php-var">$callback</span> = <span class="php-var">$this</span>-&gt;_CI-&gt;input-&gt;get(<span class="php-quote">'callback'</span>);
 </span><span id="409" class="l"><a href="#409">409: </a>
 </span><span id="410" class="l"><a href="#410">410: </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">empty</span>(<span class="php-var">$callback</span>) === <span class="php-keyword1">TRUE</span>)
 </span><span id="411" class="l"><a href="#411">411: </a>        {
@@ -510,12 +510,12 @@
 </span><span id="416" class="l"><a href="#416">416: </a>        <span class="php-keyword1">elseif</span> (<span class="php-keyword2">preg_match</span>(<span class="php-quote">'/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i'</span>, <span class="php-var">$callback</span>))
 </span><span id="417" class="l"><a href="#417">417: </a>        {
 </span><span id="418" class="l"><a href="#418">418: </a>            <span class="php-comment">// Return the data as encoded json with a callback</span>
-</span><span id="419" class="l"><a href="#419">419: </a>            <span class="php-keyword1">return</span> <span class="php-var">$callback</span> . <span class="php-quote">'('</span> . <span class="php-keyword2">json_encode</span>(<span class="php-var">$data</span>) . <span class="php-quote">');'</span>;
+</span><span id="419" class="l"><a href="#419">419: </a>            <span class="php-keyword1">return</span> <span class="php-var">$callback</span>.<span class="php-quote">'('</span>.<span class="php-keyword2">json_encode</span>(<span class="php-var">$data</span>).<span class="php-quote">');'</span>;
 </span><span id="420" class="l"><a href="#420">420: </a>        }
 </span><span id="421" class="l"><a href="#421">421: </a>
 </span><span id="422" class="l"><a href="#422">422: </a>        <span class="php-comment">// An invalid jsonp callback function provided.</span>
 </span><span id="423" class="l"><a href="#423">423: </a>        <span class="php-comment">// Though I don't believe this should be hardcoded here</span>
-</span><span id="424" class="l"><a href="#424">424: </a>        <span class="php-var">$data</span>[<span class="php-quote">'warning'</span>] = <span class="php-quote">'INVALID JSONP CALLBACK: '</span> . <span class="php-var">$callback</span>;
+</span><span id="424" class="l"><a href="#424">424: </a>        <span class="php-var">$data</span>[<span class="php-quote">'warning'</span>] = <span class="php-quote">'INVALID JSONP CALLBACK: '</span>.<span class="php-var">$callback</span>;
 </span><span id="425" class="l"><a href="#425">425: </a>
 </span><span id="426" class="l"><a href="#426">426: </a>        <span class="php-keyword1">return</span> <span class="php-keyword2">json_encode</span>(<span class="php-var">$data</span>);
 </span><span id="427" class="l"><a href="#427">427: </a>    }
