@@ -206,6 +206,13 @@ $ curl -X POST -H "X-API-KEY: some_key_here" http://example.com/books
 
 * [NetTuts: Working with RESTful Services in CodeIgniter](http://net.tutsplus.com/tutorials/php/working-with-restful-services-in-codeigniter-2/)
 
+## Running Unit tests
+
+to run unit tests, please do the following
+
+* within this dir, run "composer install"
+* type ./vendor/bin/phpunit within the dir, and it will test
+
 ## Contributions
 
 This project was originally written by Phil Sturgeon, however his involvement has shifted
