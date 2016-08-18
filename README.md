@@ -1,19 +1,30 @@
 # CodeIgniter Rest Server
 
-A fully RESTful server implementation for CodeIgniter using one library, one
-config file and one controller.
+A fully RESTful server implementation for CodeIgniter.
 
-## Requirements
+## Requirements (OK)
 
 1. PHP 5.6 or greater (note, I'm sure that 5.4 will work fine, but I'm developing using 5.6)
-2. CodeIgniter 3.1+
+2. CodeIgniter 3.1+ with Composer support enabled
+
+## Features
+
+1. Key based authentication 
+2. IP Whitelisting / Blacklisting
+3. API Key Quotas (Limits)
+
+
+
+
+
+
+
 
 ## Installation
 
 To install please use Composer.
 
-1.  Ensure that Composer support is enabled in CI 3.1 (go to application/config/config.php) and set $config['composer_autoload'] to TRUE (or your vendor path)
-2.  Add "chriskacerguis/codeigniter-restserver": "^4.0.0" to your composer.json file OR type "composer require chriskacerguis/codeigniter-restserver"
+1.  Add "chriskacerguis/codeigniter-restserver": "^4.0.0" to your composer.json file OR type "composer require chriskacerguis/codeigniter-restserver"
 
 To any file you want to use as an API controller, please add the following:
 
@@ -32,6 +43,19 @@ class Welcome extends REST_Controller {
 	  }
 }
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Handling Requests
 

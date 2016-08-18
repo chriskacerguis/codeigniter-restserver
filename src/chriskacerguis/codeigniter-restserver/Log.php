@@ -30,7 +30,7 @@ class Log {
      * @author Chris Kacerguis
      * @return bool
      */
-    private function create_table()
+    private function createTable()
     {
 
     }
@@ -51,11 +51,11 @@ class Log {
     /**
      * Create an entry in the db log table
      *
-     * @access public
+     * @access private
      * @author Chris Kacerguis
      * @return bool
      */
-    private function dbLog()
+    private function logToDB()
     {
 
     }
@@ -63,11 +63,11 @@ class Log {
     /**
      * Create an entry in the file log
      *
-     * @access public
+     * @access private
      * @author Chris Kacerguis
      * @return bool
      */
-    private function fileLog()
+    private function logToFile()
     {
 
     }
@@ -119,6 +119,5 @@ class Log {
     {
         $this->requestTotal = $this->requestStart - $this->requestEnd;
     }
-
 
 }

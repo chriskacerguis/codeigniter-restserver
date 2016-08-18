@@ -28,12 +28,12 @@ class LogTest extends \PHPUnit_Framework_TestCase
         $this->markTestSkipped('needs implementation');
     }
 
-    public function testDbLog()
+    public function testLogToDB()
     {
         $this->markTestSkipped('needs implementation');
     }
 
-    public function testFileLog()
+    public function testLogToFile()
     {
         $this->markTestSkipped('needs implementation');
     }
