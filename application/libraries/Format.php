@@ -403,14 +403,14 @@ class Format {
 
         if (empty($callback) === TRUE)
         {
-            return json_encode($data, JSON_NUMERIC_CHECK);
+            return json_encode($data);
         }
 
         // We only honour a jsonp callback which are valid javascript identifiers
         elseif (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback))
         {
             // Return the data as encoded json with a callback
-            return $callback.'('.json_encode($data, JSON_NUMERIC_CHECK).');';
+            return $callback.'('.json_encode($data).');';
         }
 
         // An invalid jsonp callback function provided.
