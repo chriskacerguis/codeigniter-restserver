@@ -1005,6 +1005,9 @@ abstract class REST_Controller extends CI_Controller {
             // you can also perform an extra check for this
             
             $existsactive = $this->db->query("SELECT api_key_activated FROM api_keys WHERE api_key = '".$key."' ");
+            // Using the Query builder method. This will only work if you have a column named activated in the api_key table.
+            //If you also want to add this as a config item replace the get('activated') with $this->config->item('rest_key_activated_column').
+            $existsactive = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get('activated')->result();
             $isactive = $existsactive->result();
             if ( ! ($row = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get($this->config->item('rest_keys_table'))->row() ) || $isactive[0]->api_key_activated == 'no' )
             {
