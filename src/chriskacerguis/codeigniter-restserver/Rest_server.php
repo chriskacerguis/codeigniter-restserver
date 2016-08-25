@@ -598,10 +598,10 @@ abstract class REST_Controller extends \CI_Controller {
      */
     private function get_local_config($config_file)
     {
-        if(file_exists(__DIR__."/../config/".$config_file.".php"))
+        if(file_exists(__DIR__."/../../config/".$config_file.".php"))
         {
             $config = array();
-            include(__DIR__ . "/../config/" . $config_file . ".php");
+            include(__DIR__ . "/../../config/" . $config_file . ".php");
             foreach($config AS $key => $value)
             {
                $this->config->set_item($key, $value);
