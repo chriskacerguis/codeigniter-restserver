@@ -1003,13 +1003,18 @@ abstract class REST_Controller extends CI_Controller {
             //if you have a field to check if the API KEY provided by the user is activated or not 
             //(in case you quickly want to deactivate specific users)
             // you can also perform an extra check for this
+            // If you decided to use the second SQL Query to create the table for the API KEY's with the activated
+            // column the uncomment the following block of comment and comment the one below it.
             
-            $existsactive = $this->db->query("SELECT api_key_activated FROM api_keys WHERE api_key = '".$key."' ");
-            // Using the Query builder method. This will only work if you have a column named activated in the api_key table.
-            //If you also want to add this as a config item replace the get('activated') with $this->config->item('rest_key_activated_column').
-            $existsactive = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get('activated')->result();
-            $isactive = $existsactive->result();
-            if ( ! ($row = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get($this->config->item('rest_keys_table'))->row() ) || $isactive[0]->api_key_activated == 'no' )
+            /*
+            $activated_key = $this->db->get_where($this->config->item('rest_keys_table'), array($this->config->item('rest_key_column') => $key))->row();
+            if ( ! ($row = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get($this->config->item('rest_keys_table'))->row() ) || $activated_key->api_key_activated == 'no' )
+            {
+                return FALSE;
+            }
+            */
+            
+            if ( ! ($row = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get($this->config->item('rest_keys_table'))->row() ))
             {
                 return FALSE;
             }
