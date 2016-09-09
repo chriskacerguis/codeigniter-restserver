@@ -312,6 +312,23 @@ $config['rest_keys_table'] = 'keys';
 |       PRIMARY KEY (`id`)
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
+| If you would like to just provide another step
+| in case you want a key to not be valid any more
+| and just not deleting or changing the key every time then
+| use this table.
+|
+| CREATE TABLE `keys` (
+|  `id` int(11) NOT NULL,
+|  `user_id` int(11) NOT NULL,
+|  `api_key` varchar(255) NOT NULL,
+|  `level` int(2) NOT NULL,
+|  `ignore_limits` tinyint(1) NOT NULL DEFAULT '0',
+|  `is_private_key` tinyint(1) NOT NULL DEFAULT '0',
+|  `ip_addresses` text,
+|  `date_created` int(11) NOT NULL,
+|  `api_key_activated` enum('yes','no') NOT NULL DEFAULT 'no'
+| ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+|
 */
 $config['rest_enable_keys'] = FALSE;
 
@@ -324,8 +341,8 @@ $config['rest_enable_keys'] = FALSE;
 | column name to match e.g. my_key
 |
 */
-$config['rest_key_column'] = 'key';
-
+$config['rest_key_column'] = 'api_key';
+$config['rest_activated_column'] = 'api_key_activated';
 /*
 |--------------------------------------------------------------------------
 | REST API Limits method
