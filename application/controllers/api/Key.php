@@ -2,9 +2,6 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-// This can be removed if you use __autoload() in config.php OR use Modular Extensions
-require APPPATH . '/libraries/REST_Controller.php';
-
 /**
  * Keys Controller
  * This is a basic Key Management REST controller to make and delete keys
