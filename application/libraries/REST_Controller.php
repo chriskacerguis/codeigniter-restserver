@@ -1133,12 +1133,10 @@ abstract class REST_Controller extends CI_Controller {
         {
           case 'API_KEY':
             $limited_uri = 'api-key:' . (isset($this->rest->key) ? $this->rest->key : '');
-            $limited_method_name = isset($this->rest->key) ? $this->rest->key : '';
             break;
 
           case 'METHOD_NAME':
             $limited_uri = 'method-name:' . $controller_method;
-            $limited_method_name =  $controller_method;
             break;
 
           case 'ROUTED_URL':
@@ -1149,20 +1147,19 @@ abstract class REST_Controller extends CI_Controller {
                 $limited_uri = substr($limited_uri,0, -strlen($this->response->format) - 1);
             }
             $limited_uri = 'uri:'.$limited_uri.':'.$this->request->method; // It's good to differentiate GET from PUT
-            $limited_method_name = $controller_method;
             break;
         }
 
-        if (isset($this->methods[$limited_method_name]['limit']) === FALSE )
+        if (isset($this->methods[$controller_method]['limit']) === FALSE )
         {
             // Everything is fine
             return TRUE;
         }
 
         // How many times can you get to this method in a defined time_limit (default: 1 hour)?
-        $limit = $this->methods[$limited_method_name]['limit'];
+        $limit = $this->methods[$controller_method]['limit'];
 
-        $time_limit = (isset($this->methods[$limited_method_name]['time']) ? $this->methods[$limited_method_name]['time'] : 3600); // 3600 = 60 * 60
+        $time_limit = (isset($this->methods[$controller_method]['time']) ? $this->methods[$controller_method]['time'] : 3600); // 3600 = 60 * 60
 
         // Get data about a keys' usage and limit to one row
         $result = $this->rest->db
