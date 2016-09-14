@@ -595,16 +595,25 @@ $config['allowed_cors_origins'] = [];
 
 /*
 |--------------------------------------------------------------------------
-| CORS Allow Any Domain
+| CORS Expose Headers
 |--------------------------------------------------------------------------
 |
-| Set to true to enable Cross-Origin Resource Sharing (CORS) from any
-|  source domain
+| This header lets a server whitelist headers that browsers are allowed to access.
+| WWW-Authenticate is required for digest authentication to work
 |
 */
 $config['allowed_cors_expose_headers'] = [
   'Content-Type',
   'WWW-Authenticate'
 ];
+
+/*
+|--------------------------------------------------------------------------
+| CORS Allow Credentials
+|--------------------------------------------------------------------------
+|
+| In order to reduce the chance of CSRF vulnerabilities in CORS, CORS requires both the server and the client to acknowledge that it is ok to include cookies on requests. Doing this makes cookies an active decision, rather than something that happens passively without any control.
+|
+*/
 
 $config['allowed_cors_credentials'] = true;
