@@ -593,3 +593,18 @@ $config['allow_any_cors_domain'] = false;
 */
 $config['allowed_cors_origins'] = [];
 
+/*
+|--------------------------------------------------------------------------
+| CORS Allow Any Domain
+|--------------------------------------------------------------------------
+|
+| Set to true to enable Cross-Origin Resource Sharing (CORS) from any
+|  source domain
+|
+*/
+$config['allowed_cors_expose_headers'] = [
+  'Content-Type',
+  'WWW-Authenticate'
+];
+
+$config['allowed_cors_credentials'] = true;
