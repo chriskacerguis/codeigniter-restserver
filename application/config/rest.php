@@ -334,6 +334,7 @@ $config['rest_key_column'] = 'key';
 | Specify the method used to limit the API calls
 |
 | Available methods are :
+| $config['rest_limits_method'] = 'IP_ADDRESS'; // Put a limit per ip address
 | $config['rest_limits_method'] = 'API_KEY'; // Put a limit per api key
 | $config['rest_limits_method'] = 'METHOD_NAME'; // Put a limit on method calls
 | $config['rest_limits_method'] = 'ROUTED_URL';  // Put a limit on the routed URL
