@@ -13,5 +13,6 @@ $lang['text_rest_ajax_only'] = 'Apenas chamadas AJAX são permitidas';
 $lang['text_rest_api_key_unauthorized'] = 'Esta chave da API não tem acesso ao controller solicitado';
 $lang['text_rest_api_key_permissions'] = 'Esta chave da API não tem permissões suficientes';
 $lang['text_rest_api_key_time_limit'] = 'Esta chave da API já atingiu o tempo limite para este método';
+$lang['text_rest_ip_address_time_limit'] = 'This IP Address has reached the time limit for this method';//todo translate
 $lang['text_rest_unknown_method'] = 'Método desconhecido';
 $lang['text_rest_unsupported'] = 'Sem suporte para este protocolo';

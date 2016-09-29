@@ -13,5 +13,6 @@ $lang['text_rest_ajax_only'] = 'Sadece AJAX isteklerine izin verildi';
 $lang['text_rest_api_key_unauthorized'] = 'Ulaşılmak istenilen controllera API anahtarının erişim yetkisi bulunmamaktadır';
 $lang['text_rest_api_key_permissions'] = 'Bu API anahtarının yeterli yetkisi bulunmamaktadır';
 $lang['text_rest_api_key_time_limit'] = 'API anahtarı bu metod için zaman sınırına ulaştı.';
+$lang['text_rest_ip_address_time_limit'] = 'IP adresi bu metod için zaman sınırına ulaştı.';
 $lang['text_rest_unknown_method'] = 'Bilinmeyen metod';
 $lang['text_rest_unsupported'] = 'Desteklenmeyen protokol';
