@@ -631,6 +631,11 @@ abstract class REST_Controller extends CI_Controller {
         $object_called = preg_replace('/^(.*)\.(?:'.implode('|', array_keys($this->_supported_formats)).')$/', '$1', $object_called);
 
         $controller_method = $object_called.'_'.$this->request->method;
+	    // Does this method exist? If not, try executing an index method
+	    if (!method_exists($this, $controller_method)) {
+		    $controller_method = "index_" . $this->request->method;
+		    array_unshift($arguments, $object_called);
+	    }
 
         // Do we want to log this method (if allowed by config)?
         $log_method = ! (isset($this->methods[$controller_method]['log']) && $this->methods[$controller_method]['log'] === FALSE);
