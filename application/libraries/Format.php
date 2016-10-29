@@ -462,7 +462,7 @@ class Format {
 
     /**
      * @param $data XML string
-     * @return SimpleXMLElement XML element object; otherwise, empty array
+     * @return array XML element object; otherwise, empty array
      */
     protected function _from_xml($data)
     {
