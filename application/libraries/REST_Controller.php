@@ -590,7 +590,7 @@ abstract class REST_Controller extends CI_Controller {
      * Checks to see if we have everything we need to run this library.
      *
      * @access protected
-     * @return Exception
+     * @@throws Exception
      */
     protected function preflight_checks()
     {
