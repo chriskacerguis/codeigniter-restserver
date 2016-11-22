@@ -650,6 +650,11 @@ abstract class REST_Controller extends CI_Controller {
             {
                 $this->_log_request();
             }
+            
+            // fix cross site to option request error 
+            if($this->request->method == 'options') {
+                exit;
+            }
 
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
