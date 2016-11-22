@@ -285,16 +285,16 @@ abstract class REST_Controller extends CI_Controller {
     /**
      * The start of the response time from the server
      *
-     * @var string
+     * @var number
      */
-    protected $_start_rtime = '';
+    protected $_start_rtime;
 
     /**
      * The end of the response time from the server
      *
-     * @var string
+     * @var number
      */
-    protected $_end_rtime = '';
+    protected $_end_rtime;
 
     /**
      * List all supported methods, the first will be the default format
