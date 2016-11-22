@@ -745,6 +745,7 @@ abstract class REST_Controller extends CI_Controller {
      */
     public function response($data = NULL, $http_code = NULL, $continue = FALSE)
     {
+		ob_start();
         // If the HTTP status is not NULL, then cast as an integer
         if ($http_code !== NULL)
         {
@@ -813,6 +814,10 @@ abstract class REST_Controller extends CI_Controller {
             $this->output->_display();
             exit;
         }
+		else
+		{
+			ob_end_flush();
+		}
 
         // Otherwise dump the output automatically
     }
