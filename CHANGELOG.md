@@ -1,6 +1,10 @@
 Changelog:
 ===========
 
+### UNRELEASED
+* Added support for CodeIgniter controller's index methods (index_GET, index_POST...)
+* Added exceptions handling when the method could not be found
+
 ### 2.7.2
 
 * Added $this->query() in which query parameters can now be obtained regardless of whether a GET request is sent or not
