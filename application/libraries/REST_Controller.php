@@ -375,7 +375,6 @@ abstract class REST_Controller extends CI_Controller {
      * @access public
      * @param string $config Configuration filename minus the file extension
      * e.g: my_rest.php is passed as 'my_rest'
-     * @return void
      */
     public function __construct($config = 'rest')
     {
@@ -589,9 +588,8 @@ abstract class REST_Controller extends CI_Controller {
     /**
      * Checks to see if we have everything we need to run this library.
      *
-     * @author Chris Kacerguis
      * @access protected
-     * @return Exception
+     * @@throws Exception
      */
     protected function preflight_checks()
     {
@@ -615,8 +613,8 @@ abstract class REST_Controller extends CI_Controller {
      * Controller method
      *
      * @access public
-     * @param  string $object_called
-     * @param  array $arguments The arguments passed to the controller method
+     * @param string $object_called
+     * @param array $arguments The arguments passed to the controller method
      */
     public function _remap($object_called, $arguments = [])
     {
@@ -633,6 +631,11 @@ abstract class REST_Controller extends CI_Controller {
         $object_called = preg_replace('/^(.*)\.(?:'.implode('|', array_keys($this->_supported_formats)).')$/', '$1', $object_called);
 
         $controller_method = $object_called.'_'.$this->request->method;
+	    // Does this method exist? If not, try executing an index method
+	    if (!method_exists($this, $controller_method)) {
+		    $controller_method = "index_" . $this->request->method;
+		    array_unshift($arguments, $object_called);
+	    }
 
         // Do we want to log this method (if allowed by config)?
         $log_method = ! (isset($this->methods[$controller_method]['log']) && $this->methods[$controller_method]['log'] === FALSE);
@@ -646,6 +649,11 @@ abstract class REST_Controller extends CI_Controller {
             if ($this->config->item('rest_enable_logging') && $log_method)
             {
                 $this->_log_request();
+            }
+            
+            // fix cross site to option request error 
+            if($this->request->method == 'options') {
+                exit;
             }
 
             $this->response([
@@ -669,7 +677,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Sure it exists, but can they do anything with it?
-        if (!method_exists($this, $controller_method))
+        if (! method_exists($this, $controller_method))
         {
             $this->response([
                     $this->config->item('rest_status_field_name') => FALSE,
@@ -705,6 +713,13 @@ abstract class REST_Controller extends CI_Controller {
             }
         }
 
+        //check request limit by ip without login
+        elseif ($this->config->item('rest_limits_method') == "IP_ADDRESS" && $this->config->item('rest_enable_limits') && $this->_check_limit($controller_method) === FALSE)
+        {
+            $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_ip_address_time_limit')];
+            $this->response($response, self::HTTP_UNAUTHORIZED);
+        }
+
         // No key stuff, but record that stuff is happening
         elseif ($this->config->item('rest_enable_logging') && $log_method)
         {
@@ -719,13 +734,8 @@ abstract class REST_Controller extends CI_Controller {
         catch (Exception $ex)
         {
             // If the method doesn't exist, then the error will be caught and an error response shown
-            $this->response([
-                    $this->config->item('rest_status_field_name') => FALSE,
-                    $this->config->item('rest_message_field_name') => [
-                        'classname' => get_class($ex),
-                        'message' => $ex->getMessage()
-                    ]
-                ], self::HTTP_INTERNAL_SERVER_ERROR);
+	        $_error = &load_class('Exceptions', 'core');
+	        $_error->show_exception($ex);
         }
     }
 
@@ -740,6 +750,7 @@ abstract class REST_Controller extends CI_Controller {
      */
     public function response($data = NULL, $http_code = NULL, $continue = FALSE)
     {
+		ob_start();
         // If the HTTP status is not NULL, then cast as an integer
         if ($http_code !== NULL)
         {
@@ -808,6 +819,10 @@ abstract class REST_Controller extends CI_Controller {
             $this->output->_display();
             exit;
         }
+		else
+		{
+			ob_end_flush();
+		}
 
         // Otherwise dump the output automatically
     }
@@ -1118,7 +1133,7 @@ abstract class REST_Controller extends CI_Controller {
      * Check if the requests to a controller method exceed a limit
      *
      * @access protected
-     * @param  string $controller_method The method being called
+     * @param string $controller_method The method being called
      * @return bool TRUE the call limit is below the threshold; otherwise, FALSE
      */
     protected function _check_limit($controller_method)
@@ -1130,16 +1145,21 @@ abstract class REST_Controller extends CI_Controller {
             return TRUE;
         }
 
+        $api_key = isset($this->rest->key) ? $this->rest->key : '';
+
         switch ($this->config->item('rest_limits_method'))
         {
+          case 'IP_ADDRESS':
+            $limited_uri = 'ip-address:' .$this->input->ip_address();
+            $api_key = $this->input->ip_address();
+            break;
+
           case 'API_KEY':
-            $limited_uri = 'api-key:' . (isset($this->rest->key) ? $this->rest->key : '');
-            $limited_method_name = isset($this->rest->key) ? $this->rest->key : '';
+            $limited_uri = 'api-key:' . $api_key;
             break;
 
           case 'METHOD_NAME':
             $limited_uri = 'method-name:' . $controller_method;
-            $limited_method_name =  $controller_method;
             break;
 
           case 'ROUTED_URL':
@@ -1150,25 +1170,24 @@ abstract class REST_Controller extends CI_Controller {
                 $limited_uri = substr($limited_uri,0, -strlen($this->response->format) - 1);
             }
             $limited_uri = 'uri:'.$limited_uri.':'.$this->request->method; // It's good to differentiate GET from PUT
-            $limited_method_name = $controller_method;
             break;
         }
 
-        if (isset($this->methods[$limited_method_name]['limit']) === FALSE )
+        if (isset($this->methods[$controller_method]['limit']) === FALSE )
         {
             // Everything is fine
             return TRUE;
         }
 
         // How many times can you get to this method in a defined time_limit (default: 1 hour)?
-        $limit = $this->methods[$limited_method_name]['limit'];
+        $limit = $this->methods[$controller_method]['limit'];
 
-        $time_limit = (isset($this->methods[$limited_method_name]['time']) ? $this->methods[$limited_method_name]['time'] : 3600); // 3600 = 60 * 60
+        $time_limit = (isset($this->methods[$controller_method]['time']) ? $this->methods[$controller_method]['time'] : 3600); // 3600 = 60 * 60
 
         // Get data about a keys' usage and limit to one row
         $result = $this->rest->db
             ->where('uri', $limited_uri)
-            ->where('api_key', $this->rest->key)
+            ->where('api_key', $api_key)
             ->get($this->config->item('rest_limits_table'))
             ->row();
 
@@ -1178,7 +1197,7 @@ abstract class REST_Controller extends CI_Controller {
             // Create a new row for the following key
             $this->rest->db->insert($this->config->item('rest_limits_table'), [
                 'uri' => $limited_uri,
-                'api_key' => isset($this->rest->key) ? $this->rest->key : '',
+                'api_key' =>$api_key,
                 'count' => 1,
                 'hour_started' => time()
             ]);
@@ -1190,7 +1209,7 @@ abstract class REST_Controller extends CI_Controller {
             // Reset the started period and count
             $this->rest->db
                 ->where('uri', $limited_uri)
-                ->where('api_key', isset($this->rest->key) ? $this->rest->key : '')
+                ->where('api_key', $api_key)
                 ->set('hour_started', time())
                 ->set('count', 1)
                 ->update($this->config->item('rest_limits_table'));
@@ -1208,7 +1227,7 @@ abstract class REST_Controller extends CI_Controller {
             // Increase the count by one
             $this->rest->db
                 ->where('uri', $limited_uri)
-                ->where('api_key', $this->rest->key)
+                ->where('api_key', $api_key)
                 ->set('count', 'count + 1', FALSE)
                 ->update($this->config->item('rest_limits_table'));
         }
@@ -1694,8 +1713,8 @@ abstract class REST_Controller extends CI_Controller {
      * prevented
      *
      * @access protected
-     * @param  string $value Input data
-     * @param  bool $xss_clean Whether to apply XSS filtering
+     * @param string $value Input data
+     * @param bool $xss_clean Whether to apply XSS filtering
      * @return string
      */
     protected function _xss_clean($value, $xss_clean)
@@ -1724,8 +1743,8 @@ abstract class REST_Controller extends CI_Controller {
      * Perform LDAP Authentication
      *
      * @access protected
-     * @param  string $username The username to validate
-     * @param  string $password The password to validate
+     * @param string $username The username to validate
+     * @param string $password The password to validate
      * @return bool
      */
     protected function _perform_ldap_auth($username = '', $password = NULL)
@@ -1819,8 +1838,8 @@ abstract class REST_Controller extends CI_Controller {
      * Perform Library Authentication - Override this function to change the way the library is called
      *
      * @access protected
-     * @param  string $username The username to validate
-     * @param  string $password The password to validate
+     * @param string $username The username to validate
+     * @param string $password The password to validate
      * @return bool
      */
     protected function _perform_library_auth($username = '', $password = NULL)
@@ -1858,8 +1877,8 @@ abstract class REST_Controller extends CI_Controller {
      * Check if the user is logged in
      *
      * @access protected
-     * @param  string $username The user's name
-     * @param  bool|string $password The user's password
+     * @param string $username The user's name
+     * @param bool|string $password The user's password
      * @return bool
      */
     protected function _check_login($username = NULL, $password = FALSE)
@@ -2162,12 +2181,12 @@ abstract class REST_Controller extends CI_Controller {
         {
             return TRUE;
         }
-        
+
         //check if the key has all_access
         $accessRow = $this->rest->db
             ->where('key', $this->rest->key)
             ->get($this->config->item('rest_access_table'))->row_array();
-        
+
         if (!empty($accessRow) && !empty($accessRow['all_access']))
         {
         	return TRUE;
@@ -2235,5 +2254,4 @@ abstract class REST_Controller extends CI_Controller {
             exit;
         }
     }
-
 }

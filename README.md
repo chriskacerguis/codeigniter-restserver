@@ -10,6 +10,12 @@ config file and one controller.
 
 _Note: for 1.7.x support download v2.2 from Downloads tab_
 
+## Important Update on 4.0.0
+
+Please note that version 4.0.0 is in the works, and is considered a breaking change (per SemVer).  As CI 3.1.0 now has native support for Composer, this library will be moving to be composer based.
+
+Take a look at the "development" branch to see what's up.
+
 ## Installation
 
 Drag and drop the **application/libraries/Format.php** and **application/libraries/REST_Controller.php** files into your application's directories. To use `require_once` it at the top of your controllers to load it into the scope. Additionally, copy the **rest.php** file from **application/config** in your application's configuration directory.
