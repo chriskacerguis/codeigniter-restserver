@@ -475,6 +475,12 @@ abstract class REST_Controller extends CI_Controller {
         $this->request->body = NULL;
 
         $this->{'_parse_' . $this->request->method}();
+        
+        // Fix parse method return arguments null
+        if($this->{'_'.$this->request->method.'_args'} === null)
+        {
+            $this->{'_'.$this->request->method.'_args'} = [];
+        }
 
         // Now we know all about our request, let's try and parse the body if it exists
         if ($this->request->format && $this->request->body)
