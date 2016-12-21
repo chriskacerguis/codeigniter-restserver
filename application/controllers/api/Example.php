@@ -73,7 +73,7 @@ class Example extends REST_Controller {
             $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
         }
 
-        // Get the user from the array, using the id as key for retreival.
+        // Get the user from the array, using the id as key for retrieval.
         // Usually a model is to be used for this.
 
         $user = NULL;

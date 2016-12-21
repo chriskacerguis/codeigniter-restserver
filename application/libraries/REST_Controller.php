@@ -285,16 +285,16 @@ abstract class REST_Controller extends CI_Controller {
     /**
      * The start of the response time from the server
      *
-     * @var string
+     * @var number
      */
-    protected $_start_rtime = '';
+    protected $_start_rtime;
 
     /**
      * The end of the response time from the server
      *
-     * @var string
+     * @var number
      */
-    protected $_end_rtime = '';
+    protected $_end_rtime;
 
     /**
      * List all supported methods, the first will be the default format
@@ -567,7 +567,7 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
-     * Deconstructor
+     * De-constructor
      *
      * @author Chris Kacerguis
      * @access public
@@ -778,7 +778,7 @@ abstract class REST_Controller extends CI_Controller {
                 $output = $this->format->factory($data)->{'to_' . $this->response->format}();
 
                 // An array must be parsed as a string, so as not to cause an array to string error
-                // Json is the most appropriate form for such a datatype
+                // Json is the most appropriate form for such a data type
                 if ($this->response->format === 'array')
                 {
                     $output = $this->format->factory($output)->{'to_json'}();
@@ -1473,7 +1473,7 @@ abstract class REST_Controller extends CI_Controller {
         }
         else if ($this->input->method() === 'put')
         {
-           // If no filetype is provided, then there are probably just arguments
+           // If no file type is provided, then there are probably just arguments
            $this->_put_args = $this->input->input_stream();
         }
     }
@@ -1523,7 +1523,7 @@ abstract class REST_Controller extends CI_Controller {
         }
         else if ($this->input->method() === 'patch')
         {
-            // If no filetype is provided, then there are probably just arguments
+            // If no file type is provided, then there are probably just arguments
             $this->_patch_args = $this->input->input_stream();
         }
     }
@@ -1941,7 +1941,7 @@ abstract class REST_Controller extends CI_Controller {
         // Get the auth_source config item
         $key = $this->config->item('auth_source');
 
-        // If falsy, then the user isn't logged in
+        // If false, then the user isn't logged in
         if ( ! $this->session->userdata($key))
         {
             // Display an error response
