@@ -1,4 +1,9 @@
 <?php
+namespace Restserver\Libraries;
+
+use Exception;
+use stdClass;
+use Restserver\Libraries\Format;
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -14,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  * @version         3.0.0
  */
-abstract class REST_Controller extends CI_Controller {
+abstract class REST_Controller extends \CI_Controller {
 
     // Note: Only the widely used HTTP status codes are documented
 
@@ -430,7 +435,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         // Load the language file
-        $this->lang->load('rest_controller', $language);
+        $this->lang->load('rest_controller', $language, FALSE, TRUE, __DIR__."/../");
 
         // Initialise the response, request and rest objects
         $this->request = new stdClass();
