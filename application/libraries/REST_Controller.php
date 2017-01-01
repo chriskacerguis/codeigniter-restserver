@@ -742,6 +742,14 @@ abstract class REST_Controller extends \CI_Controller {
         {
             call_user_func_array([$this, $controller_method], $arguments);
         }
+
+        // added so CI PHP unit test will work
+        catch (CIPHPUnitTestExitException $ex)
+        {
+            // This block is for ci-phpunit-test
+            throw $ex;
+        }
+
         catch (Exception $ex)
         {
             if ($this->config->item('rest_handle_exceptions') === FALSE) {
@@ -760,10 +768,9 @@ abstract class REST_Controller extends \CI_Controller {
      * @access public
      * @param array|NULL $data Data to output to the user
      * @param int|NULL $http_code HTTP status code
-     * @param bool $continue TRUE to flush the response to the client and continue
      * running the script; otherwise, exit
      */
-    public function response($data = NULL, $http_code = NULL, $continue = FALSE)
+    public function response($data = NULL, $http_code = NULL)
     {
 		ob_start();
         // If the HTTP status is not NULL, then cast as an integer
@@ -828,16 +835,7 @@ abstract class REST_Controller extends \CI_Controller {
         // Output the data
         $this->output->set_output($output);
 
-        if ($continue === FALSE)
-        {
-            // Display the data and exit execution
-            $this->output->_display();
-            exit;
-        }
-		else
-		{
-			ob_end_flush();
-		}
+        ob_end_flush();
 
         // Otherwise dump the output automatically
     }
