@@ -3,7 +3,6 @@ namespace Restserver\Libraries;
 
 use Exception;
 use stdClass;
-use Restserver\Libraries\Format;
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
