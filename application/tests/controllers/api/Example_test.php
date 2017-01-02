@@ -2,21 +2,17 @@
 
 class Example_test extends TestCase
 {
+
+	var $xml_user1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<xml><id>1</id><name>John</name><email>john@example.com</email><fact>Loves coding</fact></xml>\n";
+
 	/**
 	 * @group patcher
 	 */
 	public function test_users_get()
 	{
-		try {
-			$output = $this->request('GET', 'api/example/users');
-		} catch (CIPHPUnitTestExitException $e) {
-			$output = ob_get_clean();
-		}
-
-		$this->assertEquals(
-			'[{"id":1,"name":"John","email":"john@example.com","fact":"Loves coding"},{"id":2,"name":"Jim","email":"jim@example.com","fact":"Developed on CodeIgniter"},{"id":3,"name":"Jane","email":"jane@example.com","fact":"Lives in the USA","0":{"hobbies":["guitar","cycling"]}}]',
-			$output
-		);
+		$output = $this->request('GET', 'api/example/users');
+		$expected = '[{"id":1,"name":"John","email":"john@example.com","fact":"Loves coding"},{"id":2,"name":"Jim","email":"jim@example.com","fact":"Developed on CodeIgniter"},{"id":3,"name":"Jane","email":"jane@example.com","fact":"Lives in the USA","0":{"hobbies":["guitar","cycling"]}}]';
+		$this->assertEquals($expected, $output);
 		$this->assertResponseCode(200);
 	}
 
@@ -25,115 +21,84 @@ class Example_test extends TestCase
 	 */
 	public function test_users_get_format_csv()
 	{
-		try {
-			$output = $this->request('GET', 'api/example/users/format/csv');
-		} catch (CIPHPUnitTestExitException $e) {
-			$output = ob_get_clean();
-		}
-
-		$this->assertEquals(
-			'id,name,email,fact
-1,John,john@example.com,"Loves coding"
-2,Jim,jim@example.com,"Developed on CodeIgniter"
-3,Jane,jane@example.com,"Lives in the USA",Array
-',
-			$output
-		);
+		$output = $this->request('GET', 'api/example/users/format/csv');
+		$expected = "id,name,email,fact\n1,John,john@example.com,\"Loves coding\"\n2,Jim,jim@example.com,\"Developed on CodeIgniter\"\n3,Jane,jane@example.com,\"Lives in the USA\",Array\n";
+		$this->assertEquals($expected, $output);
 		$this->assertResponseCode(200);
 	}
 
 	public function test_users_get_id()
 	{
 		$output = $this->request('GET', 'api/example/users/id/1');
-		$this->assertEquals(
-			'{"id":1,"name":"John","email":"john@example.com","fact":"Loves coding"}',
-			$output
-		);
+		$expected = '{"id":1,"name":"John","email":"john@example.com","fact":"Loves coding"}';
+		$this->assertEquals($expected, $output);
 		$this->assertResponseCode(200);
 	}
 
 	public function test_users_get_id_query_string_format_xml_get_params()
 	{
 		set_is_cli(FALSE);
-//		$this->warningOff();
+		// $this->warningOff();
 		$output = $this->request(
 			'GET',
 			'api/example/users/id/1',
 			['format' => 'xml']
 		);
 		set_is_cli(TRUE);
-//		$this->warningOn();
-
-		$this->assertEquals(
-			'<?xml version="1.0" encoding="utf-8"?>
-<xml><id>1</id><name>John</name><email>john@example.com</email><fact>Loves coding</fact></xml>
-',
-			$output
-		);
+		// $this->warningOn();
+		$expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<xml><id>1</id><name>John</name><email>john@example.com</email><fact>Loves coding</fact></xml>\n";
+		$this->assertEquals($expected, $output);
 		$this->assertResponseCode(200);
 	}
 
 	public function test_users_get_id_query_string_format_xml_uri_query_string()
 	{
-		set_is_cli(FALSE);
-//		$this->warningOff();
+		//set_is_cli(FALSE);
+		// $this->warningOff();
 		$output = $this->request(
 			'GET',
 			'api/example/users/id/1?format=xml'
 		);
-		set_is_cli(TRUE);
-//		$this->warningOn();
+		//set_is_cli(TRUE);
+		// $this->warningOn();
 
-		$this->assertEquals(
-			'<?xml version="1.0" encoding="utf-8"?>
-<xml><id>1</id><name>John</name><email>john@example.com</email><fact>Loves coding</fact></xml>
-',
-			$output
-		);
+		$this->assertEquals($this->xml_user1, $output);
 		$this->assertResponseCode(200);
 	}
 
 	public function test_users_get_id_with_http_accept_header()
 	{
-//		$_SERVER['HTTP_ACCEPT'] = 'application/csv';
 		$this->request->setHeader('Accept', 'application/csv');
 		$output = $this->request('GET', 'api/example/users/id/1');
-		$this->assertEquals(
-			'id,name,email,fact
-1,John,john@example.com,"Loves coding"
-',
-			$output
-		);
+		$expected = "id,name,email,fact\n1,John,john@example.com,\"Loves coding\"\n";
+		$this->assertEquals($expected, $output);
 		$this->assertResponseCode(200);
-		$this->assertResponseHeader(
-			'Content-Type', 'application/csv; charset=utf-8'
-		);
+		$this->assertResponseHeader('Content-Type', 'application/csv; charset=utf-8');
 	}
 
 	public function test_users_get_id_user_not_found()
 	{
 		$output = $this->request('GET', 'api/example/users/id/999');
-		$this->assertEquals(
-			'{"status":false,"message":"User could not be found"}',
-			$output
-		);
+		$expected = '{"status":false,"message":"User could not be found"}';
+		$this->assertEquals($expected, $output);
 		$this->assertResponseCode(404);
 	}
 
 	public function test_post_user_data()
 	{
-		$message = [
+		$payload = [
             'id' => 100, // Automatically generated by the model
             'name' => 'Person Name',
             'email' => 'none@none.com',
             'message' => 'Added a resource'
         ];
-
-		$output = $this->request('POST', 'api/example/users', $message);
-		$this->assertEquals(
-			'{"id":100,"name":"Person Name","email":"none@none.com","message":"Added a resource"}',
-			$output
-		);
+		$output = $this->request('POST', 'api/example/users', $payload);
+		$expected = '{"id":100,"name":"Person Name","email":"none@none.com","message":"Added a resource"}';
+		$this->assertEquals($expected, $output);
 		$this->assertResponseCode(201);
 	}
+
+	// Todo: need DELETE test
+
+	// Todo: need PUT test
 }
