@@ -759,7 +759,6 @@ abstract class REST_Controller extends \CI_Controller {
      * @access public
      * @param array|NULL $data Data to output to the user
      * @param int|NULL $http_code HTTP status code
-     * running the script; otherwise, exit
      */
     public function response($data = NULL, $http_code = NULL)
     {
