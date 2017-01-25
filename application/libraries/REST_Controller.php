@@ -628,6 +628,11 @@ abstract class REST_Controller extends \CI_Controller {
      */
     public function _remap($object_called, $arguments = [])
     {
+	    // Validation flag. Some errors in this function will create an error response
+	    // but will not exit immediately. In those cases we want to prevent the API
+	    // endpoint call if authentication/authorization fails.
+	    // TODO: Keep one exit point in the function.
+	    $is_valid_request = true;
         // Should we answer if not over SSL?
         if ($this->config->item('force_https') && $this->request->ssl === FALSE)
         {
@@ -635,6 +640,7 @@ abstract class REST_Controller extends \CI_Controller {
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unsupported')
                 ], self::HTTP_FORBIDDEN);
+	        $is_valid_request = false;
         }
 
         // Remove the supported format from the function name e.g. index.json => index
@@ -670,6 +676,7 @@ abstract class REST_Controller extends \CI_Controller {
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => sprintf($this->lang->line('text_rest_invalid_api_key'), $this->rest->key)
                 ], self::HTTP_FORBIDDEN);
+	        $is_valid_request = false;
         }
 
         // Check to see if this key has access to the requested controller
@@ -684,6 +691,7 @@ abstract class REST_Controller extends \CI_Controller {
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_unauthorized')
                 ], self::HTTP_UNAUTHORIZED);
+	        $is_valid_request = false;
         }
 
         // Sure it exists, but can they do anything with it?
@@ -693,6 +701,7 @@ abstract class REST_Controller extends \CI_Controller {
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unknown_method')
                 ], self::HTTP_METHOD_NOT_ALLOWED);
+	        $is_valid_request = false;
         }
 
         // Doing key related stuff? Can only do it if they have a key right?
@@ -739,7 +748,9 @@ abstract class REST_Controller extends \CI_Controller {
         // Call the controller method and passed arguments
         try
         {
-            call_user_func_array([$this, $controller_method], $arguments);
+        	if ( $is_valid_request ) {
+		        call_user_func_array([$this, $controller_method], $arguments);
+	        }
         }
         catch (Exception $ex)
         {
