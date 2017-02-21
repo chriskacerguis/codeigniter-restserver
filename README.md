@@ -29,6 +29,7 @@ When your controller extends from `REST_Controller`, the method names will be ap
 This allows you to implement a RESTful interface easily:
 
 ```php
+require_once APPPATH . 'libraries/REST_Controller.php';
 use Restserver\Libraries\REST_Controller;
 
 class Books extends REST_Controller
