@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="CodeIgniter Application Test Suite" tests="10" assertions="18" failures="0" errors="0" time="0.027518">
+    <testsuite name="Welcome_test" file="/Users/chriskacerguis/Code/codeigniter-restserver/application/tests/controllers/Welcome_test.php" tests="3" assertions="3" failures="0" errors="0" time="0.007645">
+      <testcase name="test_index" class="Welcome_test" file="/Users/chriskacerguis/Code/codeigniter-restserver/application/tests/controllers/Welcome_test.php" line="13" assertions="1" time="0.004670"/>
+      <testcase name="test_method_404" class="Welcome_test" file="/Users/chriskacerguis/Code/codeigniter-restserver/application/tests/controllers/Welcome_test.php" line="19" assertions="1" time="0.002086"/>
+      <testcase name="test_APPPATH" class="Welcome_test" file="/Users/chriskacerguis/Code/codeigniter-restserver/application/tests/controllers/Welcome_test.php" line="25" assertions="1" time="0.000889"/>
+    </testsuite>
+    <testsuite name="Example_test" file="/Users/chriskacerguis/Code/codeigniter-restserver/application/tests/controllers/api/Example_test.php" tests="7" assertions="15" failures="0" errors="0" time="0.019873">
+      <testcase name="test_users_get" class="Example_test" file="/Users/chriskacerguis/Code/codeigniter-restserver/application/tests/controllers/api/Example_test.php" line="8" assertions="2" time="0.007898"/>
+      <testcase name="test_users_get_format_csv" class="Example_test" file="/Users/chriskacerguis/Code/codeigniter-restserver/application/tests/controllers/api/Example_test.php" line="26" assertions="2" time="0.002134"/>
+      <testcase name="test_users_get_id" class="Example_test" file="/Users/chriskacerguis/Code/codeigniter-restserver/application/tests/controllers/api/Example_test.php" line="45" assertions="2" time="0.002531"/>
+      <testcase name="test_users_get_id_query_string_format_xml_get_params" class="Example_test" file="/Users/chriskacerguis/Code/codeigniter-restserver/application/tests/controllers/api/Example_test.php" line="55" assertions="2" time="0.001981"/>
+      <testcase name="test_users_get_id_query_string_format_xml_uri_query_string" class="Example_test" file="/Users/chriskacerguis/Code/codeigniter-restserver/application/tests/controllers/api/Example_test.php" line="76" assertions="2" time="0.001800"/>
+      <testcase name="test_users_get_id_with_http_accept_header" class="Example_test" file="/Users/chriskacerguis/Code/codeigniter-restserver/application/tests/controllers/api/Example_test.php" line="96" assertions="3" time="0.001744"/>
+      <testcase name="test_users_get_id_user_not_found" class="Example_test" file="/Users/chriskacerguis/Code/codeigniter-restserver/application/tests/controllers/api/Example_test.php" line="113" assertions="2" time="0.001785"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

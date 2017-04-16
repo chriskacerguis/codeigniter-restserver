@@ -1,4 +1,6 @@
 <?php
+// Note, this cannot be namespaced for the time being due to how CI works
+//namespace Restserver\Libraries;
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 

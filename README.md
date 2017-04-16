@@ -1,6 +1,6 @@
 # CodeIgniter Rest Server
 
-[![Gitter chat](https://badges.gitter.im/chriskacerguis/codeigniter-restserver.png)](https://gitter.im/codeigniter-restserver/Lobby)
+[![Gitter chat](https://badges.gitter.im/chriskacerguis/codeigniter-restserver.png)](https://gitter.im/codeigniter-restserver/Lobby) [![Build Status](https://travis-ci.org/chriskacerguis/codeigniter-restserver.svg?branch=master)](https://travis-ci.org/chriskacerguis/codeigniter-restserver)
 
 A fully RESTful server implementation for CodeIgniter using one library, one
 config file and one controller.
@@ -29,6 +29,8 @@ When your controller extends from `REST_Controller`, the method names will be ap
 This allows you to implement a RESTful interface easily:
 
 ```php
+use Restserver\Libraries\REST_Controller;
+
 class Books extends REST_Controller
 {
   public function index_get()
