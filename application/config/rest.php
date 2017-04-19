@@ -108,9 +108,21 @@ $config['rest_realm'] = 'REST API';
 | 'digest'  More secured login
 | 'session' Check for a PHP session variable. See 'auth_source' to set the
 |           authorization key
+| 'jwt'     Check jwt bearer on authorization header and validate it.
 |
 */
 $config['rest_auth'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
+| JWT Settings
+|--------------------------------------------------------------------------
+|
+| Required for jwt authentication
+|
+*/
+$config['jwt_secret_key'] = 'My Secret Key!';
+$config['jwt_token_expire'] = 86500;
 
 /*
 |--------------------------------------------------------------------------
@@ -126,7 +138,7 @@ $config['rest_auth'] = FALSE;
 | Note: If 'rest_auth' is set to 'session' then change 'auth_source' to the name of the session variable
 |
 */
-$config['auth_source'] = 'ldap';
+$config['auth_source'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -186,6 +198,12 @@ $config['auth_library_function'] = '';
 
 // ---Uncomment list line for the wildard unit test
 // $config['auth_override_class_method']['wildcard_test_cases']['*'] = 'basic';
+
+// JWT Exmaple
+$config['auth_override_class_method_http']['jwt']['token']['post'] = 'none';
+$config['auth_override_class_method_http']['jwt']['token_refresh']['get'] = 'jwt';
+$config['auth_override_class_method_http']['jwt']['token_info']['get'] = 'jwt';
+
 
 /*
 |--------------------------------------------------------------------------
