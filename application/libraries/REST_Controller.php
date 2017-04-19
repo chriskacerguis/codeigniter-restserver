@@ -1,6 +1,11 @@
 <?php
-
 defined('BASEPATH') OR exit('No direct script access allowed');
+
+require APPPATH . '/libraries/jwt/JWT.php';
+require APPPATH . '/libraries/jwt/BeforeValidException.php';
+require APPPATH . '/libraries/jwt/ExpiredException.php';
+require APPPATH . '/libraries/jwt/SignatureInvalidException.php';
+use \Firebase\JWT\JWT;
 
 /**
  * CodeIgniter Rest Controller
@@ -360,6 +365,13 @@ abstract class REST_Controller extends CI_Controller {
     ];
 
     /**
+     * The Secret Key of the JWT authentication
+     *
+     * @var string
+     */
+    protected $jwt_secret_key = '';
+
+    /**
      * Extend this function to apply additional checking early on in the process
      *
      * @access protected
@@ -397,6 +409,9 @@ abstract class REST_Controller extends CI_Controller {
 
         // At present the library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter (no citation)
         $this->load->library('format');
+
+        //Get JWT secret key
+        $this->jwt_secret_key = $this->config->item('jwt_secret_key');
 
         // Determine supported output formats from configuration
         $supported_formats = $this->config->item('rest_supported_formats');
@@ -563,6 +578,9 @@ abstract class REST_Controller extends CI_Controller {
                     break;
                 case 'session':
                     $this->_check_php_session();
+                    break;
+                case 'jwt':
+                    $this->_check_jwt();
                     break;
             }
             if ($this->config->item('rest_ip_whitelist_enabled') === TRUE)
@@ -1292,6 +1310,14 @@ abstract class REST_Controller extends CI_Controller {
                     return TRUE;
                 }
 
+                // JWT auth override found, check jwt
+                if ($auth_override_class_method[$this->router->class]['*'] === 'jwt')
+                {
+                    $this->_check_jwt();
+
+                    return TRUE;
+                }
+
                 // Whitelist auth override found, check client's ip against config whitelist
                 if ($auth_override_class_method[$this->router->class]['*'] === 'whitelist')
                 {
@@ -1330,6 +1356,14 @@ abstract class REST_Controller extends CI_Controller {
                 if ($auth_override_class_method[$this->router->class][$this->router->method] === 'session')
                 {
                     $this->_check_php_session();
+
+                    return TRUE;
+                }
+
+                // JWT auth override found, check jwt
+                if ($auth_override_class_method[$this->router->class][$this->router->method] === 'jwt')
+                {
+                    $this->_check_jwt();
 
                     return TRUE;
                 }
@@ -1383,6 +1417,14 @@ abstract class REST_Controller extends CI_Controller {
                     return TRUE;
                 }
 
+                // JWT auth override found, check jwt
+                if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'jwt')
+                {
+                    $this->_check_jwt();
+
+                    return TRUE;
+                }
+
                 // Whitelist auth override found, check client's ip against config whitelist
                 if ($auth_override_class_method_http[$this->router->class]['*'][$this->request->method] === 'whitelist')
                 {
@@ -1421,6 +1463,14 @@ abstract class REST_Controller extends CI_Controller {
                 if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'session')
                 {
                     $this->_check_php_session();
+
+                    return TRUE;
+                }
+
+                // JWT auth override found, check jwt
+                if ($auth_override_class_method_http[$this->router->class][$this->router->method][$this->request->method] === 'jwt')
+                {
+                    $this->_check_jwt();
 
                     return TRUE;
                 }
@@ -1938,6 +1988,97 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         return TRUE;
+    }
+
+    /**
+     * Check to see if the JWT is valid
+     *
+     * @access protected
+     * @return void
+     */
+    protected function _check_jwt()
+    {
+        $authorization = $this->head('Authorization');
+
+        if (!empty($authorization))
+        {
+            if (preg_match('/Bearer\s(\S+)/', $authorization, $matches))
+            {
+                $bearer = $matches[1];
+                try
+                {
+                    $decoded = JWT::decode($bearer, $this->jwt_secret_key, array('HS256'));
+                }
+                catch (Exception $e)
+                {
+                    $this->response([
+                        $this->config->item('rest_status_field_name') => 'invalid_token',
+                        $this->config->item('rest_message_field_name') => $e->getMessage()
+                    ], self::HTTP_UNAUTHORIZED);
+                }
+            }
+            else
+            {
+                $this->response([
+                    $this->config->item('rest_status_field_name') => 'empty_bearer',
+                    $this->config->item('rest_message_field_name') => 'Bearer is missing'
+                ], self::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        }
+        else
+        {
+            $this->response([
+                $this->config->item('rest_status_field_name') => 'empty_authorization',
+                $this->config->item('rest_message_field_name') => 'Authorization Header is missing'
+            ], self::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    /**
+     * JWT encoding
+     *
+     * @access protected
+     * @param array $token The JWT Token data
+     * @return string
+     */
+    protected function jwt_encode($token)
+    {
+        return JWT::encode($token, $this->jwt_secret_key);
+    }
+
+    /**
+     * JWT decoding
+     *
+     * @access protected
+     * @param string $token The JWT Token
+     * @return array
+     */
+    protected function jwt_decode($token)
+    {
+        $decoded = JWT::decode($token, $this->jwt_secret_key, array('HS256'));
+        $decoded_array = (array) $decoded;
+        return $decoded_array;
+    }
+
+    /**
+     * Get JWT Token Bearer
+     *
+     * @access protected
+     * @return string
+     */
+    protected function jwt_token()
+    {
+        $authorization = $this->head('Authorization');
+
+        if (!empty($authorization))
+        {
+            if (preg_match('/Bearer\s(\S+)/', $authorization, $matches))
+            {
+                return $matches[1];
+            }
+            return FALSE;
+        }
+        return FALSE;
     }
 
     /**
