@@ -436,6 +436,8 @@ abstract class REST_Controller extends CI_Controller {
         $this->request = new stdClass();
         $this->response = new stdClass();
         $this->rest = new stdClass();
+        $this->rest->user_id = NULL;
+        $this->rest->user_name = NULL;
 
         // Check to see if the current IP address is blacklisted
         if ($this->config->item('rest_ip_blacklist_enabled') === TRUE)
@@ -1020,6 +1022,7 @@ abstract class REST_Controller extends CI_Controller {
         $this->rest->key = NULL;
         $this->rest->level = NULL;
         $this->rest->user_id = NULL;
+        $this->rest->user_name = NULL;
         $this->rest->ignore_limits = FALSE;
 
         // Find the key from server or arguments
@@ -2001,6 +2004,8 @@ abstract class REST_Controller extends CI_Controller {
         {
             $this->_force_login();
         }
+
+        $this->rest->user_name = !empty($username) ? $username : NULL;
     }
 
     /**
@@ -2058,6 +2063,8 @@ abstract class REST_Controller extends CI_Controller {
                     $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_invalid_credentials')
                 ], self::HTTP_UNAUTHORIZED);
         }
+
+        $this->rest->user_name = !empty($digest['username']) ? $digest['username'] : NULL;
     }
 
     /**
@@ -2154,6 +2161,10 @@ abstract class REST_Controller extends CI_Controller {
     {
         $payload['rtime'] = $this->_end_rtime - $this->_start_rtime;
 
+        if (empty($this->_insert_id)) {
+            return false;
+        }
+
         return $this->rest->db->update(
                 $this->config->item('rest_logs_table'), $payload, [
                 'id' => $this->_insert_id
@@ -2171,6 +2182,10 @@ abstract class REST_Controller extends CI_Controller {
     protected function _log_response_code($http_code)
     {
         $payload['response_code'] = $http_code;
+
+        if (empty($this->_insert_id)) {
+            return false;
+        }
 
         return $this->rest->db->update(
             $this->config->item('rest_logs_table'), $payload, [
@@ -2229,15 +2244,19 @@ abstract class REST_Controller extends CI_Controller {
     protected function _check_cors()
     {
         // Convert the config items into strings
-        $allowed_headers = implode(' ,', $this->config->item('allowed_cors_headers'));
-        $allowed_methods = implode(' ,', $this->config->item('allowed_cors_methods'));
+        $allowed_headers = implode(', ', $this->config->item('allowed_cors_headers'));
+        $allowed_methods = implode(', ', $this->config->item('allowed_cors_methods'));
+        $allowed_exposes = implode(', ', $this->config->item('allowed_cors_expose_headers'));
+        $allowed_crdntls = boolval($this->config->item('allowed_cors_credentials'));
 
         // If we want to allow any domain to access the API
         if ($this->config->item('allow_any_cors_domain') === TRUE)
         {
             header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Headers: '.$allowed_headers);
-            header('Access-Control-Allow-Methods: '.$allowed_methods);
+            header('Access-Control-Allow-Credentials: '.(string)$allowed_crdntls);
+            header('Access-Control-Allow-Headers: ' . $allowed_headers);
+            header('Access-Control-Allow-Methods: ' . $allowed_methods);
+            header('Access-Control-Expose-Headers: ' . $allowed_exposes);
         }
         else
         {
@@ -2252,9 +2271,11 @@ abstract class REST_Controller extends CI_Controller {
             // If the origin domain is in the allowed_cors_origins list, then add the Access Control headers
             if (in_array($origin, $this->config->item('allowed_cors_origins')))
             {
-                header('Access-Control-Allow-Origin: '.$origin);
-                header('Access-Control-Allow-Headers: '.$allowed_headers);
-                header('Access-Control-Allow-Methods: '.$allowed_methods);
+                header('Access-Control-Allow-Origin: ' . $origin);
+                header('Access-Control-Allow-Credentials: '.(string)$allowed_crdntls);
+                header('Access-Control-Allow-Headers: ' . $allowed_headers);
+                header('Access-Control-Allow-Methods: ' . $allowed_methods);
+                header('Access-Control-Expose-Headers: ' . $allowed_exposes);
             }
         }
 
