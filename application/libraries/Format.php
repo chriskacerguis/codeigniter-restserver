@@ -226,7 +226,12 @@ class Format {
             // if there is another array found recursively call this function
             elseif (is_array($value) || is_object($value))
             {
-                $node = $structure->addChild($key);
+                if (isset($value['_value'])) {
+                    $node = $structure->addChild($key, $value['_value']);
+                    unset($value['_value']);
+                } else {
+                    $node = $structure->addChild($key);
+                }
 
                 // recursive call.
                 $this->to_xml($value, $node, $key);
