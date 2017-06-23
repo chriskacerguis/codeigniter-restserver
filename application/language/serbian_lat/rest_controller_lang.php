@@ -13,6 +13,6 @@ $lang['text_rest_ajax_only'] = 'Jedino AJAX zahtevi su dozvoljeni';
 $lang['text_rest_api_key_unauthorized'] = 'Ovaj API klju&#269; nema ovla&#353;&#263;enje za zahtevani kontroler';
 $lang['text_rest_api_key_permissions'] = 'Ovaj API klju&#269; nema dozvoljen stepen ovla&#353;&#263;enja';
 $lang['text_rest_api_key_time_limit'] = 'Ovaj API klju&#269; je prekora&#269;io vremenski limit za dati metod';
-$lang['text_rest_ip_address_time_limit'] = 'This IP Address has reached the time limit for this method';//todo translate
+$lang['text_rest_ip_address_time_limit'] = 'Ova IP adresa je prekora&#269;ila vremenski limit za dati metod';
 $lang['text_rest_unknown_method'] = 'Nepoznat metod';
 $lang['text_rest_unsupported'] = 'Nepodr&#382;an protokol';
