@@ -45,7 +45,7 @@ class Migration_create_table_users extends CI_Migration {
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->create_table($this->table, TRUE);
 
-		/*for ($i = 1; $i <= 100; $i++)
+		for ($i = 1; $i <= 100; $i++)
 		{
 			$this->db->insert($this->table, [
 				'email'      => "user-{$i}@mail.com",
@@ -54,7 +54,7 @@ class Migration_create_table_users extends CI_Migration {
 				'lastname'   => "Lastname {$i}",
 				'created_at' => date('Y-' . rand(1, 12) . '-' . rand(1, 28) . ' H:i:s'),
 			]);
-		}*/
+		}
 	}
 
 
@@ -62,8 +62,8 @@ class Migration_create_table_users extends CI_Migration {
 	{
 		if ($this->db->table_exists($this->table))
 		{
-			$this->dbforge->drop_table($this->table);
 		}
+		$this->dbforge->drop_table($this->table);
 	}
 
 }
