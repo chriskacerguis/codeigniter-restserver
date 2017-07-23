@@ -378,6 +378,9 @@ class Format {
 
         // Close the handle
         fclose($handle);
+        
+        // Convert UTF-8 encoding to UTF-16LE which is supported by MS Excel
+        $csv = mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');
 
         return $csv;
     }
