@@ -401,7 +401,8 @@ abstract class REST_Controller extends \CI_Controller {
         $this->load->config($config);
 
         // At present the library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter (no citation)
-        $this->load->library('format');
+	//$this->load->library('format');
+	$this->format = new Format();
 
         // Determine supported output formats from configuration
         $supported_formats = $this->config->item('rest_supported_formats');
