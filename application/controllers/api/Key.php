@@ -2,10 +2,6 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-// This can be removed if you use __autoload() in config.php OR use Modular Extensions
-/** @noinspection PhpIncludeInspection */
-require APPPATH . '/libraries/REST_Controller.php';
-
 /**
  * Keys Controller
  * This is a basic Key Management REST controller to make and delete keys
@@ -17,7 +13,7 @@ require APPPATH . '/libraries/REST_Controller.php';
  * @license         MIT
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  */
-class Key extends REST_Controller {
+class Key extends MY_Controller {
 
     protected $methods = [
             'index_put' => ['level' => 10, 'limit' => 10],
