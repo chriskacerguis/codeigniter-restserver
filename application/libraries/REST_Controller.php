@@ -335,6 +335,8 @@ abstract class REST_Controller extends CI_Controller {
      * @var bool
      */
     protected $_enable_xss = FALSE;
+    
+    private $is_valid_request = TRUE;
 
     /**
      * HTTP status codes and their respective description
@@ -631,17 +633,19 @@ abstract class REST_Controller extends CI_Controller {
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unsupported')
                 ], self::HTTP_FORBIDDEN);
+
+            $this->is_valid_request = false;
         }
 
         // Remove the supported format from the function name e.g. index.json => index
         $object_called = preg_replace('/^(.*)\.(?:'.implode('|', array_keys($this->_supported_formats)).')$/', '$1', $object_called);
 
         $controller_method = $object_called.'_'.$this->request->method;
-	    // Does this method exist? If not, try executing an index method
-	    if (!method_exists($this, $controller_method)) {
-		    $controller_method = "index_" . $this->request->method;
-		    array_unshift($arguments, $object_called);
-	    }
+            // Does this method exist? If not, try executing an index method
+            if (!method_exists($this, $controller_method)) {
+                    $controller_method = "index_" . $this->request->method;
+                    array_unshift($arguments, $object_called);
+            }
 
         // Do we want to log this method (if allowed by config)?
         $log_method = ! (isset($this->methods[$controller_method]['log']) && $this->methods[$controller_method]['log'] === FALSE);
@@ -656,8 +660,8 @@ abstract class REST_Controller extends CI_Controller {
             {
                 $this->_log_request();
             }
-            
-            // fix cross site to option request error 
+
+            // fix cross site to option request error
             if($this->request->method == 'options') {
                 exit;
             }
@@ -666,6 +670,8 @@ abstract class REST_Controller extends CI_Controller {
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => sprintf($this->lang->line('text_rest_invalid_api_key'), $this->rest->key)
                 ], self::HTTP_FORBIDDEN);
+
+            $this->is_valid_request = false;
         }
 
         // Check to see if this key has access to the requested controller
@@ -680,6 +686,8 @@ abstract class REST_Controller extends CI_Controller {
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_unauthorized')
                 ], self::HTTP_UNAUTHORIZED);
+
+            $this->is_valid_request = false;
         }
 
         // Sure it exists, but can they do anything with it?
@@ -689,6 +697,8 @@ abstract class REST_Controller extends CI_Controller {
                     $this->config->item('rest_status_field_name') => FALSE,
                     $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unknown_method')
                 ], self::HTTP_METHOD_NOT_ALLOWED);
+
+            $this->is_valid_request = false;
         }
 
         // Doing key related stuff? Can only do it if they have a key right?
@@ -699,6 +709,8 @@ abstract class REST_Controller extends CI_Controller {
             {
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_time_limit')];
                 $this->response($response, self::HTTP_UNAUTHORIZED);
+
+                $this->is_valid_request = false;
             }
 
             // If no level is set use 0, they probably aren't using permissions
@@ -716,6 +728,8 @@ abstract class REST_Controller extends CI_Controller {
                 // They don't have good enough perms
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_permissions')];
                 $this->response($response, self::HTTP_UNAUTHORIZED);
+
+                $this->is_valid_request = false;
             }
         }
 
@@ -724,6 +738,8 @@ abstract class REST_Controller extends CI_Controller {
         {
             $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_ip_address_time_limit')];
             $this->response($response, self::HTTP_UNAUTHORIZED);
+
+            $this->is_valid_request = false;
         }
 
         // No key stuff, but record that stuff is happening
@@ -735,7 +751,9 @@ abstract class REST_Controller extends CI_Controller {
         // Call the controller method and passed arguments
         try
         {
-            call_user_func_array([$this, $controller_method], $arguments);
+            if ($this->is_valid_request) {
+                call_user_func_array([$this, $controller_method], $arguments);
+            }
         }
         catch (Exception $ex)
         {
@@ -744,8 +762,8 @@ abstract class REST_Controller extends CI_Controller {
             }
 
             // If the method doesn't exist, then the error will be caught and an error response shown
-	        $_error = &load_class('Exceptions', 'core');
-	        $_error->show_exception($ex);
+                $_error = &load_class('Exceptions', 'core');
+                $_error->show_exception($ex);
         }
     }
 
@@ -2134,6 +2152,10 @@ abstract class REST_Controller extends CI_Controller {
                 'WWW-Authenticate: Digest realm="'.$rest_realm
                 .'", qop="auth", nonce="'.$nonce
                 .'", opaque="' . md5($rest_realm).'"');
+        }
+
+        if ($this->config->item('strict_api_and_auth') === true) {
+            $this->is_valid_request = false;
         }
 
         // Display an error response
