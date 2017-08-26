@@ -1,5 +1,7 @@
 <?php
 
+namespace Restserver\Libraries;
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
@@ -77,7 +79,7 @@ class Format {
      *
      * @param NULL $data
      * @param NULL $from_type
-     * @throws Exception
+     * @throws \Exception
      */
 
     public function __construct($data = NULL, $from_type = NULL)
@@ -97,7 +99,7 @@ class Format {
             }
             else
             {
-                throw new Exception('Format class does not support conversion from "'.$from_type.'".');
+                throw new \Exception('Format class does not support conversion from "'.$from_type.'".');
             }
         }
 
@@ -378,7 +380,7 @@ class Format {
 
         // Close the handle
         fclose($handle);
-        
+
         // Convert UTF-8 encoding to UTF-16LE which is supported by MS Excel
         $csv = mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');
 
