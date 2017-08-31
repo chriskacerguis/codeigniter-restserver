@@ -128,6 +128,16 @@ If you don't specify a response code, and the data you respond with `== FALSE` (
 $this->response([]); // HTTP 404 Not Found
 ```
 
+## Configuration
+
+You can overwrite all default configurations by creating a rest.php file in your config folder with your configs. 
+All given configurations will overwrite the default ones.
+
+## Language
+
+You can overwrite all default language files. Just add a rest_controller_lang.php to your language and overwrite the what you want.
+
+
 ## Multilingual Support
 
 If your application uses language files to support multiple locales, `REST_Controller` will automatically parse the HTTP `Accept-Language` header and provide the language(s) in your actions. This information can be found in the `$this->response->lang` object:
