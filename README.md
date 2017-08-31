@@ -32,8 +32,6 @@ or run
 composer require chriskacerguis/codeigniter-restserver
 ```
 
-The API declares the namespace `\HanischIt\KrakenApi`.
-
 ## Handling Requests
 
 When your controller extends from `REST_Controller`, the method names will be appended with the HTTP method used to access the request. If you're  making an HTTP `GET` call to `/books`, for instance, it would call a `Books#index_get()` method.
