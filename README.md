@@ -18,9 +18,21 @@ Please note that version 4.0.0 is in the works, and is considered a breaking cha
 
 Take a look at the "development" branch to see what's up.
 
-## Installation
+## Installation & loading
 
-Drag and drop the **application/libraries/Format.php** and **application/libraries/REST_Controller.php** files into your application's directories. To use `require_once` it at the top of your controllers to load it into the scope. Additionally, copy the **rest.php** file from **application/config** in your application's configuration directory.
+CodeIgniter Rest Server is available on [Packagist](https://packagist.org/packages/hanischit/kraken-api) (using semantic versioning), and installation via composer is the recommended way to install Kraken-api. Just add this line to your `composer.json` file:
+
+```json
+"chriskacerguis/codeigniter-restserver": "^3.0"
+```
+
+or run
+
+```sh
+composer require chriskacerguis/codeigniter-restserver
+```
+
+The API declares the namespace `\HanischIt\KrakenApi`.
 
 ## Handling Requests
 

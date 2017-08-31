@@ -1,7 +1,5 @@
 <?php
 
-namespace Restserver\Libraries;
-
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
@@ -16,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  * @version         3.0.0
  */
-abstract class REST_Controller extends \CI_Controller {
+abstract class REST_Controller extends CI_Controller {
 
     // Note: Only the widely used HTTP status codes are documented
 
@@ -409,7 +407,7 @@ abstract class REST_Controller extends \CI_Controller {
         $this->get_local_config($config);
 
         // At present the library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter (no citation)
-        if(class_exists('Restserver\Libraries\Format'))
+        if(class_exists('Format'))
         {
             $this->format = new Format();
         }
@@ -454,9 +452,9 @@ abstract class REST_Controller extends \CI_Controller {
         $this->lang->load('rest_controller', $language, FALSE, TRUE, __DIR__.'/../');
 
         // Initialise the response, request and rest objects
-        $this->request = new \stdClass();
-        $this->response = new \stdClass();
-        $this->rest = new \stdClass();
+        $this->request = new stdClass();
+        $this->response = new stdClass();
+        $this->rest = new stdClass();
 
         // Check to see if the current IP address is blacklisted
         if ($this->config->item('rest_ip_blacklist_enabled') === TRUE)
@@ -635,7 +633,7 @@ abstract class REST_Controller extends \CI_Controller {
      * Checks to see if we have everything we need to run this library.
      *
      * @access protected
-     * @throws \Exception
+     * @throws Exception
      */
     protected function preflight_checks()
     {
@@ -643,13 +641,13 @@ abstract class REST_Controller extends \CI_Controller {
         if (is_php('5.4') === FALSE)
         {
             // CodeIgniter 3 is recommended for v5.4 or above
-            throw new \Exception('Using PHP v'.PHP_VERSION.', though PHP v5.4 or greater is required');
+            throw new Exception('Using PHP v'.PHP_VERSION.', though PHP v5.4 or greater is required');
         }
 
         // Check to see if this is CI 3.x
         if (explode('.', CI_VERSION, 2)[0] < 3)
         {
-            throw new \Exception('REST Server requires CodeIgniter 3.x');
+            throw new Exception('REST Server requires CodeIgniter 3.x');
         }
     }
 
@@ -661,7 +659,7 @@ abstract class REST_Controller extends \CI_Controller {
      * @access public
      * @param string $object_called
      * @param array $arguments The arguments passed to the controller method
-     * @throws \Exception
+     * @throws Exception
      */
     public function _remap($object_called, $arguments = [])
     {
@@ -794,7 +792,7 @@ abstract class REST_Controller extends \CI_Controller {
                 call_user_func_array([$this, $controller_method], $arguments);
             }
         }
-        catch (\Exception $ex)
+        catch (Exception $ex)
         {
             if ($this->config->item('rest_handle_exceptions') === FALSE) {
                 throw $ex;
