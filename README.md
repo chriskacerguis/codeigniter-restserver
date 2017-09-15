@@ -18,9 +18,19 @@ Please note that version 4.0.0 is in the works, and is considered a breaking cha
 
 Take a look at the "development" branch to see what's up.
 
-## Installation
+## Installation & loading
 
-Drag and drop the **application/libraries/Format.php** and **application/libraries/REST_Controller.php** files into your application's directories. To use `require_once` it at the top of your controllers to load it into the scope. Additionally, copy the **rest.php** file from **application/config** in your application's configuration directory.
+CodeIgniter Rest Server is available on [Packagist](https://packagist.org/packages/hanischit/kraken-api) (using semantic versioning), and installation via composer is the recommended way to install Kraken-api. Just add this line to your `composer.json` file:
+
+```json
+"chriskacerguis/codeigniter-restserver": "^3.0"
+```
+
+or run
+
+```sh
+composer require chriskacerguis/codeigniter-restserver
+```
 
 ## Handling Requests
 
@@ -117,6 +127,16 @@ If you don't specify a response code, and the data you respond with `== FALSE` (
 ```php
 $this->response([]); // HTTP 404 Not Found
 ```
+
+## Configuration
+
+You can overwrite all default configurations by creating a rest.php file in your config folder with your configs. 
+All given configurations will overwrite the default ones.
+
+## Language
+
+You can overwrite all default language files. Just add a rest_controller_lang.php to your language and overwrite the what you want.
+
 
 ## Multilingual Support
 
