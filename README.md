@@ -1,7 +1,6 @@
 # CodeIgniter Rest Server
 
-[![Gitter chat](https://badges.gitter.im/chriskacerguis/codeigniter-restserver.png)](https://gitter.im/codeigniter-restserver/Lobby)
-
+[![Gitter chat](https://badges.gitter.im/chriskacerguis/codeigniter-restserver.png)](https://gitter.im/codeigniter-restserver/Lobby) [![Build Status](https://travis-ci.org/chriskacerguis/codeigniter-restserver.svg?branch=master)](https://travis-ci.org/chriskacerguis/codeigniter-restserver)
 A fully RESTful server implementation for CodeIgniter using one library, one
 config file and one controller.
 
