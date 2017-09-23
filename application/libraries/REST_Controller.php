@@ -2034,7 +2034,7 @@ abstract class REST_Controller extends CI_Controller {
 
         // Returns NULL if the SERVER variables PHP_AUTH_USER and HTTP_AUTHENTICATION don't exist
         $username = $this->input->server('PHP_AUTH_USER');
-        $http_auth = $this->input->server('HTTP_AUTHENTICATION');
+        $http_auth = $this->input->server('HTTP_AUTHENTICATION') ?: $this->input->server('HTTP_AUTHORIZATION');
 
         $password = NULL;
         if ($username !== NULL)
