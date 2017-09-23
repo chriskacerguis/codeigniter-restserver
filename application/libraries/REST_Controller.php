@@ -413,7 +413,8 @@ abstract class REST_Controller extends CI_Controller {
         }
         else
         {
-             $this->load->library('format');
+            $this->load->library('Format', NULL, 'libraryFormat');
+            $this->format = $this->libraryFormat;
         }
 
 
