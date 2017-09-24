@@ -1,7 +1,7 @@
 # The Core Team
 
 * [Chris Kacerguis](//github.com/chriskacerguis)
-* [Phil Sturgeon] (https://github.com/philsturgeon)
+* [Phil Sturgeon](//github.com/philsturgeon)
 
 ### Special Thanks To
 
