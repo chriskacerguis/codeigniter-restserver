@@ -137,7 +137,7 @@ CI_Controller
 				3.0.0<br>
 				<b>Link:</b>
 				<a href="https://github.com/chriskacerguis/codeigniter-restserver">https://github.com/chriskacerguis/codeigniter-restserver</a><br>
-			<b>Located at</b> <a href="source-class-REST_Controller.html#5-2110" title="Go to source code">libraries/REST_Controller.php</a>
+			<b>Located at</b> <a href="source-class-REST_Controller.html#5-2211" title="Go to source code">libraries/REST_Controller.php</a>
 		<br>
 	</div>
 
@@ -157,7 +157,7 @@ CI_Controller
 
 		<td class="name"><div>
 		<a class="anchor" href="#_early_checks">#</a>
-		<code><a href="source-class-REST_Controller.html#355-363" title="Go to source code">early_checks</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#362-370" title="Go to source code">early_checks</a>( )</code>
 
 		<div class="description short">
 			<p>Extend this function to apply additional checking early on in the process</p>
@@ -187,7 +187,7 @@ CI_Controller
 
 		<td class="name"><div>
 		<a class="anchor" href="#___construct">#</a>
-		<code><a href="source-class-REST_Controller.html#365-539" title="Go to source code">__construct</a>( <span>string <var>$config</var> = <span class="php-quote">'rest'</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#372-577" title="Go to source code">__construct</a>( <span>string <var>$config</var> = <span class="php-quote">'rest'</span></span> )</code>
 
 		<div class="description short">
 			<p>Constructor for the REST API</p>
@@ -223,7 +223,7 @@ e.g: my_rest.php is passed as 'my_rest'</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#___destruct">#</a>
-		<code><a href="source-class-REST_Controller.html#541-558" title="Go to source code">__destruct</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#579-596" title="Go to source code">__destruct</a>( )</code>
 
 		<div class="description short">
 			<p>Deconstructor</p>
@@ -257,18 +257,18 @@ e.g: my_rest.php is passed as 'my_rest'</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__remap">#</a>
-		<code><a href="source-class-REST_Controller.html#560-677" title="Go to source code">_remap</a>( <span>string <var>$object_called</var></span>, <span>array <var>$arguments</var></span> )</code>
+		<code><a href="source-class-REST_Controller.html#598-716" title="Go to source code">_remap</a>( <span>string <var>$object_called</var></span>, <span>array <var>$arguments</var> = []</span> )</code>
 
 		<div class="description short">
 			<p>Requests are not made to methods directly, the request will be for
 an "object". This simply maps the object and method to the correct
-Controller method.</p>
+Controller method</p>
 		</div>
 
 		<div class="description detailed hidden">
 			<p>Requests are not made to methods directly, the request will be for
 an "object". This simply maps the object and method to the correct
-Controller method.</p>
+Controller method</p>
 
 
 				<h4>Parameters</h4>
@@ -276,7 +276,7 @@ Controller method.</p>
 					<dt><var>$object_called</var></dt>
 					<dd></dd>
 					<dt><var>$arguments</var></dt>
-					<dd>The arguments passed to the controller method.</dd>
+					<dd>The arguments passed to the controller method</dd>
 				</dl></div>
 
 
@@ -298,7 +298,7 @@ Controller method.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_response">#</a>
-		<code><a href="source-class-REST_Controller.html#679-760" title="Go to source code">response</a>( <span>array|null <var>$data</var> = <span class="php-keyword1">NULL</span></span>, <span>integer|null <var>$http_code</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean <var>$continue</var> = <span class="php-keyword1">FALSE</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#718-799" title="Go to source code">response</a>( <span>array|null <var>$data</var> = <span class="php-keyword1">NULL</span></span>, <span>integer|null <var>$http_code</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean <var>$continue</var> = <span class="php-keyword1">FALSE</span></span> )</code>
 
 		<div class="description short">
 			<p>Takes mixed data and optionally a status code, then creates the response</p>
@@ -338,20 +338,20 @@ running the script; otherwise, exit</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_set_response">#</a>
-		<code><a href="source-class-REST_Controller.html#762-775" title="Go to source code">set_response</a>( <span>array|null <var>$data</var> = <span class="php-keyword1">NULL</span></span>, <span>integer|null <var>$http_code</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#801-814" title="Go to source code">set_response</a>( <span>array|null <var>$data</var> = <span class="php-keyword1">NULL</span></span>, <span>integer|null <var>$http_code</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Takes mixed data and optionally a status code, then creates the response
 within the buffers of the Output class. The response is sent to the client
 lately by the framework, after the current controller's method termination.
-All the hooks after the controller's method termination are executable.</p>
+All the hooks after the controller's method termination are executable</p>
 		</div>
 
 		<div class="description detailed hidden">
 			<p>Takes mixed data and optionally a status code, then creates the response
 within the buffers of the Output class. The response is sent to the client
 lately by the framework, after the current controller's method termination.
-All the hooks after the controller's method termination are executable.</p>
+All the hooks after the controller's method termination are executable</p>
 
 
 				<h4>Parameters</h4>
@@ -381,7 +381,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__detect_input_format">#</a>
-		<code><a href="source-class-REST_Controller.html#777-809" title="Go to source code">_detect_input_format</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#816-848" title="Go to source code">_detect_input_format</a>( )</code>
 
 		<div class="description short">
 			<p>Get the input format e.g. json or xml</p>
@@ -403,6 +403,44 @@ All the hooks after the controller's method termination are executable.</p>
 		</div>
 		</div></td>
 	</tr>
+	<tr data-order="_get_default_output_format" id="__get_default_output_format">
+
+		<td class="attributes"><code>
+			 protected 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#__get_default_output_format">#</a>
+		<code><a href="source-class-REST_Controller.html#850-862" title="Go to source code">_get_default_output_format</a>( )</code>
+
+		<div class="description short">
+			<p>Gets the default format from the configuration. Fallbacks to 'json'
+if the corresponding configuration option $config['rest_default_format']
+is missing or is empty</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Gets the default format from the configuration. Fallbacks to 'json'
+if the corresponding configuration option $config['rest_default_format']
+is missing or is empty</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					string<br>The default supported input format
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
 	<tr data-order="_detect_output_format" id="__detect_output_format">
 
 		<td class="attributes"><code>
@@ -415,7 +453,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__detect_output_format">#</a>
-		<code><a href="source-class-REST_Controller.html#811-880" title="Go to source code">_detect_output_format</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#864-933" title="Go to source code">_detect_output_format</a>( )</code>
 
 		<div class="description short">
 			<p>Detect which format should be used to output the data</p>
@@ -449,7 +487,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__detect_method">#</a>
-		<code><a href="source-class-REST_Controller.html#882-912" title="Go to source code">_detect_method</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#935-965" title="Go to source code">_detect_method</a>( )</code>
 
 		<div class="description short">
 			<p>Get the HTTP request string e.g. get or post</p>
@@ -483,7 +521,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__detect_api_key">#</a>
-		<code><a href="source-class-REST_Controller.html#914-986" title="Go to source code">_detect_api_key</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#967-1039" title="Go to source code">_detect_api_key</a>( )</code>
 
 		<div class="description short">
 			<p>See if the user has provided an API key</p>
@@ -517,7 +555,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__detect_lang">#</a>
-		<code><a href="source-class-REST_Controller.html#988-1020" title="Go to source code">_detect_lang</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1041-1073" title="Go to source code">_detect_lang</a>( )</code>
 
 		<div class="description short">
 			<p>Preferred return language</p>
@@ -551,7 +589,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__log_request">#</a>
-		<code><a href="source-class-REST_Controller.html#1022-1048" title="Go to source code">_log_request</a>( <span>boolean <var>$authorized</var> = <span class="php-keyword1">FALSE</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1075-1101" title="Go to source code">_log_request</a>( <span>boolean <var>$authorized</var> = <span class="php-keyword1">FALSE</span></span> )</code>
 
 		<div class="description short">
 			<p>Add the request to the log table</p>
@@ -590,7 +628,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__check_limit">#</a>
-		<code><a href="source-class-REST_Controller.html#1050-1150" title="Go to source code">_check_limit</a>( <span>string <var>$controller_method</var></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1103-1203" title="Go to source code">_check_limit</a>( <span>string <var>$controller_method</var></span> )</code>
 
 		<div class="description short">
 			<p>Check if the requests to a controller method exceed a limit</p>
@@ -629,7 +667,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__auth_override_check">#</a>
-		<code><a href="source-class-REST_Controller.html#1152-1310" title="Go to source code">_auth_override_check</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1205-1395" title="Go to source code">_auth_override_check</a>( )</code>
 
 		<div class="description short">
 			<p>Check if there is a specific auth type set for the current class/method/HTTP-method being called</p>
@@ -663,7 +701,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_get">#</a>
-		<code><a href="source-class-REST_Controller.html#1312-1322" title="Go to source code">_parse_get</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1397-1407" title="Go to source code">_parse_get</a>( )</code>
 
 		<div class="description short">
 			<p>Parse the GET request arguments</p>
@@ -693,7 +731,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_post">#</a>
-		<code><a href="source-class-REST_Controller.html#1324-1338" title="Go to source code">_parse_post</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1409-1423" title="Go to source code">_parse_post</a>( )</code>
 
 		<div class="description short">
 			<p>Parse the POST request arguments</p>
@@ -723,7 +761,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_put">#</a>
-		<code><a href="source-class-REST_Controller.html#1340-1360" title="Go to source code">_parse_put</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1425-1442" title="Go to source code">_parse_put</a>( )</code>
 
 		<div class="description short">
 			<p>Parse the PUT request arguments</p>
@@ -753,7 +791,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_head">#</a>
-		<code><a href="source-class-REST_Controller.html#1362-1375" title="Go to source code">_parse_head</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1444-1457" title="Go to source code">_parse_head</a>( )</code>
 
 		<div class="description short">
 			<p>Parse the HEAD request arguments</p>
@@ -783,7 +821,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_options">#</a>
-		<code><a href="source-class-REST_Controller.html#1377-1390" title="Go to source code">_parse_options</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1459-1472" title="Go to source code">_parse_options</a>( )</code>
 
 		<div class="description short">
 			<p>Parse the OPTIONS request arguments</p>
@@ -813,7 +851,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_patch">#</a>
-		<code><a href="source-class-REST_Controller.html#1392-1413" title="Go to source code">_parse_patch</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1474-1492" title="Go to source code">_parse_patch</a>( )</code>
 
 		<div class="description short">
 			<p>Parse the PATCH request arguments</p>
@@ -843,7 +881,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_delete">#</a>
-		<code><a href="source-class-REST_Controller.html#1415-1428" title="Go to source code">_parse_delete</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1494-1507" title="Go to source code">_parse_delete</a>( )</code>
 
 		<div class="description short">
 			<p>Parse the DELETE request arguments</p>
@@ -873,7 +911,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__parse_query">#</a>
-		<code><a href="source-class-REST_Controller.html#1430-1462" title="Go to source code">_parse_query</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1509-1518" title="Go to source code">_parse_query</a>( )</code>
 
 		<div class="description short">
 			<p>Parse the query parameters</p>
@@ -903,7 +941,7 @@ All the hooks after the controller's method termination are executable.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_get">#</a>
-		<code><a href="source-class-REST_Controller.html#1466-1483" title="Go to source code">get</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1522-1539" title="Go to source code">get</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Retrieve a value from a GET request</p>
@@ -945,7 +983,7 @@ If NULL an array of arguments is returned</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_options">#</a>
-		<code><a href="source-class-REST_Controller.html#1485-1502" title="Go to source code">options</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1541-1558" title="Go to source code">options</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Retrieve a value from a OPTIONS request</p>
@@ -987,7 +1025,7 @@ If NULL an array of arguments is returned</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_head">#</a>
-		<code><a href="source-class-REST_Controller.html#1504-1521" title="Go to source code">head</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1560-1577" title="Go to source code">head</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Retrieve a value from a HEAD request</p>
@@ -1029,7 +1067,7 @@ If NULL an array of arguments is returned</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_post">#</a>
-		<code><a href="source-class-REST_Controller.html#1523-1540" title="Go to source code">post</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1579-1596" title="Go to source code">post</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Retrieve a value from a POST request</p>
@@ -1071,7 +1109,7 @@ If NULL an array of arguments is returned</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_put">#</a>
-		<code><a href="source-class-REST_Controller.html#1542-1559" title="Go to source code">put</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1598-1615" title="Go to source code">put</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Retrieve a value from a PUT request</p>
@@ -1113,7 +1151,7 @@ If NULL an array of arguments is returned</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_delete">#</a>
-		<code><a href="source-class-REST_Controller.html#1561-1578" title="Go to source code">delete</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1617-1634" title="Go to source code">delete</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Retrieve a value from a DELETE request</p>
@@ -1155,7 +1193,7 @@ If NULL an array of arguments is returned</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_patch">#</a>
-		<code><a href="source-class-REST_Controller.html#1580-1597" title="Go to source code">patch</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1636-1653" title="Go to source code">patch</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Retrieve a value from a PATCH request</p>
@@ -1197,7 +1235,7 @@ If NULL an array of arguments is returned</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_query">#</a>
-		<code><a href="source-class-REST_Controller.html#1599-1616" title="Go to source code">query</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1655-1672" title="Go to source code">query</a>( <span>null <var>$key</var> = <span class="php-keyword1">NULL</span></span>, <span>null <var>$xss_clean</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Retrieve a value from the query parameters</p>
@@ -1239,16 +1277,16 @@ If NULL an array of arguments is returned</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__xss_clean">#</a>
-		<code><a href="source-class-REST_Controller.html#1618-1632" title="Go to source code">_xss_clean</a>( <span>string <var>$value</var></span>, <span>boolean <var>$xss_clean</var></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1674-1688" title="Go to source code">_xss_clean</a>( <span>string <var>$value</var></span>, <span>boolean <var>$xss_clean</var></span> )</code>
 
 		<div class="description short">
 			<p>Sanitizes data so that Cross Site Scripting Hacks can be
-prevented.</p>
+prevented</p>
 		</div>
 
 		<div class="description detailed hidden">
 			<p>Sanitizes data so that Cross Site Scripting Hacks can be
-prevented.</p>
+prevented</p>
 
 
 				<h4>Parameters</h4>
@@ -1282,7 +1320,7 @@ prevented.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_validation_errors">#</a>
-		<code><a href="source-class-REST_Controller.html#1634-1645" title="Go to source code">validation_errors</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1690-1701" title="Go to source code">validation_errors</a>( )</code>
 
 		<div class="description short">
 			<p>Retrieve the validation errors</p>
@@ -1316,7 +1354,7 @@ prevented.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__perform_ldap_auth">#</a>
-		<code><a href="source-class-REST_Controller.html#1649-1742" title="Go to source code">_perform_ldap_auth</a>( <span>string <var>$username</var> = <span class="php-quote">''</span></span>, <span>string <var>$password</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1705-1798" title="Go to source code">_perform_ldap_auth</a>( <span>string <var>$username</var> = <span class="php-quote">''</span></span>, <span>string <var>$password</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Perform LDAP Authentication</p>
@@ -1357,7 +1395,7 @@ prevented.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__perform_library_auth">#</a>
-		<code><a href="source-class-REST_Controller.html#1744-1781" title="Go to source code">_perform_library_auth</a>( <span>string <var>$username</var> = <span class="php-quote">''</span></span>, <span>string <var>$password</var> = <span class="php-keyword1">NULL</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1800-1837" title="Go to source code">_perform_library_auth</a>( <span>string <var>$username</var> = <span class="php-quote">''</span></span>, <span>string <var>$password</var> = <span class="php-keyword1">NULL</span></span> )</code>
 
 		<div class="description short">
 			<p>Perform Library Authentication - Override this function to change the way the library is called</p>
@@ -1398,7 +1436,7 @@ prevented.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__check_login">#</a>
-		<code><a href="source-class-REST_Controller.html#1783-1838" title="Go to source code">_check_login</a>( <span>string <var>$username</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean|string <var>$password</var> = <span class="php-keyword1">FALSE</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#1839-1894" title="Go to source code">_check_login</a>( <span>string <var>$username</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean|string <var>$password</var> = <span class="php-keyword1">FALSE</span></span> )</code>
 
 		<div class="description short">
 			<p>Check if the user is logged in</p>
@@ -1439,7 +1477,7 @@ prevented.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__check_php_session">#</a>
-		<code><a href="source-class-REST_Controller.html#1840-1860" title="Go to source code">_check_php_session</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1896-1916" title="Go to source code">_check_php_session</a>( )</code>
 
 		<div class="description short">
 			<p>Check to see if the user is logged in with a PHP session key</p>
@@ -1469,7 +1507,7 @@ prevented.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__prepare_basic_auth">#</a>
-		<code><a href="source-class-REST_Controller.html#1862-1901" title="Go to source code">_prepare_basic_auth</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1918-1957" title="Go to source code">_prepare_basic_auth</a>( )</code>
 
 		<div class="description short">
 			<p>Prepares for basic authentication</p>
@@ -1499,7 +1537,7 @@ prevented.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__prepare_digest_auth">#</a>
-		<code><a href="source-class-REST_Controller.html#1903-1958" title="Go to source code">_prepare_digest_auth</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#1959-2014" title="Go to source code">_prepare_digest_auth</a>( )</code>
 
 		<div class="description short">
 			<p>Prepares for digest authentication</p>
@@ -1529,7 +1567,7 @@ prevented.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__check_blacklist_auth">#</a>
-		<code><a href="source-class-REST_Controller.html#1960-1980" title="Go to source code">_check_blacklist_auth</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#2016-2036" title="Go to source code">_check_blacklist_auth</a>( )</code>
 
 		<div class="description short">
 			<p>Checks if the client's ip is in the 'rest_ip_blacklist' config and generates a 401 response</p>
@@ -1559,7 +1597,7 @@ prevented.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__check_whitelist_auth">#</a>
-		<code><a href="source-class-REST_Controller.html#1982-2008" title="Go to source code">_check_whitelist_auth</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#2038-2064" title="Go to source code">_check_whitelist_auth</a>( )</code>
 
 		<div class="description short">
 			<p>Check if the client's ip is in the 'rest_ip_whitelist' config and generates a 401 response</p>
@@ -1589,7 +1627,7 @@ prevented.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__force_login">#</a>
-		<code><a href="source-class-REST_Controller.html#2010-2041" title="Go to source code">_force_login</a>( <span>string <var>$nonce</var> = <span class="php-quote">''</span></span> )</code>
+		<code><a href="source-class-REST_Controller.html#2066-2097" title="Go to source code">_force_login</a>( <span>string <var>$nonce</var> = <span class="php-quote">''</span></span> )</code>
 
 		<div class="description short">
 			<p>Force logging in by setting the WWW-Authenticate header</p>
@@ -1625,7 +1663,7 @@ each time</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__log_access_time">#</a>
-		<code><a href="source-class-REST_Controller.html#2043-2058" title="Go to source code">_log_access_time</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#2099-2114" title="Go to source code">_log_access_time</a>( )</code>
 
 		<div class="description short">
 			<p>Updates the log table with the total access time</p>
@@ -1663,7 +1701,7 @@ each time</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__log_response_code">#</a>
-		<code><a href="source-class-REST_Controller.html#2060-2076" title="Go to source code">_log_response_code</a>( <span> <var>$http_code</var></span> )</code>
+		<code><a href="source-class-REST_Controller.html#2116-2132" title="Go to source code">_log_response_code</a>( <span> <var>$http_code</var></span> )</code>
 
 		<div class="description short">
 			<p>Updates the log table with HTTP response code</p>
@@ -1706,7 +1744,7 @@ each time</p></dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__check_access">#</a>
-		<code><a href="source-class-REST_Controller.html#2078-2108" title="Go to source code">_check_access</a>( )</code>
+		<code><a href="source-class-REST_Controller.html#2134-2164" title="Go to source code">_check_access</a>( )</code>
 
 		<div class="description short">
 			<p>Check to see if the API key has access to the controller and methods</p>
@@ -1721,6 +1759,36 @@ each time</p></dd>
 				<div class="list">
 					boolean<br>TRUE the API key has access; otherwise, FALSE
 				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="_check_cors" id="__check_cors">
+
+		<td class="attributes"><code>
+			 protected 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#__check_cors">#</a>
+		<code><a href="source-class-REST_Controller.html#2166-2209" title="Go to source code">_check_cors</a>( )</code>
+
+		<div class="description short">
+			<p>Checks allowed domains, and adds appropriate headers for HTTP access control (CORS)</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Checks allowed domains, and adds appropriate headers for HTTP access control (CORS)</p>
+
+
+
 
 
 
@@ -3204,13 +3272,13 @@ is suitable</p>
 				<a href="source-class-REST_Controller.html#152-158" title="Go to source code"><var>$rest_format</var></a>
 
 			<div class="description short">
-				<p>This defines the rest format.
-Must be overridden it in a controller so that it is set.</p>
+				<p>This defines the rest format
+Must be overridden it in a controller so that it is set</p>
 			</div>
 
 			<div class="description detailed hidden">
-				<p>This defines the rest format.
-Must be overridden it in a controller so that it is set.</p>
+				<p>This defines the rest format
+Must be overridden it in a controller so that it is set</p>
 
 			</div>
 		</td>
@@ -3408,31 +3476,6 @@ Note: This is a dynamic object (stdClass)</p>
 			</div>
 		</td>
 	</tr>
-	<tr data-order="_insert_id" id="$_insert_id">
-		<td class="attributes"><code>
-			protected  
-			string
-		</code></td>
-
-		<td class="name">
-				<a href="source-class-REST_Controller.html#215-220" title="Go to source code"><var>$_insert_id</var></a>
-
-			<div class="description short">
-				<p>The insert_id of the log entry (if we have one)</p>
-			</div>
-
-			<div class="description detailed hidden">
-				<p>The insert_id of the log entry (if we have one)</p>
-
-			</div>
-		</td>
-		<td class="value">
-			<div>
-				<a href="#$_insert_id" class="anchor">#</a>
-				<code><span class="php-quote">''</span></code>
-			</div>
-		</td>
-	</tr>
 	<tr data-order="_put_args" id="$_put_args">
 		<td class="attributes"><code>
 			protected  
@@ -3440,7 +3483,7 @@ Note: This is a dynamic object (stdClass)</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#222-227" title="Go to source code"><var>$_put_args</var></a>
+				<a href="source-class-REST_Controller.html#215-220" title="Go to source code"><var>$_put_args</var></a>
 
 			<div class="description short">
 				<p>The arguments for the PUT request method</p>
@@ -3465,7 +3508,7 @@ Note: This is a dynamic object (stdClass)</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#229-234" title="Go to source code"><var>$_delete_args</var></a>
+				<a href="source-class-REST_Controller.html#222-227" title="Go to source code"><var>$_delete_args</var></a>
 
 			<div class="description short">
 				<p>The arguments for the DELETE request method</p>
@@ -3490,7 +3533,7 @@ Note: This is a dynamic object (stdClass)</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#236-241" title="Go to source code"><var>$_patch_args</var></a>
+				<a href="source-class-REST_Controller.html#229-234" title="Go to source code"><var>$_patch_args</var></a>
 
 			<div class="description short">
 				<p>The arguments for the PATCH request method</p>
@@ -3515,7 +3558,7 @@ Note: This is a dynamic object (stdClass)</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#243-248" title="Go to source code"><var>$_head_args</var></a>
+				<a href="source-class-REST_Controller.html#236-241" title="Go to source code"><var>$_head_args</var></a>
 
 			<div class="description short">
 				<p>The arguments for the HEAD request method</p>
@@ -3540,7 +3583,7 @@ Note: This is a dynamic object (stdClass)</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#250-255" title="Go to source code"><var>$_options_args</var></a>
+				<a href="source-class-REST_Controller.html#243-248" title="Go to source code"><var>$_options_args</var></a>
 
 			<div class="description short">
 				<p>The arguments for the OPTIONS request method</p>
@@ -3565,7 +3608,7 @@ Note: This is a dynamic object (stdClass)</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#257-262" title="Go to source code"><var>$_query_args</var></a>
+				<a href="source-class-REST_Controller.html#250-255" title="Go to source code"><var>$_query_args</var></a>
 
 			<div class="description short">
 				<p>The arguments for the query parameters</p>
@@ -3590,7 +3633,7 @@ Note: This is a dynamic object (stdClass)</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#264-269" title="Go to source code"><var>$_args</var></a>
+				<a href="source-class-REST_Controller.html#257-262" title="Go to source code"><var>$_args</var></a>
 
 			<div class="description short">
 				<p>The arguments from GET, POST, PUT, DELETE, PATCH, HEAD and OPTIONS request methods combined</p>
@@ -3608,6 +3651,31 @@ Note: This is a dynamic object (stdClass)</p>
 			</div>
 		</td>
 	</tr>
+	<tr data-order="_insert_id" id="$_insert_id">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-REST_Controller.html#264-269" title="Go to source code"><var>$_insert_id</var></a>
+
+			<div class="description short">
+				<p>The insert_id of the log entry (if we have one)</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The insert_id of the log entry (if we have one)</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$_insert_id" class="anchor">#</a>
+				<code><span class="php-quote">''</span></code>
+			</div>
+		</td>
+	</tr>
 	<tr data-order="_allow" id="$_allow">
 		<td class="attributes"><code>
 			protected  
@@ -3618,11 +3686,11 @@ Note: This is a dynamic object (stdClass)</p>
 				<a href="source-class-REST_Controller.html#271-276" title="Go to source code"><var>$_allow</var></a>
 
 			<div class="description short">
-				<p>If the request is allowed based on the API key provided.</p>
+				<p>If the request is allowed based on the API key provided</p>
 			</div>
 
 			<div class="description detailed hidden">
-				<p>If the request is allowed based on the API key provided.</p>
+				<p>If the request is allowed based on the API key provided</p>
 
 			</div>
 		</td>
@@ -3767,6 +3835,31 @@ Note: This is a dynamic object (stdClass)</p>
 			</div>
 		</td>
 	</tr>
+	<tr data-order="check_cors" id="$check_cors">
+		<td class="attributes"><code>
+			protected  
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-REST_Controller.html#322-327" title="Go to source code"><var>$check_cors</var></a>
+
+			<div class="description short">
+				<p>Whether or not to perform a CORS check and apply CORS headers to the request</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Whether or not to perform a CORS check and apply CORS headers to the request</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$check_cors" class="anchor">#</a>
+				<code><span class="php-keyword1">NULL</span></code>
+			</div>
+		</td>
+	</tr>
 	<tr data-order="_enable_xss" id="$_enable_xss">
 		<td class="attributes"><code>
 			protected  
@@ -3774,20 +3867,20 @@ Note: This is a dynamic object (stdClass)</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#322-330" title="Go to source code"><var>$_enable_xss</var></a>
+				<a href="source-class-REST_Controller.html#329-337" title="Go to source code"><var>$_enable_xss</var></a>
 
 			<div class="description short">
 				<p>Enable XSS flag
 Determines whether the XSS filter is always active when
-GET, OPTIONS, HEAD, POST, PUT, DELETE and PATCH data is encountered.
-Set automatically based on config setting.</p>
+GET, OPTIONS, HEAD, POST, PUT, DELETE and PATCH data is encountered
+Set automatically based on config setting</p>
 			</div>
 
 			<div class="description detailed hidden">
 				<p>Enable XSS flag
 Determines whether the XSS filter is always active when
-GET, OPTIONS, HEAD, POST, PUT, DELETE and PATCH data is encountered.
-Set automatically based on config setting.</p>
+GET, OPTIONS, HEAD, POST, PUT, DELETE and PATCH data is encountered
+Set automatically based on config setting</p>
 
 			</div>
 		</td>
@@ -3805,7 +3898,7 @@ Set automatically based on config setting.</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-REST_Controller.html#332-353" title="Go to source code"><var>$http_status_codes</var></a>
+				<a href="source-class-REST_Controller.html#339-360" title="Go to source code"><var>$http_status_codes</var></a>
 
 			<div class="description short">
 				<p>HTTP status codes and their respective description

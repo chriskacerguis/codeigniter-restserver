@@ -1,6 +1,10 @@
 Changelog:
 ===========
 
+### UNRELEASED
+* Added support for CodeIgniter controller's index methods (index_GET, index_POST...)
+* Added exceptions handling when the method could not be found
+
 ### 2.7.2
 
 * Added $this->query() in which query parameters can now be obtained regardless of whether a GET request is sent or not
@@ -34,7 +38,7 @@ Changelog:
 * Log Table support for IPv6 & NULL parameters
 * Abstract out the processes of firing a controller method within _remap() to an separate method
 * Moved GET, POST, PUT, and DELETE parsing to separate methods, allowing them to be overridden as needed
-* Small bugfix for a PHP 5.3 strlen error
+* Small bug-fix for a PHP 5.3 strlen error
 * Fixed some PHP 5.4 warnings
 * Fix for bug in Format.php's to_html() which failed to detect if $data was really a multidimensional array.
 * Fix for empty node on XML output format, for false = 0, true = 1.
@@ -51,11 +55,11 @@ Changelog:
 * Support for Backbone.emulateHTTP improved.
 * Combine both URI segment and GET params instead of using one or the other
 * Separate each piece of the WWW-Authenticate header for digest requests with a comma.
-* Added IP whitelist option.
+* Added IP white-list option.
 
 ### 2.5
 
-* Instead of just seeing item, item, item, the singular version of the basenode will be used if possible. [Example](http://d.pr/RS46).
+* Instead of just seeing item, item, item, the singular version of the base-node will be used if possible. [Example](http://d.pr/RS46).
 * Re-factored to use the Format library, which will soon be merged with CodeIgniter.
 * Fixed Limit bug (limit of 5 would allow 6 requests).
 * Added logging for invalid API key requests.

@@ -1,5 +1,7 @@
 # CodeIgniter Rest Server
 
+[![Gitter chat](https://badges.gitter.im/chriskacerguis/codeigniter-restserver.png)](https://gitter.im/codeigniter-restserver/Lobby)
+
 A fully RESTful server implementation for CodeIgniter using one library, one
 config file and one controller.
 
@@ -10,9 +12,25 @@ config file and one controller.
 
 _Note: for 1.7.x support download v2.2 from Downloads tab_
 
-## Installation
+## Important Update on 4.0.0
 
-Drag and drop the **application/libraries/Format.php** and **application/libraries/REST_Controller.php** files into your application's directories. To use `require_once` it at the top of your controllers to load it into the scope. Additionally, copy the **rest.php** file from **application/config** in your application's configuration directory.
+Please note that version 4.0.0 is in the works, and is considered a breaking change (per SemVer).  As CI 3.1.0 now has native support for Composer, this library will be moving to be composer based.
+
+Take a look at the "development" branch to see what's up.
+
+## Installation & loading
+
+CodeIgniter Rest Server is available on [Packagist](https://packagist.org/packages/chriskacerguis/codeigniter-restserver) (using semantic versioning), and installation via composer is the recommended way to install Codeigniter Rest Server. Just add this line to your `composer.json` file:
+
+```json
+"chriskacerguis/codeigniter-restserver": "^3.0"
+```
+
+or run
+
+```sh
+composer require chriskacerguis/codeigniter-restserver
+```
 
 ## Handling Requests
 
@@ -110,6 +128,16 @@ If you don't specify a response code, and the data you respond with `== FALSE` (
 $this->response([]); // HTTP 404 Not Found
 ```
 
+## Configuration
+
+You can overwrite all default configurations by creating a rest.php file in your config folder with your configs. 
+All given configurations will overwrite the default ones.
+
+## Language
+
+You can overwrite all default language files. Just add a rest_controller_lang.php to your language and overwrite the what you want.
+
+
 ## Multilingual Support
 
 If your application uses language files to support multiple locales, `REST_Controller` will automatically parse the HTTP `Accept-Language` header and provide the language(s) in your actions. This information can be found in the `$this->response->lang` object:
@@ -144,9 +172,9 @@ Enabling digest auth is similarly easy. Configure your desired logins in the con
 
 If you're tying this library into an AJAX endpoint where clients authenticate using PHP sessions then you may not like either of the digest nor basic authentication methods. In that case, you can tell the REST Library what PHP session variable to check for. If the variable exists, then the user is authorized. It will be up to your application to set that variable. You can define the variable in ``$config['auth_source']``.  Then tell the library to use a php session variable by setting ``$config['rest_auth']`` to ``session``.
 
-All three methods of authentication can be secured further by using an IP whitelist. If you enable `$config['rest_ip_whitelist_enabled']` in your config file, you can then set a list of allowed IPs.
+All three methods of authentication can be secured further by using an IP white-list. If you enable `$config['rest_ip_whitelist_enabled']` in your config file, you can then set a list of allowed IPs.
 
-Any client connecting to your API will be checked against the whitelisted IP array. If they're on the list, they'll be allowed access. If not, sorry, no can do hombre. The whitelist is a comma-separated string:
+Any client connecting to your API will be checked against the white-listed IP array. If they're on the list, they'll be allowed access. If not, sorry, no can do hombre. The whitelist is a comma-separated string:
 
 ```php
 $config['rest_ip_whitelist'] = '123.456.789.0, 987.654.32.1';
@@ -190,7 +218,7 @@ $ curl -X POST -H "X-API-KEY: some_key_here" http://example.com/books
 ## Contributions
 
 This project was originally written by Phil Sturgeon, however his involvement has shifted
-as he is no longer using it.  As of 2013/11/20 further developement and support will be done by Chris Kacerguis.
+as he is no longer using it.  As of 2013/11/20 further development and support will be done by Chris Kacerguis.
 
 Pull Requests are the best way to fix bugs or add features. I know loads of you use this, so please
 contribute if you have improvements to be made and I'll keep releasing versions over time.
