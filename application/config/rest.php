@@ -608,11 +608,12 @@ $config['allowed_cors_origins'] = [];
 
 /*
 |--------------------------------------------------------------------------
-| Choose method naming convention
+| Define Naming convention
 |--------------------------------------------------------------------------
 |
-| Default value is `snake_case`
-| e.g. send_notification_post, sendNotificationPost
-|
+| Default value is `snakecase`
+| Available options are below
+| - snakecase
+| - camel_case
 */
-$config['method_naming_convention'] = 'snake_case';
+$config['method_naming_convention'] = 'snakecase';
