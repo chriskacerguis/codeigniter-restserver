@@ -655,7 +655,7 @@ abstract class REST_Controller extends CI_Controller {
     /**
     * Define controller method
     *
-    * @access privateDefine controller method
+    * @access private
     * @method define_controller_method
     * @param  string $object_called
     * @return string rename controller method
