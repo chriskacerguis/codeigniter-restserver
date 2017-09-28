@@ -656,7 +656,6 @@ abstract class REST_Controller extends CI_Controller {
     * Define controller method
     *
     * @access private
-    * @method define_controller_method
     * @param  string $object_called
     * @return string rename controller method
     */
@@ -665,12 +664,12 @@ abstract class REST_Controller extends CI_Controller {
 		$rename_method = $object_called.'_'.$this->request->method;
 		$method_naming_convention = $this->config->item('method_naming_convention');
 
-		switch ( strtolower(str_replace(['_','-'], '', $method_naming_convention)) ) {
+		switch ( $method_naming_convention ) {
 			case 'camelcase':
 				$object_called = preg_replace_callback('/_(.?)/', function($matches) {
-				     return ucfirst($matches[1]);
+					 return ucfirst($matches[1]);
 				}, $object_called);
-				
+
 				$rename_method = $object_called.ucfirst($this->request->method);
 				break;
 		}
