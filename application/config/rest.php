@@ -613,7 +613,7 @@ $config['allowed_cors_origins'] = [];
 |
 | Default value is `snakecase`
 | Available options
-| - snakecase
-| - camel_case
+| - snake_case
+| - camelcase
 */
-$config['method_naming_convention'] = 'snakecase';
+$config['method_naming_convention'] = 'snake_case';
