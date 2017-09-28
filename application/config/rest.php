@@ -612,7 +612,7 @@ $config['allowed_cors_origins'] = [];
 |--------------------------------------------------------------------------
 |
 | Default value is `snakecase`
-| Available options are below
+| Available options
 | - snakecase
 | - camel_case
 */
