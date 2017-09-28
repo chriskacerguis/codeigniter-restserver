@@ -667,6 +667,10 @@ abstract class REST_Controller extends CI_Controller {
 
 		switch ( strtolower(str_replace(['_','-'], '', $method_naming_convention)) ) {
 			case 'camelcase':
+				$object_called = preg_replace_callback('/_(.?)/', function($matches) {
+				     return ucfirst($matches[1]);
+				}, $object_called);
+				
 				$rename_method = $object_called.ucfirst($this->request->method);
 				break;
 		}
