@@ -765,72 +765,88 @@ abstract class REST_Controller extends \CI_Controller {
      */
     public function response($data = NULL, $http_code = NULL)
     {
+	//if profiling enabled then print profiling data
+	$isProfilingEnabled = $this->config->item('enable_profiling');
+	if(!$isProfilingEnabled){
 		ob_start();
-        // If the HTTP status is not NULL, then cast as an integer
-        if ($http_code !== NULL)
-        {
-            // So as to be safe later on in the process
-            $http_code = (int) $http_code;
-        }
+		// If the HTTP status is not NULL, then cast as an integer
+		if ($http_code !== NULL)
+		{
+		// So as to be safe later on in the process
+		$http_code = (int) $http_code;
+		}
 
-        // Set the output as NULL by default
-        $output = NULL;
+		// Set the output as NULL by default
+		$output = NULL;
 
-        // If data is NULL and no HTTP status code provided, then display, error and exit
-        if ($data === NULL && $http_code === NULL)
-        {
-            $http_code = self::HTTP_NOT_FOUND;
-        }
+		// If data is NULL and no HTTP status code provided, then display, error and exit
+		if ($data === NULL && $http_code === NULL)
+		{
+		$http_code = self::HTTP_NOT_FOUND;
+		}
 
-        // If data is not NULL and a HTTP status code provided, then continue
-        elseif ($data !== NULL)
-        {
-            // If the format method exists, call and return the output in that format
-            if (method_exists($this->format, 'to_' . $this->response->format))
-            {
-                // Set the format header
-                $this->output->set_content_type($this->_supported_formats[$this->response->format], strtolower($this->config->item('charset')));
-                $output = $this->format->factory($data)->{'to_' . $this->response->format}();
+		// If data is not NULL and a HTTP status code provided, then continue
+		elseif ($data !== NULL)
+		{
+		// If the format method exists, call and return the output in that format
+		if (method_exists($this->format, 'to_' . $this->response->format))
+		{
+			// Set the format header
+			$this->output->set_content_type($this->_supported_formats[$this->response->format], strtolower($this->config->item('charset')));
+			$output = $this->format->factory($data)->{'to_' . $this->response->format}();
 
-                // An array must be parsed as a string, so as not to cause an array to string error
-                // Json is the most appropriate form for such a data type
-                if ($this->response->format === 'array')
-                {
-                    $output = $this->format->factory($output)->{'to_json'}();
-                }
-            }
-            else
-            {
-                // If an array or object, then parse as a json, so as to be a 'string'
-                if (is_array($data) || is_object($data))
-                {
-                    $data = $this->format->factory($data)->{'to_json'}();
-                }
+			// An array must be parsed as a string, so as not to cause an array to string error
+			// Json is the most appropriate form for such a data type
+			if ($this->response->format === 'array')
+			{
+			$output = $this->format->factory($output)->{'to_json'}();
+			}
+		}
+		else
+		{
+			// If an array or object, then parse as a json, so as to be a 'string'
+			if (is_array($data) || is_object($data))
+			{
+			$data = $this->format->factory($data)->{'to_json'}();
+			}
 
-                // Format is not supported, so output the raw data as a string
-                $output = $data;
-            }
-        }
+			// Format is not supported, so output the raw data as a string
+			$output = $data;
+		}
+		}
 
-        // If not greater than zero, then set the HTTP status code as 200 by default
-        // Though perhaps 500 should be set instead, for the developer not passing a
-        // correct HTTP status code
-        $http_code > 0 || $http_code = self::HTTP_OK;
+		// If not greater than zero, then set the HTTP status code as 200 by default
+		// Though perhaps 500 should be set instead, for the developer not passing a
+		// correct HTTP status code
+		$http_code > 0 || $http_code = self::HTTP_OK;
 
-        $this->output->set_status_header($http_code);
+		$this->output->set_status_header($http_code);
 
-        // JC: Log response code only if rest logging enabled
-        if ($this->config->item('rest_enable_logging') === TRUE)
-        {
-            $this->_log_response_code($http_code);
-        }
+		// JC: Log response code only if rest logging enabled
+		if ($this->config->item('rest_enable_logging') === TRUE)
+		{
+		$this->_log_response_code($http_code);
+		}
 
-        // Output the data
-        $this->output->set_output($output);
+		// Output the data
+		$this->output->set_output($output);
 
-        ob_end_flush();
+		if ($continue === FALSE)
+		{
+		// Display the data and exit execution
+		$this->output->_display();
+		exit;
+		}
+		else
+		{
+		ob_end_flush();
+		}
 
-        // Otherwise dump the output automatically
+		// Otherwise dump the output automatically
+	}
+	else{
+		echo json_encode($data);
+	}
     }
 
     /**
