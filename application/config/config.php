@@ -104,6 +104,17 @@ $config['enable_hooks'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
+| Enable/Disable System Profling
+|--------------------------------------------------------------------------
+|
+| If you would like to use the 'profiling' feature you must enable it by
+| setting this variable to TRUE (boolean).
+|
+*/
+$config['enable_profiling'] = FALSE;
+
+/*
+|--------------------------------------------------------------------------
 | Class Extension Prefix
 |--------------------------------------------------------------------------
 |
