@@ -210,6 +210,19 @@ By default, the HTTP will be `X-API-KEY`. This can be configured in **config/res
 ```bash
 $ curl -X POST -H "X-API-KEY: some_key_here" http://example.com/books
 ```
+## Profiling
+Codeigniter Profiler feature has been added to the library, so that you can use the power of CI profiler in your project just by setting config parameter to enable profile through out your application
+Turn it on in your **config/config.php** file:
+
+```php
+TRUE to turn profile ON, FALSE to turn it off
+$config['enable_profiling'] = FALSE;
+```
+Also you need to enable `hooks` in your config.php that looks like this
+```php
+$config['enable_hooks'] = TRUE;
+```
+Also you can refer to **config/config.php.sample** 
 
 ## Other Documentation / Tutorials
 
