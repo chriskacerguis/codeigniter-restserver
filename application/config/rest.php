@@ -604,3 +604,16 @@ $config['allow_any_cors_domain'] = FALSE;
 |
 */
 $config['allowed_cors_origins'] = [];
+
+
+/*
+|--------------------------------------------------------------------------
+| Define Naming convention
+|--------------------------------------------------------------------------
+|
+| Default value is `snakecase`
+| Available options
+| - snake_case
+| - camelcase
+*/
+$config['method_naming_convention'] = 'snake_case';

@@ -653,6 +653,31 @@ abstract class REST_Controller extends CI_Controller {
     }
 
     /**
+    * Define controller method
+    *
+    * @access private
+    * @param  string $object_called
+    * @return string rename controller method
+    */
+	private function define_controller_method($object_called)
+	{
+		$rename_method = $object_called.'_'.$this->request->method;
+		$method_naming_convention = $this->config->item('method_naming_convention');
+
+		switch ( $method_naming_convention ) {
+			case 'camelcase':
+				$object_called = preg_replace_callback('/_(.?)/', function($matches) {
+					 return ucfirst($matches[1]);
+				}, $object_called);
+
+				$rename_method = $object_called.ucfirst($this->request->method);
+				break;
+		}
+
+		return $rename_method;
+	}
+
+    /**
      * Requests are not made to methods directly, the request will be for
      * an "object". This simply maps the object and method to the correct
      * Controller method
@@ -678,7 +703,8 @@ abstract class REST_Controller extends CI_Controller {
         // Remove the supported format from the function name e.g. index.json => index
         $object_called = preg_replace('/^(.*)\.(?:'.implode('|', array_keys($this->_supported_formats)).')$/', '$1', $object_called);
 
-        $controller_method = $object_called.'_'.$this->request->method;
+        $controller_method = $this->define_controller_method($object_called);
+        
         // Does this method exist? If not, try executing an index method
         if (!method_exists($this, $controller_method)) {
             $controller_method = "index_" . $this->request->method;
