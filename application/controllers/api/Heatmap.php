@@ -46,10 +46,16 @@ class Heatmap extends REST_Controller {
      */
     public function data_get() {
 
-        $id = $this->get('id');
+        $raw_id = $this->get('id');
+
+        $id = str_replace('%20', ' ', $raw_id); // So we can get the space from the timestamp
+
+//        $this->response([
+//            'id' => $this->get('id'),
+//        ], REST_Controller::HTTP_OK);
 
         // If no ID was provided, then return all the records
-        if ($id === NULL)
+        if ($id == NULL)
         {
             // Get all the records
             $heatmap = $this->heatmap_model->get_all();
@@ -91,7 +97,7 @@ class Heatmap extends REST_Controller {
         {
             $this->set_response([
                 'status' => FALSE,
-                'message' => "No record with {$id} was found"
+                'message' => "No record with id = \"{$id}\" was found"
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
     }
@@ -100,7 +106,6 @@ class Heatmap extends REST_Controller {
      * POST Method.
      */
     public function data_post() {
-        // TODO: Check model implementation
 
         $entry = array(
             'id' => $this->get('id'),
@@ -109,14 +114,16 @@ class Heatmap extends REST_Controller {
             'sensor_value' => $this->post('sensor_value'),
         );
 
+        $id = '';
+
         if($entry['id']) {
             $this->heatmap_model->update_entry($entry);
         } else {
-            $this->heatmap_model->insert_entry($entry);
+            $id = $this->heatmap_model->insert_entry($entry);
         }
 
         $message = [
-            'id' => 100, // TODO: Set it from the model return
+            'id' => empty($id) ? $this->get('id') : $id, // Return same ID if update, return generated if was insert
             'longitude' => $this->get('longitude'),
             'latitude' => $this->get('latitude'),
             'sensor_value' => $this->get('sensor_value'),

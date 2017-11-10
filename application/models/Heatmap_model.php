@@ -46,6 +46,11 @@ class Heatmap_model extends CI_Model {
             $this->sensor_value = $input['sensor_value'];
 
             $this->db->insert('map', $this);
+
+            // Return new item id
+            $insert_id = $this->db->insert_id();
+
+            return  $insert_id;
         }
     }
 
@@ -70,8 +75,15 @@ class Heatmap_model extends CI_Model {
      * @param string $id
      */
     public function retrieve_entry($id = '') {
-        $query = $this->db->get('map', $id);
-        return $query->result();
+//        $query = $this->db->get('map', ['id' => $id]);
+
+        $this->db->select('*');
+        $this->db-> from('map');
+        $this->db-> where('id', $id);
+
+        $query = $this->db->get();
+
+        return $query->row();
     }
 
     /**
