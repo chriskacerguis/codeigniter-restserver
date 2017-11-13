@@ -74,7 +74,7 @@ class Heatmap_model extends CI_Model {
      *
      * @param string $id
      */
-    public function retrieve_entry($id = '') {
+    public function retrieve_entry($id) {
 //        $query = $this->db->get('map', ['id' => $id]);
 
         $this->db->select('*');

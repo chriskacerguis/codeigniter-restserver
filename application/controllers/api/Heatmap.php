@@ -46,7 +46,9 @@ class Heatmap extends REST_Controller {
      */
     public function data_get() {
 
-        $raw_id = $this->get('id');
+        $raw_id = $this->uri->segment(5);
+
+        print_r("ID found! it is: ". $raw_id);
 
         $id = str_replace('%20', ' ', $raw_id); // So we can get the space from the timestamp
 
@@ -86,7 +88,7 @@ class Heatmap extends REST_Controller {
         }
 
         // Get records from database
-        $heatmap = $this->heatmap_model->retrieve_entry( $this->get($id) );
+        $heatmap = $this->heatmap_model->retrieve_entry($raw_id);
 
         // If a record matches the id provided, then return it
         if (!empty($heatmap))
