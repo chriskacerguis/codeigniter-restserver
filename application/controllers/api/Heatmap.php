@@ -46,15 +46,9 @@ class Heatmap extends REST_Controller {
      */
     public function data_get() {
 
-        $raw_id = $this->uri->segment(5);
-
-        print_r("ID found! it is: ". $raw_id);
+        $raw_id = $this->uri->segment(4);
 
         $id = str_replace('%20', ' ', $raw_id); // So we can get the space from the timestamp
-
-//        $this->response([
-//            'id' => $this->get('id'),
-//        ], REST_Controller::HTTP_OK);
 
         // If no ID was provided, then return all the records
         if ($id == NULL)
