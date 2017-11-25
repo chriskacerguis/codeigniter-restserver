@@ -235,5 +235,3 @@ as he is no longer using it.  As of 2013/11/20 further development and support w
 
 Pull Requests are the best way to fix bugs or add features. I know loads of you use this, so please
 contribute if you have improvements to be made and I'll keep releasing versions over time.
-
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/chriskacerguis/codeigniter-restserver/master/LICENSE)
