@@ -612,6 +612,10 @@ $config['allowed_cors_origins'] = [];
 |
 | If using CORS checks, always include the headers and values specified here 
 | in the OPTIONS client preflight.
+| Example:
+| $config['forced_cors_headers'] = [
+|   'Access-Control-Allow-Credentials' => 'true'
+| ];
 |
 | Added because of how Sencha Ext JS framework requires the header
 | Access-Control-Allow-Credentials to be set to true to allow the use of
@@ -620,6 +624,4 @@ $config['allowed_cors_origins'] = [];
 | http://docs.sencha.com/extjs/6.5.2/classic/Ext.data.proxy.Rest.html#cfg-withCredentials
 |
 */
-$config['forced_cors_headers'] = [
-  'Access-Control-Allow-Credentials' => 'true'
-];
+$config['forced_cors_headers'] = [];
