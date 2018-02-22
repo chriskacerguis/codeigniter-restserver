@@ -15,6 +15,7 @@ class Migration_create_table_api_logs extends CI_Migration {
 
 	public function up()
 	{
+		$this->config->load('rest');
 		$table = config_item('rest_logs_table');
 		$fields = array(
 			'id'            => [

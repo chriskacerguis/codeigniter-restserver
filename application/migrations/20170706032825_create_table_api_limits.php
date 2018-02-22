@@ -15,6 +15,7 @@ class Migration_create_table_api_limits extends CI_Migration {
 
 	public function up()
 	{
+		$this->config->load('rest');
 		$table = config_item('rest_limits_table');
 		$fields = array(
 			'id'           => [
