@@ -2336,6 +2336,11 @@ abstract class REST_Controller extends CI_Controller {
         // If the request HTTP method is 'OPTIONS', kill the response and send it to the client
         if ($this->input->method() === 'options')
         {
+            // Load DB if needed for logging
+            if (!isset($this->rest->db) && $this->config->item('rest_enable_logging'))
+            {
+                $this->rest->db = $this->load->database($this->config->item('rest_database_group'), TRUE);
+            }
             exit;
         }
     }
