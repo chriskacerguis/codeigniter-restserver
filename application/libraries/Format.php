@@ -116,7 +116,7 @@ class Format {
      *
      * @return object Instance of the format class
      */
-    public function factory($data, $from_type = NULL)
+    public static function factory($data, $from_type = NULL)
     {
         // $class = __CLASS__;
         // return new $class();
