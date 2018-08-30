@@ -507,6 +507,12 @@ abstract class REST_Controller extends CI_Controller {
             $this->{'_'.$this->request->method.'_args'} = [];
         }
 
+        // Which format should the data be returned in?
+        $this->response->format = $this->_detect_output_format();
+
+        // Which language should the data be returned in?
+        $this->response->lang = $this->_detect_lang();
+
         // Now we know all about our request, let's try and parse the body if it exists
         if ($this->request->format && $this->request->body)
         {
@@ -530,12 +536,6 @@ abstract class REST_Controller extends CI_Controller {
             $this->_delete_args,
             $this->{'_'.$this->request->method.'_args'}
         );
-
-        // Which format should the data be returned in?
-        $this->response->format = $this->_detect_output_format();
-
-        // Which language should the data be returned in?
-        $this->response->lang = $this->_detect_lang();
 
         // Extend this function to apply additional checking early on in the process
         $this->early_checks();
