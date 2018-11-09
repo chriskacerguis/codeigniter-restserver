@@ -1,7 +1,7 @@
 <?php
 
 /*
- * English language
+ * Bahasa Indonesia language
  */
 
 $lang['text_rest_invalid_api_key'] = 'Kunci API %s , tidak valid'; // %s is the REST API key
