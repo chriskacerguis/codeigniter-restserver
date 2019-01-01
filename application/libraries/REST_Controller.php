@@ -1104,11 +1104,12 @@ abstract class REST_Controller extends CI_Controller {
                 {
                     // multiple ip addresses must be separated using a comma, explode and loop
                     $list_ip_addresses = explode(',', $row->ip_addresses);
+		    $ip_address = $this->input->ip_address();
                     $found_address = FALSE;
 
                     foreach ($list_ip_addresses as $ip_address)
                     {
-                        if ($this->input->ip_address() === trim($ip_address))
+                        if ($ip_address === trim($ip_address))
                         {
                             // there is a match, set the the value to TRUE and break out of the loop
                             $found_address = TRUE;
@@ -1215,8 +1216,8 @@ abstract class REST_Controller extends CI_Controller {
         switch ($this->config->item('rest_limits_method'))
         {
             case 'IP_ADDRESS':
-                $limited_uri = 'ip-address:' .$this->input->ip_address();
                 $api_key = $this->input->ip_address();
+                $limited_uri = 'ip-address:' . $api_key;
                 break;
 
             case 'API_KEY':
@@ -2181,14 +2182,14 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _force_login($nonce = '')
     {
-        $rest_auth = $this->config->item('rest_auth');
+        $rest_auth = strtolower($this->config->item('rest_auth'));
         $rest_realm = $this->config->item('rest_realm');
-        if (strtolower($rest_auth) === 'basic')
+        if ($rest_auth === 'basic')
         {
             // See http://tools.ietf.org/html/rfc2617#page-5
             header('WWW-Authenticate: Basic realm="'.$rest_realm.'"');
         }
-        elseif (strtolower($rest_auth) === 'digest')
+        elseif ($rest_auth === 'digest')
         {
             // See http://tools.ietf.org/html/rfc2617#page-18
             header(
