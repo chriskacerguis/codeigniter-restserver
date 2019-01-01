@@ -595,10 +595,6 @@ abstract class REST_Controller extends CI_Controller {
                     $this->_check_php_session();
                     break;
             }
-            if ($this->config->item('rest_ip_whitelist_enabled') === TRUE)
-            {
-                $this->_check_whitelist_auth();
-            }
         }
     }
 
@@ -2021,6 +2017,12 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _check_php_session()
     {
+        // If whitelist is enabled it has the first chance to kick them out
+        if ($this->config->item('rest_ip_whitelist_enabled'))
+        {
+            $this->_check_whitelist_auth();
+        }
+
         // Get the auth_source config item
         $key = $this->config->item('auth_source');
 
