@@ -677,8 +677,6 @@ abstract class REST_Controller extends CI_Controller {
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unsupported')
             ], self::HTTP_FORBIDDEN);
-
-            $this->is_valid_request = false;
         }
 
         // Remove the supported format from the function name e.g. index.json => index
@@ -714,8 +712,6 @@ abstract class REST_Controller extends CI_Controller {
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => sprintf($this->lang->line('text_rest_invalid_api_key'), $this->rest->key)
             ], self::HTTP_FORBIDDEN);
-
-            $this->is_valid_request = false;
         }
 
         // Check to see if this key has access to the requested controller
@@ -730,8 +726,6 @@ abstract class REST_Controller extends CI_Controller {
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_unauthorized')
             ], self::HTTP_UNAUTHORIZED);
-
-            $this->is_valid_request = false;
         }
 
         // Sure it exists, but can they do anything with it?
@@ -741,8 +735,6 @@ abstract class REST_Controller extends CI_Controller {
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unknown_method')
             ], self::HTTP_METHOD_NOT_ALLOWED);
-
-            $this->is_valid_request = false;
         }
 
         // Doing key related stuff? Can only do it if they have a key right?
@@ -753,8 +745,6 @@ abstract class REST_Controller extends CI_Controller {
             {
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_time_limit')];
                 $this->response($response, self::HTTP_UNAUTHORIZED);
-
-                $this->is_valid_request = false;
             }
 
             // If no level is set use 0, they probably aren't using permissions
@@ -772,8 +762,6 @@ abstract class REST_Controller extends CI_Controller {
                 // They don't have good enough perms
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_permissions')];
                 $this->response($response, self::HTTP_UNAUTHORIZED);
-
-                $this->is_valid_request = false;
             }
         }
 
@@ -782,8 +770,6 @@ abstract class REST_Controller extends CI_Controller {
         {
             $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_ip_address_time_limit')];
             $this->response($response, self::HTTP_UNAUTHORIZED);
-
-            $this->is_valid_request = false;
         }
 
         // No key stuff, but record that stuff is happening
