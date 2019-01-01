@@ -405,8 +405,12 @@ abstract class REST_Controller extends CI_Controller {
         // when output is displayed for not damaging data accidentally
         $this->output->parse_exec_vars = FALSE;
 
-        // Start the timer for how long the request takes
-        $this->_start_rtime = microtime(TRUE);
+        // Log the loading time to the log table
+        if ($this->config->item('rest_enable_logging') === TRUE)
+        {
+                // Start the timer for how long the request takes
+		$this->_start_rtime = microtime(TRUE);
+	}
 
         // Load the rest.php configuration file
         $this->get_local_config($config);
@@ -626,12 +630,12 @@ abstract class REST_Controller extends CI_Controller {
      */
     public function __destruct()
     {
-        // Get the current timestamp
-        $this->_end_rtime = microtime(TRUE);
-
         // Log the loading time to the log table
         if ($this->config->item('rest_enable_logging') === TRUE)
         {
+            // Get the current timestamp
+            $this->_end_rtime = microtime(TRUE);
+
             $this->_log_access_time();
         }
     }
