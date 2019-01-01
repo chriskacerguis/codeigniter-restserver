@@ -2279,16 +2279,6 @@ abstract class REST_Controller extends CI_Controller {
             return TRUE;
         }
 
-        //check if the key has all_access
-        $accessRow = $this->rest->db
-            ->where('key', $this->rest->key)
-            ->get($this->config->item('rest_access_table'))->row_array();
-
-        if (!empty($accessRow) && !empty($accessRow['all_access']))
-        {
-            return TRUE;
-        }
-
         // Fetch controller based on path and controller name
         $controller = implode(
             '/', [
@@ -2299,12 +2289,18 @@ abstract class REST_Controller extends CI_Controller {
         // Remove any double slashes for safety
         $controller = str_replace('//', '/', $controller);
 
-        // Query the access table and get the number of results
-        return $this->rest->db
-                ->where('key', $this->rest->key)
-                ->where('controller', $controller)
-                ->get($this->config->item('rest_access_table'))
-                ->num_rows() > 0;
+        //check if the key has all_access
+        $accessRow = $this->rest->db
+            ->where('key', $this->rest->key)
+            ->where('controller', $controller)
+            ->get($this->config->item('rest_access_table'))->row_array();
+
+        if (!empty($accessRow) && !empty($accessRow['all_access']))
+        {
+            return TRUE;
+        }
+
+        return false;
     }
 
     /**
