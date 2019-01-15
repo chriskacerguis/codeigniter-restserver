@@ -2108,7 +2108,7 @@ abstract class REST_Controller extends CI_Controller {
         }
 
         $md5 = md5(strtoupper($this->request->method).':'.$digest['uri']);
-        $valid_response = md5($username.':'.$digest['nonce'].':'.$digest['nc'].':'.$digest['cnonce'].':'.$digest['qop'].':'.$md5);
+        $valid_response = md5($digest['username'].':'.$digest['nonce'].':'.$digest['nc'].':'.$digest['cnonce'].':'.$digest['qop'].':'.$md5);
 
         // Check if the string don't compare (case-insensitive)
         if (strcasecmp($digest['response'], $valid_response) !== 0)
