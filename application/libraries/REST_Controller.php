@@ -405,15 +405,15 @@ abstract class REST_Controller extends CI_Controller {
         // when output is displayed for not damaging data accidentally
         $this->output->parse_exec_vars = FALSE;
 
-        // Log the loading time to the log table
-        if ($this->config->item('rest_enable_logging') === TRUE)
-        {
-                // Start the timer for how long the request takes
-		$this->_start_rtime = microtime(TRUE);
-	}
-
         // Load the rest.php configuration file
         $this->get_local_config($config);
+		
+		// Log the loading time to the log table
+        if ($this->config->item('rest_enable_logging') === TRUE)
+        {
+            // Start the timer for how long the request takes
+			$this->_start_rtime = microtime(TRUE);
+		}
 
         // At present the library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter (no citation)
         //if(class_exists('Format'))
