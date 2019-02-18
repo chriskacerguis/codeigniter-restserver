@@ -3,6 +3,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 use Teapot\StatusCode;
+use Spatie\ArrayToXml\ArrayToXml;
+use Whitelist\Check;
 
 /**
  * CodeIgniter Rest Controller
@@ -105,7 +107,6 @@ class MY_Controller extends CI_Controller {
      */
     protected $_mime_types = [
         'json'  => 'application/json',
-        'jsonp' => 'application/javascript',
         'xml'   => 'application/xml'
     ];
 
@@ -120,16 +121,16 @@ class MY_Controller extends CI_Controller {
     {
         parent::__construct();
 
+        // Load our config
+        $this->load->config($config);
+
         // Initialise the response, request and rest objects
         $this->request  = new stdClass();
         $this->response = new stdClass();
         $this->rest     = new stdClass();
 
-        // Check whitelist
-        $this->_check_whitelist();
-
-        // Check blacklist
-        $this->_check_blacklist();
+        // Check if the IP is on our blacklist or whitelist
+        $this->_check_ip();
 
         // Do auth
         $this->_check_auth();
@@ -145,8 +146,6 @@ class MY_Controller extends CI_Controller {
 
         // Set up the GET variables
         $this->_get_args = array_merge($this->_get_args, $this->uri->ruri_to_assoc());
-
-        $this->request->format = $this->_detect_input_format();
 
         // Parse things
         $this->{'_parse_' . $this->request->method}();
@@ -166,34 +165,36 @@ class MY_Controller extends CI_Controller {
     }
 
     /**
-     * Checks if we are using the whitelist
+     * Checks if we are using the blacklists or
+     * whitelists to block IPs
      *
-     * @access private
+     * @access protected
      */
-    private function _check_whitelist() 
+    protected function _check_ip()
     {
+        $checker = new Whitelist\Check();
 
-    }
-
-    /**
-     * Checks if we are using the blacklists
-     *
-     * @access private
-     */
-    private function _check_blacklist() 
-    {
-        // Match an ip address in a blacklist e.g. 127.0.0.0, 0.0.0.0
-        $pattern = sprintf('/(?:,\s*|^)\Q%s\E(?=,\s*|$)/m', $this->input->ip_address());
-        // Returns 1, 0 or FALSE (on error only). Therefore implicitly convert 1 to TRUE
-        if (preg_match($pattern, $this->config->item('rest_ip_blacklist')))
+        // Check whitelist
+        if ($this->config->item('rest_ip_whitelist') !== FALSE)
         {
-            // Display an error response
-            $this->response([
-                'status' => FALSE,
-                'msg' => $this->lang->line('text_rest_ip_denied')
-            ], self::HTTP_UNAUTHORIZED);
+            $checker->whitelist($this->config->item('rest_ip_whitelist'));
+            if (!$checker->check($this->input->ip_address())) {
+                $this->response(['status' => 'error', 'msg' => $this->lang->line('text_rest_ip_denied')], StatusCode::UNAUTHORIZED);
+            }
         }
+
+        // Check blacklist
+        if ($this->config->item('rest_ip_blacklist') !== FALSE)
+        {
+            $checker->whitelist($this->config->item('rest_ip_whitelist'));
+            if ($checker->check($this->input->ip_address())) {
+                $this->response(['status' => 'error', 'msg' => $this->lang->line('text_rest_ip_denied')], StatusCode::UNAUTHORIZED);
+            }
+        }
+ 
     }
+
+
 
     /**
      * Add the request to the log table
@@ -202,7 +203,7 @@ class MY_Controller extends CI_Controller {
      * @param bool $authorized TRUE the user is authorized; otherwise, FALSE
      * @return bool TRUE the data was inserted; otherwise, FALSE
      */
-    private function _check_auth() 
+    protected function _check_auth() 
     {
 
     }
@@ -232,39 +233,6 @@ class MY_Controller extends CI_Controller {
     }
 
     /**
-     * Get the input format e.g. json or xml
-     *
-     * @access protected
-     * @return string|NULL Supported input format; otherwise, NULL
-     */
-    protected function _detect_input_format()
-    {
-        // Get the CONTENT-TYPE value from the SERVER variable
-        $content_type = $this->input->server('CONTENT_TYPE');
-
-        if (empty($content_type) === FALSE)
-        {
-            // If a semi-colon exists in the string, then explode by ; and get the value of where
-            // the current array pointer resides. This will generally be the first element of the array
-            $content_type = (strpos($content_type, ';') !== FALSE ? current(explode(';', $content_type)) : $content_type);
-
-            // Check all formats against the CONTENT-TYPE header
-            foreach ($this->_mime_types as $type => $mime)
-            {
-                // $type = format e.g. csv
-                // $mime = mime type e.g. application/csv
-
-                // If both the mime types match, then return the format
-                if ($content_type === $mime)
-                {
-                    return $type;
-                }
-            }
-        }
-        return NULL;
-    }
-
-    /**
      * Convert array to json
      *
      * @access private
@@ -274,33 +242,6 @@ class MY_Controller extends CI_Controller {
     private function _to_json($data)
     {
         return json_encode($data);
-    }
-
-    /**
-     * Convert array to XML
-     *
-     * @access private
-     * @param array $data 
-     * @return string the xml data
-     */
-    private function _to_xml(array $data)
-    {
-        $xml    = new SimpleXMLElement('<response/>');
-        $object = new SimpleXMLElement();
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                $new_object = $object->addChild($key);
-                $this->_to_xml($new_object, $value);
-            } else {
-                // if the key is an integer, it needs text with it to actually work.
-                if ($key == (int) $key) {
-                    $key = "key_$key";
-                }
-    
-                $object->addChild($key, $value);
-            }   
-        }  
-        return $xml->asXML();
     }
 
    /**
@@ -356,7 +297,7 @@ class MY_Controller extends CI_Controller {
             return $this->_get_args;
         }
 
-        return isset($this->_get_args[$key]) ? $this->_xss_clean($this->_get_args[$key], $xss_clean) : NULL;
+        return $this->_xss_clean($this->_post_args[$key]);
     }
 
     /**
@@ -369,10 +310,7 @@ class MY_Controller extends CI_Controller {
     {
         $this->_post_args = $_POST;
 
-        if ($this->request->format)
-        {
-            $this->request->body = $this->input->raw_input_stream;
-        }
+        $this->request->body = $this->input->raw_input_stream;
     }
 
     /**
@@ -390,12 +328,7 @@ class MY_Controller extends CI_Controller {
             return $this->_post_args;
         }
 
-        if (isset($this->_post_args[$key]))
-        {
-            return $this->_post_args[$key];
-        }
-
-        return isset($this->_post_args[$key]) ? $this->_xss_clean($this->_post_args[$key], $xss_clean) : NULL;
+        return $this->_xss_clean($this->_post_args[$key]);
     }
 
     /**
@@ -437,12 +370,7 @@ class MY_Controller extends CI_Controller {
             return $this->_put_args;
         }
 
-        if (isset($this->_put_args[$key]))
-        {
-            return $this->_put_args[$key];
-        }
-
-        return isset($this->_put_args[$key]) ? $this->_xss_clean($this->_put_args[$key], $xss_clean) : NULL;
+        return $this->_xss_clean($this->_put_args[$key]);
     }
 
     /**
@@ -454,11 +382,13 @@ class MY_Controller extends CI_Controller {
      * @param bool $xss_clean Whether to apply XSS filtering
      * @return string
      */
-    protected function _xss_clean($value, $xss_clean)
+    protected function _xss_clean($value)
     {
-        is_bool($xss_clean) || $xss_clean = $this->_enable_xss;
+        if ($this->config->item(rest_xss_clean) === TRUE) {
+            return $this->security->xss_clean($value);
+        }
 
-        return $xss_clean === TRUE ? $this->security->xss_clean($value) : $value;
+        return $value;
     }
 
     /**
@@ -488,34 +418,36 @@ class MY_Controller extends CI_Controller {
             $http_code = StatusCode::NOT_FOUND;
         }
 
-        elseif ($data !== NULL) {
+        else if ($data !== NULL) {
             // Set out output to the correct format.
             $this->output->set_content_type($this->config->item('rest_format'), strtolower($this->config->item('charset')));
 
-            // If an array or object, then parse as a json, so as to be a 'string'
-            if (is_array($data) || is_object($data))
+            // Send JSON data
+            if ($this->config->item('rest_format') == 'json') 
             {
-                $data = json_encode($data);
+                $output = json_encode($data);
             }
 
-            // Format is not supported, so output the raw data as a string
-            $output = $data;
+            // Send XML data
+            if ($this->config->item('rest_format') == 'xml') 
+            {
+                // See: https://github.com/spatie/array-to-xml/issues/88
+                $wrapped_data['element'] = $data;
+                $output = ArrayToXml::convert($wrapped_data);
+            }
+
         }
 
-        else {
-            die('oops');
-        }
+        // If not greater than zero, then set the HTTP status code as 200 by default
+        // Though perhaps 500 should be set instead, for the developer not passing a
+        // correct HTTP status code
+        $http_code > 0 || $http_code = StatusCode::OK;
 
-        	// If not greater than zero, then set the HTTP status code as 200 by default
-        	// Though perhaps 500 should be set instead, for the developer not passing a
-        	// correct HTTP status code
-        	$http_code > 0 || $http_code = StatusCode::OK;
+        $this->output->set_status_header($http_code);
 
-            $this->output->set_status_header($http_code);
-            
-            $this->output->set_output($output);
+        $this->output->set_output($output);
 
-            $this->output->_display();
-            exit;
+        $this->output->_display();
+        exit;
     }    
 }

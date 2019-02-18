@@ -91,16 +91,19 @@ $config['rest_valid_logins'] = ['admin' => '1234'];
 | REST IP White-list
 |--------------------------------------------------------------------------
 |
-| Limit connections to your REST server with a comma separated
-| list of IP addresses.  If this is set, only these IP will be allowed
-| to connect.
+| Limit connections to your REST server.  If this is set, ONLY these 
+| IP will be allowed to connect.
+|
+| See https://github.com/Jalle19/php-whitelist-check for all format
+| format options.
+| 
+| Set to FALSE if you want to allow all IPs
 |
 | e.g: '123.456.789.0, 987.654.32.1'
 |
-| 127.0.0.1 and 0.0.0.0 are allowed by default
 |
 */
-$config['rest_ip_whitelist'] = '';
+$config['rest_ip_whitelist'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,10 +112,13 @@ $config['rest_ip_whitelist'] = '';
 |
 | Prevent connections from the following IP addresses
 |
-| e.g: '123.456.789.0, 987.654.32.1'
+| See https://github.com/Jalle19/php-whitelist-check for all format
+| format options.
+|
+| Set to FALSE if you want to allow all IPs
 |
 */
-$config['rest_ip_blacklist'] = '';
+$config['rest_ip_blacklist'] = FALSE;
 
 // todo pull from the xbl / blacklist things
 
@@ -257,3 +263,13 @@ $config['allowed_cors_origins'] = [];
 |
 */
 $config['forced_cors_headers'] = [];
+
+/*
+|--------------------------------------------------------------------------
+| XSS Cleaning
+|--------------------------------------------------------------------------
+|
+| Enable / disable XSS cleaning
+|
+*/
+$config['rest_xss_clean'] = TRUE;

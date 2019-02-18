@@ -4,8 +4,49 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b213749721d04cba555058a42b6fa7a6",
+    "content-hash": "3bf0160b0f71b7b8eedbceded303a6f6",
     "packages": [
+        {
+            "name": "jalle19/php-whitelist-check",
+            "version": "1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Jalle19/php-whitelist-check.git",
+                "reference": "d5785bca2a229e7175e1cf32ea752c636319545c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Jalle19/php-whitelist-check/zipball/d5785bca2a229e7175e1cf32ea752c636319545c",
+                "reference": "d5785bca2a229e7175e1cf32ea752c636319545c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "xrstf/ip-utils": "~1.1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Whitelist\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "description": "Provides a simple way to check whether an address or domain is on a whitelist",
+            "homepage": "https://github.com/Jalle19/php-whitelist-check",
+            "keywords": [
+                "cidr",
+                "ipv4",
+                "ipv6",
+                "whitelist"
+            ],
+            "time": "2016-11-18T14:29:12+00:00"
+        },
         {
             "name": "psr/http-message",
             "version": "1.0.1",
@@ -110,6 +151,55 @@
             "time": "2017-09-01T13:56:48+00:00"
         },
         {
+            "name": "spatie/array-to-xml",
+            "version": "2.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/array-to-xml.git",
+                "reference": "c7dc15c460eeaf0fa8f8f2d0606155d48f93a9bd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/array-to-xml/zipball/c7dc15c460eeaf0fa8f8f2d0606155d48f93a9bd",
+                "reference": "c7dc15c460eeaf0fa8f8f2d0606155d48f93a9bd",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^6.3",
+                "spatie/phpunit-snapshot-assertions": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\ArrayToXml\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://murze.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Convert an array to xml",
+            "homepage": "https://github.com/spatie/array-to-xml",
+            "keywords": [
+                "array",
+                "convert",
+                "xml"
+            ],
+            "time": "2018-11-29T16:24:53+00:00"
+        },
+        {
             "name": "teapot/status-code",
             "version": "v1.1.1",
             "source": {
@@ -152,6 +242,54 @@
                 "http"
             ],
             "time": "2018-01-15T19:17:51+00:00"
+        },
+        {
+            "name": "xrstf/ip-utils",
+            "version": "v1.1.0",
+            "source": {
+                "type": "hg",
+                "url": "https://bitbucket.org/xrstf/ip-utils",
+                "reference": "77208641fa9e6063ccb00c8899d157818ad2474f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://bitbucket.org/xrstf/ip-utils/get/77208641fa9e6063ccb00c8899d157818ad2474f.zip",
+                "reference": "77208641fa9e6063ccb00c8899d157818ad2474f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-default": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "IpUtils\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christoph Mewes",
+                    "homepage": "http://www.xrstf.de/"
+                }
+            ],
+            "description": "small library to deal with IPv4 & IPv6 addresses and subnets",
+            "keywords": [
+                "IP",
+                "ipv4",
+                "ipv6",
+                "matching",
+                "subnet"
+            ],
+            "time": "2013-12-04T01:57:13+00:00"
         }
     ],
     "packages-dev": [

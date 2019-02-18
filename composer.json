@@ -12,7 +12,9 @@
 	},
 	"require": {
 		"php": ">=5.3.7",
-		"shrikeh/teapot": "^2.3"
+		"shrikeh/teapot": "^2.3",
+		"spatie/array-to-xml": "^2.8",
+		"jalle19/php-whitelist-check": "^1.0"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
