@@ -26,5 +26,17 @@ $this->load->library('restserver');
 
 ## Usage
 
+API Keys table
+
+| Default table schema:
+|   CREATE TABLE `keys` (
+|       `key` VARCHAR(40) NOT NULL,
+|       `created_on` DATETIME NOT NULL,
+|       `expire_on` DATETIME,
+|       `comments` VARCHAR(255),
+|       `max_hourly` INT(11),
+|       PRIMARY KEY (`key`)
+|   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 Please see `controllers/api/Example.php` for a few examples how to use this.
 
