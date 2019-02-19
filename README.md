@@ -29,16 +29,35 @@ $this->load->library('restserver');
 ## Usage
 
 API Keys table
+
 ```sql
 CREATE TABLE `keys` (
   `key` VARCHAR(40) NOT NULL,
-  `created_on` DATETIME NOT NULL,
   `expire_on` DATETIME,
   `comments` VARCHAR(255),
   `max_hourly` INT(11),
+  `created_on` DATETIME NOT NULL,
   PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
+
+Logging Table:
+
+```sql
+CREATE TABLE `logs` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `uri` VARCHAR(255) NOT NULL,
+  `method` VARCHAR(6) NOT NULL,
+  `params` TEXT DEFAULT NULL,
+  `api_key` VARCHAR(40) NOT NULL,
+  `ip_address` VARCHAR(45) NOT NULL,
+  `authorized` VARCHAR(1) NOT NULL,
+  `response_code` smallint(3) DEFAULT '0',
+  `created_on` DATETIME NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
 
 Please see `controllers/api/Example.php` for a few examples how to use this.
 
