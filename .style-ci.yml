@@ -1,6 +1,7 @@
 presets: recommended
 risky: false
 finder:
+  exclude: '*.php'
   name: 
     - "application/controllers/api/Test.php"
     - "application/core/MY_Controller.php"
