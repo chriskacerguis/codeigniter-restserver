@@ -1,4 +1,3 @@
-presets: recommended
 risky: false
 finder:
   name: 
