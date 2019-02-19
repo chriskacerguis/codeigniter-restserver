@@ -53,4 +53,5 @@ $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-$route['api/test'] = 'api/test'; // Example 4
+// REST Server, routes needed for UnitTests
+$route['api/test/(:any)'] = 'api/test/index/name/$1';

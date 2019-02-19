@@ -11,7 +11,14 @@ class Test extends MY_Controller {
             ['id' => 1, 'name' => 'Luke', 'email' => 'luke.skywalker@rebelalliance.org', 'fact' => 'Jedi Knight and friend to Han Solo.'],
             ['id' => 2, 'name' => 'Chewie', 'email' => 'chewbacca@scruffynerfherder.com', 'fact' => 'It\'s not wise to upset a Wookiee.'],
             ['id' => 3, 'name' => 'Han', 'email' => 'han.solo@scruffynerfherder.com', 'fact' => 'made the Kessel Run in less than twelve parsecs.']
-        ];
+		];
+
+		if ($this->get('name') !== NULL)
+		{
+			$id = $this->get('name');
+			$this->response($id);
+		}
+
 		$this->response($users);
 	}
 
