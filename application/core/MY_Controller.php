@@ -374,6 +374,110 @@ class MY_Controller extends CI_Controller {
     }
 
     /**
+     * Parse the OPTIONS request arguments
+     *
+     * @access protected
+     * @return void
+     */
+    protected function _parse_options()
+    {
+        // Parse the OPTIONS variables
+        parse_str(parse_url($this->input->server('REQUEST_URI'), PHP_URL_QUERY), $options);
+
+        // Merge both the URI segments and OPTIONS params
+        $this->_options_args = array_merge($this->_options_args, $options);
+    }
+
+    /**
+     * Retrieve a value from a OPTIONS request
+     *
+     * @access public
+     * @param NULL $key Key to retrieve from the OPTIONS request.
+     * If NULL an array of arguments is returned
+     * @return array|string|NULL Value from the OPTIONS request; otherwise, NULL
+     */
+    public function options($key = NULL, $xss_clean = NULL)
+    {
+        if ($key === NULL)
+        {
+            return $this->_options_args;
+        }
+
+        return $this->_xss_clean($this->_options_args[$key]);
+    }
+
+    /**
+     * Parse the PATCH request arguments
+     *
+     * @access protected
+     * @return void
+     */
+    protected function _parse_patch()
+    {
+        // It might be a HTTP body
+        if ($this->request->format)
+        {
+            $this->request->body = $this->input->raw_input_stream;
+        }
+        else if ($this->input->method() === 'patch')
+        {
+            // If no file type is provided, then there are probably just arguments
+            $this->_patch_args = $this->input->input_stream();
+        }
+    }
+
+    /**
+     * Retrieve a value from a PATCH request
+     *
+     * @access public
+     * @param NULL $key Key to retrieve from the PATCH request
+     * If NULL an array of arguments is returned
+     * @param NULL $xss_clean Whether to apply XSS filtering
+     * @return array|string|NULL Value from the PATCH request; otherwise, NULL
+     */
+    public function patch($key = NULL, $xss_clean = NULL)
+    {
+        if ($key === NULL)
+        {
+            return $this->_patch_args;
+        }
+        return $this->_xss_clean($this->_patch_args[$key]);
+    }
+
+    /**
+     * Parse the HEAD request arguments
+     *
+     * @access protected
+     * @return void
+     */
+    protected function _parse_head()
+    {
+        // Parse the HEAD variables
+        parse_str(parse_url($this->input->server('REQUEST_URI'), PHP_URL_QUERY), $head);
+
+        // Merge both the URI segments and HEAD params
+        $this->_head_args = array_merge($this->_head_args, $head);
+    }
+
+    /**
+     * Retrieve a value from a HEAD request
+     *
+     * @access public
+     * @param NULL $key Key to retrieve from the HEAD request
+     * If NULL an array of arguments is returned
+     * @param NULL $xss_clean Whether to apply XSS filtering
+     * @return array|string|NULL Value from the HEAD request; otherwise, NULL
+     */
+    public function head($key = NULL, $xss_clean = NULL)
+    {
+        if ($key === NULL)
+        {
+            return $this->_head_args;
+        }
+        return $this->_xss_clean($this->_head_args[$key]);
+    }
+    
+    /**
      * Sanitizes data so that Cross Site Scripting Hacks can be
      * prevented
      *
@@ -384,7 +488,7 @@ class MY_Controller extends CI_Controller {
      */
     protected function _xss_clean($value)
     {
-        if ($this->config->item(rest_xss_clean) === TRUE) {
+        if ($this->config->item('rest_xss_clean') === TRUE) {
             return $this->security->xss_clean($value);
         }
 
