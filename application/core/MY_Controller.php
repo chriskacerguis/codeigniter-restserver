@@ -132,6 +132,9 @@ class MY_Controller extends CI_Controller {
         // Check if the IP is on our blacklist or whitelist
         $this->_check_ip();
 
+        // Get the query
+        $this->_parse_query();
+
         // Do auth
         $this->_check_auth();
 
@@ -271,6 +274,17 @@ class MY_Controller extends CI_Controller {
     }
 
     /**
+     * Parse the query parameters
+     *
+     * @access protected
+     * @return void
+     */
+    protected function _parse_query()
+    {
+        $this->_query_args = $this->input->get();
+    }
+
+    /**
      * Parse the GET request arguments
      *
      * @access protected
@@ -297,7 +311,7 @@ class MY_Controller extends CI_Controller {
             return $this->_get_args;
         }
 
-        return $this->_xss_clean($this->_post_args[$key]);
+        return isset($this->_get_args[$key]) ? $this->_xss_clean($this->_get_args[$key]) : NULL;
     }
 
     /**
@@ -529,7 +543,15 @@ class MY_Controller extends CI_Controller {
             // Send JSON data
             if ($this->config->item('rest_format') == 'json') 
             {
-                $output = json_encode($data);
+                if (is_array($data) || is_object($data))
+                {
+                    $output = json_encode($data);
+                }
+                else 
+                {
+                    $output = json_encode([0 => $data]);
+                }
+                
             }
 
             // Send XML data
