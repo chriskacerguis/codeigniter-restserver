@@ -1,6 +1,6 @@
 # CodeIgniter Rest Server
 
-[![StyleCI](https://github.styleci.io/repos/230589/shield?branch=development)](https://github.styleci.io/repos/230589) 
+[![StyleCI](https://github.styleci.io/repos/230589/shield?branch=development)](https://github.styleci.io/repos/230589) [![Build Status](https://travis-ci.com/chriskacerguis/codeigniter-restserver.svg?branch=development)](https://travis-ci.com/chriskacerguis/codeigniter-restserver)
 
 A fully RESTful server implementation for CodeIgniter using one library, one config file and one controller.
 
