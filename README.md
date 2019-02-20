@@ -58,6 +58,7 @@ CREATE TABLE `logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
 
+## User Auth
 
 Please see `controllers/api/Example.php` for a few examples how to use this.
 
