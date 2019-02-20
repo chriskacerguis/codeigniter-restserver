@@ -1,15 +1,18 @@
 <?php
 
-class PostTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class PostTest extends TestCase
 {
     private $http;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->http = new GuzzleHttp\Client(['base_uri' => 'http://localhost:8080']);
     }
 
-    public function tearDown() {
+    public function tearDown() : void
+    {
         $this->http = null;
     }
 

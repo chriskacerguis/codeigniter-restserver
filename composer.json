@@ -22,7 +22,7 @@
 	"require-dev": {
 		"mikey179/vfsstream": "1.1.*",
 		"guzzlehttp/guzzle": "^6.1",
-		"phpunit/phpunit": "^5.0"
+		"phpunit/phpunit": "^8.0"
 	},
 	"scripts": {
 		"test": "./vendor/bin/phpunit"
