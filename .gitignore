@@ -2,4 +2,4 @@
 vendor
 .idea
 .vscode
-config.php
+./application/config/config.php
