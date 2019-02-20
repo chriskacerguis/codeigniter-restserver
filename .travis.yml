@@ -1,7 +1,6 @@
 language: php
 sudo: false
 php:
-  - '5.6'
   - '7.2'
 before_script:
   - composer self-update
