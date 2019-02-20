@@ -483,7 +483,7 @@ $config['rest_logs_json_params'] = FALSE;
 | To specify the limits within the controller's __construct() method, add per-method
 | limits with:
 |
-|       $this->method['METHOD_NAME']['limit'] = [NUM_REQUESTS_PER_HOUR];
+|       $this->methods['METHOD_NAME']['limit'] = [NUM_REQUESTS_PER_HOUR];
 |
 | See application/controllers/api/example.php for examples
 */
