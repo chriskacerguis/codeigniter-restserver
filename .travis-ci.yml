@@ -6,4 +6,5 @@ php:
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction --dev
+  - php -S 127.0.0.1:8080
 script: phpunit
