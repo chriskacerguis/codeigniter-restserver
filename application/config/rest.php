@@ -176,18 +176,6 @@ $config['rest_language'] = 'english';
 
 /*
 |--------------------------------------------------------------------------
-| CORS Check
-|--------------------------------------------------------------------------
-|
-| Set to TRUE to enable Cross-Origin Resource Sharing (CORS). Useful if you
-| are hosting your API on a different domain from the application that
-| will access it through a browser
-|
-*/
-$config['check_cors'] = FALSE;
-
-/*
-|--------------------------------------------------------------------------
 | CORS Allowable Headers
 |--------------------------------------------------------------------------
 |
@@ -221,27 +209,17 @@ $config['allowed_cors_methods'] = [
 
 /*
 |--------------------------------------------------------------------------
-| CORS Allow Any Domain
-|--------------------------------------------------------------------------
-|
-| Set to TRUE to enable Cross-Origin Resource Sharing (CORS) from any
-| source domain
-|
-*/
-$config['allow_any_cors_domain'] = FALSE;
-
-/*
-|--------------------------------------------------------------------------
 | CORS Allowable Domains
 |--------------------------------------------------------------------------
 |
-| Used if $config['check_cors'] is set to TRUE and $config['allow_any_cors_domain']
-| is set to FALSE. Set all the allowable domains within the array
+| Only the domains within the array will be allowed, if set to TRUE all 
+| domains will be allowed.
 |
+| Example:
 | e.g. $config['allowed_origins'] = ['http://www.example.com', 'https://spa.example.com']
 |
 */
-$config['allowed_cors_origins'] = [];
+$config['allowed_cors_origins'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
