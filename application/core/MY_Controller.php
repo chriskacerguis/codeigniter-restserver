@@ -342,7 +342,7 @@ class MY_Controller extends CI_Controller {
             return $this->_post_args;
         }
 
-        return $this->_xss_clean($this->_post_args[$key]);
+        return isset($this->_post_args[$key]) ? $this->_xss_clean($this->_post_args[$key]) : NULL;
     }
 
     /**
@@ -384,7 +384,7 @@ class MY_Controller extends CI_Controller {
             return $this->_put_args;
         }
 
-        return $this->_xss_clean($this->_put_args[$key]);
+        return isset($this->_put_args[$key]) ? $this->_xss_clean($this->_put_args[$key]) : NULL;
     }
 
     /**
@@ -395,6 +395,9 @@ class MY_Controller extends CI_Controller {
      */
     protected function _parse_options()
     {
+
+        // Is this needed?
+
         // Parse the OPTIONS variables
         parse_str(parse_url($this->input->server('REQUEST_URI'), PHP_URL_QUERY), $options);
 
@@ -403,21 +406,34 @@ class MY_Controller extends CI_Controller {
     }
 
     /**
-     * Retrieve a value from a OPTIONS request
+     * Sends all server options.
      *
      * @access public
-     * @param NULL $key Key to retrieve from the OPTIONS request.
-     * If NULL an array of arguments is returned
-     * @return array|string|NULL Value from the OPTIONS request; otherwise, NULL
+     * @return NULL
      */
-    public function options($key = NULL, $xss_clean = NULL)
+    public function options()
     {
-        if ($key === NULL)
-        {
-            return $this->_options_args;
-        }
+        // $this->config->item('rest_xss_clean');
+        $methods = implode(',', $this->config->item('allowed_cors_methods'));
+        $this->output->set_header("Access-Control-Allow-Methods: {$methods}");
 
-        return $this->_xss_clean($this->_options_args[$key]);
+        if ($this->config->item('allowed_cors_origins') !== TRUE) {
+            $domains = implode(',', $this->config->item('allowed_cors_origins'));
+            $this->output->set_header("Access-Control-Allow-Origin: {$domains}");
+        }
+        else
+        {
+            $this->output->set_header("Access-Control-Allow-Origin: *");
+        }
+        
+
+
+        /*
+        allowed_cors_headers
+        
+        forced_cors_headers
+        allowed_cors_origins
+        */
     }
 
     /**
@@ -455,7 +471,7 @@ class MY_Controller extends CI_Controller {
         {
             return $this->_patch_args;
         }
-        return $this->_xss_clean($this->_patch_args[$key]);
+        return isset($this->_patch_args[$key]) ? $this->_xss_clean($this->_patch_args[$key]) : NULL;
     }
 
     /**
@@ -488,7 +504,7 @@ class MY_Controller extends CI_Controller {
         {
             return $this->_head_args;
         }
-        return $this->_xss_clean($this->_head_args[$key]);
+        return isset($this->_head_args[$key]) ? $this->_xss_clean($this->_head_args[$key]) : NULL;
     }
     
     /**
