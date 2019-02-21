@@ -31,4 +31,11 @@ class Test extends MY_Controller {
 	{
 		$this->response($this->put());
 	}
+
+	public function index_options()
+	{
+		// There is nothing to return or do, having this will
+		// enable the sending of the OPTIONS verb.
+		$this->options();
+	}
 }
