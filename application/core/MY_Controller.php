@@ -413,7 +413,9 @@ class MY_Controller extends CI_Controller {
      */
     public function options()
     {
-        // $this->config->item('rest_xss_clean');
+        $headers = implode(',', $this->config->item('allowed_cors_headers'));
+        $this->output->set_header("Access-Control-Expose-Headers: {$headers}");
+        
         $methods = implode(',', $this->config->item('allowed_cors_methods'));
         $this->output->set_header("Access-Control-Allow-Methods: {$methods}");
 
@@ -425,15 +427,6 @@ class MY_Controller extends CI_Controller {
         {
             $this->output->set_header("Access-Control-Allow-Origin: *");
         }
-        
-
-
-        /*
-        allowed_cors_headers
-        
-        forced_cors_headers
-        allowed_cors_origins
-        */
     }
 
     /**
