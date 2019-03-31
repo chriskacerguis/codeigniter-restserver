@@ -20,8 +20,8 @@ class Migration_create_table_api_logs extends CI_Migration {
 		$fields = array(
 			'id'            => [
 				'type'           => 'INT(11)',
-				'auto_increment' => TRUE,
-				'unsigned'       => TRUE,
+				'auto_increment' => true,
+				'unsigned'       => true,
 			],
 			'api_key'       => [
 				'type' => 'VARCHAR(' . config_item('rest_key_length') . ')',
@@ -34,7 +34,7 @@ class Migration_create_table_api_logs extends CI_Migration {
 			],
 			'params'        => [
 				'type' => 'TEXT',
-				'null' => TRUE,
+				'null' => true,
 			],
 			'ip_address'    => [
 				'type' => 'VARCHAR(45)',
@@ -44,19 +44,19 @@ class Migration_create_table_api_logs extends CI_Migration {
 			],
 			'rtime'         => [
 				'type' => 'FLOAT',
-				'null' => TRUE,
+				'null' => true,
 			],
 			'authorized'    => [
 				'type' => 'VARCHAR(1)',
 			],
 			'response_code' => [
 				'type'    => 'SMALLINT(3)',
-				'null'    => TRUE,
+				'null'    => true,
 				'default' => 0,
 			],
 		);
 		$this->dbforge->add_field($fields);
-		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key('id', true);
 		$this->dbforge->create_table($table);
 		/*$this->db->query(add_foreign_key($table, 'api_key',
 			config_item('rest_keys_table') . '(' . config_item('rest_key_column') . ')', 'CASCADE', 'CASCADE'));*/

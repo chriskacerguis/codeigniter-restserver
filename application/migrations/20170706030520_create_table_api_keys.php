@@ -20,16 +20,16 @@ class Migration_create_table_api_keys extends CI_Migration {
 		$fields = array(
 			'id'                           => [
 				'type'           => 'INT(11)',
-				'auto_increment' => TRUE,
-				'unsigned'       => TRUE,
+				'auto_increment' => true,
+				'unsigned'       => true,
 			],
 			'user_id'                      => [
 				'type'     => 'INT(11)',
-				'unsigned' => TRUE,
+				'unsigned' => true,
 			],
 			config_item('rest_key_column') => [
 				'type'   => 'VARCHAR(' . config_item('rest_key_length') . ')',
-				'unique' => TRUE,
+				'unique' => true,
 			],
 			'level'                        => [
 				'type' => 'INT(2)',
@@ -44,14 +44,14 @@ class Migration_create_table_api_keys extends CI_Migration {
 			],
 			'ip_addresses'                 => [
 				'type' => 'TEXT',
-				'null' => TRUE,
+				'null' => true,
 			],
 			'date_created'                 => [
 				'type' => 'INT(11)',
 			],
 		);
 		$this->dbforge->add_field($fields);
-		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key('id', true);
 		$this->dbforge->create_table($table);
 		$this->db->query(add_foreign_key($table, 'user_id', 'users(id)', 'CASCADE', 'CASCADE'));
 	}

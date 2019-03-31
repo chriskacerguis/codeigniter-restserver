@@ -20,8 +20,8 @@ class Migration_create_table_api_limits extends CI_Migration {
 		$fields = array(
 			'id'           => [
 				'type'           => 'INT(11)',
-				'auto_increment' => TRUE,
-				'unsigned'       => TRUE,
+				'auto_increment' => true,
+				'unsigned'       => true,
 			],
 			'api_key'      => [
 				'type' => 'VARCHAR(' . config_item('rest_key_length') . ')',
@@ -37,7 +37,7 @@ class Migration_create_table_api_limits extends CI_Migration {
 			],
 		);
 		$this->dbforge->add_field($fields);
-		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key('id', true);
 		$this->dbforge->add_key('uri');
 		$this->dbforge->create_table($table);
 		$this->db->query(add_foreign_key($table, 'api_key',

@@ -20,8 +20,8 @@ class Migration_create_table_api_access extends CI_Migration {
 		$fields = array(
 			'id'            => [
 				'type'           => 'INT(11)',
-				'auto_increment' => TRUE,
-				'unsigned'       => TRUE,
+				'auto_increment' => true,
+				'unsigned'       => true,
 			],
 			'key'           => [
 				'type' => 'VARCHAR(' . config_item('rest_key_length') . ')',
@@ -35,14 +35,14 @@ class Migration_create_table_api_access extends CI_Migration {
 			],
 			'date_created'  => [
 				'type' => 'DATETIME',
-				'null' => TRUE,
+				'null' => true,
 			],
 			'date_modified' => [
 				'type' => 'TIMESTAMP',
 			],
 		);
 		$this->dbforge->add_field($fields);
-		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->add_key('id', true);
 		$this->dbforge->add_key('controller');
 		$this->dbforge->create_table($table);
 		$this->db->query(add_foreign_key($table, 'key',
