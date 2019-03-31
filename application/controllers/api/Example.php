@@ -46,7 +46,7 @@ class Example extends REST_Controller {
 
         // If the id parameter doesn't exist return all the users
 
-        if ($id === NULL)
+        if ($id === null)
         {
             // Check if the users data store contains users (in case the database result returns NULL)
             if ($users)
@@ -58,7 +58,7 @@ class Example extends REST_Controller {
             {
                 // Set the response and exit
                 $this->response([
-                    'status' => FALSE,
+                    'status' => false,
                     'message' => 'No users were found'
                 ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
             }
@@ -72,13 +72,13 @@ class Example extends REST_Controller {
         if ($id <= 0)
         {
             // Invalid id, set the response and exit.
-            $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
+            $this->response(null, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
         }
 
         // Get the user from the array, using the id as key for retrieval.
         // Usually a model is to be used for this.
 
-        $user = NULL;
+        $user = null;
 
         if (!empty($users))
         {
@@ -98,7 +98,7 @@ class Example extends REST_Controller {
         else
         {
             $this->set_response([
-                'status' => FALSE,
+                'status' => false,
                 'message' => 'User could not be found'
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
@@ -125,7 +125,7 @@ class Example extends REST_Controller {
         if ($id <= 0)
         {
             // Set the response and exit
-            $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
+            $this->response(null, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
         }
 
         // $this->some_model->delete_something($id);
