@@ -14,8 +14,8 @@
 		"source": "https://github.com/chriskacerguis/codeigniter-restserver"
 	},
 	"require": {
-		"php": ">=5.4.0",
-		"codeigniter/framework": "^3.0.4"
+		"php": ">=7.1.0",
+		"codeigniter/framework": "^3.1.10"
 	},
 	"autoload": {
 		"classmap": [
