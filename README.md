@@ -1,3 +1,4 @@
+
 # CodeIgniter Rest Server
 
 [![Gitter chat](https://badges.gitter.im/chriskacerguis/codeigniter-restserver.png)](https://gitter.im/codeigniter-restserver/Lobby)
@@ -7,8 +8,8 @@ config file and one controller.
 
 ## Requirements
 
-1. PHP 5.4 or greater
-2. CodeIgniter 3.0+
+1. PHP 7.2 or greater
+2. CodeIgniter 3.1.10+
 
 _Note: for 1.7.x support download v2.2 from Downloads tab_
 
@@ -39,8 +40,11 @@ When your controller extends from `REST_Controller`, the method names will be ap
 This allows you to implement a RESTful interface easily:
 
 ```php
-class Books extends REST_Controller
+class Books extends CI_Controller
 {
+   use REST_Controller {
+    REST_Controller::__construct as private __resTraitConstruct;
+  }
   public function index_get()
   {
     // Display all books
@@ -69,9 +73,9 @@ The HTTP spec for DELETE requests precludes the use of parameters.  For delete r
 ```php
 public function index_delete($id)
 {
-	$this->response([
-		'returned from delete:' => $id,
-	]);
+  $this->response([
+    'returned from delete:' => $id,
+  ]);
 }
 ```
 
@@ -146,6 +150,7 @@ If your application uses language files to support multiple locales, `REST_Contr
 public function __construct()
 {
   parent::__construct();
+  $this->__resTraitConstruct();
 
   if (is_array($this->response->lang))
   {
@@ -194,12 +199,12 @@ You'll need to create a new database table to store and access the keys. `REST_C
 
 ```sql
 CREATE TABLE `keys` (
-	`id` INT(11) NOT NULL AUTO_INCREMENT,
-	`key` VARCHAR(40) NOT NULL,
-	`level` INT(2) NOT NULL,
-	`ignore_limits` TINYINT(1) NOT NULL DEFAULT '0',
-	`date_created` INT(11) NOT NULL,
-	PRIMARY KEY (`id`)
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `key` VARCHAR(40) NOT NULL,
+  `level` INT(2) NOT NULL,
+  `ignore_limits` TINYINT(1) NOT NULL DEFAULT '0',
+  `date_created` INT(11) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
 
