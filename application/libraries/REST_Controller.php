@@ -239,7 +239,7 @@ trait REST_Controller {
     /**
      * @var bool
      */
-    private $auth_override;
+    protected $auth_override;
 
     /**
      * Extend this function to apply additional checking early on in the process
@@ -387,7 +387,7 @@ trait REST_Controller {
         if ($this->request->format && $this->request->body)
         {
             $this->request->body = Format::factory($this->request->body, $this->request->format)->to_array();
-            
+
         // Assign payload arguments to proper method container
             $this->{'_'.$this->request->method.'_args'} = $this->request->body;
         }
