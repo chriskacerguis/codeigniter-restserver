@@ -748,7 +748,19 @@ trait REST_Controller {
             }
             else
             {
-                ob_end_flush();
+                if (is_callable('fastcgi_finish_request')) 
+                {
+                    // Terminates connection and returns response to client on PHP-FPM.
+                    $this->output->_display();
+                    ob_end_flush();
+                    fastcgi_finish_request();
+                    ignore_user_abort(true);
+                }
+                else
+                {
+                    // Legacy compatibility.
+                    ob_end_flush();
+                }
             }
 
             // Otherwise dump the output automatically
