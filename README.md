@@ -40,6 +40,8 @@ When your controller extends from `REST_Controller`, the method names will be ap
 This allows you to implement a RESTful interface easily:
 
 ```php
+use Restserver\Libraries\REST_Controller;
+
 class Books extends CI_Controller
 {
    use REST_Controller {
