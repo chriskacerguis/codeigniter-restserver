@@ -56,6 +56,21 @@ $config['rest_supported_formats'] = [
 
 /*
 |--------------------------------------------------------------------------
+| REST HTTP Verbs as Capslock
+|--------------------------------------------------------------------------
+|
+| Turn on to have the HTTP verbs being capslock, e.g `index_GET`, `index_POST`.
+| Turn off to have them lowercase, the example being `index_get`, `index_post`.
+|
+| Using capslock makes it easy to read as HTTP verbs, but might clash with your coding standart.
+| Therefore the default is lowercase, `false`.
+|
+*/
+$config['rest_http_verbs_capslock'] = false;
+
+
+/*
+|--------------------------------------------------------------------------
 | REST Status Field Name
 |--------------------------------------------------------------------------
 |
