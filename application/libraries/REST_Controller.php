@@ -547,8 +547,9 @@ trait REST_Controller {
 
         // Remove the supported format from the function name e.g. index.json => index
         $object_called = preg_replace('/^(.*)\.(?:'.implode('|', array_keys($this->_supported_formats)).')$/', '$1', $object_called);
-
-        $controller_method = $object_called.'_'.$this->request->method;
+        
+        $method_suffix = $this->config->item('rest_http_verbs_capslock') === true ? strtoupper($this->request->method) : $this->request->method)
+        $controller_method = $object_called.'_'.$method_suffix;
         // Does this method exist? If not, try executing an index method
         if (!method_exists($this, $controller_method)) {
             $controller_method = "index_" . $this->request->method;
