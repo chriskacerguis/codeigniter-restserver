@@ -1,6 +1,6 @@
 <?php
 
-namespace Restserver\Libraries;
+namespace chriskacerguis\RestServer;
 use Exception;
 use stdClass;
 
@@ -10,15 +10,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * CodeIgniter Rest Controller
  * A fully RESTful server implementation for CodeIgniter using one library, one config file and one controller.
  *
- * @package         CodeIgniter
- * @subpackage      Libraries
- * @category        Libraries
- * @author          Phil Sturgeon, Chris Kacerguis
- * @license         MIT
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
- * @version         3.0.0
+ * @version         4.0.0
  */
-trait REST_Controller {
+class RestController extends \CI_Controller {
 
     /**
      * This defines the rest format
@@ -173,14 +168,14 @@ trait REST_Controller {
      * @var array
      */
     protected $_supported_formats = [
-        'json' => 'application/json',
+        'json'  => 'application/json',
         'array' => 'application/json',
-        'csv' => 'application/csv',
-        'html' => 'text/html',
+        'csv'   => 'application/csv',
+        'html'  => 'text/html',
         'jsonp' => 'application/javascript',
-        'php' => 'text/plain',
+        'php'   => 'text/plain',
         'serialized' => 'application/vnd.php.serialized',
-        'xml' => 'application/xml'
+        'xml'   => 'application/xml'
     ];
 
     /**
@@ -210,32 +205,26 @@ trait REST_Controller {
     private $is_valid_request = TRUE;
 
     /**
-     * HTTP status codes and their respective description
-     * Note: Only the widely used HTTP status codes are used
-     *
-     * @var array
+     * Common HTTP status codes and their respective description
+     * 
      * @link http://www.restapitutorial.com/httpstatuscodes.html
      */
-    protected $http_status_codes = [
-        REST_Controller_Definitions::HTTP_OK => 'OK',
-        REST_Controller_Definitions::HTTP_CREATED => 'CREATED',
-        REST_Controller_Definitions::HTTP_NO_CONTENT => 'NO CONTENT',
-        REST_Controller_Definitions::HTTP_NOT_MODIFIED => 'NOT MODIFIED',
-        REST_Controller_Definitions::HTTP_BAD_REQUEST => 'BAD REQUEST',
-        REST_Controller_Definitions::HTTP_UNAUTHORIZED => 'UNAUTHORIZED',
-        REST_Controller_Definitions::HTTP_FORBIDDEN => 'FORBIDDEN',
-        REST_Controller_Definitions::HTTP_NOT_FOUND => 'NOT FOUND',
-        REST_Controller_Definitions::HTTP_METHOD_NOT_ALLOWED => 'METHOD NOT ALLOWED',
-        REST_Controller_Definitions::HTTP_NOT_ACCEPTABLE => 'NOT ACCEPTABLE',
-        REST_Controller_Definitions::HTTP_CONFLICT => 'CONFLICT',
-        REST_Controller_Definitions::HTTP_INTERNAL_SERVER_ERROR => 'INTERNAL SERVER ERROR',
-        REST_Controller_Definitions::HTTP_NOT_IMPLEMENTED => 'NOT IMPLEMENTED'
-    ];
+    const HTTP_OK = 200;
+    const HTTP_CREATED = 201;
+    const HTTP_NOT_MODIFIED = 304;
+    const HTTP_BAD_REQUEST = 400;
+    const HTTP_UNAUTHORIZED = 401;
+    const HTTP_FORBIDDEN = 403;
+    const HTTP_NOT_FOUND = 404;
+    const HTTP_NOT_ACCEPTABLE = 406;
+    const HTTP_INTERNAL_ERROR = 500;
+    
 
     /**
      * @var Format
      */
     private $format;
+
     /**
      * @var bool
      */
@@ -262,8 +251,6 @@ trait REST_Controller {
     {
         parent::__construct();
 
-        $this->preflight_checks();
-
         // Set the default value of global xss filtering. Same approach as CodeIgniter 3
         $this->_enable_xss = ($this->config->item('global_xss_filtering') === TRUE);
 
@@ -274,24 +261,12 @@ trait REST_Controller {
         // Log the loading time to the log table
         if ($this->config->item('rest_enable_logging') === TRUE)
         {
-                // Start the timer for how long the request takes
-        $this->_start_rtime = microtime(TRUE);
-    }
+            // Start the timer for how long the request takes
+            $this->_start_rtime = microtime(TRUE);
+        }
 
         // Load the rest.php configuration file
         $this->get_local_config($config);
-
-        // At present the library is bundled with REST_Controller 2.5+, but will eventually be part of CodeIgniter (no citation)
-        //if(class_exists('Format'))
-        //{
-        //    $this->format = new Format();
-        //}
-        //else
-        //{
-        //    $this->load->library('Format', NULL, 'libraryFormat');
-        //    $this->format = $this->libraryFormat;
-        //}
-
 
         // Determine supported output formats from configuration
         $supported_formats = $this->config->item('rest_supported_formats');
@@ -440,7 +415,7 @@ trait REST_Controller {
             $this->response([
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_ajax_only')
-            ], REST_Controller_Definitions::HTTP_NOT_ACCEPTABLE);
+            ], HTTP_NOT_ACCEPTABLE);
         }
 
         // When there is no specific override for the current class/method, use the default auth value set in the config
@@ -465,22 +440,40 @@ trait REST_Controller {
     }
 
     /**
+     * Does the auth stuff
+     */
+    private function do_auth($method = false)
+    {
+        // If we don't want to do auth, then just return true
+        if ($method === false) {
+            return true;
+        }
+
+        if(file_exists(__DIR__."/auth-".$method.".php"))
+        {
+            include(__DIR__ . "/auth-" . $method . ".php");
+        }
+    }
+
+    /**
      * @param $config_file
      */
     private function get_local_config($config_file)
     {
-        if(file_exists(__DIR__."/../config/".$config_file.".php"))
+        if(file_exists(__DIR__."/".$config_file.".php"))
         {
             $config = array();
-            include(__DIR__ . "/../config/" . $config_file . ".php");
+            include(__DIR__ . "/" . $config_file . ".php");
 
             foreach($config AS $key => $value)
             {
                 $this->config->set_item($key, $value);
             }
         }
-
-        $this->load->config($config_file, FALSE, TRUE);
+        else 
+        {
+            $this->load->config($config_file, FALSE, TRUE);
+        }
     }
 
     /**
@@ -503,28 +496,6 @@ trait REST_Controller {
     }
 
     /**
-     * Checks to see if we have everything we need to run this library.
-     *
-     * @access protected
-     * @throws Exception
-     */
-    protected function preflight_checks()
-    {
-        // Check to see if PHP is equal to or greater than 5.4.x
-        if (is_php('5.4') === FALSE)
-        {
-            // CodeIgniter 3 is recommended for v5.4 or above
-            throw new Exception('Using PHP v'.PHP_VERSION.', though PHP v5.4 or greater is required');
-        }
-
-        // Check to see if this is CI 3.x
-        if (explode('.', CI_VERSION, 2)[0] < 3)
-        {
-            throw new Exception('REST Server requires CodeIgniter 3.x');
-        }
-    }
-
-    /**
      * Requests are not made to methods directly, the request will be for
      * an "object". This simply maps the object and method to the correct
      * Controller method
@@ -542,7 +513,7 @@ trait REST_Controller {
             $this->response([
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unsupported')
-            ], REST_Controller_Definitions::HTTP_FORBIDDEN);
+            ], HTTP_FORBIDDEN);
         }
 
         // Remove the supported format from the function name e.g. index.json => index
@@ -577,7 +548,7 @@ trait REST_Controller {
             $this->response([
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => sprintf($this->lang->line('text_rest_invalid_api_key'), $this->rest->key)
-            ], REST_Controller_Definitions::HTTP_FORBIDDEN);
+            ], HTTP_FORBIDDEN);
         }
 
         // Check to see if this key has access to the requested controller
@@ -591,7 +562,7 @@ trait REST_Controller {
             $this->response([
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_unauthorized')
-            ], REST_Controller_Definitions::HTTP_UNAUTHORIZED);
+            ], HTTP_UNAUTHORIZED);
         }
 
         // Sure it exists, but can they do anything with it?
@@ -600,7 +571,7 @@ trait REST_Controller {
             $this->response([
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unknown_method')
-            ], REST_Controller_Definitions::HTTP_METHOD_NOT_ALLOWED);
+            ], $this->http_status['METHOD_NOT_ALLOWED']);
         }
 
         // Doing key related stuff? Can only do it if they have a key right?
@@ -610,7 +581,7 @@ trait REST_Controller {
             if ($this->config->item('rest_enable_limits') && $this->_check_limit($controller_method) === FALSE)
             {
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_time_limit')];
-                $this->response($response, REST_Controller_Definitions::HTTP_UNAUTHORIZED);
+                $this->response($response, HTTP_UNAUTHORIZED);
             }
 
             // If no level is set use 0, they probably aren't using permissions
@@ -627,7 +598,7 @@ trait REST_Controller {
             {
                 // They don't have good enough perms
                 $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_api_key_permissions')];
-                $this->response($response, REST_Controller_Definitions::HTTP_UNAUTHORIZED);
+                $this->response($response, HTTP_UNAUTHORIZED);
             }
         }
 
@@ -635,7 +606,7 @@ trait REST_Controller {
         elseif ($this->config->item('rest_limits_method') == "IP_ADDRESS" && $this->config->item('rest_enable_limits') && $this->_check_limit($controller_method) === FALSE)
         {
             $response = [$this->config->item('rest_status_field_name') => FALSE, $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_ip_address_time_limit')];
-            $this->response($response, REST_Controller_Definitions::HTTP_UNAUTHORIZED);
+            $this->response($response, HTTP_UNAUTHORIZED);
         }
 
         // No key stuff, but record that stuff is happening
@@ -691,7 +662,7 @@ trait REST_Controller {
             // If data is NULL and no HTTP status code provided, then display, error and exit
             if ($data === NULL && $http_code === NULL)
             {
-                $http_code = REST_Controller_Definitions::HTTP_NOT_FOUND;
+                $http_code = HTTP_NOT_FOUND;
             }
 
             // If data is not NULL and a HTTP status code provided, then continue
@@ -727,7 +698,7 @@ trait REST_Controller {
             // If not greater than zero, then set the HTTP status code as 200 by default
             // Though perhaps 500 should be set instead, for the developer not passing a
             // correct HTTP status code
-            $http_code > 0 || $http_code = REST_Controller_Definitions::HTTP_OK;
+            $http_code > 0 || $http_code = HTTP_OK;
 
             $this->output->set_status_header($http_code);
 
@@ -982,7 +953,7 @@ trait REST_Controller {
                 {
                     // multiple ip addresses must be separated using a comma, explode and loop
                     $list_ip_addresses = explode(',', $row->ip_addresses);
-            $ip_address = $this->input->ip_address();
+                    $ip_address = $this->input->ip_address();
                     $found_address = FALSE;
 
                     foreach ($list_ip_addresses as $ip_address)
@@ -1898,7 +1869,7 @@ trait REST_Controller {
             $this->response([
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unauthorized')
-            ], REST_Controller_Definitions::HTTP_UNAUTHORIZED);
+            ], $this->http_status['UNAUTHORIZED']);
         }
     }
 
@@ -1995,7 +1966,7 @@ trait REST_Controller {
             $this->response([
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_invalid_credentials')
-            ], REST_Controller_Definitions::HTTP_UNAUTHORIZED);
+            ], $this->http_status['UNAUTHORIZED']);
         }
     }
 
@@ -2017,7 +1988,7 @@ trait REST_Controller {
             $this->response([
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_ip_denied')
-            ], REST_Controller_Definitions::HTTP_UNAUTHORIZED);
+            ], $this->http_status['UNAUTHORIZED']);
         }
     }
 
@@ -2045,7 +2016,7 @@ trait REST_Controller {
             $this->response([
                 $this->config->item('rest_status_field_name') => FALSE,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_ip_unauthorized')
-            ], REST_Controller_Definitions::HTTP_UNAUTHORIZED);
+            ], $this->http_status['UNAUTHORIZED']);
         }
     }
 
@@ -2083,7 +2054,7 @@ trait REST_Controller {
         $this->response([
             $this->config->item('rest_status_field_name') => FALSE,
             $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unauthorized')
-        ], REST_Controller_Definitions::HTTP_UNAUTHORIZED);
+        ], $this->http_status['UNAUTHORIZED']);
     }
 
     /**
