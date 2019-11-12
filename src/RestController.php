@@ -631,15 +631,15 @@ class RestController extends \CI_Controller
                     // CORB protection
                     // First, get the output content.
                     $output = Format::factory($data)->{'to_'.$this->response->format}();
-                    
+
                     // Set the format header
                     // Then, check if the client asked for a callback, and if the output contains this callback :
-                    if (isset($this->_get_args['callback']) && $this->response->format == 'json' && preg_match('/^' . $this->_get_args['callback'] . '/', $output)) {
+                    if (isset($this->_get_args['callback']) && $this->response->format == 'json' && preg_match('/^'.$this->_get_args['callback'].'/', $output)) {
                         $this->output->set_content_type($this->_supported_formats['jsonp'], strtolower($this->config->item('charset')));
                     } else {
                         $this->output->set_content_type($this->_supported_formats[$this->response->format], strtolower($this->config->item('charset')));
                     }
-                    
+
                     // An array must be parsed as a string, so as not to cause an array to string error
                     // Json is the most appropriate form for such a data type
                     if ($this->response->format === 'array') {
