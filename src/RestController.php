@@ -685,7 +685,7 @@ class RestController extends \CI_Controller
                 }
             }
             ob_end_flush();
-            // Otherwise dump the output automatically
+        // Otherwise dump the output automatically
         } else {
             echo json_encode($data);
         }
