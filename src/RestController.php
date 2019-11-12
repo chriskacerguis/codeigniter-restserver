@@ -442,15 +442,13 @@ class RestController extends \CI_Controller
      */
     private function get_local_config($config_file)
     {
-        if (file_exists(__DIR__.'/'.$config_file.'.php')) {
+        if (!$this->load->config($config_file, false))
+        {
             $config = [];
             include __DIR__.'/'.$config_file.'.php';
-
             foreach ($config as $key => $value) {
                 $this->config->set_item($key, $value);
             }
-        } else {
-            $this->load->config($config_file, false, true);
         }
     }
 
