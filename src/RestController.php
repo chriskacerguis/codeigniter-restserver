@@ -877,8 +877,8 @@ class RestController extends \CI_Controller
                     $ip_address = $this->input->ip_address();
                     $found_address = false;
 
-                    foreach ($list_ip_addresses as $ip_address) {
-                        if ($ip_address === trim($ip_address)) {
+                    foreach ($list_ip_addresses as $list_ip) {
+                        if ($ip_address === trim($list_ip)) {
                             // there is a match, set the the value to TRUE and break out of the loop
                             $found_address = true;
                             break;
