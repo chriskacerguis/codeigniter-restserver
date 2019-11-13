@@ -12,7 +12,7 @@ A fully RESTful server implementation for CodeIgniter using one library, one con
 ## Installation
 
 ```sh
-composer require chriskacerguis/ci-restserver
+composer require chriskacerguis/codeigniter-restserver
 ```
 
 ## Usage
