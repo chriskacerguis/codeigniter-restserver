@@ -1536,7 +1536,7 @@ class RestController extends \CI_Controller
             'basedn'  => $this->config->item('basedn', 'ldap'),
         ];
 
-        log_message('debug', 'LDAP Auth: Connect to '.(isset($ldaphost) ? $ldaphost : '[ldap not configured]'));
+        log_message('debug', 'LDAP Auth: Connect to '.(isset($ldap['host']) ? $ldap['host'] : '[ldap not configured]'));
 
         // Connect to the ldap server
         $ldapconn = ldap_connect($ldap['host'], $ldap['port']);
