@@ -33,6 +33,11 @@ class RestController extends \CI_Controller
     protected $methods = [];
 
     /**
+     * Defines https status
+     */
+    protected $http_status = [];
+
+    /**
      * List of allowed HTTP methods.
      *
      * @var array
@@ -218,7 +223,6 @@ class RestController extends \CI_Controller
     const HTTP_UNAUTHORIZED = 401;
     const HTTP_FORBIDDEN = 403;
     const HTTP_NOT_FOUND = 404;
-    const HTTP_METHOD_NOT_ALLOWED = 405;
     const HTTP_NOT_ACCEPTABLE = 406;
     const HTTP_INTERNAL_ERROR = 500;
 
@@ -623,7 +627,7 @@ class RestController extends \CI_Controller
 
             // If data is NULL and no HTTP status code provided, then display, error and exit
             if ($data === null && $http_code === null) {
-                $http_code = HTTP_NOT_FOUND;
+                $http_code = self::HTTP_NOT_FOUND;
             }
 
             // If data is not NULL and a HTTP status code provided, then continue
@@ -661,7 +665,7 @@ class RestController extends \CI_Controller
             // If not greater than zero, then set the HTTP status code as 200 by default
             // Though perhaps 500 should be set instead, for the developer not passing a
             // correct HTTP status code
-            $http_code > 0 || $http_code = HTTP_OK;
+            $http_code > 0 || $http_code = self::HTTP_OK;
 
             $this->output->set_status_header($http_code);
 
