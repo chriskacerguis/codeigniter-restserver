@@ -258,14 +258,14 @@ class RestController extends \CI_Controller
         // when output is displayed for not damaging data accidentally
         $this->output->parse_exec_vars = false;
 
+        // Load the rest.php configuration file
+        $this->get_local_config($config);
+
         // Log the loading time to the log table
         if ($this->config->item('rest_enable_logging') === true) {
             // Start the timer for how long the request takes
             $this->_start_rtime = microtime(true);
         }
-
-        // Load the rest.php configuration file
-        $this->get_local_config($config);
 
         // Determine supported output formats from configuration
         $supported_formats = $this->config->item('rest_supported_formats');
