@@ -4,6 +4,7 @@ namespace chriskacerguis\RestServer;
 
 use Exception;
 use stdClass;
+require APPPATH . 'libraries/Format.php';
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -1786,8 +1787,20 @@ class RestController extends \CI_Controller
             $this->_force_login($unique_id);
         }
 
-        $md5 = md5(strtoupper($this->request->method).':'.$digest['uri']);
-        $valid_response = md5($digest['username'].':'.$digest['nonce'].':'.$digest['nc'].':'.$digest['cnonce'].':'.$digest['qop'].':'.$md5);
+        //$md5 = md5(strtoupper($this->request->method).':'.$digest['uri']);
+        //$valid_response = md5($digest['username'].':'.$digest['nonce'].':'.$digest['nc'].':'.$digest['cnonce'].':'.$digest['qop'].':'.$md5);
+
+        $realm = $this->config->item('rest_realm');
+        $users = $this->config->item('rest_valid_logins');
+        if(isset( $users[$digest['username']] ))
+        {
+            $password = $users[$digest['username']];
+        }else{
+            $password = 'unknown password';
+        }
+        $first = md5($digest['username'] . ':' . $realm . ':' . $password);
+        $end = md5($_SERVER['REQUEST_METHOD'].':'.$digest['uri']);
+        $valid_response = md5($first.':'.$digest['nonce'].':'.$digest['nc'].':'.$digest['cnonce'].':'.$digest['qop'].':'.$end);
 
         // Check if the string don't compare (case-insensitive)
         if (strcasecmp($digest['response'], $valid_response) !== 0) {
