@@ -433,8 +433,8 @@ class RestController extends \CI_Controller
             return true;
         }
 
-        if (file_exists(__DIR__.'/auth-'.$method.'.php')) {
-            include __DIR__.'/auth-'.$method.'.php';
+        if (file_exists(__DIR__.'/auth/'.$method.'.php')) {
+            include __DIR__.'/auth/'.$method.'.php';
         }
     }
 
