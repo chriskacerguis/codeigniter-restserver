@@ -258,14 +258,14 @@ class RestController extends \CI_Controller
         // when output is displayed for not damaging data accidentally
         $this->output->parse_exec_vars = false;
 
+        // Load the rest.php configuration file
+        $this->get_local_config($config);
+
         // Log the loading time to the log table
         if ($this->config->item('rest_enable_logging') === true) {
             // Start the timer for how long the request takes
             $this->_start_rtime = microtime(true);
         }
-
-        // Load the rest.php configuration file
-        $this->get_local_config($config);
 
         // Determine supported output formats from configuration
         $supported_formats = $this->config->item('rest_supported_formats');
@@ -544,7 +544,7 @@ class RestController extends \CI_Controller
             $this->response([
                 $this->config->item('rest_status_field_name')  => false,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unknown_method'),
-            ], $this->http_status['METHOD_NOT_ALLOWED']);
+            ], self::HTTP_METHOD_NOT_ALLOWED);
         }
 
         // Doing key related stuff? Can only do it if they have a key right?
@@ -623,7 +623,7 @@ class RestController extends \CI_Controller
 
             // If data is NULL and no HTTP status code provided, then display, error and exit
             if ($data === null && $http_code === null) {
-                $http_code = HTTP_NOT_FOUND;
+                $http_code = self::HTTP_NOT_FOUND;
             }
 
             // If data is not NULL and a HTTP status code provided, then continue
@@ -661,7 +661,7 @@ class RestController extends \CI_Controller
             // If not greater than zero, then set the HTTP status code as 200 by default
             // Though perhaps 500 should be set instead, for the developer not passing a
             // correct HTTP status code
-            $http_code > 0 || $http_code = HTTP_OK;
+            $http_code > 0 || $http_code = self::HTTP_OK;
 
             $this->output->set_status_header($http_code);
 
@@ -1541,7 +1541,7 @@ class RestController extends \CI_Controller
             'basedn'  => $this->config->item('basedn', 'ldap'),
         ];
 
-        log_message('debug', 'LDAP Auth: Connect to '.(isset($ldaphost) ? $ldaphost : '[ldap not configured]'));
+        log_message('debug', 'LDAP Auth: Connect to '.(isset($ldap['host']) ? $ldap['host'] : '[ldap not configured]'));
 
         // Connect to the ldap server
         $ldapconn = ldap_connect($ldap['host'], $ldap['port']);
@@ -1715,7 +1715,7 @@ class RestController extends \CI_Controller
             $this->response([
                 $this->config->item('rest_status_field_name')  => false,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unauthorized'),
-            ], $this->http_status['UNAUTHORIZED']);
+            ], self::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -1800,7 +1800,7 @@ class RestController extends \CI_Controller
             $this->response([
                 $this->config->item('rest_status_field_name')  => false,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_invalid_credentials'),
-            ], $this->http_status['UNAUTHORIZED']);
+            ], self::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -1820,7 +1820,7 @@ class RestController extends \CI_Controller
             $this->response([
                 $this->config->item('rest_status_field_name')  => false,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_ip_denied'),
-            ], $this->http_status['UNAUTHORIZED']);
+            ], self::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -1845,7 +1845,7 @@ class RestController extends \CI_Controller
             $this->response([
                 $this->config->item('rest_status_field_name')  => false,
                 $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_ip_unauthorized'),
-            ], $this->http_status['UNAUTHORIZED']);
+            ], self::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -1880,7 +1880,7 @@ class RestController extends \CI_Controller
         $this->response([
             $this->config->item('rest_status_field_name')  => false,
             $this->config->item('rest_message_field_name') => $this->lang->line('text_rest_unauthorized'),
-        ], $this->http_status['UNAUTHORIZED']);
+        ], self::HTTP_UNAUTHORIZED);
     }
 
     /**
