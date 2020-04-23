@@ -1709,6 +1709,9 @@ class RestController extends \CI_Controller
         if ($this->config->item('rest_ip_whitelist_enabled')) {
             $this->_check_whitelist_auth();
         }
+        
+        // Load library session of CodeIgniter
+        $this->load->library('session');
 
         // Get the auth_source config item
         $key = $this->config->item('auth_source');
