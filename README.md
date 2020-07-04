@@ -12,21 +12,21 @@ A fully RESTful server implementation for CodeIgniter using one library, one con
 ## Installation
 
 ```sh
-composer require chriskacerguis/codeigniter-restserver
+composer require agoenks29D/codeigniter-restserver
 ```
 
 ## Usage
 
-CodeIgniter Rest Server is available on [Packagist](https://packagist.org/packages/chriskacerguis/codeigniter-restserver) (using semantic versioning), and installation via composer is the recommended way to install Codeigniter Rest Server. Just add this line to your `composer.json` file:
+CodeIgniter Rest Server is available on [Packagist](https://packagist.org/packages/agoenks29D/codeigniter-restserver) (using semantic versioning), and installation via composer is the recommended way to install Codeigniter Rest Server. Just add this line to your `composer.json` file:
 
 ```json
-"chriskacerguis/codeigniter-restserver": "^3.1"
+"agoenks29D/codeigniter-restserver": "^3.1"
 ```
 
 or run
 
 ```sh
-composer require chriskacerguis/codeigniter-restserver
+composer require agoenks29D/codeigniter-restserver
 ```
 
 Note that you will need to copy `rest.php` to your `config` directory (e.g. `application/config`)

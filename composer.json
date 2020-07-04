@@ -1,12 +1,16 @@
 {
-    "name": "chriskacerguis/codeigniter-restserver",
-    "description": "CI Rest Server",
+    "name": "agoenks29D/codeigniter-restserver",
+    "description": "CI HMVC Rest Server",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Chris Kacerguis",
             "email": "chriskacerguis@gmail.com"
+        },
+        {
+            "name": "Agung Dirgantara",
+            "email": "agungmasda29@gmail.com"
         }
     ],
     "minimum-stability": "dev",
