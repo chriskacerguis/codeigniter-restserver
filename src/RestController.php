@@ -33,7 +33,7 @@ class RestController extends \CI_Controller
     protected $methods = [];
 
     /**
-     * Defines https status
+     * Defines https status.
      */
     protected $http_status = [];
 
@@ -448,10 +448,10 @@ class RestController extends \CI_Controller
      */
     private function get_local_config($config_file)
     {
-        if ( file_exists(APPPATH . 'config/' . $config_file . '.php') ) {
+        if (file_exists(APPPATH.'config/'.$config_file.'.php')) {
             $this->load->config($config_file, false);
         } else {
-            if ( file_exists(__DIR__.'/'.$config_file.'.php') ) {
+            if (file_exists(__DIR__.'/'.$config_file.'.php')) {
                 $config = [];
                 include __DIR__.'/'.$config_file.'.php';
                 foreach ($config as $key => $value) {
@@ -951,15 +951,17 @@ class RestController extends \CI_Controller
         // Insert the request into the log table
         $is_inserted = $this->rest->db
             ->insert(
-                $this->config->item('rest_logs_table'), [
-                'uri'        => $this->uri->uri_string(),
-                'method'     => $this->request->method,
-                'params'     => $this->_args ? ($this->config->item('rest_logs_json_params') === true ? json_encode($this->_args) : serialize($this->_args)) : null,
-                'api_key'    => isset($this->rest->key) ? $this->rest->key : '',
-                'ip_address' => $this->input->ip_address(),
-                'time'       => time(),
-                'authorized' => $authorized,
-            ]);
+                $this->config->item('rest_logs_table'),
+                [
+                    'uri'        => $this->uri->uri_string(),
+                    'method'     => $this->request->method,
+                    'params'     => $this->_args ? ($this->config->item('rest_logs_json_params') === true ? json_encode($this->_args) : serialize($this->_args)) : null,
+                    'api_key'    => isset($this->rest->key) ? $this->rest->key : '',
+                    'ip_address' => $this->input->ip_address(),
+                    'time'       => time(),
+                    'authorized' => $authorized,
+                ]
+            );
 
         // Get the last insert id to update at a later stage of the request
         $this->_insert_id = $this->rest->db->insert_id();
@@ -1710,7 +1712,7 @@ class RestController extends \CI_Controller
         if ($this->config->item('rest_ip_whitelist_enabled')) {
             $this->_check_whitelist_auth();
         }
-        
+
         // Load library session of CodeIgniter
         $this->load->library('session');
 
@@ -1877,7 +1879,8 @@ class RestController extends \CI_Controller
             header(
                 'WWW-Authenticate: Digest realm="'.$rest_realm
                 .'", qop="auth", nonce="'.$nonce
-                .'", opaque="'.md5($rest_realm).'"');
+                .'", opaque="'.md5($rest_realm).'"'
+            );
         }
 
         if ($this->config->item('strict_api_and_auth') === true) {
@@ -1907,9 +1910,12 @@ class RestController extends \CI_Controller
         $payload['rtime'] = $this->_end_rtime - $this->_start_rtime;
 
         return $this->rest->db->update(
-            $this->config->item('rest_logs_table'), $payload, [
-            'id' => $this->_insert_id,
-        ]);
+            $this->config->item('rest_logs_table'),
+            $payload,
+            [
+                'id' => $this->_insert_id,
+            ]
+        );
     }
 
     /**
@@ -1930,9 +1936,12 @@ class RestController extends \CI_Controller
         $payload['response_code'] = $http_code;
 
         return $this->rest->db->update(
-            $this->config->item('rest_logs_table'), $payload, [
-            'id' => $this->_insert_id,
-        ]);
+            $this->config->item('rest_logs_table'),
+            $payload,
+            [
+                'id' => $this->_insert_id,
+            ]
+        );
     }
 
     /**
@@ -1949,10 +1958,12 @@ class RestController extends \CI_Controller
 
         // Fetch controller based on path and controller name
         $controller = implode(
-            '/', [
-            $this->router->directory,
-            $this->router->class,
-        ]);
+            '/',
+            [
+                $this->router->directory,
+                $this->router->class,
+            ]
+        );
 
         // Remove any double slashes for safety
         $controller = str_replace('//', '/', $controller);
