@@ -11,27 +11,24 @@ assignees: ''
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-Steps to reproduce the behavior, or a code snippet (properly formatted):
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+Please provide either a cleanly formatted code snippet or a link to repo / gist with code that I can use to reproduce:
+
+```php
+    public function set_response($data = null, $http_code = null)
+    {
+        $this->response($data, $http_code, true);
+    }
+```
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Screenshots / Error Messages**
+If applicable, add screenshots and/or error messages to help explain your problem.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
+**Environment (please complete the following information):**
+ - PHP Version: [e.g. 7.2.1]
+ - CodeIgniter Version [e.g. 4.0.1]
  - Version [e.g. 22]
 
 **Additional context**
