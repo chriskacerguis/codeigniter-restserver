@@ -1411,6 +1411,9 @@ class RestController extends \CI_Controller
     public function post($key = null, $xss_clean = null)
     {
         if ($key === null) {
+            foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($this->_post_args), RecursiveIteratorIterator::CATCH_GET_CHILD) as $key => $value) {
+                $this->_post_args[$key] = $this->_xss_clean($this->_post_args[$key], $xss_clean);
+            }
             return $this->_post_args;
         }
 
