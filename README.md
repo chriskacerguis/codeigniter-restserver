@@ -80,7 +80,7 @@ class Api extends RestController {
             if ( $users )
             {
                 // Set the response and exit
-                $this->response( $users, 200 );
+                $this->response( $users, RestController::HTTP_OK );
             }
             else
             {
@@ -88,23 +88,78 @@ class Api extends RestController {
                 $this->response( [
                     'status' => false,
                     'message' => 'No users were found'
-                ], 404 );
+                ], RestController::HTTP_NOT_FOUND );
             }
         }
         else
         {
             if ( array_key_exists( $id, $users ) )
             {
-                $this->response( $users[$id], 200 );
+                $this->response( $users[$id], RestController::HTTP_OK );
             }
             else
             {
                 $this->response( [
                     'status' => false,
                     'message' => 'No such user found'
-                ], 404 );
+                ], RestController::HTTP_NOT_FOUND );
             }
         }
     }
 }
 ```
+
+## Basic POST example
+
+Here is a basic post example. This controller, which should be saved as `Api.php`, or the `user_post` added to your existing `Api.php` from the `GET` example above.
+
+* `http://domain/api/user` will add a new user to your data store
+
+Note that for POST requests, your values are passed in the BODY of your request, unlike using GET.
+
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+use chriskacerguis\RestServer\RestController;
+
+class Api extends RestController {
+
+    function __construct()
+    {
+        // Construct the parent class
+        parent::__construct();
+    }
+
+    public function user_post()
+    {
+        $name = $this->post( 'name' );
+        $department = $this->post( 'department' );
+
+        if ( empty( $name ) || empty( $department ) )
+        {
+            // Return a bad response.
+            $this->response( [
+                'status' => false,
+                'message' => 'Validation failed'
+            ], RestController::HTTP_BAD_REQUEST );
+        }
+
+        // Save your data here.
+        // $this->load->model('api_model');
+        // $insert_id = $this->api_model->save_user($name, $department)
+        // if ( $insert_id ) {
+        //     $this->response( [
+        //         'status' => true,
+        //         'message' => 'User created'
+        //     ], RestController::HTTP_CREATED );
+        // }
+    }
+}
+```
+
+## Some notes:
+
+* For POST requests, add your values in the BODY of your request, including authentication (e.g., X-API-KEY).
+* For GET requests, add your values to the PARAMS, and your authentication in the header.
+* Method names are automatically derived by RestServer based on the HTTP verb, for example, a GET function, called in this example, as `users` is defined as `users_get`, and the POST function, as per the example, is called as `user` and defined as `user_post`. You must not call the function with the `_post` or `_get` suffix.
