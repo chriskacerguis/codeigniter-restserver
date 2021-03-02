@@ -1329,8 +1329,13 @@ class RestController extends \CI_Controller
      */
     protected function _parse_delete()
     {
-        // These should exist if a DELETE request
-        if ($this->input->method() === 'delete') {
+        if ($this->request->format) {
+            $this->request->body = $this->input->raw_input_stream;
+            if ($this->request->format === 'json') {
+                $this->_delete_args = json_decode($this->input->raw_input_stream);
+            }
+        } elseif ($this->input->method() === 'delete') {
+            // If no file type is provided, then there are probably just arguments
             $this->_delete_args = $this->input->input_stream();
         }
     }
