@@ -4,6 +4,7 @@ namespace chriskacerguis\RestServer;
 
 use Exception;
 use stdClass;
+use RecursiveIteratorIterator;
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
