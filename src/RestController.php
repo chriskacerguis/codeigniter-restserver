@@ -3,8 +3,8 @@
 namespace chriskacerguis\RestServer;
 
 use Exception;
-use stdClass;
 use RecursiveIteratorIterator;
+use stdClass;
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
