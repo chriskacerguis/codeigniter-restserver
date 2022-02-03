@@ -3,6 +3,7 @@
 namespace chriskacerguis\RestServer;
 
 use Exception;
+use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
 use stdClass;
 
