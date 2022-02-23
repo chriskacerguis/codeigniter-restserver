@@ -834,7 +834,9 @@ class RestController extends \CI_Controller
                 $method = $this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE');
             }
 
-            $method = strtolower($method);
+            if ($method !== null) {
+                $method = strtolower($method);
+            }
         }
 
         if (empty($method)) {
