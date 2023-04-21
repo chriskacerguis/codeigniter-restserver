@@ -867,11 +867,12 @@ class RestController extends \CI_Controller
 
         // Find the key from server or arguments
         if (($key = isset($this->_args[$api_key_variable]) ? $this->_args[$api_key_variable] : $this->input->server($key_name))) {
+
+            $this->rest->key = $key;
+
             if (!($row = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get($this->config->item('rest_keys_table'))->row())) {
                 return false;
             }
-
-            $this->rest->key = $row->{$this->config->item('rest_key_column')};
 
             isset($row->user_id) && $this->rest->user_id = $row->user_id;
             isset($row->level) && $this->rest->level = $row->level;
