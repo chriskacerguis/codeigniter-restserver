@@ -4,6 +4,12 @@
 
 A fully RESTful server implementation for CodeIgniter using one library, one config file and one controller.
 
+## Important!!
+
+CodeIgniter 4 includes REST support out of the box and therefore does not require the RestServer.
+
+See the documentation here: [RESTful Resource Handling](https://codeigniter4.github.io/userguide/incoming/restful.html)
+
 ## Requirements
 
 - PHP 7.2 or greater
