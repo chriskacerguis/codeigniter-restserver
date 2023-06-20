@@ -322,6 +322,19 @@ $config['rest_keys_table'] = 'keys';
 |       PRIMARY KEY (`id`)
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
+| For PostgreSQL
+|   CREATE TABLE keys (
+|       id SERIAL,
+|       user_id INT NOT NULL,
+|       key VARCHAR(40) NOT NULL,
+|       level INT NOT NULL,
+|       ignore_limits SMALLINT NOT NULL DEFAULT '0',
+|       is_private_key SMALLINT NOT NULL DEFAULT '0',
+|       ip_addresses TEXT NULL DEFAULT NULL,
+|       date_created INT NOT NULL,
+|       PRIMARY KEY (id)
+|   ) ;
+|  |
 */
 $config['rest_enable_keys'] = false;
 
@@ -402,6 +415,20 @@ $config['rest_key_name'] = 'X-API-KEY';
 |       PRIMARY KEY (`id`)
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
+| For PostgreSQL
+|   CREATE TABLE logs (
+|       id SERIAL,
+|       uri VARCHAR(255) NOT NULL,
+|       method VARCHAR(6) NOT NULL,
+|       params TEXT DEFAULT NULL,
+|       api_key VARCHAR(40) NOT NULL,
+|       ip_address VARCHAR(45) NOT NULL,
+|       time INT NOT NULL,
+|       rtime DOUBLE PRECISION DEFAULT NULL,
+|       authorized boolean NOT NULL,
+|       response_code smallint DEFAULT '0',
+|       PRIMARY KEY (id)
+|   ) ;
 */
 $config['rest_enable_logging'] = false;
 
@@ -434,6 +461,31 @@ $config['rest_logs_table'] = 'logs';
 |       `date_modified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 |       PRIMARY KEY (`id`)
 |    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+|
+| For PostgreSQL
+|   CREATE TABLE access (
+|       id SERIAL,
+|       key VARCHAR(40) NOT NULL DEFAULT '',
+|       all_access SMALLINT NOT NULL DEFAULT '0',
+|       controller VARCHAR(50) NOT NULL DEFAULT '',
+|       date_created TIMESTAMP(0) DEFAULT NULL,
+|       date_modified TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+|       PRIMARY KEY (id)
+|    ) ;
+|    CREATE OR REPLACE FUNCTION upd_timestamp() RETURNS TRIGGER
+|    LANGUAGE plpgsql
+|    AS
+|    $$
+|    BEGIN
+|        NEW.modified = CURRENT_TIMESTAMP;
+|        RETURN NEW;
+|    END;
+|    $$;
+|    CREATE TRIGGER trigger_access
+|      BEFORE UPDATE
+|      ON access
+|      FOR EACH ROW
+|      EXECUTE PROCEDURE upd_timestamp();
 |
 */
 $config['rest_enable_access'] = false;
@@ -478,6 +530,16 @@ $config['rest_logs_json_params'] = false;
 |       `api_key` VARCHAR(40) NOT NULL,
 |       PRIMARY KEY (`id`)
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+|
+| For PostgreSQL
+|   CREATE TABLE limits (
+|       id SERIAL,
+|       uri VARCHAR(255) NOT NULL,
+|       count INT NOT NULL,
+|       hour_started INT NOT NULL,
+|       api_key VARCHAR(40) NOT NULL,
+|       PRIMARY KEY (id)
+|   ) ;
 |
 | To specify the limits within the controller's __construct() method, add per-method
 | limits with:
