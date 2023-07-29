@@ -11,7 +11,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * Help convert between various formats such as XML, JSON, CSV, etc.
  *
  * @author    Phil Sturgeon, Chris Kacerguis, @softwarespot
- * @license   http://www.dbad-license.org/
+ * @license   MIT (See LICENSE)
  */
 class Format
 {
