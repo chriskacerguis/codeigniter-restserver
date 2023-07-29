@@ -697,7 +697,7 @@ class RestController extends \CI_Controller
                 }
             }
             ob_end_flush();
-        // Otherwise dump the output automatically
+            // Otherwise dump the output automatically
         } else {
             echo json_encode($data);
         }
@@ -866,8 +866,7 @@ class RestController extends \CI_Controller
         $this->rest->ignore_limits = false;
 
         // Find the key from server or arguments
-        if (($key = isset($this->_args[$api_key_variable]) ? $this->_args[$api_key_variable] : $this->input->server($key_name))) {
-
+        if ($key = isset($this->_args[$api_key_variable]) ? $this->_args[$api_key_variable] : $this->input->server($key_name)) {
             $this->rest->key = $key;
 
             if (!($row = $this->rest->db->where($this->config->item('rest_key_column'), $key)->get($this->config->item('rest_keys_table'))->row())) {

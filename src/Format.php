@@ -183,7 +183,6 @@ class Format
         }
 
         foreach ($data as $key => $value) {
-
             //change false/true to 0/1
             if (is_bool($value)) {
                 $value = (int) $value;
