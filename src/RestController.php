@@ -639,7 +639,7 @@ class RestController extends \CI_Controller
                 $formatter = null;
                 if ($this->format && method_exists($this->format, 'to_'.$this->response->format)) {
                     $formatter = $this->format::factory($data);
-                } else if (method_exists(Format::class, 'to_'.$this->response->format)) {
+                } elseif (method_exists(Format::class, 'to_'.$this->response->format)) {
                     $formatter = Format::factory($data);
                 }
 
