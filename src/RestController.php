@@ -232,7 +232,7 @@ class RestController extends \CI_Controller
     /**
      * @var Format
      */
-    private $format;
+    protected $format;
 
     /**
      * @var bool
@@ -636,10 +636,17 @@ class RestController extends \CI_Controller
             // If data is not NULL and a HTTP status code provided, then continue
             elseif ($data !== null) {
                 // If the format method exists, call and return the output in that format
-                if (method_exists(Format::class, 'to_'.$this->response->format)) {
+                $formatter = null;
+                if ($this->format && method_exists($this->format, 'to_'.$this->response->format)) {
+                    $formatter = $this->format::factory($data);
+                } else if (method_exists(Format::class, 'to_'.$this->response->format)) {
+                    $formatter = Format::factory($data);
+                }
+
+                if ($formatter !== null) {
                     // CORB protection
                     // First, get the output content.
-                    $output = Format::factory($data)->{'to_'.$this->response->format}();
+                    $output = $formatter->{'to_'.$this->response->format}();
 
                     // Set the format header
                     // Then, check if the client asked for a callback, and if the output contains this callback :
