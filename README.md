@@ -114,3 +114,56 @@ class Api extends RestController {
     }
 }
 ```
+
+## Extending supported formats
+
+If you need to be able to support more formats for replies, you can extend the
+`Format` class to add the required `to_...` methods
+
+1. Extend the `RestController` class (in `libraries/MY_REST_Controller.php`)
+```php
+<?php
+
+use chriskacerguis\RestServer\RestController;
+
+class MY_REST_Controller extends RestController
+{
+    public function __construct()
+    {
+        parent::__construct();
+        // This can be the library's chriskacerguis\RestServer\Format
+        // or your own custom overloaded Format class (see bellow)
+        $this->format = new Format();
+    }
+}
+```
+
+2. Extend the `Format` class (can be created as a CodeIgniter library in `libraries/Format.php`).
+Following is an example to add support for PDF output
+
+```php
+<?php
+
+use chriskacerguis\RestServer\Format as RestServerFormat;
+
+class Format extends RestServerFormat
+{
+    public function to_pdf($data = null)
+    {
+        if ($data === null && func_num_args() === 0) {
+            $data = $this->_data;
+        }
+
+        if (is_array($data) || substr($data, 0, 4) != '%PDF') {
+            $html = $this->to_html($data);
+
+            // Use your PDF lib of choice. For example mpdf
+            $mpdf = new \Mpdf\Mpdf();
+            $mpdf->WriteHTML($html);
+            return $mpdf->Output('', 'S');
+        }
+
+        return $data;
+    }
+}
+```
