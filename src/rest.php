@@ -319,6 +319,7 @@ $config['rest_keys_table'] = 'keys';
 |       `is_private_key` TINYINT(1)  NOT NULL DEFAULT '0',
 |       `ip_addresses` TEXT NULL DEFAULT NULL,
 |       `date_created` INT(11) NOT NULL,
+|       `expires` INT(11) NOT NULL
 |       PRIMARY KEY (`id`)
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
@@ -332,6 +333,7 @@ $config['rest_keys_table'] = 'keys';
 |       is_private_key SMALLINT NOT NULL DEFAULT '0',
 |       ip_addresses TEXT NULL DEFAULT NULL,
 |       date_created INT NOT NULL,
+|       expires INT NOT NULL,
 |       PRIMARY KEY (id)
 |   ) ;
 |  |
@@ -348,6 +350,19 @@ $config['rest_enable_keys'] = false;
 |
 */
 $config['rest_key_column'] = 'key';
+/*
+|--------------------------------------------------------------------------
+| REST Table Key Expiry Config and Column Name
+|--------------------------------------------------------------------------
+|
+| Configure wether or not api keys should expire, and the column name to 
+| match e.g. expires
+| Note: the value in the column will be treated as a unix timestamp and 
+| compared with php function time()
+|
+*/
+$config['rest_keys_expire'] = false;
+$config['rest_keys_expiry_column'] = 'expires';
 
 /*
 |--------------------------------------------------------------------------
