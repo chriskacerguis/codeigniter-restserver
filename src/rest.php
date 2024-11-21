@@ -355,9 +355,9 @@ $config['rest_key_column'] = 'key';
 | REST Table Key Expiry Config and Column Name
 |--------------------------------------------------------------------------
 |
-| Configure wether or not api keys should expire, and the column name to 
+| Configure wether or not api keys should expire, and the column name to
 | match e.g. expires
-| Note: the value in the column will be treated as a unix timestamp and 
+| Note: the value in the column will be treated as a unix timestamp and
 | compared with php function time()
 |
 */
