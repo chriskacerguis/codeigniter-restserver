@@ -880,7 +880,7 @@ class RestController extends \CI_Controller
                 return false;
             }
 
-            if ($this->config->item('rest_keys_expire')===true && $row->{$this->config->item('rest_keys_expiry_column')} < time()) {
+            if ($this->config->item('rest_keys_expire') === true && $row->{$this->config->item('rest_keys_expiry_column')} < time()) {
                 return false;
             }
 
