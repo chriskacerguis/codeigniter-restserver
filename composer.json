@@ -13,5 +13,22 @@
     "autoload": {
         "psr-4": {"chriskacerguis\\RestServer\\": "src/"}
     },
-    "require": {}
+    "require": {
+        "codeigniter4/framework": "^4.5"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.9",
+        "phpstan/phpstan": "^1.12",
+        "phpunit/phpunit": "^10.5 || ^11.0"
+    },
+    "scripts": {
+        "lint": "phpcs --standard=phpcs.xml",
+        "stan": "phpstan analyse src --level=max",
+        "test": "phpunit -c phpunit.xml.dist --testdox"
+    },
+    "extra": {
+        "ci4": {
+            "discover": true
+        }
+    }
 }

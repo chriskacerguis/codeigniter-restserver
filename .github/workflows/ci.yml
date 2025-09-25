@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master, development ]
+  pull_request:
+    branches: [ main, master, development ]
+
+jobs:
+  lint:
+    name: Lint & Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: composer:v2, phpstan, phpcs
+          extensions: dom, mbstring, intl, json, xml, curl
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Install dependencies (with cache)
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: --no-interaction --prefer-dist --no-progress
+
+      - name: PHPCS (PSR-12)
+        run: composer run lint
+
+      - name: Detect style drift (phpcbf --dry-run)
+        run: vendor/bin/phpcbf --standard=phpcs.xml --dry-run --no-patch
+
+      - name: PHPStan (max level)
+        run: composer run stan
+
+  test:
+    name: PHPUnit (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.1', '8.2', '8.3', '8.4']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer:v2
+          extensions: dom, mbstring, intl, json, xml, curl
+
+      - name: Install dependencies (with cache)
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: --no-interaction --prefer-dist --no-progress
+
+      - name: Run tests
+        run: composer run test

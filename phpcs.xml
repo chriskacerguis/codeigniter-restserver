@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="CodeIgniter RestServer Coding Standards">
+    <description>PSR-12 with a few safe sniffs for legacy CI3 compatibility.</description>
+    <rule ref="PSR12"/>
+    <rule ref="Generic.PHP.LowerCaseKeyword"/>
+    <rule ref="Generic.Arrays.ArrayIndent"/>
+
+    <file>src</file>
+    <exclude-pattern>language/*</exclude-pattern>
+
+    <!-- Allow tabs/spaces mix typical in CI3 views (not used here, but safe) -->
+    <config name="tabWidth" value="4"/>
+</ruleset>

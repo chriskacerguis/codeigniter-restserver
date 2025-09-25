@@ -1,169 +1,206 @@
-# CodeIgniter RestServer
+# CodeIgniter RestServer (CI4 Module)
 
-[![StyleCI](https://github.styleci.io/repos/230589/shield?branch=master)](https://github.styleci.io/repos/230589)
+This is a modernized, CI4-compatible module with filters for CORS, API keys, authentication (Basic/Digest/Session), and rate limiting, plus a lean base REST controller and a framework-neutral `Format` utility.
 
-A fully RESTful server implementation for CodeIgniter using one library, one config file and one controller.
-
-## Important!!
-
-CodeIgniter 4 includes REST support out of the box and therefore does not require the RestServer.
-
-See the documentation here: [RESTful Resource Handling](https://codeigniter4.github.io/userguide/incoming/restful.html)
+Note: CodeIgniter 4 has built-in RESTful controllers. This module focuses on extras like API keys, CORS, and rate limiting, packaged for easy reuse.
 
 ## Requirements
 
-- PHP 7.2 or greater
-- CodeIgniter 3.1.11+
+- PHP 8.1+
+- CodeIgniter 4.5+
 
 ## Installation
 
-```sh
+Install via Composer in your CI4 application:
+
+```bash
 composer require chriskacerguis/codeigniter-restserver
 ```
 
-## Usage
+Auto-discovery is enabled, so the module’s config, filters, and migrations will be found automatically.
 
-CodeIgniter Rest Server is available on [Packagist](https://packagist.org/packages/chriskacerguis/codeigniter-restserver) (using semantic versioning), and installation via composer is the recommended way to install Codeigniter Rest Server. Just add this line to your `composer.json` file:
+## Database migrations
 
-```json
-"chriskacerguis/codeigniter-restserver": "^3.1"
+This package includes migrations for tables `keys`, `logs`, `access`, `limits`.
+
+Run them from your CI4 app root (where `spark` exists):
+
+```bash
+php spark migrate -n 'chriskacerguis\RestServer'
+# or run all discovered namespaces (including this one)
+php spark migrate -all
+
+php spark migrate:status -n 'chriskacerguis\RestServer'
 ```
 
-or run
+## Configuration
 
-```sh
-composer require chriskacerguis/codeigniter-restserver
+Settings live in `chriskacerguis\RestServer\Config\Rest` (no `rest.php` in CI4). Common options:
+
+- `defaultFormat`: `json` (supported: `json,array,csv,html,jsonp,php,serialized,xml`)
+- Auth: `auth` = `false` | `basic` | `digest` | `session`, `realm`, `validLogins`
+- API Keys: `enableKeys`, `keysTable`, `keyHeaderName`, `keysExpire`, `keysExpiryColumn`, `keyLength`
+- Rate Limits: `enableLimits`, `limitsMethod` = `ROUTED_URL` | `API_KEY` | `IP_ADDRESS` | `METHOD_NAME`, `limitDefaultPerHour`, `limitWindowSeconds`
+- CORS: `checkCors`, `allowAnyCorsDomain`, `allowedCorsOrigins`, `allowedCorsHeaders`, `allowedCorsMethods`, `forcedCorsHeaders`
+
+Adjust these in your app by publishing a copy or via your own config/environment.
+
+## Filters wiring
+
+Add filter aliases in your CI4 app’s `app/Config/Filters.php`:
+
+```php
+public $aliases = [
+    'rest-auth'      => \chriskacerguis\RestServer\Filters\AuthFilter::class,
+    'rest-apikey'    => \chriskacerguis\RestServer\Filters\ApiKeyFilter::class,
+    'rest-cors'      => \chriskacerguis\RestServer\Filters\CorsFilter::class,
+    'rest-ratelimit' => \chriskacerguis\RestServer\Filters\RateLimitFilter::class,
+];
+
+public $globals = [
+    'before' => [
+        // 'rest-cors', // enable globally if desired
+    ],
+    'after' => [],
+];
 ```
 
-Note that you will need to copy `rest.php` to your `config` directory (e.g. `application/config`)
+Apply filters to routes in `app/Config/Routes.php`:
 
-Step 1: Add this to your controller (should be before any of your code)
+```php
+$routes->group('api', ['filter' => 'rest-cors'], static function ($routes) {
+    $routes->group('', ['filter' => 'rest-apikey'], static function ($routes) {
+        $routes->group('', ['filter' => 'rest-auth'], static function ($routes) {
+            $routes->group('', ['filter' => 'rest-ratelimit'], static function ($routes) {
+                $routes->get('users', 'Api\\Users::index');
+            });
+        });
+    });
+});
+```
+
+## Base controller
+
+Use the provided base controller to simplify response handling:
 
 ```php
 use chriskacerguis\RestServer\RestController;
-```
 
-Step 2: Extend your controller
-
-```php
-class Example extends RestController
-```
-
-## Basic GET example
-
-Here is a basic example. This controller, which should be saved as `Api.php`, can be called in two ways:
-
-* `http://domain/api/users/` will return the list of all users
-* `http://domain/api/users/id/1` will only return information about the user with id = 1
-
-```php
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
-use chriskacerguis\RestServer\RestController;
-
-class Api extends RestController {
-
-    function __construct()
-    {
-        // Construct the parent class
-        parent::__construct();
-    }
-
-    public function users_get()
-    {
-        // Users from a data store e.g. database
-        $users = [
-            ['id' => 0, 'name' => 'John', 'email' => 'john@example.com'],
-            ['id' => 1, 'name' => 'Jim', 'email' => 'jim@example.com'],
-        ];
-
-        $id = $this->get( 'id' );
-
-        if ( $id === null )
-        {
-            // Check if the users data store contains users
-            if ( $users )
-            {
-                // Set the response and exit
-                $this->response( $users, 200 );
-            }
-            else
-            {
-                // Set the response and exit
-                $this->response( [
-                    'status' => false,
-                    'message' => 'No users were found'
-                ], 404 );
-            }
-        }
-        else
-        {
-            if ( array_key_exists( $id, $users ) )
-            {
-                $this->response( $users[$id], 200 );
-            }
-            else
-            {
-                $this->response( [
-                    'status' => false,
-                    'message' => 'No such user found'
-                ], 404 );
-            }
-        }
-    }
-}
-```
-
-## Extending supported formats
-
-If you need to be able to support more formats for replies, you can extend the
-`Format` class to add the required `to_...` methods
-
-1. Extend the `RestController` class (in `libraries/MY_REST_Controller.php`)
-```php
-<?php
-
-use chriskacerguis\RestServer\RestController;
-
-class MY_REST_Controller extends RestController
+class Users extends RestController
 {
-    public function __construct()
+    public function index()
     {
-        parent::__construct();
-        // This can be the library's chriskacerguis\RestServer\Format
-        // or your own custom overloaded Format class (see bellow)
-        $this->format = new Format();
+        return $this->respondData([
+            ['id' => 1, 'name' => 'John'],
+            ['id' => 2, 'name' => 'Jane'],
+        ]);
     }
 }
 ```
 
-2. Extend the `Format` class (can be created as a CodeIgniter library in `libraries/Format.php`).
-Following is an example to add support for PDF output
+## API keys
+
+- Enable in config: `enableKeys = true`.
+- Provide keys in request header `X-API-KEY: <key>` or query `?api_key=<key>`.
+- Keys are validated via the `keys` table; optional expiry uses `keysExpire` and `keysExpiryColumn`.
+
+## Rate limiting
+
+- Enable in config: `enableLimits = true`.
+- Default window and limit can be customized via `limitDefaultPerHour` and `limitWindowSeconds`.
+- Exposes headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`; on exceed, returns `429` with `Retry-After`.
+
+## CORS
+
+- Enable check: `checkCors = true` and wire `rest-cors` filter.
+- Configure allowed origins/methods/headers via config.
+
+## Logging & access controls (optional)
+
+- `logs` and `access` tables and models are included for future/optional use.
+- You may add additional filters or listeners to record logs and enforce per-controller/method access.
+
+## Upgrading from CI3
+
+- CI3’s `rest.php` is no longer used. Settings moved to `Config\Rest`.
+- Controller usage is CI4-style (`ResourceController` based).
+- Install in a CI4 app and use the steps above.
+
+## Development
+
+Style and static analysis:
+
+```bash
+composer run lint
+composer run stan
+```
+
+## Quick demo: copy-paste test
+
+Use this minimal controller and route in your CI4 app to verify the module works end-to-end.
+
+1) Create `app/Controllers/Api/Users.php` in your CI4 app:
 
 ```php
 <?php
+namespace App\Controllers\Api;
 
-use chriskacerguis\RestServer\Format as RestServerFormat;
+use chriskacerguis\RestServer\RestController;
 
-class Format extends RestServerFormat
+class Users extends RestController
 {
-    public function to_pdf($data = null)
+    public function index()
     {
-        if ($data === null && func_num_args() === 0) {
-            $data = $this->_data;
-        }
-
-        if (is_array($data) || substr($data, 0, 4) != '%PDF') {
-            $html = $this->to_html($data);
-
-            // Use your PDF lib of choice. For example mpdf
-            $mpdf = new \Mpdf\Mpdf();
-            $mpdf->WriteHTML($html);
-            return $mpdf->Output('', 'S');
-        }
-
-        return $data;
+        return $this->respondData([
+            ['id' => 1, 'name' => 'John'],
+            ['id' => 2, 'name' => 'Jane'],
+        ]);
     }
 }
 ```
+
+2) In `app/Config/Filters.php` add aliases (if not already present):
+
+```php
+public $aliases = [
+    'rest-auth'      => \chriskacerguis\RestServer\Filters\AuthFilter::class,
+    'rest-apikey'    => \chriskacerguis\RestServer\Filters\ApiKeyFilter::class,
+    'rest-cors'      => \chriskacerguis\RestServer\Filters\CorsFilter::class,
+    'rest-ratelimit' => \chriskacerguis\RestServer\Filters\RateLimitFilter::class,
+];
+```
+
+3) In `app/Config/Routes.php` add a quick route with filters:
+
+```php
+use CodeIgniter\Router\RouteCollection;
+
+/** @var RouteCollection $routes */
+$routes->group('api', ['filter' => 'rest-cors'], static function ($routes) {
+    $routes->group('', ['filter' => 'rest-apikey'], static function ($routes) {
+        $routes->group('', ['filter' => 'rest-auth'], static function ($routes) {
+            $routes->group('', ['filter' => 'rest-ratelimit'], static function ($routes) {
+                $routes->get('users', 'Api\\Users::index');
+            });
+        });
+    });
+});
+```
+
+4) Configure and migrate:
+- In `Config\\Rest` (this module) set `enableKeys = true` and insert at least one key record in the `keys` table.
+- Run migrations in your app root:
+
+```bash
+php spark migrate -n 'chriskacerguis\RestServer'
+```
+
+5) Test with curl:
+
+```bash
+curl -H 'X-API-KEY: YOUR_KEY' http://localhost:8080/api/users
+```
+
+## License
+
+MIT
