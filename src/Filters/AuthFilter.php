@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace chriskacerguis\RestServer\Filters;
@@ -13,7 +14,7 @@ class AuthFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-    $config = config(RestConfig::class);
+        $config = config(RestConfig::class);
 
         if ($config->auth === false || $config->auth === '') {
             // Auth disabled
@@ -163,15 +164,19 @@ class AuthFilter implements FilterInterface
         return $config->validLogins[$username] ?? null;
     }
 
-    private function unauthorizedResponse(string $scheme, string $realm, string $message = 'Unauthorized'): ResponseInterface
-    {
+    private function unauthorizedResponse(
+        string $scheme,
+        string $realm,
+        string $message = 'Unauthorized'
+    ): ResponseInterface {
         $response = service('response');
         if (!$response instanceof ResponseInterface) {
             $response = new Response(config('App'));
         }
 
         if ($scheme === 'basic') {
-            $response->setHeader('WWW-Authenticate', 'Basic realm="' . addslashes($realm) . '", charset="UTF-8"');
+            $basicHeader = 'Basic realm="' . addslashes($realm) . '", charset="UTF-8"';
+            $response->setHeader('WWW-Authenticate', $basicHeader);
         } elseif ($scheme === 'digest') {
             $nonce  = bin2hex(random_bytes(16));
             $opaque = bin2hex(random_bytes(16));

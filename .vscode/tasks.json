@@ -9,6 +9,15 @@
 				"$phpunit"
 			],
 			"group": "build"
+		},
+		{
+			"label": "phpcs lint",
+			"type": "shell",
+			"command": "vendor/bin/phpcs --standard=phpcs.xml",
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
 		}
 	]
 }

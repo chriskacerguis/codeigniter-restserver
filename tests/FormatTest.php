@@ -8,21 +8,21 @@ final class FormatTest extends TestCase
 {
     public function testToJson(): void
     {
-        $out = Format::factory(['a' => 1, 'b' => 2])->to_json();
+        $out = Format::factory(['a' => 1, 'b' => 2])->toJson();
         $this->assertJson($out);
         $this->assertSame('{"a":1,"b":2}', $out);
     }
 
     public function testToArray(): void
     {
-        $out = Format::factory(['a' => 1, 'b' => ['c' => 3]])->to_array();
+        $out = Format::factory(['a' => 1, 'b' => ['c' => 3]])->toArray();
         $this->assertIsArray($out);
         $this->assertSame(3, $out['b']['c']);
     }
 
     public function testToXml(): void
     {
-        $xml = Format::factory(['a' => 1, 'b' => 2])->to_xml();
+        $xml = Format::factory(['a' => 1, 'b' => 2])->toXml();
         $this->assertStringContainsString('<a>1</a>', $xml);
         $this->assertStringContainsString('<b>2</b>', $xml);
     }
@@ -31,7 +31,7 @@ final class FormatTest extends TestCase
     {
         $ser = serialize((object)['x' => 1]);
         $fmt = new Format($ser, 'serialize');
-        $arr = $fmt->to_array();
+        $arr = $fmt->toArray();
         $this->assertIsArray($arr);
     }
 }

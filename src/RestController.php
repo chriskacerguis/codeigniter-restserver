@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace chriskacerguis\RestServer;
@@ -40,10 +41,18 @@ class RestController extends ResourceController
     {
         $format = $format ?? $this->restConfig->defaultFormat;
         $formatter = Format::factory($data);
-        $method = 'to_'.$format;
-        if (method_exists($formatter, $method)) {
-            return $formatter->{$method}();
-        }
-        return $formatter->to_json();
+        // Map format keys to camelCase methods
+        $map = [
+            'json'       => 'toJson',
+            'array'      => 'toArray',
+            'csv'        => 'toCsv',
+            'html'       => 'toHtml',
+            'jsonp'      => 'toJson', // JSONP not supported; fall back to JSON
+            'php'        => 'toPhp',
+            'serialized' => 'toSerialized',
+            'xml'        => 'toXml',
+        ];
+        $method = $map[$format] ?? 'toJson';
+        return $formatter->{$method}();
     }
 }

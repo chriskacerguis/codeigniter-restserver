@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace chriskacerguis\RestServer\Filters;
@@ -14,7 +15,7 @@ class RateLimitFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-    $config = config(RestConfig::class);
+        $config = config(RestConfig::class);
 
         if (!$config->enableLimits) {
             return null;
@@ -25,7 +26,7 @@ class RateLimitFilter implements FilterInterface
             'class'     => null,
             'method'    => null,
             'api_key'   => null,
-            'ip_address'=> null,
+            'ip_address' => null,
         ];
 
         $uriPath = '/' . ltrim((string) $request->getUri()->getPath(), '/');
@@ -76,8 +77,8 @@ class RateLimitFilter implements FilterInterface
                 'count'     => 0,
                 'limit'     => $defaultLimit,
                 'reset_at'  => gmdate('Y-m-d H:i:s', $now + $periodSeconds),
-                'created_at'=> $nowDt,
-                'updated_at'=> null,
+                'created_at' => $nowDt,
+                'updated_at' => null,
             ]);
             $limitModel->insert($row);
             $row['id'] = $limitModel->getInsertID();
