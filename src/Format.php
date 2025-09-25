@@ -243,5 +243,4 @@ class Format
     {
         return trim((string) $data);
     }
-
 }
