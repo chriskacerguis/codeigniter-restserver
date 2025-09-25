@@ -230,7 +230,7 @@ final class FiltersTest extends TestCase
                     }
                 }
 
-return new class($row) {
+                return new class($row) {
                     private $r;
 
                     public function __construct($r)
