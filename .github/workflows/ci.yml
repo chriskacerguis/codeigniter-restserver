@@ -1,4 +1,4 @@
-name: CI
+name: Lint and Test
 
 on:
   push:
@@ -33,8 +33,13 @@ jobs:
       - name: PHPCS (PSR-12)
         run: composer run lint
 
-      - name: Detect style drift (phpcbf --dry-run)
-        run: vendor/bin/phpcbf --standard=phpcs.xml --dry-run --no-patch
+      - name: Detect style drift (fail if auto-fixes needed)
+        shell: bash
+        run: |
+          # Run phpcbf to apply auto-fixes into the working tree
+          vendor/bin/phpcbf --standard=phpcs.xml --no-patch || true
+          # Fail if any changes were made by phpcbf (style drift)
+          git --no-pager diff --name-only --exit-code || { echo "::error ::Style drift detected. Please run phpcbf locally."; exit 1; }
 
       - name: PHPStan (max level)
         run: composer run stan
