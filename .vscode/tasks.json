@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "phpunit tests",
+			"type": "shell",
+			"command": "vendor/bin/phpunit -c phpunit.xml.dist --testdox || php -d detect_unicode=0 phpunit.phar -c phpunit.xml.dist --testdox",
+			"problemMatcher": [
+				"$phpunit"
+			],
+			"group": "build"
+		}
+	]
+}

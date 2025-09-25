@@ -12,6 +12,22 @@ namespace CodeIgniter\HTTP {
 }
 namespace CodeIgniter\Config { class BaseConfig {} }
 
+// Minimal stubs to satisfy RestController inheritance and response handling in tests
+namespace CodeIgniter\RESTful { class ResourceController { protected $format = 'json'; protected $response; } }
+namespace CodeIgniter\API {
+    trait ResponseTrait {
+        protected $response;
+        protected function respond($data = null, int $status = 200) {
+            if ($this->response === null) {
+                $this->response = \service('response');
+            }
+            $this->response->setStatusCode($status);
+            $this->response->setHeader('Content-Type', 'application/json');
+            return $this->response->setJSON($data);
+        }
+    }
+}
+
 namespace {
 use chriskacerguis\RestServer\Config\Rest;
 
@@ -22,6 +38,16 @@ spl_autoload_register(function ($class) {
     if (str_starts_with($class, $prefix)) {
         $relative = substr($class, strlen($prefix));
         $path = $baseDir . str_replace('\\', '/', $relative) . '.php';
+        if (is_file($path)) {
+            require $path;
+        }
+    }
+    // Load test support classes
+    $tPrefix = 'Tests\\Support\\';
+    $tBase = dirname(__DIR__) . '/tests/';
+    if (str_starts_with($class, $tPrefix)) {
+        $relative = substr($class, strlen($tPrefix));
+        $path = $tBase . str_replace('\\', '/', $relative) . '.php';
         if (is_file($path)) {
             require $path;
         }
