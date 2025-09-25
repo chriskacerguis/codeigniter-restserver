@@ -9,7 +9,7 @@ Note: CodeIgniter 4 has built-in RESTful controllers. This module focuses on ext
 
 ## Requirements
 
-- PHP 8.1+
+- PHP 8.4+
 - CodeIgniter 4.5+
 
 ## Installation
