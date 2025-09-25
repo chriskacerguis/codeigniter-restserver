@@ -4,6 +4,9 @@ This is a modernized, CI4-compatible module with filters for CORS, API keys, aut
 
 Note: CodeIgniter 4 has built-in RESTful controllers. This module focuses on extras like API keys, CORS, and rate limiting, packaged for easy reuse.
 
+> [!WARNING]  
+> This is currently in BETA and there may be reduced functionality or problems.  Please send your bug reports.
+
 ## Requirements
 
 - PHP 8.1+
