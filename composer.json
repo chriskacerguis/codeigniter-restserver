@@ -23,7 +23,7 @@
     },
     "scripts": {
         "lint": "phpcs --standard=phpcs.xml",
-        "stan": "phpstan analyse src --level=max",
+        "stan": "phpstan analyse src -c phpstan.neon.dist",
         "test": "phpunit -c phpunit.xml.dist --testdox"
     },
     "extra": {
