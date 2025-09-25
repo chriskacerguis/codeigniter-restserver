@@ -1,14 +1,9 @@
 # CodeIgniter RestServer
 
-[![StyleCI](https://github.styleci.io/repos/230589/shield?branch=master)](https://github.styleci.io/repos/230589)
+A fully RESTful server implementation for CodeIgniter 3 using one library, one config file and one controller.
 
-A fully RESTful server implementation for CodeIgniter using one library, one config file and one controller.
-
-## Important!!
-
-CodeIgniter 4 includes REST support out of the box and therefore does not require the RestServer.
-
-See the documentation here: [RESTful Resource Handling](https://codeigniter4.github.io/userguide/incoming/restful.html)
+> [!IMPORTANT]
+> I have published the first "beta" of codeigniter-restserver 4.  See the "development" branch.  Please be sure to note the system requirments.
 
 ## Requirements
 
