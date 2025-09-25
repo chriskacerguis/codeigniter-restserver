@@ -1,30 +1,74 @@
 <?php
+
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
-use chriskacerguis\RestServer\Filters\ApiKeyFilter;
 use chriskacerguis\RestServer\Config\Rest;
+use chriskacerguis\RestServer\Filters\ApiKeyFilter;
+use PHPUnit\Framework\TestCase;
 
 final class ApiKeyFilterTest extends TestCase
 {
     private function requestWith(array $opts = [])
     {
         return new class($opts) implements \CodeIgniter\HTTP\RequestInterface {
-            private array $opts; public function __construct(array $opts){$this->opts=$opts;}
-            public function getHeaderLine($name){ return $this->opts['headers'][$name] ?? ''; }
-            public function getGet($key=null){ $get=$this->opts['get'] ?? []; return $key===null?$get:($get[$key]??null);}            
-            public function getMethod($upper=false){ return $this->opts['method'] ?? 'GET'; }
-            public function getUri(){ return new class($this->opts['path'] ?? '/') { private string $p; public function __construct($p){$this->p=$p;} public function getPath(){return $this->p;} }; }
-            public function getIPAddress(){ return $this->opts['ip'] ?? '127.0.0.1'; }
+            private array $opts;
+
+            public function __construct(array $opts)
+            {
+                $this->opts = $opts;
+            }
+
+            public function getHeaderLine($name)
+            {
+                return $this->opts['headers'][$name] ?? '';
+            }
+
+            public function getGet($key = null)
+            {
+                $get = $this->opts['get'] ?? [];
+
+                return $key === null ? $get : ($get[$key] ?? null);
+            }
+
+            public function getMethod($upper = false)
+            {
+                return $this->opts['method'] ?? 'GET';
+            }
+
+            public function getUri()
+            {
+                return new class($this->opts['path'] ?? '/') {
+                    private string $p;
+
+                    public function __construct($p)
+                    {
+                        $this->p = $p;
+                    }
+
+                    public function getPath()
+                    {
+                        return $this->p;
+                    }
+                };
+            }
+
+            public function getIPAddress()
+            {
+                return $this->opts['ip'] ?? '127.0.0.1';
+            }
         };
     }
 
     private function installStubKeyModel(array $rows): void
     {
         // Provide a stub KeyModel via config->keyModelClass with no-arg constructor
-        $class = new class {
+        $class = new class() {
             public static array $rows = [];
-            public function findValidKey(string $key): ?array { return self::$rows[$key] ?? null; }
+
+            public function findValidKey(string $key): ?array
+            {
+                return self::$rows[$key] ?? null;
+            }
         };
         $ref = new \ReflectionClass($class);
         $className = $ref->getName();

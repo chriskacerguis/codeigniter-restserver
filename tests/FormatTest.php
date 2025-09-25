@@ -1,8 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
 use chriskacerguis\RestServer\Format;
+use PHPUnit\Framework\TestCase;
 
 final class FormatTest extends TestCase
 {
@@ -29,7 +30,7 @@ final class FormatTest extends TestCase
 
     public function testFromSerializeDisallowsObjects(): void
     {
-        $ser = serialize((object)['x' => 1]);
+        $ser = serialize((object) ['x' => 1]);
         $fmt = new Format($ser, 'serialize');
         $arr = $fmt->to_array();
         $this->assertIsArray($arr);

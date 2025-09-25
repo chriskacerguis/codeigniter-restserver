@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
@@ -14,6 +15,7 @@ final class ControllerTest extends TestCase
         $prop = $ref->getParentClass()->getProperty('response');
         $prop->setAccessible(true);
         $prop->setValue($c, service('response'));
+
         return $c;
     }
 

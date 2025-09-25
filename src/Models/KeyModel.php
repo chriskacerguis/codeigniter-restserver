@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace chriskacerguis\RestServer\Models;
 
-use CodeIgniter\Model;
 use chriskacerguis\RestServer\Config\Rest as RestConfig;
+use CodeIgniter\Model;
 
 class KeyModel extends Model
 {
@@ -34,11 +35,12 @@ class KeyModel extends Model
         if ($config->keysExpire && $config->keysExpiryColumn) {
             $builder->groupStart()
                 ->where($config->keysExpiryColumn, null)
-                ->orWhere($config->keysExpiryColumn . ' >', gmdate('Y-m-d H:i:s'))
+                ->orWhere($config->keysExpiryColumn.' >', gmdate('Y-m-d H:i:s'))
                 ->groupEnd();
         }
 
         $row = $builder->get()->getRowArray();
+
         return $row ?: null;
     }
 }

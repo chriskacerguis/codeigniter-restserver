@@ -1,17 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace chriskacerguis\RestServer\Database\Migrations;
 
-use CodeIgniter\Database\Migration;
 use chriskacerguis\RestServer\Config\Rest as RestConfig;
+use CodeIgniter\Database\Migration;
 
 class CreateLogsTable extends Migration
 {
     public function up(): void
     {
         $config = new RestConfig();
-        $table  = $config->logsTable;
+        $table = $config->logsTable;
 
         $this->forge->addField([
             'id' => [

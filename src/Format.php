@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace chriskacerguis\RestServer;
@@ -52,6 +53,7 @@ class Format
                 $array[$key] = $value;
             }
         }
+
         return $array;
     }
 
@@ -94,6 +96,7 @@ class Format
                 $structure->addChild($key, $value);
             }
         }
+
         return $structure->asXML();
     }
 
@@ -126,6 +129,7 @@ class Format
             $html .= '</tr>';
         }
         $html .= '</tbody></table>';
+
         return $html;
     }
 
@@ -165,6 +169,7 @@ class Format
         $csv = stream_get_contents($handle);
         fclose($handle);
         $csv = mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');
+
         return $csv;
     }
 
@@ -176,11 +181,11 @@ class Format
         $callback = null;
         if (empty($callback) === true) {
             return json_encode($data, JSON_UNESCAPED_UNICODE);
-        }
-        elseif (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback)) {
+        } elseif (preg_match('/^[a-z_\$][a-z0-9\$_]*(\.[a-z_\$][a-z0-9\$_]*)*$/i', $callback)) {
             return $callback.'('.json_encode($data, JSON_UNESCAPED_UNICODE).');';
         }
         $data['warning'] = 'INVALID JSONP CALLBACK: '.$callback;
+
         return json_encode($data, JSON_UNESCAPED_UNICODE);
     }
 
@@ -189,6 +194,7 @@ class Format
         if ($data === null && func_num_args() === 0) {
             $data = $this->_data;
         }
+
         return serialize($data);
     }
 
@@ -197,6 +203,7 @@ class Format
         if ($data === null && func_num_args() === 0) {
             $data = $this->_data;
         }
+
         return var_export($data, true);
     }
 
@@ -213,6 +220,7 @@ class Format
         if ($enclosure === null) {
             $enclosure = '"';
         }
+
         return str_getcsv($data, $delimiter, $enclosure);
     }
 

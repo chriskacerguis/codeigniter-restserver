@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace chriskacerguis\RestServer;
 
-use CodeIgniter\RESTful\ResourceController;
-use CodeIgniter\API\ResponseTrait;
 use chriskacerguis\RestServer\Config\Rest as RestConfig;
+use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\RESTful\ResourceController;
 
 class RestController extends ResourceController
 {
@@ -44,6 +45,7 @@ class RestController extends ResourceController
         if (method_exists($formatter, $method)) {
             return $formatter->{$method}();
         }
+
         return $formatter->to_json();
     }
 }

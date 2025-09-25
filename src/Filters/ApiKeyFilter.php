@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace chriskacerguis\RestServer\Filters;
@@ -7,8 +8,8 @@ use chriskacerguis\RestServer\Config\Rest as RestConfig;
 use chriskacerguis\RestServer\Models\KeyModel;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
 
 class ApiKeyFilter implements FilterInterface
 {
@@ -25,8 +26,9 @@ class ApiKeyFilter implements FilterInterface
 
         if ($apiKey === '') {
             $response = service('response') ?: new Response(config('App'));
+
             return $response->setStatusCode(401)->setJSON([
-                $config->statusFieldName => false,
+                $config->statusFieldName  => false,
                 $config->messageFieldName => 'API key missing',
             ]);
         }
@@ -36,8 +38,9 @@ class ApiKeyFilter implements FilterInterface
         $row = $model->findValidKey($apiKey);
         if (!$row) {
             $response = service('response') ?: new Response(config('App'));
+
             return $response->setStatusCode(401)->setJSON([
-                $config->statusFieldName => false,
+                $config->statusFieldName  => false,
                 $config->messageFieldName => 'Invalid or expired API key',
             ]);
         }

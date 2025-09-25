@@ -1,17 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace chriskacerguis\RestServer\Database\Migrations;
 
-use CodeIgniter\Database\Migration;
 use chriskacerguis\RestServer\Config\Rest as RestConfig;
+use CodeIgniter\Database\Migration;
 
 class CreateLimitsTable extends Migration
 {
     public function up(): void
     {
         $config = new RestConfig();
-        $table  = $config->limitsTable;
+        $table = $config->limitsTable;
 
         $this->forge->addField([
             'id' => [

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace chriskacerguis\RestServer\Config;
@@ -60,7 +61,7 @@ class Rest extends BaseConfig
     public int $keyLength = 40;
     public string $keyHeaderName = 'X-API-KEY';
     /**
-     * Override the model class used to validate API keys (for testing or customization)
+     * Override the model class used to validate API keys (for testing or customization).
      *
      * @var class-string
      */
@@ -83,7 +84,7 @@ class Rest extends BaseConfig
     public int $limitDefaultPerHour = 60; // default requests per hour
     public int $limitWindowSeconds = 3600; // default window length
     /**
-     * Override the model class used to persist limits (for testing or customization)
+     * Override the model class used to persist limits (for testing or customization).
      *
      * @var class-string
      */

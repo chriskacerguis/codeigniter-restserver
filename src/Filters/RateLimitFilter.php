@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace chriskacerguis\RestServer\Filters;
@@ -7,14 +8,14 @@ use chriskacerguis\RestServer\Config\Rest as RestConfig;
 use chriskacerguis\RestServer\Models\LimitModel;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
 
 class RateLimitFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-    $config = config(RestConfig::class);
+        $config = config(RestConfig::class);
 
         if (!$config->enableLimits) {
             return null;
@@ -28,7 +29,7 @@ class RateLimitFilter implements FilterInterface
             'ip_address'=> null,
         ];
 
-        $uriPath = '/' . ltrim((string) $request->getUri()->getPath(), '/');
+        $uriPath = '/'.ltrim((string) $request->getUri()->getPath(), '/');
         $identifier['uri'] = $uriPath;
         $identifier['method'] = strtoupper($request->getMethod());
         $identifier['ip_address'] = $request->getIPAddress();
@@ -92,8 +93,8 @@ class RateLimitFilter implements FilterInterface
         $row['updated_at'] = $nowDt;
 
         $limitModel->update($row['id'], [
-            'count' => $row['count'],
-            'reset_at' => $row['reset_at'],
+            'count'      => $row['count'],
+            'reset_at'   => $row['reset_at'],
             'updated_at' => $row['updated_at'],
         ]);
 
@@ -102,9 +103,10 @@ class RateLimitFilter implements FilterInterface
             $response = service('response') ?: new Response(config('App'));
             $retryAfter = max(1, strtotime((string) $row['reset_at']) - $now);
             $response->setHeader('Retry-After', (string) $retryAfter);
+
             return $response->setStatusCode(429)->setJSON([
                 'status' => false,
-                'error' => 'Rate limit exceeded',
+                'error'  => 'Rate limit exceeded',
             ]);
         }
 

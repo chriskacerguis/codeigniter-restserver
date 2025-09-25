@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace chriskacerguis\RestServer\Filters;
@@ -6,14 +7,14 @@ namespace chriskacerguis\RestServer\Filters;
 use chriskacerguis\RestServer\Config\Rest as RestConfig;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
 
 class AuthFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-    $config = config(RestConfig::class);
+        $config = config(RestConfig::class);
 
         if ($config->auth === false || $config->auth === '') {
             // Auth disabled
@@ -58,11 +59,11 @@ class AuthFilter implements FilterInterface
                 return $this->unauthorizedResponse('digest', $config->realm);
             }
 
-            $ha1 = md5($username . ':' . $config->realm . ':' . $password);
-            $ha2 = md5($method . ':' . ($digest['uri'] ?? ''));
+            $ha1 = md5($username.':'.$config->realm.':'.$password);
+            $ha2 = md5($method.':'.($digest['uri'] ?? ''));
 
-            $data = $ha1 . ':' . ($digest['nonce'] ?? '') . ':' . ($digest['nc'] ?? '') . ':'
-                . ($digest['cnonce'] ?? '') . ':' . ($digest['qop'] ?? '') . ':' . $ha2;
+            $data = $ha1.':'.($digest['nonce'] ?? '').':'.($digest['nc'] ?? '').':'
+                .($digest['cnonce'] ?? '').':'.($digest['qop'] ?? '').':'.$ha2;
             $validResponse = md5($data);
 
             if (hash_equals($validResponse, (string) ($digest['response'] ?? ''))) {
@@ -128,13 +129,14 @@ class AuthFilter implements FilterInterface
     {
         if ($config->authSource === 'library' && $config->authLibraryClass && $config->authLibraryFunction) {
             $class = $config->authLibraryClass;
-            $func  = $config->authLibraryFunction;
+            $func = $config->authLibraryFunction;
 
             if (method_exists($class, $func)) {
                 if ((new \ReflectionMethod($class, $func))->isStatic()) {
                     return (bool) $class::$func($username, $password);
                 }
                 $instance = new $class();
+
                 return (bool) $instance->$func($username, $password);
             }
         }
@@ -147,15 +149,17 @@ class AuthFilter implements FilterInterface
     {
         if ($config->authSource === 'library' && $config->authLibraryClass && $config->authLibraryFunction) {
             $class = $config->authLibraryClass;
-            $func  = $config->authLibraryFunction;
+            $func = $config->authLibraryFunction;
 
             if (method_exists($class, $func)) {
                 if ((new \ReflectionMethod($class, $func))->isStatic()) {
                     $ok = (bool) $class::$func($username, null);
+
                     return $ok ? '' : null;
                 }
                 $instance = new $class();
                 $ok = (bool) $instance->$func($username, null);
+
                 return $ok ? '' : null;
             }
         }
@@ -171,9 +175,9 @@ class AuthFilter implements FilterInterface
         }
 
         if ($scheme === 'basic') {
-            $response->setHeader('WWW-Authenticate', 'Basic realm="' . addslashes($realm) . '", charset="UTF-8"');
+            $response->setHeader('WWW-Authenticate', 'Basic realm="'.addslashes($realm).'", charset="UTF-8"');
         } elseif ($scheme === 'digest') {
-            $nonce  = bin2hex(random_bytes(16));
+            $nonce = bin2hex(random_bytes(16));
             $opaque = bin2hex(random_bytes(16));
             $header = sprintf(
                 'Digest realm="%s", qop="auth", nonce="%s", opaque="%s"',
@@ -186,7 +190,7 @@ class AuthFilter implements FilterInterface
 
         return $response->setStatusCode(401)->setJSON([
             'status' => false,
-            'error' => $message,
+            'error'  => $message,
         ]);
     }
 }

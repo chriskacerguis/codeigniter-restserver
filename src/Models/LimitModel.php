@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace chriskacerguis\RestServer\Models;
 
-use CodeIgniter\Model;
 use chriskacerguis\RestServer\Config\Rest as RestConfig;
+use CodeIgniter\Model;
 
 class LimitModel extends Model
 {
