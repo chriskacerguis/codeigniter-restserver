@@ -14,11 +14,11 @@ final class FiltersTest extends TestCase
         // Minimal request stub implementing methods used by our filters
         return new class($opts) implements \CodeIgniter\HTTP\RequestInterface {
             private array $opts; public function __construct(array $opts){$this->opts=$opts;}
-            public function getHeaderLine($name){ return $this->opts['headers'][$name] ?? ''; }
+            public function getHeaderLine($name): string { return (string)($this->opts['headers'][$name] ?? ''); }
             public function getGet($key=null){ $get=$this->opts['get'] ?? []; return $key===null?$get:($get[$key]??null);}            
-            public function getMethod($upper=false){ return $this->opts['method'] ?? 'GET'; }
-            public function getUri(){ return new class($this->opts['path'] ?? '/') { private string $p; public function __construct($p){$this->p=$p;} public function getPath(){return $this->p;} }; }
-            public function getIPAddress(){ return $this->opts['ip'] ?? '127.0.0.1'; }
+            public function getMethod($upper=false): string { return (string)($this->opts['method'] ?? 'GET'); }
+            public function getUri(): \CodeIgniter\HTTP\URI { return new class($this->opts['path'] ?? '/') extends \CodeIgniter\HTTP\URI { private string $p; public function __construct($p){$this->p=(string)$p;} public function getPath(): string {return $this->p;} }; }
+            public function getIPAddress(): string { return (string)($this->opts['ip'] ?? '127.0.0.1'); }
             // Unused RequestInterface methods for our tests
             public function setMethod($method){return $this;} public function setLocale($locale){return $this;}
             public function getLocale(){return 'en';} public function isValidIP($ip=null,$which=null){return true;}

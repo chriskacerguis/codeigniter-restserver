@@ -14,7 +14,7 @@ class RestController extends ResourceController
     use ResponseTrait;
 
     protected RestConfig $restConfig;
-
+    /** @var array<string,string> */
     protected array $supportedFormats = [
         'json'       => 'application/json',
         'array'      => 'application/json',
@@ -28,16 +28,19 @@ class RestController extends ResourceController
 
     public function __construct()
     {
-        $this->restConfig = config(RestConfig::class);
+        $cfg = config(RestConfig::class);
+        $this->restConfig = $cfg instanceof RestConfig ? $cfg : new RestConfig();
         $this->format = $this->restConfig->defaultFormat;
     }
 
-    protected function respondData($data, int $status = 200): ResponseInterface
+    protected function respondData(mixed $data, int $status = 200): ResponseInterface
     {
-        return $this->respond($data, $status);
+        $resp = $this->respond($data, $status);
+        // Our test stub's respond() returns the ResponseInterface instance
+        return $resp;
     }
 
-    protected function formatData($data, ?string $format = null): string
+    protected function formatData(mixed $data, ?string $format = null): string
     {
         $format = $format ?? $this->restConfig->defaultFormat;
         $formatter = Format::factory($data);
@@ -53,6 +56,11 @@ class RestController extends ResourceController
             'xml'        => 'toXml',
         ];
         $method = $map[$format] ?? 'toJson';
-        return $formatter->{$method}();
+        $out = $formatter->{$method}();
+        if (is_string($out)) {
+            return $out;
+        }
+        // Fallback for toArray or other non-string outputs
+        return Format::factory($out)->toJson();
     }
 }

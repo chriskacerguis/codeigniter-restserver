@@ -13,19 +13,34 @@ use CodeIgniter\HTTP\Response;
 
 class ApiKeyFilter implements FilterInterface
 {
-    public function before(RequestInterface $request, $arguments = null)
+    /**
+     * @param array<string,mixed>|null $arguments
+     */
+    public function before(RequestInterface $request, $arguments = null): ?ResponseInterface
     {
         $config = config(RestConfig::class);
+        if (!$config instanceof RestConfig) {
+            $config = new RestConfig();
+        }
         if (!$config->enableKeys) {
             return null;
         }
 
-        $headerName = $config->keyHeaderName;
-        $apiKey = $request->getHeaderLine($headerName)
-            ?: ($request->getGet('api_key') ?? ($request->getGet($headerName) ?? ''));
+        $headerName = (string) $config->keyHeaderName;
+        $apiKey = $request->getHeaderLine($headerName);
+        if ($apiKey === '') {
+            $queryKey = $request->getGet('api_key');
+            if (!is_string($queryKey) || $queryKey === '') {
+                $queryKey = $request->getGet($headerName);
+            }
+            $apiKey = is_string($queryKey) ? $queryKey : '';
+        }
 
         if ($apiKey === '') {
-            $response = service('response') ?: new Response(config('App'));
+            $response = service('response');
+            if (!$response instanceof ResponseInterface) {
+                $response = new Response(config('App'));
+            }
             return $response->setStatusCode(401)->setJSON([
                 $config->statusFieldName => false,
                 $config->messageFieldName => 'API key missing',
@@ -33,10 +48,14 @@ class ApiKeyFilter implements FilterInterface
         }
 
         $modelClass = $config->keyModelClass ?? KeyModel::class;
+        /** @var KeyModel $model */
         $model = new $modelClass();
-        $row = $model->findValidKey($apiKey);
+        $row = $model->findValidKey((string) $apiKey);
         if (!$row) {
-            $response = service('response') ?: new Response(config('App'));
+            $response = service('response');
+            if (!$response instanceof ResponseInterface) {
+                $response = new Response(config('App'));
+            }
             return $response->setStatusCode(401)->setJSON([
                 $config->statusFieldName => false,
                 $config->messageFieldName => 'Invalid or expired API key',
@@ -46,7 +65,10 @@ class ApiKeyFilter implements FilterInterface
         return null;
     }
 
-    public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
+    /**
+     * @param array<string,mixed>|null $arguments
+     */
+    public function after(RequestInterface $request, ResponseInterface $response, $arguments = null): void
     {
         // no-op
     }

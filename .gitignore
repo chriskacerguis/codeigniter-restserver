@@ -20,3 +20,4 @@ application/logs/*
 /vendor/
 *.phar
 .phpunit.result.cache
+phpstan.neon.dist

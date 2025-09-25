@@ -12,75 +12,89 @@ use CodeIgniter\HTTP\Response;
 
 class AuthFilter implements FilterInterface
 {
-    public function before(RequestInterface $request, $arguments = null)
+    /**
+     * @param array<string,mixed>|null $arguments
+     */
+    public function before(RequestInterface $request, $arguments = null): ?ResponseInterface
     {
         $config = config(RestConfig::class);
-
-        if ($config->auth === false || $config->auth === '') {
-            // Auth disabled
-            return null;
+        if (!$config instanceof RestConfig) {
+            $config = new RestConfig();
         }
 
-        if ($config->auth === 'session') {
-            $session = service('session');
-            if ($session && ($session->get('isLoggedIn') === true || $session->get('logged_in') === true)) {
-                return null;
-            }
-
-            return $this->unauthorizedResponse('basic', $config->realm, 'Session authentication required');
+        if ($config->auth === false) {
+            return null; // Auth disabled
         }
 
-        $authHeader = (string) ($request->getHeaderLine('Authorization') ?? '');
+        $authHeader = $request->getHeaderLine('Authorization');
         $method = strtoupper($request->getMethod());
 
-        if ($config->auth === 'basic') {
-            $creds = $this->parseBasic($authHeader);
-            if (!$creds) {
-                return $this->unauthorizedResponse('basic', $config->realm);
-            }
+        switch ($config->auth) {
+            case 'session':
+                $session = service('session');
+                if (
+                    is_object($session)
+                    && method_exists($session, 'get')
+                    && (
+                        $session->get('isLoggedIn') === true
+                        || $session->get('logged_in') === true
+                    )
+                ) {
+                    return null;
+                }
+                return $this->unauthorizedResponse(
+                    'basic',
+                    (string) ($config->realm ?? ''),
+                    'Session authentication required'
+                );
 
-            $isValid = $this->validateCredentials($creds['username'], $creds['password'], $config);
-            if ($isValid) {
+            case 'basic':
+                $creds = $this->parseBasic($authHeader);
+                if (!$creds) {
+                    return $this->unauthorizedResponse('basic', (string) ($config->realm ?? ''));
+                }
+                if ($this->validateCredentials($creds['username'], $creds['password'], $config)) {
+                    return null;
+                }
+                return $this->unauthorizedResponse('basic', (string) ($config->realm ?? ''));
+
+            case 'digest':
+                $digest = $this->parseDigest($authHeader);
+                if (!$digest) {
+                    return $this->unauthorizedResponse('digest', (string) ($config->realm ?? ''));
+                }
+                $username = $digest['username'] ?? '';
+                $password = $this->findPasswordForUser($username, $config);
+                if ($password === null) {
+                    return $this->unauthorizedResponse('digest', (string) ($config->realm ?? ''));
+                }
+                $realm = (string) ($config->realm ?? '');
+                $ha1 = md5($username . ':' . $realm . ':' . $password);
+                $ha2 = md5($method . ':' . (string) ($digest['uri'] ?? ''));
+                $data = $ha1 . ':' . ($digest['nonce'] ?? '') . ':' . ($digest['nc'] ?? '') . ':'
+                    . ($digest['cnonce'] ?? '') . ':' . ($digest['qop'] ?? '') . ':' . $ha2;
+                $validResponse = md5($data);
+                if (hash_equals($validResponse, (string) ($digest['response'] ?? ''))) {
+                    return null;
+                }
+                return $this->unauthorizedResponse('digest', (string) ($config->realm ?? ''));
+
+            default:
                 return null;
-            }
-
-            return $this->unauthorizedResponse('basic', $config->realm);
         }
-
-        if ($config->auth === 'digest') {
-            $digest = $this->parseDigest($authHeader);
-            if (!$digest) {
-                return $this->unauthorizedResponse('digest', $config->realm);
-            }
-
-            $username = $digest['username'] ?? '';
-            $password = $this->findPasswordForUser($username, $config);
-            if ($password === null) {
-                return $this->unauthorizedResponse('digest', $config->realm);
-            }
-
-            $ha1 = md5($username . ':' . $config->realm . ':' . $password);
-            $ha2 = md5($method . ':' . ($digest['uri'] ?? ''));
-
-            $data = $ha1 . ':' . ($digest['nonce'] ?? '') . ':' . ($digest['nc'] ?? '') . ':'
-                . ($digest['cnonce'] ?? '') . ':' . ($digest['qop'] ?? '') . ':' . $ha2;
-            $validResponse = md5($data);
-
-            if (hash_equals($validResponse, (string) ($digest['response'] ?? ''))) {
-                return null;
-            }
-
-            return $this->unauthorizedResponse('digest', $config->realm);
-        }
-
-        return null;
     }
 
-    public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
+    /**
+     * @param array<string,mixed>|null $arguments
+     */
+    public function after(RequestInterface $request, ResponseInterface $response, $arguments = null): void
     {
         // No-op
     }
 
+    /**
+     * @return array{username:string,password:string}|null
+     */
     private function parseBasic(string $authHeader): ?array
     {
         if (!str_starts_with(strtolower($authHeader), 'basic ')) {
@@ -101,6 +115,9 @@ class AuthFilter implements FilterInterface
         return ['username' => $parts[0], 'password' => $parts[1]];
     }
 
+    /**
+     * @return array<string,string>|null
+     */
     private function parseDigest(string $authHeader): ?array
     {
         if (!str_starts_with(strtolower($authHeader), 'digest ')) {

@@ -254,6 +254,15 @@ php spark migrate -n 'chriskacerguis\RestServer'
 curl -H 'X-API-KEY: YOUR_KEY' http://localhost:8080/api/users
 ```
 
+## Testing
+
+```bash
+php phpcs.phar --standard=phpcs.xml
+php phpunit.phar -c phpunit.xml.dist --testdox
+php -d memory_limit=512M phpstan.phar analyse src --no-progress -c phpstan.neon.dist
+```
+
+
 ## License
 
 MIT

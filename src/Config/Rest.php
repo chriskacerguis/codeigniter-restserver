@@ -13,6 +13,7 @@ class Rest extends BaseConfig
 
     // Output formats
     public string $defaultFormat = 'json';
+    /** @var array<string> */
     public array $supportedFormats = [
         'json', 'array', 'csv', 'html', 'jsonp', 'php', 'serialized', 'xml',
     ];
@@ -30,6 +31,7 @@ class Rest extends BaseConfig
     public $auth = false;
     /** @var ''|'ldap'|'library' */
     public string $authSource = '';
+    /** @var array<string,string> */
     public array $validLogins = ['admin' => '1234'];
 
     // Allow Authentication and API Keys
@@ -63,7 +65,7 @@ class Rest extends BaseConfig
     /**
      * Override the model class used to validate API keys (for testing or customization)
      *
-     * @var class-string
+     * @var class-string<\chriskacerguis\RestServer\Models\KeyModel>
      */
     public string $keyModelClass = 'chriskacerguis\\RestServer\\Models\\KeyModel';
 
@@ -86,7 +88,7 @@ class Rest extends BaseConfig
     /**
      * Override the model class used to persist limits (for testing or customization)
      *
-     * @var class-string
+     * @var class-string<\chriskacerguis\RestServer\Models\LimitModel>
      */
     public string $limitModelClass = 'chriskacerguis\\RestServer\\Models\\LimitModel';
 
@@ -101,11 +103,15 @@ class Rest extends BaseConfig
 
     // CORS
     public bool $checkCors = false;
+    /** @var array<string> */
     public array $allowedCorsHeaders = [
         'Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Access-Control-Request-Method',
     ];
+    /** @var array<string> */
     public array $allowedCorsMethods = ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'];
     public bool $allowAnyCorsDomain = false;
+    /** @var array<string> */
     public array $allowedCorsOrigins = [];
+    /** @var array<string,string> */
     public array $forcedCorsHeaders = [];
 }
