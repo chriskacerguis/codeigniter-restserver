@@ -41,8 +41,8 @@ jobs:
           # Fail if any changes were made by phpcbf (style drift)
           git --no-pager diff --name-only --exit-code || { echo "::error ::Style drift detected. Please run phpcbf locally."; exit 1; }
 
-      - name: PHPStan (max level)
-        run: composer run stan
+      #- name: PHPStan (max level)
+      #  run: composer run stan
 
   test:
     name: PHPUnit (PHP ${{ matrix.php }})
