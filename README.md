@@ -19,6 +19,56 @@ composer require chriskacerguis/codeigniter-restserver
 
 Auto-discovery is enabled, so the module’s config, filters, and migrations will be found automatically.
 
+### Manual installation (no Composer)
+
+If you cannot use Composer, you can install this module manually.
+
+1) Download the source
+
+- Download a release ZIP from GitHub or clone the repo, then copy the `src/` folder into your app. A common layout is:
+
+```
+app/ThirdParty/RestServer/src
+```
+
+2) Register PSR-4 autoloading
+
+Edit `app/Config/Autoload.php` and add the namespace mapping so CodeIgniter can locate the classes:
+
+```php
+public $psr4 = [
+    'App\\' => APPPATH,
+    // Add this line (adjust the path if you chose a different location)
+    'chriskacerguis\\RestServer\\' => APPPATH . 'ThirdParty/RestServer/src',
+];
+```
+
+Alternative: If you prefer `app/Modules/RestServer`, copy `src/` there and map it accordingly:
+
+```php
+'chriskacerguis\\RestServer\\' => APPPATH . 'Modules/RestServer/src',
+```
+
+3) Run the module migrations
+
+Once the namespace is registered, you can run the included migrations by namespace:
+
+```bash
+php spark migrate -n 'chriskacerguis\RestServer'
+```
+
+4) Wire filters and routes
+
+Follow the "Filters wiring" section below to add the filter aliases and route groups in your app configs.
+
+5) Verify
+
+Create a simple controller that extends `chriskacerguis\RestServer\RestController` and hit it in the browser or via curl. See the "Quick demo" section for a copy-paste example.
+
+Notes:
+- Language files in this repository are optional; the core module doesn’t require them for basic operation.
+- When updating the module, repeat step 1 and keep your PSR-4 mapping intact.
+
 ## Database migrations
 
 This package includes migrations for tables `keys`, `logs`, `access`, `limits`.
