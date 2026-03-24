@@ -1363,9 +1363,9 @@ class RestController extends \CI_Controller
     /**
      * Retrieve a value from a GET request.
      *
-     * @param null $key       Key to retrieve from the GET request
+     * @param string|null $key       Key to retrieve from the GET request
      *                        If NULL an array of arguments is returned
-     * @param null $xss_clean Whether to apply XSS filtering
+     * @param bool|null $xss_clean Whether to apply XSS filtering
      *
      * @return array|string|null Value from the GET request; otherwise, NULL
      */
@@ -1381,9 +1381,9 @@ class RestController extends \CI_Controller
     /**
      * Retrieve a value from a OPTIONS request.
      *
-     * @param null $key       Key to retrieve from the OPTIONS request.
+     * @param string|null $key       Key to retrieve from the OPTIONS request.
      *                        If NULL an array of arguments is returned
-     * @param null $xss_clean Whether to apply XSS filtering
+     * @param bool|null $xss_clean Whether to apply XSS filtering
      *
      * @return array|string|null Value from the OPTIONS request; otherwise, NULL
      */
@@ -1399,9 +1399,9 @@ class RestController extends \CI_Controller
     /**
      * Retrieve a value from a HEAD request.
      *
-     * @param null $key       Key to retrieve from the HEAD request
+     * @param string|null $key       Key to retrieve from the HEAD request
      *                        If NULL an array of arguments is returned
-     * @param null $xss_clean Whether to apply XSS filtering
+     * @param bool|null $xss_clean Whether to apply XSS filtering
      *
      * @return array|string|null Value from the HEAD request; otherwise, NULL
      */
@@ -1417,9 +1417,9 @@ class RestController extends \CI_Controller
     /**
      * Retrieve a value from a POST request.
      *
-     * @param null $key       Key to retrieve from the POST request
+     * @param string|null $key       Key to retrieve from the POST request
      *                        If NULL an array of arguments is returned
-     * @param null $xss_clean Whether to apply XSS filtering
+     * @param bool|null $xss_clean Whether to apply XSS filtering
      *
      * @return array|string|null Value from the POST request; otherwise, NULL
      */
@@ -1439,9 +1439,9 @@ class RestController extends \CI_Controller
     /**
      * Retrieve a value from a PUT request.
      *
-     * @param null $key       Key to retrieve from the PUT request
+     * @param string|null $key       Key to retrieve from the PUT request
      *                        If NULL an array of arguments is returned
-     * @param null $xss_clean Whether to apply XSS filtering
+     * @param bool|null $xss_clean Whether to apply XSS filtering
      *
      * @return array|string|null Value from the PUT request; otherwise, NULL
      */
@@ -1457,9 +1457,9 @@ class RestController extends \CI_Controller
     /**
      * Retrieve a value from a DELETE request.
      *
-     * @param null $key       Key to retrieve from the DELETE request
+     * @param string|null $key       Key to retrieve from the DELETE request
      *                        If NULL an array of arguments is returned
-     * @param null $xss_clean Whether to apply XSS filtering
+     * @param bool|null $xss_clean Whether to apply XSS filtering
      *
      * @return array|string|null Value from the DELETE request; otherwise, NULL
      */
@@ -1475,9 +1475,9 @@ class RestController extends \CI_Controller
     /**
      * Retrieve a value from a PATCH request.
      *
-     * @param null $key       Key to retrieve from the PATCH request
+     * @param string|null $key       Key to retrieve from the PATCH request
      *                        If NULL an array of arguments is returned
-     * @param null $xss_clean Whether to apply XSS filtering
+     * @param bool|null $xss_clean Whether to apply XSS filtering
      *
      * @return array|string|null Value from the PATCH request; otherwise, NULL
      */
@@ -1493,9 +1493,9 @@ class RestController extends \CI_Controller
     /**
      * Retrieve a value from the query parameters.
      *
-     * @param null $key       Key to retrieve from the query parameters
+     * @param string|null $key       Key to retrieve from the query parameters
      *                        If NULL an array of arguments is returned
-     * @param null $xss_clean Whether to apply XSS filtering
+     * @param bool|null $xss_clean Whether to apply XSS filtering
      *
      * @return array|string|null Value from the query parameters; otherwise, NULL
      */
