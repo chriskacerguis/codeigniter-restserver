@@ -2,6 +2,8 @@
 
 namespace chriskacerguis\RestServer;
 
+include 'Format.php';
+
 use Exception;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
@@ -1256,7 +1258,9 @@ class RestController extends \CI_Controller
     protected function _parse_get()
     {
         // Merge both the URI segments and query parameters
-        $this->_get_args = array_merge($this->_get_args, $this->_query_args);
+        if(! empty($this->_get_args) && ! empty($this->_query_args)){
+            $this->_get_args = array_merge($this->_get_args, $this->_query_args);
+        }
     }
 
     /**
