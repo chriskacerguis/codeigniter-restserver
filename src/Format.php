@@ -483,7 +483,8 @@ class Format
      */
     protected function _from_serialize($data)
     {
-        return unserialize(trim($data));
+        // Request bodies come from untrusted clients before authentication, so never instantiate objects
+        return unserialize(trim($data), ['allowed_classes' => false]);
     }
 
     /**
